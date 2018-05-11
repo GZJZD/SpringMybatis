@@ -55,7 +55,7 @@
   </servlet>
   <servlet-mapping>
     <servlet-name>SpringMVC</servlet-name>
-    <!-- 此处也可以配置成 *.do 形式 -->
+    <!-- 此处也可以配置成 *.Action 形式 -->
     <url-pattern>*.Action</url-pattern>
   </servlet-mapping>
 
