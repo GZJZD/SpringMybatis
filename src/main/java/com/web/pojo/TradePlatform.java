@@ -23,7 +23,8 @@ public class TradePlatform {
 		this.name = name;
 	}
 
-	public TradePlatform(String name) {
+	public TradePlatform(Long id, String name) {
+		this.id = id;
 		this.name = name;
 	}
 }

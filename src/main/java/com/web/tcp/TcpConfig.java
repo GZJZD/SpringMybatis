@@ -18,6 +18,7 @@ public class TcpConfig {
         @PostConstruct
         public static void init(){
             MyThread thread = new MyThread();
+
             thread.start();
         }
 

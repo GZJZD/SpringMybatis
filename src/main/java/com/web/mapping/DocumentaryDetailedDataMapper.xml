@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.web.dao.DocumentaryDetailedDataMapper">
+    <insert id="insert" parameterType="com.web.pojo.DocumentaryDetailedData" useGeneratedKeys="true"  keyProperty="id">
+       insert into documentaryDetailedData (login, varietyCode, cmd, counts, openPrice, openTime, closePrice,
+      closeTime, poundage, status, leftoverCounts, alreadyProfit)
+    values (#{login}, #{varietyCode}, #{cmd}, #{counts}, #{openPrice}, #{openTime}, #{closePrice},
+      #{closeTime}, #{poundage}, #{status}, #{leftoverCounts}, #{alreadyProfit})
+    </insert>
+    <update id="updateByPrimaryKey" parameterType="com.web.pojo.DocumentaryDetailedData">
+   update documentaryDetailedData
+     set login = #{login},
+      varietyCode = #{varietyCode},
+      cmd = #{cmd},
+      counts = #{counts},
+      openPrice = #{openPrice},
+      openTime = #{openTime},
+      closePrice = #{closePrice},
+      closeTime = #{closeTime},
+      poundage = #{poundage},
+      status = #{status},
+      leftoverCounts = #{leftoverCounts},
+      alreadyProfit = #{alreadyProfit}
+    where id = #{id}
+    </update>
+    <delete id="deleteByPrimaryKey" parameterType="Long">
+        delete from documentaryDetailedData where id = #{id}
+    </delete>
+    <select id="selectAll" resultType="com.web.pojo.DocumentaryDetailedData">
+        SELECT id, login, varietyCode, cmd, counts, openPrice, openTime, closePrice, closeTime,
+    poundage, status, leftoverCounts, alreadyProfit
+    FROM documentaryDetailedData
+    </select>
+
+    <select id="selectDataByASC" resultType="com.web.pojo.DocumentaryDetailedData">
+        select id, login, varietyCode, cmd, counts, openPrice, openTime, closePrice, closeTime,
+        poundage, status, leftoverCounts, alreadyProfit,newOpenOrderNum
+        from  DocumentaryDetailedData
+        where closeTime is null order by openTime asc
+    </select>
+</mapper>
