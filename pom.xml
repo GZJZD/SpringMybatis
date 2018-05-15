@@ -22,6 +22,7 @@
 
     <!-- log4j日志包版本号 -->
     <slf4j.version>1.7.18</slf4j.version>
+
     <log4j.version>1.2.17</log4j.version>
 
   </properties>
@@ -156,6 +157,7 @@
     </dependency>
 
     <!-- log end -->
+
     <!-- 映入JSON -->
     <dependency>
       <groupId>org.codehaus.jackson</groupId>
@@ -205,7 +207,33 @@
       <artifactId>jackson-databind</artifactId>
       <version>2.8.0</version>
     </dependency>
-
+    <!--activeMq-->
+    <dependency>
+      <groupId>org.springframework</groupId>
+      <artifactId>spring-jms</artifactId>
+      <version>${spring.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>org.springframework</groupId>
+      <artifactId>spring-test</artifactId>
+      <version>${spring.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>javax.annotation</groupId>
+      <artifactId>jsr250-api</artifactId>
+      <version>1.0</version>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.activemq</groupId>
+      <artifactId>activemq-core</artifactId>
+      <version>5.7.0</version>
+    </dependency>
+    <!--mq的池-->
+    <dependency>
+      <groupId>org.apache.activemq</groupId>
+      <artifactId>activemq-pool</artifactId>
+      <version>5.15.2</version>
+    </dependency>
 
 
   </dependencies>
