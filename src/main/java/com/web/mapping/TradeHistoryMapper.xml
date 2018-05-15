@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.web.dao.TradeHistoryMapper">
+    <insert id="insert" parameterType="com.web.pojo.TradeHistory" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO tradehistory (varietyCode, openClose, cmd, counts, price, createTime,
+      poundage, status, newOpenOrderNum, version)
+    values (#{varietyCode}, #{openClose}, #{cmd}, #{counts}, #{price}, #{createTime},
+      #{poundage}, #{status}, #{newOpenOrderNum}, unix_timestamp(now()))
+    </insert>
+    <update id="updateByPrimaryKey" parameterType="com.web.pojo.TradeHistory">
+        update tradehistory
+        <set>
+            <if test="varietyCode != null">
+                varietyCode = #{varietyCode},
+            </if>
+            <if test="openClose != null">
+                openClose = #{openClose},
+            </if>
+            <if test="cmd != null">
+                cmd = #{cmd},
+            </if>
+            <if test="counts != null">
+                counts = #{counts},
+            </if>
+            <if test="price != null">
+                price = #{price},
+            </if>
+            <if test="createTime != null">
+                createTime = #{createTime},
+            </if>
+            <if test="poundage != null">
+                poundage = #{poundage},
+            </if>
+            <if test="status != null">
+                status = #{status},
+            </if>
+            <if test="newOpenOrderNum != null">
+                newOpenOrderNum = #{newOpenOrderNum},
+            </if>
+            <if test="version != null">
+                version = unix_timestamp(now())
+            </if>
+
+        </set>
+        where id = #{id} and version =#{version}
+    </update>
+    <select id="selectByPrimaryKey" resultType="com.web.pojo.TradeHistory">
+        select id, varietyCode, openClose, cmd, counts, price, createTime, poundage, status,
+    newOpenOrderNum, version
+    from tradehistory
+    where id = #{id}
+    </select>
+    <select id="selectAll" resultType="com.web.pojo.TradeHistory">
+         select id, varietyCode, openClose, cmd, counts, price, createTime, poundage, status,
+    newOpenOrderNum, version
+    from tradehistory
+    </select>
+</mapper>

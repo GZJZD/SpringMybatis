@@ -1,7 +1,11 @@
 package com.web.tcp;
 
+import com.alibaba.fastjson.JSON;
 import com.web.pojo.DealData;
+import com.web.service.ICheckStrategyService;
+import com.web.service.IDealDataService;
 import com.web.tcp.service.DealService;
+import com.web.util.ApplicationContextHolder;
 import org.apache.log4j.Logger;
 
 import java.text.SimpleDateFormat;
@@ -17,9 +21,14 @@ public class DealServiceImpl implements DealService,Runnable{
 
     private String socketData;
     private String platformName;
-//    private IJudgementStrategyService judgementStrategyServiceImpl = (IJudgementStrategyService) ApplicationContextHolder
-//            .getBeanByName("judgementStrategyServiceImpl");
 
+    private ICheckStrategyService
+            checkStrategyService = (ICheckStrategyService) ApplicationContextHolder
+            .getBeanByName("checkStrategyServiceImpl");
+
+    private IDealDataService
+            dealDataService = (IDealDataService) ApplicationContextHolder
+            .getBeanByName("dealDataServiceImpl");
     private static Logger log = Logger.getLogger(DealServiceImpl.class.getName());
 
     public DealServiceImpl(String socketData, String platformName) {
@@ -47,6 +56,8 @@ public class DealServiceImpl implements DealService,Runnable{
             dealData.setCmd(Integer.parseInt(splitArr[index++]));//多空
             dealData.setOpenClose(Integer.parseInt(splitArr[index++]));//开平
             dealData.setProfit(Double.parseDouble(splitArr[index++]));//平仓盈亏
+            dealDataService.insert(dealData);
+            log.info("接收到一条来自TCP的数据："+ JSON.toJSONString(dealData));
 
         }catch (Exception e) {
             //数据的构造失败，毁灭当前信息
@@ -73,7 +84,9 @@ public class DealServiceImpl implements DealService,Runnable{
 
     @Override
     public void run() {
-
+        //构造下单数据
+        DealData dealData = constructor(socketData);
+        checkStrategyService.judgingOrderConditions(dealData);
     }
 
 //    @Override

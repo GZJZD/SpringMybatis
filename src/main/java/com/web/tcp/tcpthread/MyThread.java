@@ -24,7 +24,7 @@ public class MyThread  extends Thread{
     private static int timeNum = 0;
     public static final String TEST_TCP = "192.168.3.176";
     public static final String DEV_TCP = "116.62.195.204";
-    public static final String ip = "192.168.3.169";
+    public static final String ip = "192.168.3.183";
     public static final Integer port = 12000;
     public MyThread(){
 
