@@ -16,8 +16,9 @@ public interface DocumentaryDetailedDataMapper {
     /**
      * 按时间顺序，把还没有平仓的数据查找出来
      *@Author: May
-     *@param
      *@Date: 18:30 2018/5/11
+     * @param
+     *
      */
     List<DocumentaryDetailedData> selectDataByASC();
 

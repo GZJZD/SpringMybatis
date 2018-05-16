@@ -26,9 +26,7 @@ public class DealServiceImpl implements DealService,Runnable{
             checkStrategyService = (ICheckStrategyService) ApplicationContextHolder
             .getBeanByName("checkStrategyServiceImpl");
 
-    private IDealDataService
-            dealDataService = (IDealDataService) ApplicationContextHolder
-            .getBeanByName("dealDataServiceImpl");
+
     private static Logger log = Logger.getLogger(DealServiceImpl.class.getName());
 
     public DealServiceImpl(String socketData, String platformName) {
@@ -56,7 +54,7 @@ public class DealServiceImpl implements DealService,Runnable{
             dealData.setCmd(Integer.parseInt(splitArr[index++]));//多空
             dealData.setOpenClose(Integer.parseInt(splitArr[index++]));//开平
             dealData.setProfit(Double.parseDouble(splitArr[index++]));//平仓盈亏
-            dealDataService.insert(dealData);
+
             log.info("接收到一条来自TCP的数据："+ JSON.toJSONString(dealData));
 
         }catch (Exception e) {

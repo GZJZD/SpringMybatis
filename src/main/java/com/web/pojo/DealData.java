@@ -10,11 +10,6 @@ import java.util.Date;
 
 public class DealData {
 
-    public static final int CMD_BUY = 0;//多
-    public static final int CMD_SELL = 1;//空
-    public static final int OPENCLOSE_OPEN = 0;//开
-    public static final int OPENCLOSE_CLOSE = 1;//平
-
     //头
     private String head;
     //账号

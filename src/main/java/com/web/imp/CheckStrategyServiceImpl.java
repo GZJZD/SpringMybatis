@@ -3,12 +3,13 @@ package com.web.imp;
 
 import com.web.pojo.*;
 import com.web.pojo.vo.OrderDealData;
-import com.web.service.ICheckStrategyService;
-import com.web.service.IDocumentaryDetailedDataService;
-import com.web.service.ITradeHistoryService;
-import com.web.service.ITradeMsgService;
+import com.web.service.*;
+import com.web.tcp.DealServiceImpl;
+import com.web.util.ApplicationContextHolder;
 import com.web.util.DoubleUtil;
+import com.web.util.StatusUtil;
 import com.web.util.StrategyGenerateUtil;
+import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -29,6 +30,9 @@ public class CheckStrategyServiceImpl implements ICheckStrategyService {
     private Strategy strategy = StrategyGenerateUtil.getStrategy();
     //大于就是正数，小于就是负数
     private  int zero = 0 ;
+    private static Logger log = Logger.getLogger(CheckStrategyServiceImpl.class.getName());
+    @Autowired
+    private IDealDataService dealDataService ;
 
     //发送MQ
   //  @Autowired
@@ -53,7 +57,7 @@ public class CheckStrategyServiceImpl implements ICheckStrategyService {
             //获取策略的跟单参数
             DocumentaryParameters documentaryParameters = strategy.getDocumentaryParameters();
             //判断策略的状态是否在交易中,不在交易就进行判断
-            if (documentaryParameters.getStatus().equals(DocumentaryParameters.TRADE_STATUS_YES)) {
+            if (documentaryParameters.getStatus().equals(StatusUtil.TRADING_PAUSE.getIndex())) {
                 //创建交易对象
                 OrderDealData orderDealData = new OrderDealData();
                 //设置交易对象的交易账号
@@ -65,10 +69,10 @@ public class CheckStrategyServiceImpl implements ICheckStrategyService {
                 //获取原有的持仓数
                 Integer holdNum = documentaryParameters.getHoldNum();
                 //判断策略的正反方向跟单
-                if (documentaryParameters.getType().equals(DocumentaryParameters.STRATEGY_TYPE_NO)) {
+                if (documentaryParameters.getDirection().equals(StatusUtil.DIRECTION_REVERSE.getIndex())) {
                     //反向跟单
                     //判断TCP数据的多空方向
-                    if (data.getCmd().equals(DealData.CMD_BUY)) {
+                    if (data.getCmd().equals(StatusUtil.BUY)) {
                         //多，增加净头寸
                         headNum = DoubleUtil.add(headNum, data.getCounts());
                     } else {
@@ -106,30 +110,29 @@ public class CheckStrategyServiceImpl implements ICheckStrategyService {
                         if (sum < zero) {
                             //并且应持仓数为负数的时候，如果大于原有的持仓数就是要平仓,并且应持仓数不为正数就不需要开仓
                             if (sum > holdNum  && holdNum < zero) {
-                                //todo 弄个方法,平仓不应该是新开一个跟单明细而是找最早的跟单明细对象进行平掉
-                                 //todo 封装成一个方法，根据传过来过来的参数去变化
+
                                 doColseData(interim);
 
                                 //设置交易对象下单手数
                                 //发送交易请求
-                                SendMsgByTrade(orderDealData,DealData.CMD_SELL,DealData.OPENCLOSE_CLOSE,
+                                SendMsgByTrade(orderDealData,StatusUtil.SELL.getIndex(),StatusUtil.CLOSE.getIndex(),
                                         interim,data,detailedData.getId(),documentaryParameters);
                             } else if (sum < holdNum && holdNum <= zero) {
                                 //当sum为负数的时候小于原本的持仓，那就是开仓
                                 //设置跟单明细的多空状态为空单,设置手数
-                                saveDocumentaryDetailedData(detailedData,DealData.CMD_SELL,interim);
+                                saveDocumentaryDetailedData(detailedData,StatusUtil.SELL.getIndex(),interim);
 
                                 //发送交易请求
-                                SendMsgByTrade(orderDealData,DealData.CMD_SELL,DealData.OPENCLOSE_OPEN,
+                                SendMsgByTrade(orderDealData,StatusUtil.SELL.getIndex(),StatusUtil.OPEN.getIndex(),
                                         interim,data,detailedData.getId(),documentaryParameters);
 
                             }else if( holdNum > zero){
                                 //同时平仓又开仓，平holdNum，开sum
                                 //设置跟单明细的多空状态为空单,先做负的，设置手数
-                                saveDocumentaryDetailedData(detailedData,DealData.CMD_SELL,(double) Math.abs(sum));
+                                saveDocumentaryDetailedData(detailedData,StatusUtil.SELL.getIndex(),(double) Math.abs(sum));
 
                                 //先做开仓
-                                SendMsgByTrade(orderDealData,DealData.CMD_SELL,DealData.OPENCLOSE_OPEN,
+                                SendMsgByTrade(orderDealData,StatusUtil.SELL.getIndex(),StatusUtil.OPEN.getIndex(),
                                         (double) Math.abs(sum),data,detailedData.getId(),documentaryParameters);
                                 //再来做一单，平仓
                                 //平仓跟单明细
@@ -138,9 +141,8 @@ public class CheckStrategyServiceImpl implements ICheckStrategyService {
                                 OrderDealData orderDealDataClose = new OrderDealData();
                                 //设置交易对象的交易账号
                                 orderDealDataClose.setDealAccount(strategy.getAccount().getUsername());
-                                SendMsgByTrade(orderDealDataClose,DealData.CMD_BUY,DealData.OPENCLOSE_CLOSE,
+                                SendMsgByTrade(orderDealDataClose,StatusUtil.SELL.getIndex(),StatusUtil.CLOSE.getIndex(),
                                         (double) Math.abs(holdNum),data,null,documentaryParameters);
-
                             }
 
                         } else if (sum > zero) {
@@ -149,17 +151,16 @@ public class CheckStrategyServiceImpl implements ICheckStrategyService {
                                 //平仓
                                 doColseData(interim);
                                 //发送下单请求,做多单，平仓
-                                SendMsgByTrade(orderDealData,DealData.CMD_BUY,DealData.OPENCLOSE_CLOSE,
+                                SendMsgByTrade(orderDealData,StatusUtil.BUY.getIndex(),StatusUtil.CLOSE.getIndex(),
                                         interim,data,null,documentaryParameters);
                             }else if(holdNum < zero){
-
                                 //2.当持仓数 < zero ,平持仓数，开sum
 
                                 //先做开仓
                                 //设置跟单明细的多空状态为空单,先做负的，设置手数
-                                saveDocumentaryDetailedData(detailedData,DealData.CMD_BUY,(double) Math.abs(sum));
+                                saveDocumentaryDetailedData(detailedData,StatusUtil.BUY.getIndex(),(double) Math.abs(sum));
 
-                                SendMsgByTrade(orderDealData,DealData.CMD_BUY,DealData.OPENCLOSE_OPEN,
+                                SendMsgByTrade(orderDealData,StatusUtil.BUY.getIndex(),StatusUtil.OPEN.getIndex(),
                                         (double) Math.abs(sum),data,detailedData.getId(),documentaryParameters);
                                 //再来做一单，平仓
                                 //平仓跟单明细
@@ -168,16 +169,16 @@ public class CheckStrategyServiceImpl implements ICheckStrategyService {
                                 OrderDealData orderDealDataClose = new OrderDealData();
                                 //设置交易对象的交易账号
                                 orderDealDataClose.setDealAccount(strategy.getAccount().getUsername());
-                                SendMsgByTrade(orderDealDataClose,DealData.CMD_SELL,DealData.OPENCLOSE_CLOSE,
+                                SendMsgByTrade(orderDealDataClose,StatusUtil.BUY.getIndex(),StatusUtil.CLOSE.getIndex(),
                                         (double) Math.abs(holdNum),data,null,documentaryParameters);
 
                             }else if(holdNum >= zero && sum > holdNum ){
                                 //3.当持仓数 >=zero,sum > 持仓数，开仓
                                 //当sum为正数的时候大于原本的持仓，那就是开仓
                                 //设置跟单明细的多空状态为多单,设置手数
-                                saveDocumentaryDetailedData(detailedData,DealData.CMD_BUY,interim);
+                                saveDocumentaryDetailedData(detailedData,StatusUtil.BUY.getIndex(),interim);
                                 //发送交易请求
-                                SendMsgByTrade(orderDealData,DealData.CMD_BUY,DealData.OPENCLOSE_OPEN,
+                                SendMsgByTrade(orderDealData,StatusUtil.BUY.getIndex(),StatusUtil.OPEN.getIndex(),
                                         interim,data,detailedData.getId(),documentaryParameters);
                             }
                         }else if(sum == zero){
@@ -186,12 +187,12 @@ public class CheckStrategyServiceImpl implements ICheckStrategyService {
                             if(holdNum < zero){
                                 //设置交易对象下单手数
                                 //发送交易请求
-                                SendMsgByTrade(orderDealData,DealData.CMD_BUY,DealData.OPENCLOSE_CLOSE,
+                                SendMsgByTrade(orderDealData,StatusUtil.BUY.getIndex(),StatusUtil.CLOSE.getIndex(),
                                         (double) Math.abs(holdNum),data,detailedData.getId(),documentaryParameters);
                             }else {
                                 //设置交易对象下单手数
                                 //发送交易请求
-                                SendMsgByTrade(orderDealData,DealData.CMD_SELL,DealData.OPENCLOSE_CLOSE,
+                                SendMsgByTrade(orderDealData,StatusUtil.SELL.getIndex(),StatusUtil.CLOSE.getIndex(),
                                         (double) Math.abs(holdNum),data,detailedData.getId(),documentaryParameters);
                             }
                         }
@@ -202,8 +203,11 @@ public class CheckStrategyServiceImpl implements ICheckStrategyService {
                 }
             }
         }
-
+        //新增一条tcp数据
+        dealDataService.insert(data);
     }
+
+
 
     /**判断该账号是否登录了
      *@Author: May
@@ -211,12 +215,12 @@ public class CheckStrategyServiceImpl implements ICheckStrategyService {
      *@Date: 12:12 2zero18/5/1zero
      */
     private void checkLogin(Strategy strategy){
-        if (strategy.getStatus().equals(Strategy.STRATEGY_STATUS_NO)) {
+        if (strategy.getStatus().equals(StatusUtil.STRATEGY_STOP.getIndex())) {
             Account account = strategy.getAccount();
             //发送MQ去登录
             tradeMsgService.login(account);
             //设计启动
-            strategy.setStatus(Strategy.STRATEGY_STATUS_YES);
+            strategy.setStatus(StatusUtil.STRATEGY_START.getIndex());
         }
     }
     /**
@@ -278,6 +282,7 @@ public class CheckStrategyServiceImpl implements ICheckStrategyService {
         orderDealData.setDetailedId(detailedDataId);
         //发送交易请求
         tradeMsgService.addOrder(orderDealData);
+        log.info("发送一条交易信息："+orderDealData.toString());
     }
     /**
      * 保存跟单明细
@@ -324,5 +329,6 @@ public class CheckStrategyServiceImpl implements ICheckStrategyService {
             }
         }
     }
+
 
 }

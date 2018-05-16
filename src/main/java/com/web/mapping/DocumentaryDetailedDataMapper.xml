@@ -36,6 +36,6 @@
         select id, login, varietyCode, cmd, counts, openPrice, openTime, closePrice, closeTime,
         poundage, status, leftoverCounts, alreadyProfit,newOpenOrderNum
         from  DocumentaryDetailedData
-        where closeTime is null order by openTime asc
+        where closeTime is null  order by openTime asc
     </select>
 </mapper>

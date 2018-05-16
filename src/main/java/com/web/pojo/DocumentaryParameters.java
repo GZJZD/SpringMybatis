@@ -11,16 +11,11 @@ import java.io.Serializable;
  */
 
 public class DocumentaryParameters implements Serializable {
-    public static final int ORDERPOINT_NO = 0;//限价
-    public static final int ORDERPOINT_YES = 1;//市价
-     public static final int TRADE_STATUS_NO = 0;//正在交易
-    public static final int TRADE_STATUS_YES = 1;//交易暂停
-    public static final Boolean STRATEGY_TYPE_NO = false;//反向跟单
-    public static final Boolean STRATEGY_TYPE_YES = true;//正向跟单
+
 
     private Long id;
     //跟单类型[正/反],真为正向跟单
-    private Boolean type;
+    private Integer direction;
     //净头寸变化,
     private Integer changeNum;
     //跟多少手
@@ -52,12 +47,12 @@ public class DocumentaryParameters implements Serializable {
         this.id = id;
     }
 
-    public Boolean getType() {
-        return type;
+    public Integer getDirection() {
+        return direction;
     }
 
-    public void setType(Boolean type) {
-        this.type = type;
+    public void setDirection(Integer direction) {
+        this.direction = direction;
     }
 
     public Integer getChangeNum() {
@@ -148,12 +143,12 @@ public class DocumentaryParameters implements Serializable {
         this.status = status;
     }
 
-    public DocumentaryParameters(Long id, Boolean type, Integer changeNum, Integer followNum,
+    public DocumentaryParameters(Long id, Integer direction, Integer changeNum, Integer followNum,
                                  Integer orderPoint, Boolean customerPoint, Double customerPointNum,
                                  Integer bigCheckSurplus, Integer bigStopLoss, Integer accountStopLoss,
                                  Double headNum, Integer holdNum, Integer status) {
         this.id = id;
-        this.type = type;
+        this.direction = direction;
         this.changeNum = changeNum;
         this.followNum = followNum;
         this.orderPoint = orderPoint;
