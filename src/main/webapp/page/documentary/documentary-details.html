@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="UTF-8">
+		<title>跟单明细</title>
+		<link rel="stylesheet" href="../../css/bootstrap.min.css" />
+		<link rel="stylesheet" href="../../css/font.css">
+		<link rel="stylesheet" href="../../css/common.css">
+		<link rel="stylesheet" href="css/documentary-details.css">
+		<script type="text/javascript" src="https://cdn.bootcss.com/jquery/3.2.1/jquery.min.js"></script>
+		<script src="http://netdna.bootstrapcdn.com/bootstrap/3.0.0/js/bootstrap.min.js"></script>
+		<script type="text/javascript" src="../../lib/layui/layui.js" charset="utf-8"></script>
+
+	</head>
+
+	<body>
+
+		<div id="">
+			<div class="layui-fluid">
+				<!--<fieldset class="layui-elem-field layui-field-title">
+					<legend>流体容器（宽度自适应，不固定）</legend>
+				</fieldset>-->
+				<div class="layui-row">
+					<div class="layui-col-sm3">
+						<div class="grid-demo grid-demo-bg1 font-one">100/200</div>
+						<div class="grid-demo grid-demo-bg1 font-tow">跟单数/手数</div>
+					</div>
+					<div class="layui-col-sm3">
+						<div class="grid-demo font-one">44442</div>
+						<div class="grid-demo font-tow">平仓盈亏($)</div>
+					</div>
+					<div class="layui-col-sm3">
+						<div class="grid-demo grid-demo-bg1 font-one">-144</div>
+						<div class="grid-demo grid-demo-bg1 font-tow">持仓盈亏($)</div>
+					</div>
+					<div class="layui-col-sm3">
+						<div class="grid-demo font-one">1212</div>
+						<div class="grid-demo font-tow">手续费</div>
+					</div>
+				</div>
+			</div>
+
+			<div class="navigation-div">
+				<div class="layui-tab layui-tab-brief" lay-filter="docDemoTabBrief">
+					<ul class="layui-tab-title">
+						<li>跟单数据</li>
+						<li>跟单明细</li>
+						<li>客户数据</li>
+						<li>跟单参数</li>
+					</ul>
+					<div class="layui-tab-content" style="height: 100px;">
+						<div class="layui-tab-item layui-show">
+							<table class="layui-table">
+								<thead>
+									<tr>
+										<th>
+											<div class="layui-unselect header layui-form-checkbox" lay-skin="primary"><i class="layui-icon">&#xe605;</i></div>
+										</th>
+										
+										<th>用户名</th>
+										<th>品种</th>
+										<th>跟单类型</th>
+										<th>手数类型</th>
+										<th>跟单手数</th>
+										<th>跟单成功率</th>
+										<th>客户盈亏</th>
+										<th>平仓盈亏</th>
+										<th>持仓盈亏</th>
+										<th>手续费</th>
+										<th>操作</th>
+									</tr>
+								</thead>
+								<tbody>
+									<tr>
+										<td>
+											<div class="layui-unselect layui-form-checkbox" lay-skin="primary" data-id='2'><i class="layui-icon">&#xe605;</i></div>
+										</td>
+										<td>1</td>
+										<td>小明</td>
+										<td>男</td>
+										<td>13000000000</td>
+										<td>admin@mail.com</td>
+										<td>北京市 海淀区</td>
+										<td>admin@mail.com</td>
+										<td>北京市 海淀区</td>
+										<td>2017-01-01 11:11:42</td>
+										<td class="td-status">
+											<span class="layui-btn layui-btn-normal layui-btn-mini">已启用</span></td>
+										<td class="td-manage">
+											<a onclick="member_stop(this,'10001')" href="javascript:;" title="启用">
+												<i class="layui-icon">&#xe601;</i>
+											</a>
+											<a title="编辑" onclick="x_admin_show('编辑','client-edit.html',600,400)" href="javascript:;">
+												<i class="layui-icon">&#xe642;</i>
+											</a>
+											<a onclick="x_admin_show('修改密码','client-password.html',600,400)" title="修改密码" href="javascript:;">
+												<i class="layui-icon">&#xe631;</i>
+											</a>
+											<a title="删除" onclick="member_del(this,'要删除的id')" href="javascript:;">
+												<i class="layui-icon">&#xe640;</i>
+											</a>
+										</td>
+									</tr>
+									
+								</tbody>
+							</table>
+						</div>
+						<div class="layui-tab-item">内容2</div>
+						<div class="layui-tab-item">内容3</div>
+						<div class="layui-tab-item">内容4</div>
+						<div class="layui-tab-item">内容5</div>
+					</div>
+				</div>
+
+			</div>
+
+		</div>
+
+		<script type="text/javascript" src="../../js/common.js"></script>
+
+	</body>
+
+</html>

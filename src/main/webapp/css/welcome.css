@@ -1,0 +1,127 @@
+@charset 'utf-8';
+* {
+  margin: 0;
+  padding: 0;
+}
+.bg-red {
+  background: #e14e4e;
+}
+.color-w {
+  color: #fff;
+}
+.header {
+  height: 50px;
+  line-height: 50px;
+}
+.att-address {
+  height: 50px;
+  line-height: 50px;
+  background: #ddefd5;
+  border-left: #c1d6a2 4px solid;
+  padding-left: 10px;
+}
+.att-address .note {
+  padding: 2px 4px;
+}
+.my-nav {
+  height: 50px;
+  line-height: 50px;
+  border-bottom: 1px solid #ddd;
+}
+.my-nav a {
+  display: inline-block;
+  border-bottom: 4px solid transparent;
+  line-height: 50px;
+  float: left;
+  padding: 0 15px;
+}
+.my-nav a:hover {
+  border-bottom: 4px solid #e14e4e;
+  text-decoration: none;
+}
+.my-nav a.active {
+  border-bottom: 4px solid #e14e4e;
+}
+.font-18 {
+  font-size: 18px;
+}
+.font-24 {
+  font-size: 40px;
+}
+.font-25{
+	padding: 20px 10px 10px 10px;
+	font-size:20px;
+}
+.content {
+  margin-top: 20px;
+}
+.content .block {
+  line-height: 24px;
+  color: #fff;
+}
+.content .block > div:nth-child(1) .area {
+  background: #568fbf;
+}
+.content .block > div:nth-child(1) .area .a-foot {
+  background: #4c87bb;
+  margin: 0 -10px;
+  padding: 0 10px;
+}
+.content .block > div:nth-child(2) .area {
+  background: #e35a5a;
+}
+.content .block > div:nth-child(2) .area .a-foot {
+  background: #e14e4e;
+  margin: 0 -10px;
+  padding: 0 10px;
+}
+.content .block > div:nth-child(3) .area {
+  background: #44b7af;
+}
+.content .block > div:nth-child(3) .area .a-foot {
+  background: #40ada5;
+  margin: 0 -10px;
+  padding: 0 10px;
+}
+.content .block > div:nth-child(4) .area {
+  background: #8774a7;
+}
+.content .block > div:nth-child(4) .area .a-foot {
+  background: #7e6ca1;
+  margin: 0 -10px;
+  padding: 0 10px;
+}
+.content .area {
+  padding: 30px 10px 30px 10px;
+}
+.content .search {
+  padding: 15px 0;
+}
+.content .search .form-group {
+  display: inline-block;
+}
+.content .table-case {
+  border: #66819f 1px solid;
+}
+.content .table-case .table-title {
+  background: #66819f;
+  color: #fff;
+  height: 35px;
+  line-height: 35px;
+  padding: 0 10px;
+}
+.content .table-case .tab {
+  margin: 10px;
+}
+.content .tip {
+  height: 50px;
+  line-height: 50px;
+  padding: 0 10px;
+  margin-bottom: 25px;
+}
+/*# sourceMappingURL=wang.css.map */
+
+.search div{
+	 margin:  0px 120px 0 0;
+	
+}

@@ -1,0 +1,263 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="UTF-8">
+		<title></title>
+		<meta name="renderer" content="webkit">
+		<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+		<meta name="viewport" content="width=device-width,user-scalable=yes, minimum-scale=0.4, initial-scale=0.8,target-densitydpi=low-dpi" />
+
+		<link rel="stylesheet" href="css/welcome.css" />
+		<link rel="stylesheet" href="lib/bootstrap/css/bootstrap-table.min.css" />
+		<link rel="stylesheet" href="http://netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap.min.css" rel="stylesheet">
+		<link rel="stylesheet" type="text/css" href="http://cdn.bootcss.com/bootstrap-select/2.0.0-beta1/css/bootstrap-select.css">
+		<link rel="stylesheet" href="./css/font.css">
+		<link rel="stylesheet" href="./css/xadmin.css">
+		<script type="text/javascript" src="lib/jquery/jquery-3.2.1.min.js"></script>
+		<script type="text/javascript" src="./lib/layui/layui.js" charset="utf-8"></script>
+		<script type="text/javascript" src="./js/xadmin.js"></script>
+		<script type="text/javascript" src="http://cdn.bootcss.com/bootstrap-select/2.0.0-beta1/js/bootstrap-select.js"></script>
+		<script src="lib/bootstrap/js/bootstrap-table.js"></script>
+		<script src="http://netdna.bootstrapcdn.com/bootstrap/3.0.0/js/bootstrap.min.js"></script>
+		<script src="lib/bootstrap/js/bootstrap-table-zh-CN.min.js"></script>
+		
+
+		<style>
+			.layui-elem-quote {
+				background-color: #c9e2b3;
+			}
+		</style>
+	</head>
+
+	<body>
+		<div class="container-fluid">
+			<div class="att-address">
+				<span class="bg-red note color-w">NOTE:</span> 文档尚未产出：
+				<a href="">文档地址</a>
+			</div>
+			<fieldset class="layui-elem-field layui-field-title">
+				<legend>客户数据</legend>
+			</fieldset>
+			<div class="content">
+				<div class="row block">
+					<div class="col-xs-3">
+						<div class="area text-right">
+							<div class="font-24">-42342</div>
+							<div class="font-25">持仓盈亏</div>
+							<div class="a-foot text-left"></div>
+						</div>
+					</div>
+					<div class="col-xs-3">
+						<div class="area text-right">
+							<div class="font-24">-31232</div>
+							<div class="font-25">客户总盈亏</div>
+							<div class="a-foot text-left"></div>
+						</div>
+					</div>
+					<div class="col-xs-3">
+						<div class="area text-right">
+							<div class="font-24">321233</div>
+							<div class="font-25">手续费</div>
+							<!--<div class="a-foot text-left">手续费</div>-->
+						</div>
+					</div>
+					<div class="col-xs-3">
+						<div class="area text-right">
+							<div class="font-24">-12.3</div>
+							<div class="font-25">盈亏效率</div>
+							<!--<div class="a-foot text-left">手续费</div>-->
+						</div>
+					</div>
+				</div>
+				<div class="search">
+					按起止时间：
+					<div class="layui-input-inline">
+						<input type="text" class="layui-input" id="test1" placeholder="起始日期">
+						<input type="text" class="layui-input" id="test2" placeholder="终止日期">
+					</div>
+
+					按平台：
+					<div class="form-group">
+						<select class="form-control" name="">
+							<option value="">11111</option>
+						</select>
+					</div>
+					按品种
+					<div class="form-group">
+						<select id="bs3Select" class="selectpicker show-tick form-control" multiple data-live-search="true">
+							<option selected>cow</option>
+							<option>bull</option>
+							<option class="get-class" disabled>ox</option>
+
+						</select>
+					</div>
+					按合约
+					<div class="form-group">
+						<select id="bs3Select" class="selectpicker show-tick form-control" multiple data-live-search="true">
+							<option selected>cow111111</option>
+							<option>bull1111</option>
+							<option class="get-class" disabled>ox</option>
+						</select>
+					</div>
+					按代理人
+					<div class="form-group">
+						<select class="form-control" name="">
+							<option value="">11111</option>
+						</select>
+					</div>
+					按客户
+					<div class="form-group">
+						<select class="form-control" name="">
+							<option value="">11111</option>
+						</select>
+					</div>
+					<button class="btn btn-primary">搜索</button>
+				</div>
+				<!--<div class="tip bg-warning">
+					注意
+				</div>-->
+				<div class="table-case">
+					<div class="table-title"><span class="glyphicon glyphicon-user"></span>客户列表</div>
+					<div class="tab">
+						<table id="table"></table>
+					</div>
+				</div>
+			</div>
+		</div>
+		<!-- 注意：如果你直接复制所有代码到本地，上述js路径需要改成你本地的 -->
+		<script type="text/javascript">
+		//	table_Id, method, url, unique_Id, sortOrder, columns
+			var tableId ="#table";
+			var method = "post";
+			var url_  ="demo.json";
+			var unique_Id = "id";
+			var sortOrder = "asc";
+			var columns = [{
+						title: '全选',
+						field: 'select',
+						//复选框
+						checkbox: true,
+						
+						align: 'center',
+						valign: 'middle'
+					},
+					{
+						field: 'id',
+						title: 'ID'
+					},
+					{
+						field: 'name',
+						title: '名字'
+					}, {
+						field: 'stargazers_count',
+						title: '隨便'
+					}, {
+						field: 'forks_count',
+						title: '總數'
+					},
+					{
+						field: 'ID',
+						title: '操作',
+						
+						align: 'center',
+						valign: 'middle',
+						formatter: actionFormatter
+					},
+				];
+			
+			$(function(){
+				showByTableId(tableId,method,url_,unique_Id,sortOrder,columns);
+			})
+			//根据窗口调整表格高度
+			$(window).resize(function() {
+				$('#table').bootstrapTable('resetView', {
+					height: tableHeight()
+				})
+			})
+
+			
+				
+			
+			//三个参数，value代表该列的值
+			function operateFormatter(value, row, index) {
+				if(value == 2) {
+					return '<i class="fa fa-lock" style="color:red"></i>'
+				} else if(value == 1) {
+					return '<i class="fa fa-unlock" style="color:green"></i>'
+				} else {
+					return '数据错误'
+				}
+			}
+			//请求服务数据时所传参数
+			function queryParams(params) {
+				return {
+					//每页多少条数据
+					pageSize: params.limit,
+					//请求第几页
+					pageIndex: params.pageNumber,
+					Name: $('#search_name').val(),
+					Tel: $('#search_tel').val()
+				}
+			}
+			//查询事件  
+			function SearchData() {
+				$(tableId).bootstrapTable('refresh', {
+					pageNumber: 1
+				});
+			}
+			//tableHeight函数
+			function tableHeight() {
+				//可以根据自己页面情况进行调整
+				return $(window).height() - 280;
+			}
+			//查询按钮事件
+			$('#search_btn').click(function() {
+				$(tableId).bootstrapTable('refresh', {
+					url: 'Jsion/demo.json'
+				});
+			})
+				
+			//操作栏的格式化
+			function actionFormatter(value, row, index) {
+				var id = row.id;
+				var result = "";
+				var editUrl ="page/clientUser/client-edit.html";
+				var edit_w = 600;
+				var edit_h = 400;
+				var details = "查看明細";
+				result += "<a href='javascript:;' class='btn btn-xs green' onclick=\"EditViewById('" + id + "', view='view','"+editUrl+"','"+edit_w+"','"+edit_h+"')\" title='查看明細'><span class='glyphicon glyphicon-search'></span></a>";
+				result += "<a href='javascript:;' class='btn btn-xs green' onclick=\"EditViewById('" + id + "', view='view','"+editUrl+"','"+edit_w+"','"+edit_h+"')\" title='修改'><span class='glyphicon glyphicon-search'></span></a>";
+				result += "<a href='javascript:;' class='btn btn-xs red' onclick=\"DeleteByIds('" + id + "')\" title='删除'><span class='glyphicon glyphicon-remove'></span></a>";
+
+				return result;
+			}
+	
+
+function delAll(){
+	BtchDeleteBook("table",url)));
+}
+//			//批量删除  
+//			function BtchDeleteBook() {
+//				var opts = $('tableId).bootstrapTable('getSelections');
+//				if(opts == "") {
+//					alert("请选择要删除的数据");
+//				} else {
+//					var idArray = [];
+//					for(var i = 0; i < opts.length; i++) {
+//						idArray.push(opts[i].BookId);
+//					}
+//					if(confirm("确定要删除吗：" + idArray + "吗？")) {
+//						alert("执行删除操作");
+//					}
+//				}
+//			}
+
+			function DeleteByIds(id) {
+				alert(id);
+			}
+		</script>
+		<script src="js/common.js"></script>
+	</body>
+
+</html>
