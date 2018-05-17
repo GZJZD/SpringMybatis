@@ -26,10 +26,10 @@ public abstract class StrategyGenerateUtil {
         Variety variety=new Variety(1L,"黄金","XAUUSD.e");
         strategy.setVariety(variety);
         //设计状态
-        strategy.setStatus(Strategy.STRATEGY_STATUS_NO);
+        strategy.setStatus(StatusUtil.STRATEGY_STOP.getIndex());
         //设计平台的跟单参数,反向跟单,净头寸每变化10手跟1手
-        DocumentaryParameters documentaryParameters = new DocumentaryParameters(1L,DocumentaryParameters.
-                STRATEGY_TYPE_NO,10,1,1,null,null,0,0,0,-20.0,2,DocumentaryParameters.TRADE_STATUS_YES);
+        DocumentaryParameters documentaryParameters = new DocumentaryParameters(1L,StatusUtil.DIRECTION_REVERSE.getIndex(),10,1,1,
+                null,null,0,0,0,-20.0,2,StatusUtil.TRADING_PAUSE.getIndex());
         strategy.setDocumentaryParameters(documentaryParameters);
 
         return strategy;

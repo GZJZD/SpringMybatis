@@ -24,7 +24,7 @@ public class MyThread  extends Thread{
     private static int timeNum = 0;
     public static final String TEST_TCP = "192.168.3.176";
     public static final String DEV_TCP = "116.62.195.204";
-    public static final String ip = "192.168.3.183";
+    public static final String ip = "192.168.3.119";
     public static final Integer port = 12000;
     public MyThread(){
 
@@ -117,7 +117,7 @@ public class MyThread  extends Thread{
             socket = new Socket();
             SocketAddress socketAddress = new InetSocketAddress(ip, 12000);
             //数据接收的响应时间设置
-            socket.setSoTimeout(10000);
+          //  socket.setSoTimeout(10000);
             socket.connect(socketAddress,10000); // 连接超时限制在5秒
             //       otherSocket.setSoTimeout(1000 * timeOutSecond);//设置读操作超时时间5到180秒
 

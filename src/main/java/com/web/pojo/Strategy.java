@@ -14,9 +14,6 @@ import java.util.Date;
 
 public class Strategy implements Serializable {
 
-    public static final int STRATEGY_STATUS_YES=1;//策略启动
-    public static final int STRATEGY_STATUS_NO=0;//策略不启动
-
     private Long id;
     //数据源平台
     private CustomerPlatform customerPlatform;
