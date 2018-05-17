@@ -6,7 +6,7 @@ import com.web.pojo.vo.OrderDealData;
 import com.web.service.*;
 import com.web.util.DoubleUtil;
 import com.web.util.StatusUtil;
-import com.web.util.StrategyGenerateUtil;
+import com.web.util.TacticsGenerateUtil;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -23,12 +23,12 @@ import java.util.List;
 @Service
 @Transactional
 @SuppressWarnings("All")
-public class CheckStrategyServiceImpl implements ICheckStrategyService {
+public class CheckTacticsServiceImpl implements ICheckTacticsService {
     //死策略
-    private Strategy strategy = StrategyGenerateUtil.getStrategy();
+    private Tactics Tactics = TacticsGenerateUtil.getTactics();
     //大于就是正数，小于就是负数
     private  int zero = 0 ;
-    private static Logger log = Logger.getLogger(CheckStrategyServiceImpl.class.getName());
+    private static Logger log = Logger.getLogger(CheckTacticsServiceImpl.class.getName());
     @Autowired
     private IDealDataService dealDataService ;
 
@@ -42,24 +42,24 @@ public class CheckStrategyServiceImpl implements ICheckStrategyService {
     private ITradeHistoryService tradeHistoryService;//交易历史对象
 
     @Override
-    public Strategy getStrategy() {
+    public Tactics getTactics() {
 
-        return strategy;
+        return Tactics;
     }
 
     @Override
     public void judgingOrderConditions(DealData data) {
-        if (data.getVarietyCode().equals(strategy.getVariety().getVarietyCode())) {
+        if (data.getVarietyCode().equals(Tactics.getVariety().getVarietyCode())) {
             //判断是否登录了
-            checkLogin(strategy);
+            checkLogin(Tactics);
             //获取策略的跟单参数
-            DocumentaryParameters documentaryParameters = strategy.getDocumentaryParameters();
+            DocumentaryParameters documentaryParameters = Tactics.getDocumentaryParameters();
             //判断策略的状态是否在交易中,不在交易就进行判断
             if (documentaryParameters.getStatus().equals(StatusUtil.TRADING_PAUSE.getIndex())) {
                 //创建交易对象
                 OrderDealData orderDealData = new OrderDealData();
                 //设置交易对象的交易账号
-                orderDealData.setDealAccount(strategy.getAccount().getUsername());
+                orderDealData.setDealAccount(Tactics.getAccount().getUsername());
 
                 //获取现有的净头寸
                 Double headNum = documentaryParameters.getHeadNum();
@@ -100,7 +100,7 @@ public class CheckStrategyServiceImpl implements ICheckStrategyService {
                         //创建跟单明细
                         DocumentaryDetailedData detailedData = new DocumentaryDetailedData();
                         //跟单明细的品种
-                        detailedData.setVarietyCode(strategy.getVariety().getVarietyCode());
+                        detailedData.setVarietyCode(Tactics.getVariety().getVarietyCode());
                         //设置跟单明细的净头寸
                         detailedData.setLogin(headNum + "");
                         //本次应该下单的数量
@@ -138,7 +138,7 @@ public class CheckStrategyServiceImpl implements ICheckStrategyService {
                                 //创建交易对象
                                 OrderDealData orderDealDataClose = new OrderDealData();
                                 //设置交易对象的交易账号
-                                orderDealDataClose.setDealAccount(strategy.getAccount().getUsername());
+                                orderDealDataClose.setDealAccount(Tactics.getAccount().getUsername());
                                 SendMsgByTrade(orderDealDataClose,StatusUtil.SELL.getIndex(),StatusUtil.CLOSE.getIndex(),
                                         (double) Math.abs(holdNum),data,null,documentaryParameters);
                             }
@@ -166,7 +166,7 @@ public class CheckStrategyServiceImpl implements ICheckStrategyService {
                                 //创建交易对象
                                 OrderDealData orderDealDataClose = new OrderDealData();
                                 //设置交易对象的交易账号
-                                orderDealDataClose.setDealAccount(strategy.getAccount().getUsername());
+                                orderDealDataClose.setDealAccount(Tactics.getAccount().getUsername());
                                 SendMsgByTrade(orderDealDataClose,StatusUtil.BUY.getIndex(),StatusUtil.CLOSE.getIndex(),
                                         (double) Math.abs(holdNum),data,null,documentaryParameters);
 
@@ -212,13 +212,13 @@ public class CheckStrategyServiceImpl implements ICheckStrategyService {
      *@param
      *@Date: 12:12 2zero18/5/1zero
      */
-    private void checkLogin(Strategy strategy){
-        if (strategy.getStatus().equals(StatusUtil.STRATEGY_STOP.getIndex())) {
-            Account account = strategy.getAccount();
+    private void checkLogin(Tactics Tactics){
+        if (Tactics.getStatus().equals(StatusUtil.Tactics_STOP.getIndex())) {
+            Account account = Tactics.getAccount();
             //发送MQ去登录
             tradeMsgService.login(account);
             //设计启动
-            strategy.setStatus(StatusUtil.STRATEGY_START.getIndex());
+            Tactics.setStatus(StatusUtil.Tactics_START.getIndex());
         }
     }
     /**
@@ -257,7 +257,7 @@ public class CheckStrategyServiceImpl implements ICheckStrategyService {
     private void SendMsgByTrade(OrderDealData orderDealData,Integer cmd,Integer OpenClose,
                                 Double counts,DealData data,Long detailedDataId,DocumentaryParameters documentaryParameters){
         TradeHistory tradeHistory = new TradeHistory();
-        tradeHistory.setVarietyCode(strategy.getVariety().getVarietyCode());//商品
+        tradeHistory.setVarietyCode(Tactics.getVariety().getVarietyCode());//商品
         tradeHistory.setOpenClose(OpenClose);//开仓
         tradeHistory.setCmd(cmd);//多空
         tradeHistory.setCounts(counts);//手数

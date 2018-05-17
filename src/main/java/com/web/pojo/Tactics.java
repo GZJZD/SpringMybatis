@@ -12,7 +12,7 @@ import java.util.Date;
  * 2017年12月23日上午1:11:29
  */
 
-public class Strategy implements Serializable {
+public class Tactics implements Serializable {
 
     private Long id;
     //数据源平台

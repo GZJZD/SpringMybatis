@@ -2,7 +2,7 @@ package com.web.tcp;
 
 import com.alibaba.fastjson.JSON;
 import com.web.pojo.DealData;
-import com.web.service.ICheckStrategyService;
+import com.web.service.ICheckTacticsService;
 import com.web.tcp.service.DataParserService;
 import com.web.util.ApplicationContextHolder;
 import org.apache.log4j.Logger;
@@ -21,9 +21,9 @@ public class DataParserServiceImpl implements DataParserService,Runnable{
     private String socketData;
     private String platformName;
 
-    private ICheckStrategyService
-            checkStrategyService = (ICheckStrategyService) ApplicationContextHolder
-            .getBeanByName("checkStrategyServiceImpl");
+    private ICheckTacticsService
+            checkTacticsService = (ICheckTacticsService) ApplicationContextHolder
+            .getBeanByName("checkTacticsServiceImpl");
 
 
     private static Logger log = Logger.getLogger(DataParserServiceImpl.class.getName());
@@ -83,7 +83,7 @@ public class DataParserServiceImpl implements DataParserService,Runnable{
     public void run() {
         //构造下单数据
         DealData dealData = constructor(socketData);
-        checkStrategyService.judgingOrderConditions(dealData);
+        checkTacticsService.judgingOrderConditions(dealData);
     }
 
 

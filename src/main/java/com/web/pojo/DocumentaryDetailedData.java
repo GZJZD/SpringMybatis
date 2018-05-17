@@ -35,7 +35,7 @@ public class DocumentaryDetailedData {
     //跟单是否成功
     private Integer status;
     //策略的id,品种从策略里面取出,后期数据库进行关联
-    // private Strategy strategy;
+    // private Tactics Tactics;
     //剩余的手数
     private Double leftoverCounts;
     //已经平仓过的盈亏,要等交易系统把价格传过来才知道

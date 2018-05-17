@@ -2,20 +2,20 @@ package com.web.service;
 
 
 import com.web.pojo.DealData;
-import com.web.pojo.Strategy;
+import com.web.pojo.Tactics;
 import com.web.pojo.vo.OrderDealData;
 
 /**
  * 净头寸的策略判断
  * Created by may on 2018/5/8.
  */
-public interface ICheckStrategyService {
+public interface ICheckTacticsService {
     /** 返回策略
      *@Author: May
      *@param
      *@Date: 12:48 2018/5/8
      */
-     Strategy getStrategy();
+     Tactics getTactics();
 
     /**
      * 判断下单条件
