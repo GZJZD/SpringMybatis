@@ -2,7 +2,7 @@ package com.web.service;
 
 
 import com.web.pojo.Account;
-import com.web.pojo.vo.OrderDealData;
+import com.web.pojo.vo.OrderParameter;
 
 /**
  * 此类用于发送消息到交易系统
@@ -32,7 +32,7 @@ public interface ITradeMsgService {
      *@param
      *@Date: 14:19 2018/4/25
      */
-    public void addOrder(OrderDealData orderDealData);
+    public void addOrder(OrderParameter orderParameter);
 
     /**
      * 撤单

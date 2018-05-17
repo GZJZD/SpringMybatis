@@ -6,7 +6,7 @@ import java.util.Date;
  * Created by may on 2018/4/23.
  * 跟单明细数据
  */
-public class DocumentaryDetailedData {
+public class DocumentaryDetail {
     public static final int DETAILED_STATUS_NO=0;//跟单失败
     public static final int DETAILED_STATUS_YES=1;//跟单成功
     private Long id;

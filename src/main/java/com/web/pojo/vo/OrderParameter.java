@@ -10,7 +10,7 @@ import java.io.Serializable;
  *@Date: 21:16 2018/4/23
  */
 
-public class OrderDealData implements Serializable{
+public class OrderParameter implements Serializable{
     //交易账号
     private String dealAccount;
     //交易手数

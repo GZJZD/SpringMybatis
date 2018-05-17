@@ -1,15 +1,15 @@
 package com.web.service;
 
 
-import com.web.pojo.DealData;
+import com.web.pojo.DataSource;
 import com.web.pojo.Tactics;
-import com.web.pojo.vo.OrderDealData;
+import com.web.pojo.vo.OrderParameter;
 
 /**
- * 净头寸的策略判断
+ * 跟单模块
  * Created by may on 2018/5/8.
  */
-public interface ICheckTacticsService {
+public interface IMoinitorService {
     /** 返回策略
      *@Author: May
      *@param
@@ -18,10 +18,10 @@ public interface ICheckTacticsService {
      Tactics getTactics();
 
     /**
-     * 判断下单条件
+     * 实现交易逻辑
      *@Author: May
      *@param data
      *@Date: 14:24 2018/4/23
      */
-    public void judgingOrderConditions(DealData data);
+    public void madeAnOrder(DataSource data);
 }
