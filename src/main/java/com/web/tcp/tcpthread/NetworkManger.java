@@ -1,18 +1,16 @@
 package com.web.tcp.tcpthread;
 
-import com.web.tcp.DealServiceImpl;
+import com.web.tcp.DataParserServiceImpl;
 import com.web.tcp.PlatformSocket;
 import com.web.tcp.ThreadPoolUtil;
 import org.apache.log4j.Logger;
 
 import java.io.*;
 import java.net.*;
-import java.util.LinkedList;
-import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-public class MyThread  extends Thread{
+public class NetworkManger extends Thread{
     //由香港提供的数据是固定以HEAD;开头的
     private Pattern compile = Pattern.compile("HEAD;");
     //一条完整的交易数据的分号数量是11个
@@ -26,7 +24,7 @@ public class MyThread  extends Thread{
     public static final String DEV_TCP = "116.62.195.204";
     public static final String ip = "192.168.3.119";
     public static final Integer port = 12000;
-    public MyThread(){
+    public NetworkManger(){
 
     }
 
@@ -68,7 +66,7 @@ public class MyThread  extends Thread{
                             //System.out.println(sBuilder.toString());
                             //完成一次交易数据的监听,将数据交于其他线程处理
 //                             madeOrderThreadPool.execute(new DealServiceImpl(sBuilder.toString(),platformSocket.getPlatformName()));
-                            ThreadPoolUtil.getInstance().getThreadPoole().execute(new DealServiceImpl(sBuilder.toString(), "DZ"));
+                            ThreadPoolUtil.getInstance().getThreadPoole().execute(new DataParserServiceImpl(sBuilder.toString(), "DZ"));
                             semicolons = 0;
                             sBuilder.delete(0, sBuilder.length());
                         }
@@ -80,7 +78,7 @@ public class MyThread  extends Thread{
         } catch (SocketTimeoutException e){
             System.out.println("服务器连接超时,重新连接ing");
             int startTime = 5000;
-            MyThread myThread = new MyThread();
+            NetworkManger networkManger = new NetworkManger();
             try {
                 if (socket != null) {
                     socket.close();
@@ -88,7 +86,7 @@ public class MyThread  extends Thread{
                 }
 
                 sleep(startTime);
-                myThread.run();
+                networkManger.run();
                 System.out.println("服务器重启完成");
             } catch (InterruptedException e1) {
                 e1.printStackTrace();
@@ -125,12 +123,12 @@ public class MyThread  extends Thread{
             e.printStackTrace();
             timeNum += 2;
             connectOk = false;
-            Logger.getLogger(MyThread.class).error("连接超时," + timeNum + "秒后进行重连");
+            Logger.getLogger(NetworkManger.class).error("连接超时," + timeNum + "秒后进行重连");
         }
         catch (ConnectException e) {
             connectOk = false;
             e.printStackTrace();
-            Logger.getLogger(MyThread.class).error("连接失败" + timeNum + "秒后进行重连");
+            Logger.getLogger(NetworkManger.class).error("连接失败" + timeNum + "秒后进行重连");
         } catch (IOException e) {
             connectOk = false;
             e.printStackTrace();

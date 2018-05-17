@@ -4,8 +4,6 @@ package com.web.imp;
 import com.web.pojo.*;
 import com.web.pojo.vo.OrderDealData;
 import com.web.service.*;
-import com.web.tcp.DealServiceImpl;
-import com.web.util.ApplicationContextHolder;
 import com.web.util.DoubleUtil;
 import com.web.util.StatusUtil;
 import com.web.util.StrategyGenerateUtil;
