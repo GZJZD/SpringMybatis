@@ -1,6 +1,6 @@
 package com.web.tcp;
 
-import com.web.tcp.tcpthread.MyThread;
+import com.web.tcp.tcpthread.NetworkManger;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.PostConstruct;
@@ -17,7 +17,7 @@ public class TcpConfig {
 
         @PostConstruct
         public static void init(){
-            MyThread thread = new MyThread();
+            NetworkManger thread = new NetworkManger();
 
             thread.start();
         }

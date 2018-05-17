@@ -3,8 +3,7 @@ package com.web.tcp;
 import com.alibaba.fastjson.JSON;
 import com.web.pojo.DealData;
 import com.web.service.ICheckStrategyService;
-import com.web.service.IDealDataService;
-import com.web.tcp.service.DealService;
+import com.web.tcp.service.DataParserService;
 import com.web.util.ApplicationContextHolder;
 import org.apache.log4j.Logger;
 
@@ -17,7 +16,7 @@ import java.util.Date;
  *
  * 2018年1月5日下午8:30:59
  */
-public class DealServiceImpl implements DealService,Runnable{
+public class DataParserServiceImpl implements DataParserService,Runnable{
 
     private String socketData;
     private String platformName;
@@ -27,9 +26,9 @@ public class DealServiceImpl implements DealService,Runnable{
             .getBeanByName("checkStrategyServiceImpl");
 
 
-    private static Logger log = Logger.getLogger(DealServiceImpl.class.getName());
+    private static Logger log = Logger.getLogger(DataParserServiceImpl.class.getName());
 
-    public DealServiceImpl(String socketData, String platformName) {
+    public DataParserServiceImpl(String socketData, String platformName) {
         this.socketData = socketData;
         this.platformName = platformName;
     }
@@ -87,28 +86,5 @@ public class DealServiceImpl implements DealService,Runnable{
         checkStrategyService.judgingOrderConditions(dealData);
     }
 
-//    @Override
-//    public void run() {
-//        //构造下单数据
-//        DealData dealData = constructor(socketData);
-//        //是否需要下单 TODO 判断卖出的是否还要数量
-//        //Boolean needAnOrder = needAnOrder(dealData);
-//        //下单
-//		/*if(needAnOrder) {
-//			madeAnOrder(dealData);
-//		}*/
-//        OrderDealData orderDealData = judgementStrategyServiceImpl.getOrderDealData(dealData);
-//        System.out.println(orderDealData);
-//        log.info(orderDealData.toString());
-//        // log.info(judgementStrategyServiceImpl.getCustomerDataVOByKey("xiaoXAUUSD.eDZ").toString());
-//        //List<DocumentaryDetailedData> detailedDataByKey = judgementStrategyServiceImpl.getDocumentaryDetailedDataByKey("xiaoXAUUSD.eDZ");
-//	/*	for (DocumentaryDetailedData detailedData : detailedDataByKey) {
-//			System.out.println(detailedData.toString());
-//		}
-//		for (CustomerDataVO customerDataVO : judgementStrategyServiceImpl.getCustomerDataVOByKey("xiaoXAUUSD.eDZ")) {
-//			System.out.println(customerDataVO.toString());
-//		}*/
-//
-//    }
 
 }

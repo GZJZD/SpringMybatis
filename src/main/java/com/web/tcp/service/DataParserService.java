@@ -8,7 +8,7 @@ import com.web.pojo.DealData;
  *
  * 2018年1月4日上午12:10:52
  */
-public interface DealService {
+public interface DataParserService {
     /**
      * 构造交易数据实体对象
      * @param dealMsg
