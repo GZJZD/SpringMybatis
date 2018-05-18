@@ -8,7 +8,7 @@ import java.util.Date;
         * 2018年1月4日上午12:13:54
         */
 
-public class DealData {
+public class DataSource {
 
     //头
     private String head;
@@ -33,6 +33,8 @@ public class DealData {
     private Integer openClose;
     //平仓盈亏
     private Double profit;
+    //数据源的平台
+    private String platformName;
 
 
     //set,get...
@@ -108,9 +110,17 @@ public class DealData {
         this.createTime = createTime;
     }
 
+    public String getPlatformName() {
+        return platformName;
+    }
+
+    public void setPlatformName(String platformName) {
+        this.platformName = platformName;
+    }
+
     @Override
     public String toString() {
-        return "DealData{" +
+        return "DataSource{" +
                 "head='" + head + '\'' +
                 ", login='" + login + '\'' +
                 ", openOrderNum='" + openOrderNum + '\'' +
@@ -122,6 +132,7 @@ public class DealData {
                 ", cmd=" + cmd +
                 ", openClose=" + openClose +
                 ", profit=" + profit +
+                ", platformName='" + platformName + '\'' +
                 '}';
     }
 }

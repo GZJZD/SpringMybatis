@@ -1,14 +1,14 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
-<mapper namespace="com.web.dao.DocumentaryDetailedDataMapper">
-    <insert id="insert" parameterType="com.web.pojo.DocumentaryDetailedData" useGeneratedKeys="true"  keyProperty="id">
-       insert into documentaryDetailedData (login, varietyCode, cmd, counts, openPrice, openTime, closePrice,
+<mapper namespace="com.web.dao.DocumentaryDetailMapper">
+    <insert id="insert" parameterType="com.web.pojo.DocumentaryDetail" useGeneratedKeys="true"  keyProperty="id">
+       insert into documentaryDetail (login, varietyCode, cmd, counts, openPrice, openTime, closePrice,
       closeTime, poundage, status, leftoverCounts, alreadyProfit)
     values (#{login}, #{varietyCode}, #{cmd}, #{counts}, #{openPrice}, #{openTime}, #{closePrice},
       #{closeTime}, #{poundage}, #{status}, #{leftoverCounts}, #{alreadyProfit})
     </insert>
-    <update id="updateByPrimaryKey" parameterType="com.web.pojo.DocumentaryDetailedData">
-   update documentaryDetailedData
+    <update id="updateByPrimaryKey" parameterType="com.web.pojo.DocumentaryDetail">
+   update documentaryDetail
      set login = #{login},
       varietyCode = #{varietyCode},
       cmd = #{cmd},
@@ -24,18 +24,18 @@
     where id = #{id}
     </update>
     <delete id="deleteByPrimaryKey" parameterType="Long">
-        delete from documentaryDetailedData where id = #{id}
+        delete from documentaryDetail where id = #{id}
     </delete>
-    <select id="selectAll" resultType="com.web.pojo.DocumentaryDetailedData">
+    <select id="selectAll" resultType="com.web.pojo.DocumentaryDetail">
         SELECT id, login, varietyCode, cmd, counts, openPrice, openTime, closePrice, closeTime,
     poundage, status, leftoverCounts, alreadyProfit
-    FROM documentaryDetailedData
+    FROM documentaryDetail
     </select>
 
-    <select id="selectDataByASC" resultType="com.web.pojo.DocumentaryDetailedData">
+    <select id="selectDataByASC" resultType="com.web.pojo.DocumentaryDetail">
         select id, login, varietyCode, cmd, counts, openPrice, openTime, closePrice, closeTime,
         poundage, status, leftoverCounts, alreadyProfit,newOpenOrderNum
-        from  DocumentaryDetailedData
+        from  DocumentaryDetail
         where closeTime is null  order by openTime asc
     </select>
 </mapper>

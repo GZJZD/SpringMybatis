@@ -20,20 +20,36 @@ public class NetworkManger extends Thread{
     private static Socket socket = null;
     //时间间隔
     private static int timeNum = 0;
-    public static final String TEST_TCP = "192.168.3.176";
-    public static final String DEV_TCP = "116.62.195.204";
-    public static final String ip = "192.168.3.119";
-    public static final Integer port = 12000;
-    public NetworkManger(){
+    //平台名字
+    private String platformName;
+    //ip
+    private  String ip ;
+    //端口
+    private Integer port;
 
+    public NetworkManger(String ip,Integer port,String platformName){
+        this.ip=ip;
+        this.port=port;
+        this.platformName = platformName;
     }
 
     @Override
     public void run() {
 
         // 与服务端建立连接
+        ConnectToServerByTcp();
+        //接收数据
+        receiveData();
+    }
+
+
+    /**
+     * 接收tcp的数据
+     *@Author: May
+     *@Date: 16:55 2018/5/17
+     */
+    public void receiveData(){
         try {
-             ConnectToServerByTcp();
             InputStream inputStream = socket.getInputStream();
             int content = -1;
             //用来装载数据
@@ -66,7 +82,7 @@ public class NetworkManger extends Thread{
                             //System.out.println(sBuilder.toString());
                             //完成一次交易数据的监听,将数据交于其他线程处理
 //                             madeOrderThreadPool.execute(new DealServiceImpl(sBuilder.toString(),platformSocket.getPlatformName()));
-                            ThreadPoolUtil.getInstance().getThreadPoole().execute(new DataParserServiceImpl(sBuilder.toString(), "DZ"));
+                            ThreadPoolUtil.getInstance().getThreadPoole().execute(new DataParserServiceImpl(sBuilder.toString(), platformName));
                             semicolons = 0;
                             sBuilder.delete(0, sBuilder.length());
                         }
@@ -78,7 +94,7 @@ public class NetworkManger extends Thread{
         } catch (SocketTimeoutException e){
             System.out.println("服务器连接超时,重新连接ing");
             int startTime = 5000;
-            NetworkManger networkManger = new NetworkManger();
+            NetworkManger networkManger = new NetworkManger(ip,port,platformName);
             try {
                 if (socket != null) {
                     socket.close();
@@ -98,22 +114,16 @@ public class NetworkManger extends Thread{
             e.printStackTrace();
             System.out.println("error lest");
         }
-
-
     }
 
 
-
-
-
-
-    public static Socket ConnectToServerByTcp() {
+    public  Socket ConnectToServerByTcp() {
 // 建立通讯连接
         boolean connectOk = true;
         try {
             // 创建一个流套接字并将其连接到指定主机上的指定端口号
             socket = new Socket();
-            SocketAddress socketAddress = new InetSocketAddress(ip, 12000);
+            SocketAddress socketAddress = new InetSocketAddress(ip, port);
             //数据接收的响应时间设置
           //  socket.setSoTimeout(10000);
             socket.connect(socketAddress,10000); // 连接超时限制在5秒
