@@ -30,4 +30,11 @@
         where id=#{id}
     </select>
 
+
+    <select id="findAll"
+            resultType="com.web.pojo.Test">
+        select * from users
+
+    </select>
+
 </mapper>
