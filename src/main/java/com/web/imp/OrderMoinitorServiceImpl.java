@@ -23,18 +23,17 @@ import java.util.List;
 @Service
 @Transactional
 @SuppressWarnings("All")
-public class MoinitorServiceImpl implements IMoinitorService {
+public class OrderMoinitorServiceImpl implements IOrderMoinitorService {
     //死策略
     private Tactics Tactics = TacticsGenerateUtil.getTactics();
     //大于就是正数，小于就是负数
     private  int zero = 0 ;
-    private static Logger log = Logger.getLogger(MoinitorServiceImpl.class.getName());
-    @Autowired
-    private IDataSourceService dataSourceService ;
+    private static Logger log = Logger.getLogger(OrderMoinitorServiceImpl.class.getName());
+
 
     //发送MQ
   //  @Autowired
-    private ITradeMsgService tradeMsgService;
+    private IOrderTraderService orderTraderService;
 
     @Autowired
     private IDocumentaryDetailService documentaryDetailService;//跟单明细的service
@@ -42,9 +41,9 @@ public class MoinitorServiceImpl implements IMoinitorService {
     private ITradeHistoryService tradeHistoryService;//交易历史对象
 
     @Override
-    public Tactics getTactics() {
+    public List<Tactics> getTactics() {
 
-        return Tactics;
+        return null;
     }
 
     @Override
@@ -78,7 +77,6 @@ public class MoinitorServiceImpl implements IMoinitorService {
                         headNum = DoubleUtil.sub(headNum, data.getCounts());
 
                     }
-                    System.out.println("净头寸的值为："+headNum);
                     //修改净头寸的值
                     documentaryParameters.setHeadNum(headNum);
                     //应持仓多少手
@@ -201,22 +199,16 @@ public class MoinitorServiceImpl implements IMoinitorService {
                 }
             }
         }
-        //新增一条tcp数据
-        dataSourceService.insert(data);
     }
 
 
 
-    /**判断该账号是否登录了
-     *@Author: May
-     *@param
-     *@Date: 12:12 2zero18/5/1zero
-     */
-    private void checkLogin(Tactics Tactics){
+
+    public void checkLogin(Tactics Tactics){
         if (Tactics.getStatus().equals(StatusUtil.Tactics_STOP.getIndex())) {
             Account account = Tactics.getAccount();
             //发送MQ去登录
-            tradeMsgService.login(account);
+            orderTraderService.login(account);
             //设计启动
             Tactics.setStatus(StatusUtil.Tactics_START.getIndex());
         }
@@ -279,7 +271,7 @@ public class MoinitorServiceImpl implements IMoinitorService {
         checkPoint(documentaryParameters, orderParameter);
         orderParameter.setDetailedId(documentaryDetailId);
         //发送交易请求
-        tradeMsgService.addOrder(orderParameter);
+        orderTraderService.addOrder(orderParameter);
         log.info("发送一条交易信息："+orderParameter.toString());
     }
     /**

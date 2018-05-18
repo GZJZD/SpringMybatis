@@ -15,8 +15,6 @@ import java.util.Date;
 public class Tactics implements Serializable {
 
     private Long id;
-    //数据源平台
-    private CustomerPlatform customerPlatform;
     //品种
     private Variety variety;
     //交易账号
@@ -42,13 +40,6 @@ public class Tactics implements Serializable {
         this.id = id;
     }
 
-    public CustomerPlatform getCustomerPlatform() {
-        return customerPlatform;
-    }
-
-    public void setCustomerPlatform(CustomerPlatform customerPlatform) {
-        this.customerPlatform = customerPlatform;
-    }
 
     public Variety getVariety() {
         return variety;

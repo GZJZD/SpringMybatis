@@ -5,8 +5,8 @@ import com.alibaba.fastjson.JSON;
 import com.web.pojo.Account;
 import com.web.pojo.vo.OrderParameter;
 
-import com.web.service.IProducerService;
-import com.web.service.ITradeMsgService;
+import com.web.service.IOrderTraderService;
+import com.web.service.IProducerMsgService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -17,25 +17,25 @@ import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @Transactional
-public class TradeMsgServiceImpl implements ITradeMsgService {
+public class OrderTraderServiceImpl implements IOrderTraderService {
 
     @Autowired
-    private IProducerService producerService;
+    private IProducerMsgService producerMsgService;
 
 
     @Override
     public void login(Account account) {
-        producerService.sendMessage(JSON.toJSONString(account));
+        producerMsgService.sendMessage(JSON.toJSONString(account));
     }
 
     @Override
     public void loginOut(Account account) {
-        producerService.sendMessage(JSON.toJSONString(account));
+        producerMsgService.sendMessage(JSON.toJSONString(account));
     }
 
     @Override
     public void addOrder(OrderParameter orderParameter) {
-        producerService.sendMessage(JSON.toJSONString(orderParameter));
+        producerMsgService.sendMessage(JSON.toJSONString(orderParameter));
 
     }
 

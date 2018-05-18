@@ -16,8 +16,7 @@ public abstract class TacticsGenerateUtil {
     public static Tactics getTactics(){
         Tactics Tactics =new Tactics();
         Tactics.setId(1L);
-        CustomerPlatform customerPlatform = new CustomerPlatform(1L,"DZ");
-        Tactics.setCustomerPlatform(customerPlatform);
+
         TradePlatform tradePlatform = new TradePlatform(1L,"EF");
         //设计交易账号
         Account account = new Account(1L,"xiao","123",tradePlatform);

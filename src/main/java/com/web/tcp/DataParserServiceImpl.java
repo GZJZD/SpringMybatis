@@ -2,11 +2,14 @@ package com.web.tcp;
 
 import com.alibaba.fastjson.JSON;
 import com.web.pojo.DataSource;
-import com.web.service.IMoinitorService;
+import com.web.service.IOrderMoinitorService;
 import com.web.tcp.service.DataParserService;
 import com.web.util.ApplicationContextHolder;
 import org.apache.log4j.Logger;
 
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileWriter;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
@@ -20,9 +23,11 @@ public class DataParserServiceImpl implements DataParserService,Runnable{
 
     private String socketData;
     private String platformName;
-    private IMoinitorService
-            moinitorService = (IMoinitorService) ApplicationContextHolder
-            .getBeanByName("moinitorServiceImpl");
+    private IOrderMoinitorService
+            orderMoinitorService = (IOrderMoinitorService) ApplicationContextHolder
+            .getBeanByName("orderMoinitorServiceImpl");
+    private static String path = "E:/tcpData/";
+
 
     private static Logger log = Logger.getLogger(DataParserServiceImpl.class.getName());
 
@@ -32,7 +37,7 @@ public class DataParserServiceImpl implements DataParserService,Runnable{
     }
 
     @Override
-    public DataSource constructor(String dealMsg) {
+    public synchronized DataSource constructor(String dealMsg) {
         String[] splitArr = dealMsg.split(";");
         int index = 0;
         System.out.println(splitArr);
@@ -52,6 +57,7 @@ public class DataParserServiceImpl implements DataParserService,Runnable{
             dataSource.setOpenClose(Integer.parseInt(splitArr[index++]));//开平
             dataSource.setProfit(Double.parseDouble(splitArr[index++]));//平仓盈亏
             dataSource.setPlatformName(this.platformName);
+            createFile(dealMsg);
             log.info("接收到一条来自TCP的数据："+ JSON.toJSONString(dataSource));
 
         }catch (Exception e) {
@@ -67,7 +73,32 @@ public class DataParserServiceImpl implements DataParserService,Runnable{
     public void run() {
         //构造下单数据
         DataSource dataSource = constructor(socketData);
-        moinitorService.madeAnOrder(dataSource);
+        orderMoinitorService.madeAnOrder(dataSource);
+    }
+    /**
+     * 按天创建文件
+     *@Author: May
+     *@param
+     *@Date: 14:10 2018/5/18
+     */
+    public  void createFile(String tcpData)throws Exception{
+        Date date = new Date();
+        String fileName=path+new SimpleDateFormat("yyyyMMdd").format(date);
+        //如果不存在,创建文件夹
+        File f = new File(fileName);
+        if(!f.exists()){
+            f.createNewFile();
+        }
+        try {
+            FileWriter fw = new FileWriter(f, true);
+            BufferedWriter bw = new BufferedWriter(fw);
+            bw.append(tcpData);
+            bw.newLine();
+            bw.close();
+            fw.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
 

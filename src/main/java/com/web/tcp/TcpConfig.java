@@ -19,10 +19,13 @@ public class TcpConfig {
         public List<String> phoneBlacklist = new ArrayList<String>();
         //初始化3个线程执行对应的连接操作
         private static ExecutorService fixedThreadPool = Executors.newFixedThreadPool(3);
+
         @PostConstruct
         public static void init(){
-            fixedThreadPool.execute( new NetworkManger("116.62.195.204",12000,"orders75"));
+            fixedThreadPool.execute( new NetworkManger("192.168.3.129",12000,"orders75"));
+/*
             fixedThreadPool.execute( new NetworkManger("116.62.195.204",12001,"orders76"));
+*/
         }
 
 }
