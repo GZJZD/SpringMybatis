@@ -45,6 +45,15 @@ public class OrderUserVo {
      * 手续费总额
      */
     private Double serviceChargeTotal;
+    /**
+     * 回报率
+     */
+    private Double rateOfReturn;
+    /**
+     * 累计盈亏
+     */
+    private Double totalGainAndLoss;
+
 
 
 
@@ -58,13 +67,7 @@ public class OrderUserVo {
      * 平仓盈亏
      */
     private Double offset_gain_and_loss;
-    /**
-     * 累计盈亏
-     */
 
-    /**
-     * 回报率
-     */
 
     /**
      *盈亏比
@@ -76,16 +79,16 @@ public class OrderUserVo {
      */
     private Double do_singular;
 
-
-
-
-
-
-
     /**
      * 做单天数
      */
-    private Integer documentary_total_day;
+    private Integer total_Day;
+
+
+
+
+
+
 
 
 

@@ -1,39 +1,39 @@
 package com.web.pojo;
 
+import com.web.util.BaseUtil;
+
 /**
  * 客户列表
  */
-public class OrderUser {
+public class OrderUser  extends BaseUtil {
 
     /**
      * 用户编号
      */
-    private String userCode;
+    private Long userCode;
 
     /**
      * 平台
      */
-    private Integer platformCode;
+    private Long platformCode;
 
     /**
      * 代理人
      */
     private String agencyName;
 
-
-
     /**
      * 持仓数
      */
-    private Integer tackeNumber;
+    private Long holdNumber;
     /**
      * 平仓盈亏
      */
-    private String closeGainLoss;
+    private Double closeGainLoss;
     /**
-     * 品种code
+     * 品种
      */
-    private Integer produceCode;
+    private Long produceCode;
 
     /**
      * 开仓时间
@@ -53,5 +53,15 @@ public class OrderUser {
      * 出金
      */
     private Double outMoney;
+
+
+    /**
+     * 手数
+     */
+    private Double handNumber;
+    /**
+     * 价位
+     */
+    private Double price;
 
 }
