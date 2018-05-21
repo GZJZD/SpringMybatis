@@ -5,9 +5,23 @@ package com.web.util;
  * Created by may on 2018/5/15.
  */
 public enum StatusUtil {
-    BUY("多",0),SELL("空",1),OPEN("开",0),CLOSE("平",1),TRADING_START("交易中",0),TRADING_PAUSE("交易暂停",1),
-    DIRECTION_REVERSE("反向跟单",0),DIRECTION_POSITIVE("正向跟单",1),MARKET_PRICE("市价",1),LIMIT_PRICE("限价",0),
-    Tactics_START("启动",1),Tactics_STOP("停止",0);
+    BUY("多",0),
+    SELL("空",1),
+    OPEN("开",0),
+    CLOSE("平",1),
+    TRADING_START("交易中",0),
+    TRADING_PAUSE("交易暂停",1),
+    DIRECTION_REVERSE("反向跟单",0),
+    DIRECTION_POSITIVE("正向跟单",1),
+    MARKET_PRICE("市价",1),
+    LIMIT_PRICE("限价",0),
+    FOLLOW_ORDER_START("启动",1),
+    FOLLOW_ORDER_TEMPORARY_STOP("暂停",2),
+    FOLLOW_ORDER_STOP("停止",0),
+    FOLLOW_MANNER_USER("跟用户",0),
+    FOLLOWMANNER_NET_POSITION("净头寸",1),
+    CLIENT_POINT_GOOD("好",1),
+    CLIENT_POINT_BAD("差",0);
 
     private String name;
     private Integer index;

@@ -1,0 +1,118 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.web.dao.FollowOrderClientDetailDao" >
+  <resultMap id="BaseResultMap" type="com.web.pojo.FollowOrderClientDetail" >
+    <id column="id" property="id"  />
+    <result column="client_name" property="clientName"  />
+    <result column="variety_name" property="varietyName"  />
+    <result column="trade_direction" property="tradeDirection"  />
+    <result column="hand_number" property="handNumber"  />
+    <result column="open_price" property="openPrice"  />
+    <result column="open_time" property="openTime"  />
+    <result column="close_price" property="closePrice"  />
+    <result column="close_time" property="closeTime"  />
+    <result column="poundage" property="poundage"  />
+    <result column="profit_loss" property="profitLoss"  />
+    <result column="client_profit" property="clientProfit"  />
+    <result column="open_order_number" property="openOrderNumber"  />
+    <result column="update_time" property="updateTime"  />
+    <result column="follow_order_id" property="followOrderId"  />
+    <result column="version" property="version"  />
+  </resultMap>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long" >
+    delete from follow_order_client_detail
+    where id = #{id}
+  </delete>
+  <insert id="insert" parameterType="com.web.pojo.FollowOrderClientDetail" useGeneratedKeys="true" keyProperty="id" >
+    insert into follow_order_client_detail (client_name, variety_name, trade_direction, 
+      hand_number, open_price, open_time, 
+      close_price, close_time, poundage, 
+      profit_loss, client_profit, open_order_number, 
+      update_time, follow_order_id, version
+      )
+    values (#{clientName}, #{varietyName}, #{tradeDirection}, 
+      #{handNumber}, #{openPrice}, #{openTime}, 
+      #{closePrice}, #{closeTime}, #{poundage}, 
+      #{profitLoss}, #{clientProfit}, #{openOrderNumber}, 
+      #{updateTime}, #{followOrderId}, now()
+      )
+  </insert>
+  <update id="updateByPrimaryKey" parameterType="com.web.pojo.FollowOrderClientDetail" >
+    update follow_order_client_detail
+    <set>
+      <if test="clientName != null">
+        client_name = #{clientName},
+      </if>
+      <if test="varietyName != null">
+        variety_name = #{varietyName},
+      </if>
+      <if test="tradeDirection != null">
+        trade_direction = #{tradeDirection},
+      </if>
+      <if test="handNumber != null">
+        hand_number = #{handNumber},
+      </if>
+      <if test="openPrice != null">
+        open_price = #{openPrice},
+      </if>
+      <if test="openTime != null">
+        open_time = #{openTime},
+      </if>
+      <if test="closePrice != null">
+        close_price = #{closePrice},
+      </if>
+      <if test="closeTime != null">
+        close_time = #{closeTime},
+      </if>
+      <if test="poundage != null">
+        poundage = #{poundage},
+      </if>
+      <if test="profitLoss != null">
+        profit_loss = #{profitLoss},
+      </if>
+      <if test="clientProfit != null">
+        client_profit = #{clientProfit},
+      </if>
+      <if test="openOrderNumber != null">
+        open_order_number = #{openOrderNumber},
+      </if>
+      <if test="updateTime != null">
+        update_time = #{updateTime},
+      </if>
+      <if test="followOrderId != null">
+        follow_order_id = #{followOrderId},
+      </if>
+      version =now()
+    </set>
+    where id = #{id} and version = #{version}
+  </update>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
+    select
+    <include refid="base_List"/>
+    from follow_order_client_detail
+    where id = #{id}
+  </select>
+  <select id="selectAll" resultMap="BaseResultMap" >
+    select
+    <include refid="base_List"/>
+    from follow_order_client_detail
+  </select>
+
+  <sql id="base_List">
+    id,
+    client_name,
+    variety_name,
+    trade_direction,
+    hand_number,
+    open_price,
+    open_time,
+    close_price,
+    close_time,
+    poundage,
+    profit_loss,
+    client_profit,
+    open_order_number,
+    update_time,
+    follow_order_id
+  </sql>
+</mapper>

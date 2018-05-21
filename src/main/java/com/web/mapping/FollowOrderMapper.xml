@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.web.dao.FollowOrderDao" >
+  <resultMap id="BaseResultMap" type="com.web.pojo.FollowOrder" >
+    <id column="id" property="id"  />
+    <result column="follow_order_status" property="followOrderStatus"  />
+    <result column="position_gain_and_loss" property="positionGainAndLoss"  />
+    <result column="offset_gain_and_loss" property="offsetGainAndLoss"  />
+    <result column="gain_and_loss_total" property="gainAndLossTotal"  />
+    <result column="poundage_total" property="poundageTotal"  />
+    <result column="client_profit" property="clientProfit"  />
+    <result column="profit_and_loss_rate" property="profitAndLossRate"  />
+    <result column="start_time" property="startTime"  />
+    <result column="success_rate" property="successRate"  />
+    <result column="documentary_id" property="documentary_id"  />
+    <result column="update_time" property="updateTime"  />
+    <result column="update_documentary_id" property="update_documentary_id"  />
+    <result column="version" property="version"  />
+    <association property="tactics" columnPrefix="tactics_" javaType="com.web.pojo.Tactics">
+      <id property="id" column="id"/>
+      <result property="tacticsName" column="tacticsName"/>
+      <result property="followManner" column="followManner"/>
+    </association>
+  </resultMap>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long" >
+    delete from follow_order
+    where id = #{id}
+  </delete>
+  <insert id="insert" parameterType="com.web.pojo.FollowOrder" useGeneratedKeys="true" keyProperty="id" >
+    insert into follow_order (tactics_id, follow_order_status, position_gain_and_loss, 
+      offset_gain_and_loss, gain_and_loss_total, 
+      poundage_total, client_profit, profit_and_loss_rate, 
+      start_time, success_rate, documentary_id, 
+      update_time, update_documentary_id,version
+      )
+    values (#{tactics.id}, #{followOrderStatus}, #{positionGainAndLoss},
+      #{offsetGainAndLoss}, #{gainAndLossTotal}, 
+      #{poundageTotal}, #{clientProfit}, #{profitAndLossRate}, 
+      #{startTime}, #{successRate}, #{documentary_id}, 
+      #{updateTime}, #{update_documentary_id},#{version}
+      )
+  </insert>
+  <update id="updateByPrimaryKey" parameterType="com.web.pojo.FollowOrder" >
+    update follow_order
+    <set>
+      <if test="tactics !=null ">
+        tactics_id = #{tactics.id},
+      </if>
+      <if test="followOrderStatus !=null ">
+        follow_order_status = #{followOrderStatus},
+      </if>
+      <if test="positionGainAndLoss !=null ">
+        position_gain_and_loss = #{positionGainAndLoss},
+      </if>
+      <if test="offsetGainAndLoss !=null ">
+        offset_gain_and_loss = #{offsetGainAndLoss},
+      </if>
+      <if test="gainAndLossTotal !=null ">
+        gain_and_loss_total = #{gainAndLossTotal},
+      </if>
+      <if test="poundageTotal !=null ">
+        poundage_total = #{poundageTotal},
+      </if>
+      <if test="clientProfit !=null ">
+        client_profit = #{clientProfit},
+      </if>
+      <if test="profitAndLossRate !=null ">
+        profit_and_loss_rate = #{profitAndLossRate},
+      </if>
+      <if test="startTime !=null ">
+        start_time = #{startTime},
+      </if>
+      <if test="successRate !=null ">
+        success_rate = #{successRate},
+      </if>
+      <if test="documentary_id !=null ">
+        documentary_id = #{documentary_id},
+      </if>
+      <if test="updateTime !=null ">
+        update_time = #{updateTime},
+      </if>
+      <if test="update_documentary_id !=null ">
+        update_documentary_id = #{update_documentary_id},
+      </if>
+      version = #{version} + 1
+    </set>
+    where id = #{id} and version = #{version}
+  </update>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
+    select
+    <include refid="base_List"/>
+    from follow_order
+    where id = #{id}
+  </select>
+  <select id="selectAll" resultMap="BaseResultMap" >
+    select
+    <include refid="base_List"/>
+    from follow_order
+  </select>
+  <sql id="base_List">
+    id,
+    tactics_id,
+    follow_order_status,
+    position_gain_and_loss,
+    offset_gain_and_loss,
+    gain_and_loss_total,
+    poundage_total,
+    client_profit,
+    profit_and_loss_rate,
+    start_time,
+    success_rate,
+    documentary_id,
+    update_time,
+    update_documentary_id,
+    version
+  </sql>
+</mapper>

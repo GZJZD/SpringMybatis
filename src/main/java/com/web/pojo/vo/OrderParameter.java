@@ -19,10 +19,9 @@ public class OrderParameter implements Serializable{
     private int orderPoint;
     //如果为限价，交易的市价 + - customerPointNum
     private Double customerPointNum;
-    //开仓单号 用来标识是哪个客户数据,可以通过开仓单号来区别是哪个客户的跟单明细
-    private String newOpenOrderNum;
-    //用于告诉净头寸策略里哪个的跟单明细
-    private Long detailedId;
+    //对接号码:开仓单号-跟单id-交易记录自增id
+    private String signalNumber;
+
     //多空(0=多,1=空)
     private Integer cmd;
     //开平(0=开,1=平)
@@ -62,21 +61,15 @@ public class OrderParameter implements Serializable{
         this.customerPointNum = customerPointNum;
     }
 
-    public String getNewOpenOrderNum() {
-        return newOpenOrderNum;
+    public String getSignalNumber() {
+        return signalNumber;
     }
 
-    public void setNewOpenOrderNum(String newOpenOrderNum) {
-        this.newOpenOrderNum = newOpenOrderNum;
+    public void setSignalNumber(String signalNumber) {
+        this.signalNumber = signalNumber;
     }
 
-    public Long getDetailedId() {
-        return detailedId;
-    }
 
-    public void setDetailedId(Long detailedId) {
-        this.detailedId = detailedId;
-    }
 
     public Integer getCmd() {
         return cmd;

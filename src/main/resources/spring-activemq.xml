@@ -1,30 +1,31 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <beans xmlns="http://www.springframework.org/schema/beans"
-	   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:p="http://www.springframework.org/schema/p"
-	   xmlns:context="http://www.springframework.org/schema/context"
-	   xmlns:mvc="http://www.springframework.org/schema/mvc"
-	   xmlns:tx="http://www.springframework.org/schema/tx"
-	   xmlns:aop="http://www.springframework.org/schema/aop"
+	   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	   xsi:schemaLocation="
-	http://www.springframework.org/schema/aop
-	http://www.springframework.org/schema/aop/spring-aop.xsd
+
 	http://www.springframework.org/schema/beans
-	http://www.springframework.org/schema/beans/spring-beans.xsd
-	http://www.springframework.org/schema/context
-	http://www.springframework.org/schema/context/spring-context.xsd
-	http://www.springframework.org/schema/mvc
-	http://www.springframework.org/schema/mvc/spring-mvc.xsd
-	http://www.springframework.org/schema/tx
-	http://www.springframework.org/schema/tx/spring-tx.xsd
-	http://mybatis.org/schema/mybatis-spring
-	http://mybatis.org/schema/mybatis-spring.xsd">
+	http://www.springframework.org/schema/beans/spring-beans.xsd">
 
 	<!-- Spring提供的JMS工具类，它可以进行消息发送、接收等 -->
-	<bean id="jmsTemplate" class="org.springframework.jms.core.JmsTemplate">
+	<!--登录-->
+	<bean id="loginJmsTemplate" class="org.springframework.jms.core.JmsTemplate">
 		<!-- 这个connectionFactory对应的是我们定义的Spring提供的那个ConnectionFactory对象 -->
 		<property name="connectionFactory" ref="connectionFactory"/>
 
-		<property name="defaultDestination" ref="queueDestination"/>
+		<property name="defaultDestination" ref="loginDestination"/>
+		<!-- 使 deliveryMode, priority, timeToLive设置生效-->
+		<property name="explicitQosEnabled" value="true" />
+		<!-- 持久化 如果设置为非持久化MQ服务器重启后MQ中的数据会丢失-->
+		<property name="deliveryPersistent" value="true"/>
+		<!--这里注意:如果不开启事务，消息在异常的情况下是不会重试的-->
+		<property name="sessionTransacted" value="false"/>
+	</bean>
+	<!--登录-->
+	<bean id="orderJmsTemplate" class="org.springframework.jms.core.JmsTemplate">
+		<!-- 这个connectionFactory对应的是我们定义的Spring提供的那个ConnectionFactory对象 -->
+		<property name="connectionFactory" ref="connectionFactory"/>
+
+		<property name="defaultDestination" ref="orderDestination"/>
 		<!-- 使 deliveryMode, priority, timeToLive设置生效-->
 		<property name="explicitQosEnabled" value="true" />
 		<!-- 持久化 如果设置为非持久化MQ服务器重启后MQ中的数据会丢失-->
@@ -48,18 +49,30 @@
 	<bean id="redeliveryPolicyMap" class="org.apache.activemq.broker.region.policy.RedeliveryPolicyMap">
 		<property name="redeliveryPolicyEntries">
 			<list>
-				<ref bean="bizRedeliveryPolicy"/>
+				<ref bean="loginBizRedeliveryPolicy"/>
+				<ref bean="orderBizRedeliveryPolicy"/>
 			</list>
 		</property>
 	</bean>
-
-	<bean id="bizRedeliveryPolicy" class="org.apache.activemq.RedeliveryPolicy">
+	<!--登录-->
+	<bean id="loginBizRedeliveryPolicy" class="org.apache.activemq.RedeliveryPolicy">
 		<!--重发次数 延时、延时系数、延时指数开关、目标（重发等待时间1s, 2s, 4s, 8s）-->
 		<property name="maximumRedeliveries" value="3"/>
 		<property name="redeliveryDelay" value="1000"/>
 		<property name="backOffMultiplier" value="2"/>
 		<property name="useExponentialBackOff" value="true"/>
-		<property name="destination" ref="queueDestination"/>
+		<property name="destination" ref="loginDestination"/>
+
+	</bean>
+	<!--订单-->
+	<bean id="orderBizRedeliveryPolicy" class="org.apache.activemq.RedeliveryPolicy">
+		<!--重发次数 延时、延时系数、延时指数开关、目标（重发等待时间1s, 2s, 4s, 8s）-->
+		<property name="maximumRedeliveries" value="3"/>
+		<property name="redeliveryDelay" value="1000"/>
+		<property name="backOffMultiplier" value="2"/>
+		<property name="useExponentialBackOff" value="true"/>
+		<property name="destination" ref="orderDestination"/>
+
 	</bean>
 
 	<!--
@@ -84,37 +97,37 @@
 
 
 
-	<!-- 消息订阅模式 -->
-	<bean id="queueDestination" class="org.apache.activemq.command.ActiveMQTopic">
+	<!-- p2p登录信息 -->
+	<bean id="loginDestination" class="org.apache.activemq.command.ActiveMQQueue">
 		<!-- 订阅消息的名字 -->
-		<constructor-arg index="0" value="orderTopic"/>
-
+		<constructor-arg index="0" value="login"/>
+	</bean>
+	<!-- p2p登录信息 -->
+	<bean id="orderDestination" class="org.apache.activemq.command.ActiveMQQueue">
+		<!-- 订阅消息的名字 -->
+		<constructor-arg index="0" value="order"/>
 	</bean>
 
 
-	<!-- Spring提供的JMS工具类，它可以进行消息发送、接收等 -->
-	<!--<bean id="bizMqJmsTemplate" class="org.springframework.jms.core.JmsTemplate">-->
-		<!--&lt;!&ndash; 这个connectionFactory对应的是我们定义的Spring提供的那个ConnectionFactory对象 &ndash;&gt;-->
-		<!--<property name="connectionFactory" ref="connectionFactory"/>-->
-		<!--<property name="defaultDestination" ref="queueDestination"/>-->
-		<!--&lt;!&ndash; 使 deliveryMode, priority, timeToLive设置生效&ndash;&gt;-->
-		<!--<property name="explicitQosEnabled" value="true" />-->
-		<!--&lt;!&ndash; 持久化 如果设置为非持久化MQ服务器重启后MQ中的数据会丢失&ndash;&gt;-->
-		<!--<property name="deliveryPersistent" value="true"/>-->
-		<!--&lt;!&ndash;这里注意:如果不开启事务，消息在异常的情况下是不会重试的&ndash;&gt;-->
-		<!--<property name="sessionTransacted" value="false"/>-->
-	<!--</bean>-->
-
-	<!-- 消息监听器 -->
-	<bean id="consumerMessageListener" class="com.web.listeners.ConsumerMessageListener"/>
-	<!-- 消息监听容器 -->
-	<bean id="jmsContainer"
+	<!-- 登录消息监听器 -->
+	<bean id="loginMessageListener" class="com.web.listeners.LoginMessageListener"/>
+	<!-- 登录消息监听容器 -->
+	<bean id="loginContainer"
 		  class="org.springframework.jms.listener.DefaultMessageListenerContainer">
 		<property name="connectionFactory" ref="connectionFactory" />
-		<property name="destinationName" value="orderTopic1" />
-		<property name="messageListener" ref="consumerMessageListener" />
-		<!--订阅者开关-->
-		<property name="pubSubDomain" value="true"/>
+		<property name="destinationName" value="loginTrade" />
+		<property name="messageListener" ref="loginMessageListener" />
+		<!--这里注意:如果不开启事务，消息在异常的情况下是不会重试的-->
+		<property name="sessionTransacted" value="true"/>
+	</bean>
+	<!-- 交易消息监听器 -->
+	<bean id="orderMessageListener" class="com.web.listeners.OrderMessageListener"/>
+	<!-- 交易消息监听容器 -->
+	<bean id="orderContainer"
+		  class="org.springframework.jms.listener.DefaultMessageListenerContainer">
+		<property name="connectionFactory" ref="connectionFactory" />
+		<property name="destinationName" value="orderTrade" />
+		<property name="messageListener" ref="orderMessageListener" />
 		<!--这里注意:如果不开启事务，消息在异常的情况下是不会重试的-->
 		<property name="sessionTransacted" value="true"/>
 	</bean>
