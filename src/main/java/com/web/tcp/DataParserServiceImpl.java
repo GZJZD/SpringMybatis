@@ -2,6 +2,7 @@ package com.web.tcp;
 
 import com.alibaba.fastjson.JSON;
 import com.web.pojo.DataSource;
+import com.web.service.IFollowOrderService;
 import com.web.tcp.service.DataParserService;
 import com.web.util.ApplicationContextHolder;
 import org.apache.log4j.Logger;
@@ -22,9 +23,9 @@ public class DataParserServiceImpl implements DataParserService,Runnable{
 
     private String socketData;
     private String platformName;
-    private IOrderMoinitorService
-            orderMoinitorService = (IOrderMoinitorService) ApplicationContextHolder
-            .getBeanByName("orderMoinitorServiceImpl");
+    private IFollowOrderService
+            followOrderService = (IFollowOrderService) ApplicationContextHolder
+            .getBeanByName("followOrderServiceImpl");
     private static String path = "E:/tcpData/";
 
 
@@ -72,7 +73,7 @@ public class DataParserServiceImpl implements DataParserService,Runnable{
     public void run() {
         //构造下单数据
         DataSource dataSource = constructor(socketData);
-        orderMoinitorService.madeAnOrder(dataSource);
+        followOrderService.madeAnOrder(dataSource);
     }
     /**
      * 按天创建文件
