@@ -5,7 +5,7 @@ import com.web.pojo.TradeHistory;
 
 import java.util.List;
 
-public interface TradeHistoryMapper {
+public interface TradeHistoryDao {
 
     int insert(TradeHistory record);
 

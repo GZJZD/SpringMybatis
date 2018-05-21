@@ -1,7 +1,7 @@
-package com.web.imp;
+package com.web.service.imp;
 
 
-import com.web.dao.DocumentaryDetailMapper;
+import com.web.dao.DocumentaryDetailDao;
 import com.web.pojo.DocumentaryDetail;
 import com.web.service.IDocumentaryDetailService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,7 +17,7 @@ import java.util.List;
 @Transactional
 public class DocumentaryDetailServiceImpl implements IDocumentaryDetailService {
     @Autowired
-    private DocumentaryDetailMapper documentaryDetailMapper;
+    private DocumentaryDetailDao documentaryDetailMapper;
     @Override
     public void insert(DocumentaryDetail record) {
         documentaryDetailMapper.insert(record);

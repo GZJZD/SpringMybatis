@@ -1,6 +1,6 @@
-package com.web.imp;
+package com.web.service.imp;
 
-import com.web.dao.TestMapper;
+import com.web.dao.TestDao;
 import com.web.pojo.Test;
 import com.web.service.TestService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,7 +17,7 @@ import java.util.List;
 @Service("testService")
 public class TestServiceImp implements TestService {
     @Autowired(required = false)
-    private TestMapper testMapper = null;
+    private TestDao testMapper = null;
 
     public Test getById(int id) {
         return testMapper.selectByPrimaryKey(id);

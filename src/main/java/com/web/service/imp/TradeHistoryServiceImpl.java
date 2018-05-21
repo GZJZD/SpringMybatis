@@ -1,7 +1,7 @@
-package com.web.imp;
+package com.web.service.imp;
 
 
-import com.web.dao.TradeHistoryMapper;
+import com.web.dao.TradeHistoryDao;
 import com.web.pojo.TradeHistory;
 import com.web.service.ITradeHistoryService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,7 +17,7 @@ import java.util.List;
 @Transactional
 public class TradeHistoryServiceImpl implements ITradeHistoryService {
     @Autowired
-    private TradeHistoryMapper tradeHistoryMapper;
+    private TradeHistoryDao tradeHistoryMapper;
 
     @Override
     public void insert(TradeHistory record) {
