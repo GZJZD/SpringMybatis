@@ -1,8 +1,6 @@
 package com.web.util;
 
-import com.sun.deploy.util.StringUtils;
 
-import java.util.Date;
 
 public class BaseUtil {
     /**
@@ -20,11 +18,11 @@ public class BaseUtil {
     /**
      * 创建人
      */
-    private Integer createUser;
+    private Long createUser;
     /**
      * 修改人
      */
-    private Integer updateByUser;
+    private Long updateByUser;
 
 
     public Long getId() {
@@ -42,7 +40,7 @@ public class BaseUtil {
 
     public void setCreateDate(String createDate) {
         this.createDate = createDate;
-        if (createDate == null && createDate.isEmpty() ){
+        if (createDate == null && createDate.isEmpty()) {
             createDate = DateUtil.getHour();
         }
     }
@@ -58,19 +56,19 @@ public class BaseUtil {
 
     }
 
-    public Integer getCreateUser() {
+    public Long getCreateUser() {
         return createUser;
     }
 
-    public void setCreateUser(Integer createUser) {
+    public void setCreateUser(Long createUser) {
         this.createUser = createUser;
     }
 
-    public Integer getUpdateByUser() {
+    public Long getUpdateByUser() {
         return updateByUser;
     }
 
-    public void setUpdateByUser(Integer updateByUser) {
+    public void setUpdateByUser(Long updateByUser) {
         this.updateByUser = updateByUser;
     }
 }
