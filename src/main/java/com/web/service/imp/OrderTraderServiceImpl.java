@@ -7,9 +7,13 @@ import com.web.pojo.vo.OrderParameter;
 
 import com.web.service.IOrderTraderService;
 import com.web.service.IProducerMsgService;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import javax.annotation.Resource;
+
 
 /**
  * Created by may on 2018/4/25.
@@ -19,23 +23,25 @@ import org.springframework.transaction.annotation.Transactional;
 @Transactional
 public class OrderTraderServiceImpl implements IOrderTraderService {
 
-    @Autowired
-    private IProducerMsgService producerMsgService;
+    @Resource(name = "loginProducerMsgServiceImpl")
+    private IProducerMsgService loginProducerMsgServiceImpl ;
+    @Resource(name = "orderProducerMsgServiceImpl")
+    private IProducerMsgService orderProducerMsgServiceImpl ;
 
 
     @Override
     public void login(Account account) {
-        producerMsgService.sendMessage(JSON.toJSONString(account));
+        loginProducerMsgServiceImpl.sendMessage(JSON.toJSONString(account));
     }
 
     @Override
     public void loginOut(Account account) {
-        producerMsgService.sendMessage(JSON.toJSONString(account));
+        loginProducerMsgServiceImpl.sendMessage(JSON.toJSONString(account));
     }
 
     @Override
     public void addOrder(OrderParameter orderParameter) {
-        producerMsgService.sendMessage(JSON.toJSONString(orderParameter));
+        orderProducerMsgServiceImpl.sendMessage(JSON.toJSONString(orderParameter));
 
     }
 
