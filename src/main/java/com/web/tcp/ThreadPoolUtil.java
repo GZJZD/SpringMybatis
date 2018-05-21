@@ -5,7 +5,7 @@ import java.util.concurrent.Executors;
 
 /**
  * 返回线程池
- * Created by seemygo on 2018/4/29.
+ * Created by may on 2018/4/29.
  */
 public class ThreadPoolUtil {
     private  static ThreadPoolUtil instance;

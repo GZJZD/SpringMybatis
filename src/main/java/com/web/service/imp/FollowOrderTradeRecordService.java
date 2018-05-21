@@ -1,17 +1,18 @@
-package com.web.service;
+package com.web.service.imp;
 
 import com.web.dao.FollowOrderTradeRecordDao;
 import com.web.pojo.FollowOrderTradeRecord;
 
+import com.web.service.IFollowOrderTradeRecordService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 /**
- * Created by seemygo on 2018/5/20.
+ * Created by may on 2018/5/20.
  */
 @Service@Transactional
-public class FollowOrderTradeRecordService implements IFollowOrderTradeRecordService{
+public class FollowOrderTradeRecordService implements IFollowOrderTradeRecordService {
     @Autowired
     private FollowOrderTradeRecordDao followOrderTradeRecordDao;
     @Override

@@ -2,6 +2,7 @@ package com.web.service;
 
 
 import com.web.pojo.DataSource;
+import com.web.pojo.FollowOrder;
 import com.web.pojo.Tactics;
 import com.web.pojo.vo.OrderParameter;
 
@@ -11,13 +12,23 @@ import java.util.List;
  * 跟单模块
  * Created by may on 2018/5/8.
  */
-public interface IOrderMoinitorService {
-    /** 返回策略
+public interface IFollowOrderService {
+
+
+    void save(FollowOrder followOrder);
+    /** 返回跟单集合
      *@Author: May
      *@param
      *@Date: 12:48 2018/5/8
      */
-     List<Tactics> getTactics();
+     FollowOrder getListFollowOrder();
+    /** 返回跟单
+     *@Author: May
+     *@param
+     *@Date: 12:48 2018/5/8
+     */
+     FollowOrder getFollowOrder(Long id);
+
     /**
      * 实现交易逻辑
      *@Author: May
@@ -30,5 +41,7 @@ public interface IOrderMoinitorService {
      *@param
      *@Date: 12:12 2zero18/5/1zero
      */
-    void checkLogin(Tactics Tactics);
+    void checkLogin(Tactics tactics, FollowOrder followOrder);
+
+
 }

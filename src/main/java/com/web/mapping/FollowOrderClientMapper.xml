@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.web.dao.FollowOrderClientDao" >
+  <resultMap id="BaseResultMap" type="com.web.pojo.FollowOrderClient" >
+    <id column="id" property="id"  />
+    <result column="follow_order_id" property="followOrderId"  />
+    <result column="client_id" property="clientId"  />
+    <result column="follow_manner" property="followManner"  />
+    <result column="hand_number_type" property="handNumberType"  />
+    <result column="follow_hand_number" property="followHandNumber"  />
+    <result column="update_time" property="updateTime"  />
+    <result column="version" property="version"  jdbcType="TIMESTAMP"/>
+  </resultMap>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long" >
+    delete from follow_order_client
+    where id = #{id}
+  </delete>
+  <insert id="insert" parameterType="com.web.pojo.FollowOrderClient" useGeneratedKeys="true" keyProperty="id" >
+    insert into follow_order_client (follow_order_id, client_id, follow_manner, 
+      hand_number_type, follow_hand_number, update_time, 
+      version)
+    values (#{followOrderId}, #{clientId}, #{followManner}, 
+      #{handNumberType}, #{followHandNumber}, #{updateTime}, 
+     now())
+  </insert>
+  <update id="updateByPrimaryKey" parameterType="com.web.pojo.FollowOrderClient" >
+    update follow_order_client
+    <set>
+      <if test="followOrderId != null ">
+        follow_order_id = #{followOrderId},
+      </if>
+      <if test="clientId != null ">
+        client_id = #{clientId},
+      </if>
+      <if test="followManner != null ">
+        follow_manner = #{followManner},
+      </if>
+      <if test="handNumberType != null ">
+        hand_number_type = #{handNumberType},
+      </if>
+      <if test="followHandNumber != null ">
+        follow_hand_number = #{followHandNumber},
+      </if>
+      <if test="updateTime != null ">
+        update_time = #{updateTime},
+      </if>
+      version = now()
+    </set>
+
+    where id = #{id} and version = #{version}
+  </update>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
+    select
+    <include refid="base_List"/>
+    from follow_order_client
+    where id = #{id}
+  </select>
+  <select id="selectAll" resultMap="BaseResultMap" >
+    select
+    <include refid="base_List"/>
+    from follow_order_client
+  </select>
+  <select id="selectByClientId" resultMap="BaseResultMap">
+    select
+    <include refid="base_List"/>
+    from follow_order_client
+    where client_id =#{clientId}
+  </select>
+
+  <sql id="base_List">
+    id,
+    follow_order_id,
+    follow_manner,
+    hand_number_type,
+    follow_hand_number,
+    version
+  </sql>
+</mapper>
