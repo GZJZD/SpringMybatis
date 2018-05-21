@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.web.dao.OrderUserDao">
+
+    <resultMap id="BaseResultMap" type="com.web.pojo.OrderUser" >
+    <id column="id" property="id" jdbcType="BIGINT" />
+    <result column="user_code" property="userCode" jdbcType="BIGINT" />
+    <result column="platform_code" property="platformCode" jdbcType="BIGINT" />
+    <result column="agency_name" property="agencyName" jdbcType="VARCHAR" />
+    <result column="hold_number" property="holdNumber" jdbcType="BIGINT" />
+    <result column="close_gain_loss" property="closeGainLoss" jdbcType="NUMERIC" />
+    <result column="produce_code" property="produceCode" jdbcType="NUMERIC" />
+    <result column="open_time" property="openTime" jdbcType="VARCHAR" />
+    <result column="close_time" property="closeTime" jdbcType="VARCHAR" />
+    <result column="in_money" property="inMoney" jdbcType="NUMERIC" />
+    <result column="out_money" property="outMoney" jdbcType="NUMERIC" />
+    <result column="hand_number" property="handNumber" jdbcType="NUMERIC" />
+    <result column="price" property="price" jdbcType="NUMERIC" />
+    <result column="create_date" property="createDate" jdbcType="VARCHAR" />
+    <result column="update_date" property="updateDate" jdbcType="VARCHAR" />
+    <result column="create_user" property="createUser" jdbcType="VARCHAR" />
+    <result column="update_by_user" property="updateByUser" jdbcType="VARCHAR" />
+    </resultMap>
+    <!--<sql id="Base_Column_List" >-->
+    <!--id, pass_name, pass_wrod, only_id,update_time,create_time-->
+    <!--</sql>-->
+
+    <!--<select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >-->
+    <!--select-->
+    <!--<include refid="Base_Column_List" />-->
+    <!--from message-->
+    <!--where id = #{id,jdbcType=INTEGER}-->
+    <!--</select>-->
+
+
+</mapper>
