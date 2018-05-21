@@ -8,8 +8,11 @@
     <result column="follow_manner" property="followManner"  />
     <result column="hand_number_type" property="handNumberType"  />
     <result column="follow_hand_number" property="followHandNumber"  />
-    <result column="update_time" property="updateTime"  />
-    <result column="version" property="version"  jdbcType="TIMESTAMP"/>
+    <result column="update_date" property="updateDate"  />
+    <result column="update_by_user" property="updateByUser"/>
+    <result column="create_date" property="createDate"/>
+    <result column="create_user" property="createUser"/>
+    <result column="version" property="version" />
   </resultMap>
   <delete id="deleteByPrimaryKey" parameterType="java.lang.Long" >
     delete from follow_order_client
@@ -17,11 +20,11 @@
   </delete>
   <insert id="insert" parameterType="com.web.pojo.FollowOrderClient" useGeneratedKeys="true" keyProperty="id" >
     insert into follow_order_client (follow_order_id, client_id, follow_manner, 
-      hand_number_type, follow_hand_number, update_time, 
+      hand_number_type, follow_hand_number, update_date,update_by_user,create_date,create_user,
       version)
     values (#{followOrderId}, #{clientId}, #{followManner}, 
-      #{handNumberType}, #{followHandNumber}, #{updateTime}, 
-     now())
+      #{handNumberType}, #{followHandNumber}, #{updateDate}, #{updateByUser} ,#{createDate},#{createUser},
+     #{version})
   </insert>
   <update id="updateByPrimaryKey" parameterType="com.web.pojo.FollowOrderClient" >
     update follow_order_client
@@ -41,10 +44,22 @@
       <if test="followHandNumber != null ">
         follow_hand_number = #{followHandNumber},
       </if>
-      <if test="updateTime != null ">
-        update_time = #{updateTime},
+      <if test="updateDate != null ">
+        update_date = #{updateDate},
       </if>
-      version = now()
+      <if test="updateByUser != null ">
+        update_by_user = #{updateByUser},
+      </if>
+      <if test="createDate != null ">
+        create_date = #{createDate},
+      </if>
+      <if test="createUser != null ">
+        create_user = #{createUser},
+      </if>
+      <if test="version != null ">
+        version = #{version} + 1,
+      </if>
+
     </set>
 
     where id = #{id} and version = #{version}
@@ -73,6 +88,10 @@
     follow_manner,
     hand_number_type,
     follow_hand_number,
+    update_date,
+    update_by_user,
+    create_date,
+    create_user,
     version
   </sql>
 </mapper>

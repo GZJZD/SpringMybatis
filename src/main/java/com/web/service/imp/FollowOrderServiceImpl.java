@@ -5,6 +5,7 @@ import com.web.dao.FollowOrderDao;
 import com.web.pojo.*;
 import com.web.pojo.vo.OrderParameter;
 import com.web.service.*;
+import com.web.util.DateUtil;
 import com.web.util.DoubleUtil;
 import com.web.util.StatusUtil;
 import com.web.util.TacticsGenerateUtil;
@@ -250,7 +251,8 @@ public class FollowOrderServiceImpl implements IFollowOrderService {
             //设计启动
             followOrder.setFollowOrderStatus(StatusUtil.FOLLOW_ORDER_START.getIndex());
             //设计启动时间
-            followOrder.setStartTime(new Date());
+
+            followOrder.setStartTime(DateUtil.getStringDate());
             //更改表的状态
 
         }

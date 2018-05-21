@@ -1,5 +1,7 @@
 package com.web.pojo;
 
+import com.web.util.BaseUtil;
+
 import java.io.Serializable;
 import java.util.Date;
 /**
@@ -8,7 +10,7 @@ import java.util.Date;
  *@param
  *@Date: 10:40 2018/5/21
  */
-public class Tactics implements Serializable{
+public class Tactics extends BaseUtil{
     private Long id;
     //策略名称
     private String tacticsName;
@@ -46,6 +48,7 @@ public class Tactics implements Serializable{
     private Integer netPositionHoldNumber;
     //判断是否正在交易
     private Integer netPositionStatus;
+
     //版本
     private Integer version=0;
 
@@ -208,4 +211,5 @@ public class Tactics implements Serializable{
     public void setVersion(Integer version) {
         this.version = version;
     }
+
 }

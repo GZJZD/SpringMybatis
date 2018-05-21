@@ -9,7 +9,7 @@ public class Variety {
     private Long id;
     private String varietyName;
     private String varietyCode;
-
+    private String tradePlaceName;
 
     public Long getId() {
         return id;
@@ -30,9 +30,18 @@ public class Variety {
         this.varietyCode = varietyCode;
     }
 
-    public Variety(Long id, String varietyName, String varietyCode) {
+    public String getTradePlaceName() {
+        return tradePlaceName;
+    }
+
+    public void setTradePlaceName(String tradePlaceName) {
+        this.tradePlaceName = tradePlaceName;
+    }
+
+    public Variety(Long id, String varietyName, String varietyCode, String tradePlaceName) {
         this.id = id;
         this.varietyName = varietyName;
         this.varietyCode = varietyCode;
+        this.tradePlaceName=tradePlaceName;
     }
 }

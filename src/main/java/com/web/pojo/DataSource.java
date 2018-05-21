@@ -26,7 +26,7 @@ public class DataSource {
     private Double price;
     //时间
     //private Date createTime;
-    private Date createTime;
+    private String createTime;
     //多空(0=多,1=空)
     private Integer cmd;
     //开平(0=开,1=平)
@@ -102,11 +102,11 @@ public class DataSource {
         this.profit = profit;
     }
 
-    public Date getCreateTime() {
+    public String getCreateTime() {
         return createTime;
     }
 
-    public void setCreateTime(Date createTime) {
+    public void setCreateTime(String createTime) {
         this.createTime = createTime;
     }
 

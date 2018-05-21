@@ -12,9 +12,11 @@
     <result column="profit_and_loss_rate" property="profitAndLossRate"  />
     <result column="start_time" property="startTime"  />
     <result column="success_rate" property="successRate"  />
-    <result column="documentary_id" property="documentary_id"  />
-    <result column="update_time" property="updateTime"  />
-    <result column="update_documentary_id" property="update_documentary_id"  />
+    <result column="documentary_id" property="updateByUser"  />
+    <result column="update_date" property="updateDate"  />
+    <result column="update_by_user" property="updateByUser"/>
+    <result column="create_date" property="createDate"/>
+    <result column="create_user" property="createUser"/>
     <result column="version" property="version"  />
     <association property="tactics" columnPrefix="tactics_" javaType="com.web.pojo.Tactics">
       <id property="id" column="id"/>
@@ -31,13 +33,13 @@
       offset_gain_and_loss, gain_and_loss_total, 
       poundage_total, client_profit, profit_and_loss_rate, 
       start_time, success_rate, documentary_id, 
-      update_time, update_documentary_id,version
+      update_date,update_by_user,create_date,create_user,version
       )
     values (#{tactics.id}, #{followOrderStatus}, #{positionGainAndLoss},
       #{offsetGainAndLoss}, #{gainAndLossTotal}, 
       #{poundageTotal}, #{clientProfit}, #{profitAndLossRate}, 
-      #{startTime}, #{successRate}, #{documentary_id}, 
-      #{updateTime}, #{update_documentary_id},#{version}
+      #{startTime}, #{successRate},#{updateDate},
+      #{updateByUser} ,#{createDate},#{createUser},#{version}
       )
   </insert>
   <update id="updateByPrimaryKey" parameterType="com.web.pojo.FollowOrder" >
@@ -73,14 +75,17 @@
       <if test="successRate !=null ">
         success_rate = #{successRate},
       </if>
-      <if test="documentary_id !=null ">
-        documentary_id = #{documentary_id},
+      <if test="updateDate != null ">
+        update_date = #{updateDate},
       </if>
-      <if test="updateTime !=null ">
-        update_time = #{updateTime},
+      <if test="updateByUser != null ">
+        update_by_user = #{updateByUser},
       </if>
-      <if test="update_documentary_id !=null ">
-        update_documentary_id = #{update_documentary_id},
+      <if test="createDate != null ">
+        create_date = #{createDate},
+      </if>
+      <if test="createUser != null ">
+        create_user = #{createUser},
       </if>
       version = #{version} + 1
     </set>
@@ -109,9 +114,10 @@
     profit_and_loss_rate,
     start_time,
     success_rate,
-    documentary_id,
-    update_time,
-    update_documentary_id,
+    update_date,
+    update_by_user,
+    create_date,
+    create_user,
     version
   </sql>
 </mapper>

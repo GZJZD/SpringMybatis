@@ -50,9 +50,7 @@ public class DataParserServiceImpl implements DataParserService,Runnable{
             dataSource.setVarietyCode(splitArr[index++]);//商品
             dataSource.setCounts(Double.parseDouble(splitArr[index++]));//手数
             dataSource.setPrice(Double.parseDouble(splitArr[index++]));//价位
-            String date = splitArr[index++];
-            Date createTime = new SimpleDateFormat("yyyyMMddHHmmss").parse(date);//创建时间
-            dataSource.setCreateTime(createTime);//时间
+            dataSource.setCreateTime(splitArr[index++]);//时间
             dataSource.setCmd(Integer.parseInt(splitArr[index++]));//多空
             dataSource.setOpenClose(Integer.parseInt(splitArr[index++]));//开平
             dataSource.setProfit(Double.parseDouble(splitArr[index++]));//平仓盈亏
