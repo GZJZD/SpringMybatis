@@ -1,5 +1,7 @@
 package com.web.pojo;
 
+import com.web.util.BaseUtil;
+
 import java.io.Serializable;
 import java.util.Date;
 import java.util.List;
@@ -10,7 +12,7 @@ import java.util.List;
  *@param
  *@Date: 10:38 2018/5/21
  */
-public class FollowOrderClient implements Serializable{
+public class FollowOrderClient extends BaseUtil{
     private Long id;
     //跟单id
     private Long followOrderId;
@@ -22,14 +24,7 @@ public class FollowOrderClient implements Serializable{
     private Integer handNumberType;
     //手数
     private Integer followHandNumber;
-    //修改人id
-    private Long updateByUser;
-    //修改时间
-    private String updateDate;
-    //创建时间
-    private String createDate;
 
-    private Long createUser;
     //版本
     private Integer version=0;
 
@@ -39,14 +34,6 @@ public class FollowOrderClient implements Serializable{
 
     public void setId(Long id) {
         this.id = id;
-    }
-
-    public Long getUpdateByUser() {
-        return updateByUser;
-    }
-
-    public void setUpdateByUser(Long updateByUser) {
-        this.updateByUser = updateByUser;
     }
 
     public Long getFollowOrderId() {

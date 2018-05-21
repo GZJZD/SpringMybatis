@@ -1,5 +1,7 @@
 package com.web.pojo;
 
+import com.web.util.BaseUtil;
+
 import java.util.Date;
 
 /**
@@ -8,7 +10,7 @@ import java.util.Date;
  *@param
  *@Date: 14:11 2018/5/21
  */
-public class ContractInfo {
+public class ContractInfo extends BaseUtil {
     private Long id;
 
     private Variety variety;
@@ -18,14 +20,7 @@ public class ContractInfo {
     private String tradePlaceName;
     //合约名称
     private String contractName;
-    //修改人id
-    private Long updateByUser;
-    //修改时间
-    private String updateDate;
-    //创建时间
-    private String createDate;
 
-    private Long createUser;
 
     public Long getId() {
         return id;

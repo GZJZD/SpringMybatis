@@ -1,5 +1,7 @@
 package com.web.pojo;
 
+import com.web.util.BaseUtil;
+
 import java.io.Serializable;
 import java.util.Date;
 
@@ -9,7 +11,7 @@ import java.util.Date;
  *@param
  *@Date: 10:46 2018/5/21
  */
-public class FollowOrder implements Serializable {
+public class FollowOrder extends BaseUtil{
     private Long id;
     //策略
     private Tactics tactics;
@@ -31,14 +33,7 @@ public class FollowOrder implements Serializable {
     private String startTime;
     //跟单成功率:成功/全部交易
     private String successRate;
-    //修改人id
-    private Long updateByUser;
-    //修改时间
-    private String updateDate;
-    //创建时间
-    private String createDate;
 
-    private Long createUser;
     //版本
     private Integer version=0;
 
@@ -130,16 +125,6 @@ public class FollowOrder implements Serializable {
         this.successRate = successRate;
     }
 
-
-
-
-    public Long getUpdateByUser() {
-        return updateByUser;
-    }
-
-    public void setUpdateByUser(Long updateByUser) {
-        this.updateByUser = updateByUser;
-    }
 
     public Integer getVersion() {
         return version;

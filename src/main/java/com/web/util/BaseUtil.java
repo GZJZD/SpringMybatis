@@ -1,8 +1,9 @@
 package com.web.util;
 
 
+import java.io.Serializable;
 
-public class BaseUtil {
+public class BaseUtil implements Serializable {
     /**
      * id
      */
