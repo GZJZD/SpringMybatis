@@ -19,6 +19,10 @@
     <result column="net_position_sum" property="netPositionSum"  />
     <result column="net_position_hold_number" property="netPositionHoldNumber"  />
     <result column="net_position_status" property="netPositionStatus"/>
+    <result column="update_date" property="updateDate"  />
+    <result column="update_by_user" property="updateByUser"/>
+    <result column="create_date" property="createDate"/>
+    <result column="create_user" property="createUser"/>
     <result column="version" property="version"  />
  <!--   <association columnPrefix="account_" javaType="com.web.pojo.Account" property="account">
       <id column="id" property="id" />
@@ -41,13 +45,15 @@
       max_loss_number, account_loss, order_point, 
       client_point, client_point_number, net_position_direction, 
       net_position_change, net_position_follow_number, 
-      net_position_sum, net_position_hold_number, net_position_status,update_time,update_documentary_id,version)
+      net_position_sum, net_position_hold_number, net_position_status,
+      update_date,update_by_user,create_date,create_user,version)
     values (#{tacticsName}, #{account.id},#{variety.id}, #{followManner},
       #{maxProfit}, #{maxProfitNumber}, #{maxLoss}, 
       #{maxLossNumber}, #{accountLoss}, #{orderPoint}, 
       #{clientPoint}, #{clientPointNumber}, #{netPositionDirection}, 
       #{netPositionChange}, #{netPositionFollowNumber}, 
-     #{netPositionSum}, #{netPositionHoldNumber}, #{netPositionStatus},#{updateTime},#{updateDocumentaryId}#{version}
+     #{netPositionSum}, #{netPositionHoldNumber}, #{netPositionStatus},
+     #{updateDate}, #{updateByUser} ,#{createDate},#{createUser},#{version}
      )
   </insert>
   <update id="updateByPrimaryKey" parameterType="com.web.pojo.Tactics" >
@@ -107,11 +113,17 @@
       <if test="netPositionStatus != null">
         net_position_status = #{netPositionStatus},
       </if>
-      <if test="updateTime != null">
-        update_time = #{updateTime},
+      <if test="updateDate != null ">
+        update_date = #{updateDate},
       </if>
-      <if test="updateDocumentaryId != null">
-        update_documentary_id = #{updateDocumentaryId},
+      <if test="updateByUser != null ">
+        update_by_user = #{updateByUser},
+      </if>
+      <if test="createDate != null ">
+        create_date = #{createDate},
+      </if>
+      <if test="createUser != null ">
+        create_user = #{createUser},
       </if>
       version = #{version} + 1
     </set>
@@ -158,8 +170,10 @@
     net_position_sum,
     net_position_hold_number,
     net_position_status,
-    update_time,
-    update_documentary_id,
+    update_date,
+    update_by_user,
+    create_date,
+    create_user,
     version
   </sql>
 </mapper>

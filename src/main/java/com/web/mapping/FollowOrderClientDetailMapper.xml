@@ -15,7 +15,9 @@
     <result column="profit_loss" property="profitLoss"  />
     <result column="client_profit" property="clientProfit"  />
     <result column="open_order_number" property="openOrderNumber"  />
-    <result column="update_time" property="updateTime"  />
+    <result column="update_date" property="updateDate"  />
+    <result column="update_by_user" property="updateByUser"/>
+    <result column="create_date" property="createDate"/>
     <result column="follow_order_id" property="followOrderId"  />
     <result column="version" property="version"  />
   </resultMap>
@@ -28,13 +30,13 @@
       hand_number, open_price, open_time, 
       close_price, close_time, poundage, 
       profit_loss, client_profit, open_order_number, 
-      update_time,update_documentary_id, follow_order_id, version
+      update_date,update_by_user,create_date, follow_order_id, version
       )
     values (#{clientName}, #{varietyName}, #{tradeDirection}, 
       #{handNumber}, #{openPrice}, #{openTime}, 
       #{closePrice}, #{closeTime}, #{poundage}, 
       #{profitLoss}, #{clientProfit}, #{openOrderNumber}, 
-      #{updateTime}, #{updateDocumentaryId},#{followOrderId}, now()
+      #{updateDate}, #{updateByUser} ,#{createDate},#{followOrderId},#{version}
       )
   </insert>
   <update id="updateByPrimaryKey" parameterType="com.web.pojo.FollowOrderClientDetail" >
@@ -76,14 +78,18 @@
       <if test="openOrderNumber != null">
         open_order_number = #{openOrderNumber},
       </if>
-      <if test="updateTime != null">
-        update_time = #{updateTime},
-      </if>
+
       <if test="followOrderId != null">
         follow_order_id = #{followOrderId},
       </if>
-      <if test="updateDocumentaryId != null">
-        update_documentary_id = #{updateDocumentaryId},
+      <if test="updateDate != null ">
+        update_date = #{updateDate},
+      </if>
+      <if test="updateByUser != null ">
+        update_by_user = #{updateByUser},
+      </if>
+      <if test="createDate != null ">
+        create_date = #{createDate},
       </if>
       version = #{version} +1
     </set>
@@ -115,8 +121,9 @@
     profit_loss,
     client_profit,
     open_order_number,
-    update_time,
-    update_documentary_id,
+    update_date,
+    update_by_user,
+    create_date,
     follow_order_id,
     version
   </sql>

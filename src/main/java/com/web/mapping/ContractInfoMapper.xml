@@ -6,7 +6,10 @@
         <result column="contract_code" property="contractCode"/>
         <result column="trade_place_name" property="tradePlaceName"/>
         <result column="contract_name" property="contractName"/>
-        <result column="update_time" property="updateTime"/>
+        <result column="update_date" property="updateDate"  />
+        <result column="update_by_user" property="updateByUser"/>
+        <result column="create_date" property="createDate"/>
+        <result column="create_user" property="createUser"/>
         <association property="variety" javaType="com.web.pojo.Variety" column="variety_id"
                      select="com.web.dao.VarietyDao.selectByPrimaryKey"/>
     </resultMap>
@@ -17,7 +20,10 @@
       contract_code,
       trade_place_name,
       contract_name,
-      update_time
+      update_date,
+      update_by_user,
+      create_date,
+      create_user
       from contract_ info
       where variety_id =#{varietyId} and trade_place_name = #{tradeName}
     </select>
@@ -28,7 +34,10 @@
       contract_code,
       trade_place_name,
       contract_name,
-      update_time
+      update_date,
+      update_by_user,
+      create_date,
+      create_user
       from contract_ info
     </select>
 

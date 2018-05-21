@@ -21,11 +21,11 @@ public class FollowOrderClientDetail implements Serializable {
     //开仓价
     private Double openPrice;
     //开仓时间
-    private Date openTime;
+    private String openTime;
     //平仓价
     private Double closePrice;
     //平仓时间
-    private Date closeTime;
+    private String closeTime;
     //手续费
     private Double poundage;
     //盈亏
@@ -34,14 +34,33 @@ public class FollowOrderClientDetail implements Serializable {
     private Double clientProfit;
     //开仓单号
     private Integer openOrderNumber;
+    //修改人id
+    private Long updateByUser;
     //修改时间
-    private Date updateTime;
-    //修改人
-    private Long updateDocumentaryId;
+    private String updateDate;
+    //创建时间
+    private String createDate;
+
     //跟单id
     private Long followOrderId;
     //版本
     private Integer version;
+
+    public String getUpdateDate() {
+        return updateDate;
+    }
+
+    public void setUpdateDate(String updateDate) {
+        this.updateDate = updateDate;
+    }
+
+    public String getCreateDate() {
+        return createDate;
+    }
+
+    public void setCreateDate(String createDate) {
+        this.createDate = createDate;
+    }
 
     public Long getId() {
         return id;
@@ -91,13 +110,7 @@ public class FollowOrderClientDetail implements Serializable {
         this.openPrice = openPrice;
     }
 
-    public Date getOpenTime() {
-        return openTime;
-    }
 
-    public void setOpenTime(Date openTime) {
-        this.openTime = openTime;
-    }
 
     public Double getClosePrice() {
         return closePrice;
@@ -107,11 +120,19 @@ public class FollowOrderClientDetail implements Serializable {
         this.closePrice = closePrice;
     }
 
-    public Date getCloseTime() {
+    public String getOpenTime() {
+        return openTime;
+    }
+
+    public void setOpenTime(String openTime) {
+        this.openTime = openTime;
+    }
+
+    public String getCloseTime() {
         return closeTime;
     }
 
-    public void setCloseTime(Date closeTime) {
+    public void setCloseTime(String closeTime) {
         this.closeTime = closeTime;
     }
 
@@ -147,14 +168,6 @@ public class FollowOrderClientDetail implements Serializable {
         this.openOrderNumber = openOrderNumber;
     }
 
-    public Date getUpdateTime() {
-        return updateTime;
-    }
-
-    public void setUpdateTime(Date updateTime) {
-        this.updateTime = updateTime;
-    }
-
     public Long getFollowOrderId() {
         return followOrderId;
     }
@@ -171,11 +184,11 @@ public class FollowOrderClientDetail implements Serializable {
         this.version = version;
     }
 
-    public Long getUpdateDocumentaryId() {
-        return updateDocumentaryId;
+    public Long getUpdateByUser() {
+        return updateByUser;
     }
 
-    public void setUpdateDocumentaryId(Long updateDocumentaryId) {
-        this.updateDocumentaryId = updateDocumentaryId;
+    public void setUpdateByUser(Long updateByUser) {
+        this.updateByUser = updateByUser;
     }
 }

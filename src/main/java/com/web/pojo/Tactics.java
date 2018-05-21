@@ -46,10 +46,14 @@ public class Tactics implements Serializable{
     private Integer netPositionHoldNumber;
     //判断是否正在交易
     private Integer netPositionStatus;
-    //修改时间
-    private Date updateTime;
     //修改人id
-    private Long updateDocumentaryId;
+    private Long updateByUser;
+    //修改时间
+    private String updateDate;
+    //创建时间
+    private String createDate;
+
+    private Long createUser;
     //版本
     private Integer version=0;
 
@@ -213,19 +217,13 @@ public class Tactics implements Serializable{
         this.version = version;
     }
 
-    public Date getUpdateTime() {
-        return updateTime;
+
+
+    public Long getUpdateByUser() {
+        return updateByUser;
     }
 
-    public void setUpdateTime(Date updateTime) {
-        this.updateTime = updateTime;
-    }
-
-    public Long getUpdateDocumentaryId() {
-        return updateDocumentaryId;
-    }
-
-    public void setUpdateDocumentaryId(Long updateDocumentaryId) {
-        this.updateDocumentaryId = updateDocumentaryId;
+    public void setUpdateByUser(Long updateByUser) {
+        this.updateByUser = updateByUser;
     }
 }

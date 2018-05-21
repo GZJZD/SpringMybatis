@@ -23,10 +23,13 @@ public class FollowOrderClient implements Serializable{
     //手数
     private Integer followHandNumber;
     //修改人id
-    private Long documentaryId;
-
+    private Long updateByUser;
     //修改时间
-    private Date updateTime;
+    private String updateDate;
+    //创建时间
+    private String createDate;
+
+    private Long createUser;
     //版本
     private Integer version=0;
 
@@ -38,12 +41,12 @@ public class FollowOrderClient implements Serializable{
         this.id = id;
     }
 
-    public Long getDocumentaryId() {
-        return documentaryId;
+    public Long getUpdateByUser() {
+        return updateByUser;
     }
 
-    public void setDocumentaryId(Long documentaryId) {
-        this.documentaryId = documentaryId;
+    public void setUpdateByUser(Long updateByUser) {
+        this.updateByUser = updateByUser;
     }
 
     public Long getFollowOrderId() {
@@ -86,13 +89,7 @@ public class FollowOrderClient implements Serializable{
         this.followHandNumber = followHandNumber;
     }
 
-    public Date getUpdateTime() {
-        return updateTime;
-    }
 
-    public void setUpdateTime(Date updateTime) {
-        this.updateTime = updateTime;
-    }
 
     public Integer getVersion() {
         return version;

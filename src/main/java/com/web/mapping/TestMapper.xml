@@ -7,11 +7,11 @@
         <!--<result column="pass_name" property="pass_name" jdbcType="VARCHAR" />-->
         <!--<result column="pass_wrod" property="pass_wrod" jdbcType="VARCHAR" />-->
         <!--<result column="only_id" property="only_id" jdbcType="VARCHAR" />-->
-        <!--<result column="update_time" property="update_time" jdbcType="INTEGER" />-->
+        <!--<result column="update_date" property="update_date" jdbcType="INTEGER" />-->
         <!--<result column="create_time" property="create_time" jdbcType="INTEGER" />-->
     <!--</resultMap>-->
     <!--<sql id="Base_Column_List" >-->
-        <!--id, pass_name, pass_wrod, only_id,update_time,create_time-->
+        <!--id, pass_name, pass_wrod, only_id,update_date,create_time-->
     <!--</sql>-->
 
     <!--<select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >-->

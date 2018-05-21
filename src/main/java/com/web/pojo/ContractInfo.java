@@ -18,8 +18,14 @@ public class ContractInfo {
     private String tradePlaceName;
     //合约名称
     private String contractName;
+    //修改人id
+    private Long updateByUser;
     //修改时间
-    private Date updateTime;
+    private String updateDate;
+    //创建时间
+    private String createDate;
+
+    private Long createUser;
 
     public Long getId() {
         return id;
@@ -61,11 +67,4 @@ public class ContractInfo {
         this.contractName = contractName;
     }
 
-    public Date getUpdateTime() {
-        return updateTime;
-    }
-
-    public void setUpdateTime(Date updateTime) {
-        this.updateTime = updateTime;
-    }
 }

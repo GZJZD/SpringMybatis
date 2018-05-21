@@ -3,7 +3,6 @@
 <mapper namespace="com.web.dao.FollowOrderTradeRecordDao">
     <resultMap id="BaseResultMap" type="com.web.pojo.FollowOrderTradeRecord">
         <id column="id" property="id"/>
-        <result column="documentary_id" property="documentary_id"/>
         <result column="variety_id" property="varietyId"/>
         <result column="variety_code" property="varietyCode"/>
         <result column="hand_number" property="handNumber"/>
@@ -19,7 +18,8 @@
         <result column="new_open_order_number" property="newOpenOrderNumber"/>
         <result column="poundage" property="poundage"/>
         <result column="net_position_sum" property="netPositionSum"/>
-        <result column="update_time" property="updateTime"/>
+        <result column="update_date" property="updateDate"  />
+        <result column="create_date" property="createDate"/>
         <result column="version" property="version"/>
     </resultMap>
     <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
@@ -27,25 +27,23 @@
     where id = #{id}
   </delete>
     <insert id="insert" parameterType="com.web.pojo.FollowOrderTradeRecord" useGeneratedKeys="true" keyProperty="id">
-    insert into follow_order_trade_record (documentary_id, variety_id, variety_code, 
+    insert into follow_order_trade_record ( variety_id, variety_code,
       hand_number, trade_time, trade_direction, 
       open_close_type, market_price, signal_number, 
       account_id, follow_order_id, trade_status, 
       open_order_number, new_open_order_number, 
-      poundage,net_position_sum,update_time,version)
-    values (#{documentary_id}, #{varietyId}, #{varietyCode}, 
+      poundage,net_position_sum,update_date,create_date,version)
+    values ( #{varietyId}, #{varietyCode},
       #{handNumber}, #{tradeTime}, #{tradeDirection}, 
       #{openCloseType}, #{marketPrice}, #{signalNumber}, 
       #{accountId}, #{followOrderId}, #{tradeStatus}, 
       #{openOrderNumber}, #{newOpenOrderNumber}, 
-      #{poundage},#{netPositionSum},#{updateTime},#{version})
+      #{poundage},#{netPositionSum},#{updateDate},#{createDate},#{version})
   </insert>
     <update id="updateByPrimaryKey" parameterType="com.web.pojo.FollowOrderTradeRecord">
         update follow_order_trade_record
         <set>
-            <if test="documentary_id != null">
-                documentary_id = #{documentary_id},
-            </if>
+
             <if test="varietyId != null">
                 variety_id = #{varietyId},
             </if>
@@ -92,9 +90,13 @@
                 net_position_sum = #{netPositionSum},
             </if>
 
-            <if test="updateTime != null">
-                update_time = #{updateTime},
+            <if test="updateDate != null ">
+                update_date = #{updateDate},
             </if>
+            <if test="createDate != null ">
+                create_date = #{createDate},
+            </if>
+
             <if test="version != null">
                 version = #{version} + 1
             </if>
@@ -116,7 +118,6 @@
 
     <sql id="base_List">
     id,
-    documentary_id,
     variety_id, variety_code,
     hand_number,
     trade_time,
@@ -130,7 +131,8 @@
     open_order_number,
     new_open_order_number,
     net_position_sum,
-    update_time,
+    update_date,
+    create_date,
     poundage
   </sql>
 </mapper>

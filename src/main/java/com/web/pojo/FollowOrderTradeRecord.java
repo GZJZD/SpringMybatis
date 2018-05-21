@@ -10,8 +10,7 @@ import java.util.Date;
  */
 public class FollowOrderTradeRecord implements Serializable {
     private Long id;
-    //跟单人id
-    private Long documentary_id;
+
     //品种id
     private Long varietyId;
     //品种代码
@@ -19,7 +18,7 @@ public class FollowOrderTradeRecord implements Serializable {
     //手数
     private Double handNumber;
     //交易时间
-    private Date tradeTime;
+    private String tradeTime;
     //交易方向:多/空
     private Integer tradeDirection;
     //交易类型:开仓/平仓
@@ -43,32 +42,11 @@ public class FollowOrderTradeRecord implements Serializable {
     //下单时净头寸的值
     private Integer netPositionSum;
     //修改时间
-    private Date updateTime;
+    private String updateDate;
+    //创建时间
+    private String createDate;
     //版本
     private Integer version=0;
-
-    @Override
-    public String toString() {
-        return "FollowOrderTradeRecord{" +
-                "id=" + id +
-                ", documentary_id=" + documentary_id +
-                ", varietyId=" + varietyId +
-                ", varietyCode='" + varietyCode + '\'' +
-                ", handNumber=" + handNumber +
-                ", tradeTime=" + tradeTime +
-                ", tradeDirection=" + tradeDirection +
-                ", openCloseType=" + openCloseType +
-                ", marketPrice=" + marketPrice +
-                ", signalNumber='" + signalNumber + '\'' +
-                ", accountId=" + accountId +
-                ", followOrderId=" + followOrderId +
-                ", tradeStatus=" + tradeStatus +
-                ", openOrderNumber='" + openOrderNumber + '\'' +
-                ", newOpenOrderNumber='" + newOpenOrderNumber + '\'' +
-                ", poundage=" + poundage +
-                ", version=" + version +
-                '}';
-    }
 
     public Long getId() {
         return id;
@@ -76,14 +54,6 @@ public class FollowOrderTradeRecord implements Serializable {
 
     public void setId(Long id) {
         this.id = id;
-    }
-
-    public Long getDocumentary_id() {
-        return documentary_id;
-    }
-
-    public void setDocumentary_id(Long documentary_id) {
-        this.documentary_id = documentary_id;
     }
 
     public Long getVarietyId() {
@@ -110,11 +80,11 @@ public class FollowOrderTradeRecord implements Serializable {
         this.handNumber = handNumber;
     }
 
-    public Date getTradeTime() {
+    public String getTradeTime() {
         return tradeTime;
     }
 
-    public void setTradeTime(Date tradeTime) {
+    public void setTradeTime(String tradeTime) {
         this.tradeTime = tradeTime;
     }
 
@@ -206,13 +176,7 @@ public class FollowOrderTradeRecord implements Serializable {
         this.netPositionSum = netPositionSum;
     }
 
-    public Date getUpdateTime() {
-        return updateTime;
-    }
 
-    public void setUpdateTime(Date updateTime) {
-        this.updateTime = updateTime;
-    }
 
     public Integer getVersion() {
         return version;
