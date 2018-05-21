@@ -32,11 +32,11 @@ public class FollowOrder implements Serializable {
     //跟单成功率:成功/全部交易
     private String successRate;
     //创建人
-    private Long documentary_id;
+    private Long documentaryId;
     //修改时间
     private Date updateTime;
     //修改人
-    private Long update_documentary_id;
+    private Long updateDocumentaryId;
     //版本
     private Integer version=0;
 
@@ -128,14 +128,6 @@ public class FollowOrder implements Serializable {
         this.successRate = successRate;
     }
 
-    public Long getDocumentary_id() {
-        return documentary_id;
-    }
-
-    public void setDocumentary_id(Long documentary_id) {
-        this.documentary_id = documentary_id;
-    }
-
     public Date getUpdateTime() {
         return updateTime;
     }
@@ -144,12 +136,20 @@ public class FollowOrder implements Serializable {
         this.updateTime = updateTime;
     }
 
-    public Long getUpdate_documentary_id() {
-        return update_documentary_id;
+    public Long getDocumentaryId() {
+        return documentaryId;
     }
 
-    public void setUpdate_documentary_id(Long update_documentary_id) {
-        this.update_documentary_id = update_documentary_id;
+    public void setDocumentaryId(Long documentaryId) {
+        this.documentaryId = documentaryId;
+    }
+
+    public Long getUpdateDocumentaryId() {
+        return updateDocumentaryId;
+    }
+
+    public void setUpdateDocumentaryId(Long updateDocumentaryId) {
+        this.updateDocumentaryId = updateDocumentaryId;
     }
 
     public Integer getVersion() {

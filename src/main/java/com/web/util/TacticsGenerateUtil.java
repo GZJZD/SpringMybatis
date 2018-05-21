@@ -22,7 +22,7 @@ public abstract class TacticsGenerateUtil {
         Account account = new Account(1L,"xiao","123",tradePlatform);
         tactics.setAccount(account);
         //设计品种
-        Variety variety=new Variety(1L,"黄金","XAUUSD.e");
+        Variety variety=new Variety(1L,"黄金","XAUUSD.e","NYMEX");
         tactics.setVariety(variety);
         tactics.setVersion(0);
         //设计状态

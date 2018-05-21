@@ -2,7 +2,12 @@ package com.web.pojo;
 
 import java.io.Serializable;
 import java.util.Date;
-
+/**
+ * 客户
+ *@Author: May
+ *@param
+ *@Date: 15:46 2018/5/21
+ */
 public class FollowOrderClientDetail implements Serializable {
     private Long id;
     //客户名
@@ -31,10 +36,12 @@ public class FollowOrderClientDetail implements Serializable {
     private Integer openOrderNumber;
     //修改时间
     private Date updateTime;
+    //修改人
+    private Long updateDocumentaryId;
     //跟单id
     private Long followOrderId;
     //版本
-    private Date version;
+    private Integer version;
 
     public Long getId() {
         return id;
@@ -156,11 +163,19 @@ public class FollowOrderClientDetail implements Serializable {
         this.followOrderId = followOrderId;
     }
 
-    public Date getVersion() {
+    public Integer getVersion() {
         return version;
     }
 
-    public void setVersion(Date version) {
+    public void setVersion(Integer version) {
         this.version = version;
+    }
+
+    public Long getUpdateDocumentaryId() {
+        return updateDocumentaryId;
+    }
+
+    public void setUpdateDocumentaryId(Long updateDocumentaryId) {
+        this.updateDocumentaryId = updateDocumentaryId;
     }
 }

@@ -2,6 +2,8 @@ package com.web.pojo;
 
 import java.io.Serializable;
 import java.util.Date;
+import java.util.List;
+
 /**
  * 记录客户与跟单之间的联系
  *@Author: May
@@ -20,10 +22,13 @@ public class FollowOrderClient implements Serializable{
     private Integer handNumberType;
     //手数
     private Integer followHandNumber;
+    //修改人id
+    private Long documentaryId;
+
     //修改时间
     private Date updateTime;
     //版本
-    private Date version;
+    private Integer version=0;
 
     public Long getId() {
         return id;
@@ -31,6 +36,14 @@ public class FollowOrderClient implements Serializable{
 
     public void setId(Long id) {
         this.id = id;
+    }
+
+    public Long getDocumentaryId() {
+        return documentaryId;
+    }
+
+    public void setDocumentaryId(Long documentaryId) {
+        this.documentaryId = documentaryId;
     }
 
     public Long getFollowOrderId() {
@@ -81,11 +94,11 @@ public class FollowOrderClient implements Serializable{
         this.updateTime = updateTime;
     }
 
-    public Date getVersion() {
+    public Integer getVersion() {
         return version;
     }
 
-    public void setVersion(Date version) {
+    public void setVersion(Integer version) {
         this.version = version;
     }
 }

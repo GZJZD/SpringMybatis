@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.web.dao.ContractInfoDao">
+    <resultMap id="BaseResultMap" type="com.web.pojo.ContractInfo">
+        <id column="id" property="id"/>
+        <result column="contract_code" property="contractCode"/>
+        <result column="trade_place_name" property="tradePlaceName"/>
+        <result column="contract_name" property="contractName"/>
+        <result column="update_time" property="updateTime"/>
+        <association property="variety" javaType="com.web.pojo.Variety" column="variety_id"
+                     select="com.web.dao.VarietyDao.selectByPrimaryKey"/>
+    </resultMap>
+    <select id="getInfoByVarietyIdAndTradeName" resultType="com.web.pojo.ContractInfo">
+      SELECT
+      id,
+      variety_id,
+      contract_code,
+      trade_place_name,
+      contract_name,
+      update_time
+      from contract_ info
+      where variety_id =#{varietyId} and trade_place_name = #{tradeName}
+    </select>
+    <select id="getContractInfoList" resultMap="BaseResultMap">
+      SELECT
+      id,
+      variety_id,
+      contract_code,
+      trade_place_name,
+      contract_name,
+      update_time
+      from contract_ info
+    </select>
+
+</mapper>

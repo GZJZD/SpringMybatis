@@ -28,13 +28,13 @@
       hand_number, open_price, open_time, 
       close_price, close_time, poundage, 
       profit_loss, client_profit, open_order_number, 
-      update_time, follow_order_id, version
+      update_time,update_documentary_id, follow_order_id, version
       )
     values (#{clientName}, #{varietyName}, #{tradeDirection}, 
       #{handNumber}, #{openPrice}, #{openTime}, 
       #{closePrice}, #{closeTime}, #{poundage}, 
       #{profitLoss}, #{clientProfit}, #{openOrderNumber}, 
-      #{updateTime}, #{followOrderId}, now()
+      #{updateTime}, #{updateDocumentaryId},#{followOrderId}, now()
       )
   </insert>
   <update id="updateByPrimaryKey" parameterType="com.web.pojo.FollowOrderClientDetail" >
@@ -82,7 +82,10 @@
       <if test="followOrderId != null">
         follow_order_id = #{followOrderId},
       </if>
-      version =now()
+      <if test="updateDocumentaryId != null">
+        update_documentary_id = #{updateDocumentaryId},
+      </if>
+      version = #{version} +1
     </set>
     where id = #{id} and version = #{version}
   </update>
@@ -113,6 +116,8 @@
     client_profit,
     open_order_number,
     update_time,
-    follow_order_id
+    update_documentary_id,
+    follow_order_id,
+    version
   </sql>
 </mapper>

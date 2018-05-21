@@ -18,6 +18,8 @@
         <result column="open_order_number" property="openOrderNumber"/>
         <result column="new_open_order_number" property="newOpenOrderNumber"/>
         <result column="poundage" property="poundage"/>
+        <result column="net_position_sum" property="netPositionSum"/>
+        <result column="update_time" property="updateTime"/>
         <result column="version" property="version"/>
     </resultMap>
     <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
@@ -30,13 +32,13 @@
       open_close_type, market_price, signal_number, 
       account_id, follow_order_id, trade_status, 
       open_order_number, new_open_order_number, 
-      poundage,version)
+      poundage,net_position_sum,update_time,version)
     values (#{documentary_id}, #{varietyId}, #{varietyCode}, 
       #{handNumber}, #{tradeTime}, #{tradeDirection}, 
       #{openCloseType}, #{marketPrice}, #{signalNumber}, 
       #{accountId}, #{followOrderId}, #{tradeStatus}, 
       #{openOrderNumber}, #{newOpenOrderNumber}, 
-      #{poundage},#{version})
+      #{poundage},#{netPositionSum},#{updateTime},#{version})
   </insert>
     <update id="updateByPrimaryKey" parameterType="com.web.pojo.FollowOrderTradeRecord">
         update follow_order_trade_record
@@ -86,6 +88,13 @@
             <if test="poundage != null">
                 poundage = #{poundage},
             </if>
+            <if test="netPositionSum != null">
+                net_position_sum = #{netPositionSum},
+            </if>
+
+            <if test="updateTime != null">
+                update_time = #{updateTime},
+            </if>
             <if test="version != null">
                 version = #{version} + 1
             </if>
@@ -120,6 +129,8 @@
     trade_status,
     open_order_number,
     new_open_order_number,
+    net_position_sum,
+    update_time,
     poundage
   </sql>
 </mapper>

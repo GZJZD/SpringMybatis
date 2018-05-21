@@ -12,9 +12,9 @@
     <result column="profit_and_loss_rate" property="profitAndLossRate"  />
     <result column="start_time" property="startTime"  />
     <result column="success_rate" property="successRate"  />
-    <result column="documentary_id" property="documentary_id"  />
+    <result column="documentary_id" property="documentaryId"  />
     <result column="update_time" property="updateTime"  />
-    <result column="update_documentary_id" property="update_documentary_id"  />
+    <result column="update_documentary_id" property="updateDocumentaryId"  />
     <result column="version" property="version"  />
     <association property="tactics" columnPrefix="tactics_" javaType="com.web.pojo.Tactics">
       <id property="id" column="id"/>
@@ -36,8 +36,8 @@
     values (#{tactics.id}, #{followOrderStatus}, #{positionGainAndLoss},
       #{offsetGainAndLoss}, #{gainAndLossTotal}, 
       #{poundageTotal}, #{clientProfit}, #{profitAndLossRate}, 
-      #{startTime}, #{successRate}, #{documentary_id}, 
-      #{updateTime}, #{update_documentary_id},#{version}
+      #{startTime}, #{successRate}, #{documentaryId},
+      #{updateTime}, #{updateDocumentaryId},#{version}
       )
   </insert>
   <update id="updateByPrimaryKey" parameterType="com.web.pojo.FollowOrder" >
@@ -74,13 +74,13 @@
         success_rate = #{successRate},
       </if>
       <if test="documentary_id !=null ">
-        documentary_id = #{documentary_id},
+        documentary_id = #{documentaryId},
       </if>
       <if test="updateTime !=null ">
         update_time = #{updateTime},
       </if>
       <if test="update_documentary_id !=null ">
-        update_documentary_id = #{update_documentary_id},
+        update_documentary_id = #{updateDocumentaryId},
       </if>
       version = #{version} + 1
     </set>

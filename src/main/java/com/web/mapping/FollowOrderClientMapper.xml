@@ -9,7 +9,8 @@
     <result column="hand_number_type" property="handNumberType"  />
     <result column="follow_hand_number" property="followHandNumber"  />
     <result column="update_time" property="updateTime"  />
-    <result column="version" property="version"  jdbcType="TIMESTAMP"/>
+    <result column="documentary_id" property="documentaryId"/>
+    <result column="version" property="version" />
   </resultMap>
   <delete id="deleteByPrimaryKey" parameterType="java.lang.Long" >
     delete from follow_order_client
@@ -17,11 +18,11 @@
   </delete>
   <insert id="insert" parameterType="com.web.pojo.FollowOrderClient" useGeneratedKeys="true" keyProperty="id" >
     insert into follow_order_client (follow_order_id, client_id, follow_manner, 
-      hand_number_type, follow_hand_number, update_time, 
+      hand_number_type, follow_hand_number, update_time, ,documentary_id,
       version)
     values (#{followOrderId}, #{clientId}, #{followManner}, 
-      #{handNumberType}, #{followHandNumber}, #{updateTime}, 
-     now())
+      #{handNumberType}, #{followHandNumber}, #{updateTime}, #{documentary_id}
+     #{version})
   </insert>
   <update id="updateByPrimaryKey" parameterType="com.web.pojo.FollowOrderClient" >
     update follow_order_client
@@ -44,7 +45,13 @@
       <if test="updateTime != null ">
         update_time = #{updateTime},
       </if>
-      version = now()
+      <if test="documentaryId != null ">
+        documentary_id = #{documentaryId},
+      </if>
+      <if test="version != null ">
+        version = #{version} + 1,
+      </if>
+
     </set>
 
     where id = #{id} and version = #{version}
@@ -73,6 +80,8 @@
     follow_manner,
     hand_number_type,
     follow_hand_number,
+    update_time,
+    documentary_id,
     version
   </sql>
 </mapper>

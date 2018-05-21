@@ -24,12 +24,12 @@
       <id column="id" property="id" />
       <result column="username" property="username" />
       <result column="password" property="password" />
-    </association>
-    <association columnPrefix="variety" javaType="com.web.pojo.Variety" property="variety">
-      <id column="id" property="id" />
-      <result column="varietyCode" property="varietyCode" />
-      <result column="varietyName" property="varietyName" />
     </association>-->
+    <association property="variety" columnPrefix="v_"  javaType="com.web.pojo.Variety">
+      <id column="id" property="id"/>
+      <result property="varietyCode" column="variety_code"/>
+      <result property="varietyName" column="variety_name"/>
+    </association>
   </resultMap>
   <delete id="deleteByPrimaryKey" parameterType="java.lang.Long" >
     delete from tactics
@@ -41,13 +41,13 @@
       max_loss_number, account_loss, order_point, 
       client_point, client_point_number, net_position_direction, 
       net_position_change, net_position_follow_number, 
-      net_position_sum, net_position_hold_number, net_position_status,version)
+      net_position_sum, net_position_hold_number, net_position_status,update_time,update_documentary_id,version)
     values (#{tacticsName}, #{account.id},#{variety.id}, #{followManner},
       #{maxProfit}, #{maxProfitNumber}, #{maxLoss}, 
       #{maxLossNumber}, #{accountLoss}, #{orderPoint}, 
       #{clientPoint}, #{clientPointNumber}, #{netPositionDirection}, 
       #{netPositionChange}, #{netPositionFollowNumber}, 
-     #{netPositionSum}, #{netPositionHoldNumber}, #{netPositionStatus},#{version}
+     #{netPositionSum}, #{netPositionHoldNumber}, #{netPositionStatus},#{updateTime},#{updateDocumentaryId}#{version}
      )
   </insert>
   <update id="updateByPrimaryKey" parameterType="com.web.pojo.Tactics" >
@@ -107,6 +107,12 @@
       <if test="netPositionStatus != null">
         net_position_status = #{netPositionStatus},
       </if>
+      <if test="updateTime != null">
+        update_time = #{updateTime},
+      </if>
+      <if test="updateDocumentaryId != null">
+        update_documentary_id = #{updateDocumentaryId},
+      </if>
       version = #{version} + 1
     </set>
     where id = #{id} and version = #{version}
@@ -114,14 +120,22 @@
   </update>
   <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
     select
+    variety.id v_variety_id,
+    variety.variety_name v_variety_name,
+    variety.variety_code v_variety_code,
     <include refid="base_List"/>
     from tactics
+    JOIN variety variety on tactics.variety_id = variety.id
     where id = #{id}
   </select>
   <select id="selectAll" resultMap="BaseResultMap" >
     select
+    variety.id v_variety_id,
+    variety.variety_name v_variety_name,
+    variety.variety_code v_variety_code,
     <include refid="base_List"/>
     from tactics
+    JOIN variety variety on tactics.variety_id = variety.id
   </select>
 
   <sql id="base_List">
@@ -144,6 +158,8 @@
     net_position_sum,
     net_position_hold_number,
     net_position_status,
+    update_time,
+    update_documentary_id,
     version
   </sql>
 </mapper>

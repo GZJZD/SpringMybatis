@@ -2,7 +2,12 @@ package com.web.pojo;
 
 import java.io.Serializable;
 import java.util.Date;
-
+/**
+ * 跟单交易记录
+ *@Author: May
+ *@param
+ *@Date: 15:46 2018/5/21
+ */
 public class FollowOrderTradeRecord implements Serializable {
     private Long id;
     //跟单人id
@@ -35,6 +40,10 @@ public class FollowOrderTradeRecord implements Serializable {
     private String newOpenOrderNumber;
     //手续费
     private Double poundage;
+    //下单时净头寸的值
+    private Integer netPositionSum;
+    //修改时间
+    private Date updateTime;
     //版本
     private Integer version=0;
 
@@ -187,6 +196,22 @@ public class FollowOrderTradeRecord implements Serializable {
 
     public void setPoundage(Double poundage) {
         this.poundage = poundage;
+    }
+
+    public Integer getNetPositionSum() {
+        return netPositionSum;
+    }
+
+    public void setNetPositionSum(Integer netPositionSum) {
+        this.netPositionSum = netPositionSum;
+    }
+
+    public Date getUpdateTime() {
+        return updateTime;
+    }
+
+    public void setUpdateTime(Date updateTime) {
+        this.updateTime = updateTime;
     }
 
     public Integer getVersion() {

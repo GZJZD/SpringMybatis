@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.web.dao.VarietyDao">
+    <resultMap id="BaseResultMap" type="com.web.pojo.Variety">
+       <id column="id" property="id"/>
+        <result column="variety_name" property="varietyName"/>
+        <result column="variety_code" property="varietyCode"/>
+        <result column="trade_ place_name" property="tradePlaceName"/>
+    </resultMap>
+    <select id="selectAll" resultMap="BaseResultMap">
+      SELECT id, variety_name,variety_code,trade_ place_name from variety
+    </select>
+    <select id="selectByPrimaryKey" resultType="com.web.pojo.Variety">
+        SELECT id, variety_name,variety_code,trade_ place_name from variety
+    </select>
+    <select id="selectByVarietyCode" resultType="com.web.pojo.Variety">
+         SELECT id, variety_name,variety_code,trade_ place_name from variety
+         where variety_name = #{varietyCode}
+    </select>
+
+</mapper>
