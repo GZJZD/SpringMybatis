@@ -1,0 +1,125 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.web.dao.FollowOrderTradeRecordDao">
+    <resultMap id="BaseResultMap" type="com.web.pojo.FollowOrderTradeRecord">
+        <id column="id" property="id"/>
+        <result column="documentary_id" property="documentary_id"/>
+        <result column="variety_id" property="varietyId"/>
+        <result column="variety_code" property="varietyCode"/>
+        <result column="hand_number" property="handNumber"/>
+        <result column="trade_time" property="tradeTime"/>
+        <result column="trade_direction" property="tradeDirection"/>
+        <result column="open_close_type" property="openCloseType"/>
+        <result column="market_price" property="marketPrice"/>
+        <result column="signal_number" property="signalNumber"/>
+        <result column="account_id" property="accountId"/>
+        <result column="follow_order_id" property="followOrderId"/>
+        <result column="trade_status" property="tradeStatus"/>
+        <result column="open_order_number" property="openOrderNumber"/>
+        <result column="new_open_order_number" property="newOpenOrderNumber"/>
+        <result column="poundage" property="poundage"/>
+        <result column="version" property="version"/>
+    </resultMap>
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+    delete from follow_order_trade_record
+    where id = #{id}
+  </delete>
+    <insert id="insert" parameterType="com.web.pojo.FollowOrderTradeRecord" useGeneratedKeys="true" keyProperty="id">
+    insert into follow_order_trade_record (documentary_id, variety_id, variety_code, 
+      hand_number, trade_time, trade_direction, 
+      open_close_type, market_price, signal_number, 
+      account_id, follow_order_id, trade_status, 
+      open_order_number, new_open_order_number, 
+      poundage,version)
+    values (#{documentary_id}, #{varietyId}, #{varietyCode}, 
+      #{handNumber}, #{tradeTime}, #{tradeDirection}, 
+      #{openCloseType}, #{marketPrice}, #{signalNumber}, 
+      #{accountId}, #{followOrderId}, #{tradeStatus}, 
+      #{openOrderNumber}, #{newOpenOrderNumber}, 
+      #{poundage},#{version})
+  </insert>
+    <update id="updateByPrimaryKey" parameterType="com.web.pojo.FollowOrderTradeRecord">
+        update follow_order_trade_record
+        <set>
+            <if test="documentary_id != null">
+                documentary_id = #{documentary_id},
+            </if>
+            <if test="varietyId != null">
+                variety_id = #{varietyId},
+            </if>
+            <if test="varietyCode != null">
+                variety_code = #{varietyCode},
+            </if>
+            <if test="handNumber != null">
+                hand_number = #{handNumber},
+            </if>
+            <if test="tradeTime != null">
+                trade_time = #{tradeTime},
+            </if>
+            <if test="tradeDirection != null">
+                trade_direction = #{tradeDirection},
+            </if>
+            <if test="openCloseType != null">
+                open_close_type = #{openCloseType},
+            </if>
+            <if test="marketPrice != null">
+                market_price = #{marketPrice},
+            </if>
+            <if test="signalNumber != null">
+                signal_number = #{signalNumber},
+            </if>
+            <if test="accountId != null">
+                account_id = #{accountId},
+            </if>
+            <if test="followOrderId != null">
+                follow_order_id = #{followOrderId},
+            </if>
+            <if test="tradeStatus != null">
+                trade_status = #{tradeStatus},
+            </if>
+            <if test="openOrderNumber != null">
+                open_order_number = #{openOrderNumber},
+            </if>
+            <if test="newOpenOrderNumber != null">
+                new_open_order_number = #{newOpenOrderNumber},
+            </if>
+            <if test="poundage != null">
+                poundage = #{poundage},
+            </if>
+            <if test="version != null">
+                version = #{version} + 1
+            </if>
+        </set>
+        where id = #{id} and version = #{version}
+    </update>
+
+    <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long">
+    select
+        <include refid="base_List"/>
+    from follow_order_trade_record
+    where id = #{id}
+  </select>
+    <select id="selectAll" resultMap="BaseResultMap">
+    select
+    <include refid="base_List"/>
+    from follow_order_trade_record
+  </select>
+
+    <sql id="base_List">
+    id,
+    documentary_id,
+    variety_id, variety_code,
+    hand_number,
+    trade_time,
+    rade_direction,
+    open_close_type,
+    market_price,
+    signal_number,
+    account_id,
+    follow_order_id,
+    trade_status,
+    open_order_number,
+    new_open_order_number,
+    poundage
+  </sql>
+</mapper>
