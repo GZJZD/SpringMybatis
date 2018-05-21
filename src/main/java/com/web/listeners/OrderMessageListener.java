@@ -5,7 +5,12 @@ import javax.jms.JMSException;
 import javax.jms.Message;
 import javax.jms.MessageListener;
 import javax.jms.TextMessage;
-
+/**
+ * 监听下单的信息
+ *@Author: May
+ *@param
+ *@Date: 11:08 2018/5/21
+ */
 public class OrderMessageListener implements MessageListener {
 
     public void onMessage(Message message) {

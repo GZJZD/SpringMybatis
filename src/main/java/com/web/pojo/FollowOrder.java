@@ -28,15 +28,17 @@ public class FollowOrder implements Serializable {
     //盈亏率:总平仓盈亏除以总手续费
     private Double profitAndLossRate;
     //开始时间
-    private Date startTime;
+    private String startTime;
     //跟单成功率:成功/全部交易
     private String successRate;
-    //创建人
-    private Long documentary_id;
+    //修改人id
+    private Long updateByUser;
     //修改时间
-    private Date updateTime;
-    //修改人
-    private Long update_documentary_id;
+    private String updateDate;
+    //创建时间
+    private String createDate;
+
+    private Long createUser;
     //版本
     private Integer version=0;
 
@@ -112,11 +114,11 @@ public class FollowOrder implements Serializable {
         this.profitAndLossRate = profitAndLossRate;
     }
 
-    public Date getStartTime() {
+    public String getStartTime() {
         return startTime;
     }
 
-    public void setStartTime(Date startTime) {
+    public void setStartTime(String startTime) {
         this.startTime = startTime;
     }
 
@@ -128,28 +130,15 @@ public class FollowOrder implements Serializable {
         this.successRate = successRate;
     }
 
-    public Long getDocumentary_id() {
-        return documentary_id;
+
+
+
+    public Long getUpdateByUser() {
+        return updateByUser;
     }
 
-    public void setDocumentary_id(Long documentary_id) {
-        this.documentary_id = documentary_id;
-    }
-
-    public Date getUpdateTime() {
-        return updateTime;
-    }
-
-    public void setUpdateTime(Date updateTime) {
-        this.updateTime = updateTime;
-    }
-
-    public Long getUpdate_documentary_id() {
-        return update_documentary_id;
-    }
-
-    public void setUpdate_documentary_id(Long update_documentary_id) {
-        this.update_documentary_id = update_documentary_id;
+    public void setUpdateByUser(Long updateByUser) {
+        this.updateByUser = updateByUser;
     }
 
     public Integer getVersion() {
