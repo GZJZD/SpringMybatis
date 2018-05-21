@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
-<mapper namespace="com.web.dao.DocumentaryDetailMapper">
+<mapper namespace="com.web.dao.DocumentaryDetailDao">
     <insert id="insert" parameterType="com.web.pojo.DocumentaryDetail" useGeneratedKeys="true"  keyProperty="id">
        insert into documentaryDetail (login, varietyCode, cmd, counts, openPrice, openTime, closePrice,
       closeTime, poundage, status, leftoverCounts, alreadyProfit)

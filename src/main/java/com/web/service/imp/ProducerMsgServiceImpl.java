@@ -1,4 +1,4 @@
-package com.web.imp;
+package com.web.service.imp;
 
 import com.web.service.IProducerMsgService;
 import org.springframework.beans.factory.annotation.Autowired;

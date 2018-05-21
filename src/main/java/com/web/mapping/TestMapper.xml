@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
-<mapper namespace="com.web.dao.TestMapper">
+<mapper namespace="com.web.dao.TestDao">
 
     <!--<resultMap id="BaseResultMap" type="com.web.pojo.Test" >-->
         <!--<id column="id" property="id" jdbcType="INTEGER" />-->
@@ -28,6 +28,13 @@
             resultType="com.web.pojo.Test">
         select * from users
         where id=#{id}
+    </select>
+
+
+    <select id="findAll"
+            resultType="com.web.pojo.Test">
+        select * from users
+
     </select>
 
 </mapper>

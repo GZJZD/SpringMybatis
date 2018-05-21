@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
-<mapper namespace="com.web.dao.TradeHistoryMapper">
+<mapper namespace="com.web.dao.TradeHistoryDao">
     <insert id="insert" parameterType="com.web.pojo.TradeHistory" useGeneratedKeys="true" keyProperty="id">
         INSERT INTO tradehistory (varietyCode, openClose, cmd, counts, price, createTime,
       poundage, status, newOpenOrderNum, version)

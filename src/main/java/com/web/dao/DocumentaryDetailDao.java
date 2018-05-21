@@ -6,7 +6,7 @@ import com.web.pojo.DocumentaryDetail;
 
 import java.util.List;
 
-public interface DocumentaryDetailMapper {
+public interface DocumentaryDetailDao {
     int deleteByPrimaryKey(Long id);
 
     int insert(DocumentaryDetail record);
