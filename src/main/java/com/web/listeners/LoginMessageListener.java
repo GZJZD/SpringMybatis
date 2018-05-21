@@ -6,6 +6,12 @@ import javax.jms.Message;
 import javax.jms.MessageListener;
 import javax.jms.TextMessage;
 
+/**
+ * 监听登录信息
+ *@Author: May
+ *@param
+ *@Date: 11:07 2018/5/21
+ */
 public class LoginMessageListener implements MessageListener {
 
     public void onMessage(Message message) {
