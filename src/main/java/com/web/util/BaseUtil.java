@@ -8,7 +8,7 @@ public class BaseUtil {
     /**
      * id
      */
-    private Integer id;
+    private Long id;
     /**
      * 创建时间
      */
@@ -27,11 +27,11 @@ public class BaseUtil {
     private Integer updateByUser;
 
 
-    public Integer getId() {
+    public Long getId() {
         return id;
     }
 
-    public void setId(Integer id) {
+    public void setId(Long id) {
         this.id = id;
     }
 
