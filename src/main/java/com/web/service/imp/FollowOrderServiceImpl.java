@@ -6,6 +6,9 @@ import com.web.pojo.*;
 import com.web.pojo.vo.OrderParameter;
 import com.web.service.*;
 
+import com.web.util.common.DateUtil;
+import com.web.util.common.DoubleUtil;
+
 import com.web.util.FollowOrderGenerateUtil;
 import com.web.util.StatusUtil;
 import com.web.util.common.DateUtil;
@@ -14,7 +17,6 @@ import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
 
 import java.util.List;
 
