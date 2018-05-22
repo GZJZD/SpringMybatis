@@ -11,6 +11,9 @@ public class Variety {
     private String varietyCode;
     private String tradePlaceName;
 
+    public Variety() {
+    }
+
     public Long getId() {
         return id;
     }

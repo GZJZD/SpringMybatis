@@ -3,10 +3,9 @@ package com.web.service;
 
 import com.web.pojo.DataSource;
 import com.web.pojo.FollowOrder;
-import com.web.pojo.Tactics;
-import com.web.pojo.vo.OrderParameter;
 
 import java.util.List;
+
 
 /**
  * 跟单模块
@@ -21,13 +20,15 @@ public interface IFollowOrderService {
      *@param
      *@Date: 12:48 2018/5/8
      */
-     FollowOrder getListFollowOrder();
+     List<FollowOrder> getListFollowOrder();
     /** 返回跟单
      *@Author: May
      *@param
      *@Date: 12:48 2018/5/8
      */
      FollowOrder getFollowOrder(Long id);
+
+     void updateFollowOrder(FollowOrder followOrder);
 
     /**
      * 实现交易逻辑
@@ -41,7 +42,7 @@ public interface IFollowOrderService {
      *@param
      *@Date: 12:12 2zero18/5/1zero
      */
-    void checkLogin(Tactics tactics, FollowOrder followOrder);
+    void checkLogin( FollowOrder followOrder);
 
 
 }
