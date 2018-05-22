@@ -8,13 +8,13 @@
         <result column="trade_ place_name" property="tradePlaceName"/>
     </resultMap>
     <select id="selectAll" resultMap="BaseResultMap">
-      SELECT id, variety_name,variety_code,trade_ place_name from variety
+      SELECT id, variety_name,variety_code,trade_place_name from variety
     </select>
     <select id="selectByPrimaryKey" resultType="com.web.pojo.Variety">
-        SELECT id, variety_name,variety_code,trade_ place_name from variety
+        SELECT id, variety_name,variety_code,trade_place_name from variety
     </select>
     <select id="selectByVarietyCode" resultType="com.web.pojo.Variety">
-         SELECT id, variety_name,variety_code,trade_ place_name from variety
+         SELECT id, variety_name,variety_code,trade_place_name from variety
          where variety_name = #{varietyCode}
     </select>
 

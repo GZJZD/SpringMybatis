@@ -121,7 +121,7 @@
     variety_id, variety_code,
     hand_number,
     trade_time,
-    rade_direction,
+    trade_direction,
     open_close_type,
     market_price,
     signal_number,
