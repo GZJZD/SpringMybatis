@@ -210,7 +210,6 @@ public class FollowOrderServiceImpl implements IFollowOrderService {
         } else {
             //空，减少净头寸
             netPositionSum = DoubleUtil.sub(netPositionSum, data.getCounts());
-
         }
         followOrder.setNetPositionSum(netPositionSum);
         updateFollowOrder(followOrder);
