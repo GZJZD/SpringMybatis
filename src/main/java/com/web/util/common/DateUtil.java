@@ -1,4 +1,4 @@
-package com.web.util;
+package com.web.util.common;
 
 import java.text.ParsePosition;
 import java.text.SimpleDateFormat;

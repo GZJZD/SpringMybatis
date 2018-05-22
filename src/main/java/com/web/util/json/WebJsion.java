@@ -1,4 +1,4 @@
-package com.web.util;
+package com.web.util.json;
 
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
