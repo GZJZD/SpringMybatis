@@ -3,15 +3,14 @@ package com.web.pojo.vo;
 import com.web.pojo.FollowOrder;
 
 /**
- * 跟单
+ * 跟单映射表
  *@Author: May
  *@param
  *@Date: 10:46 2018/5/21
  */
 public class FollowOrderVO {
-    private Long id;
     //策略
-    private FollowOrder tactics;
+    private FollowOrder followOrder;
 
     //持仓盈亏
     private Double positionGainAndLoss;
@@ -35,21 +34,12 @@ public class FollowOrderVO {
     private String successRate;
 
 
-
-    public Long getId() {
-        return id;
+    public FollowOrder getFollowOrder() {
+        return followOrder;
     }
 
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public FollowOrder getTactics() {
-        return tactics;
-    }
-
-    public void setTactics(FollowOrder tactics) {
-        this.tactics = tactics;
+    public void setFollowOrder(FollowOrder followOrder) {
+        this.followOrder = followOrder;
     }
 
     public Double getPositionGainAndLoss() {

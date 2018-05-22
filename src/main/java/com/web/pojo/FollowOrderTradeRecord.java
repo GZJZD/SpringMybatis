@@ -40,7 +40,7 @@ public class FollowOrderTradeRecord implements Serializable {
     //手续费
     private Double poundage;
     //下单时净头寸的值
-    private Integer netPositionSum;
+    private Double netPositionSum;
     //修改时间
     private String updateDate;
     //创建时间
@@ -168,15 +168,29 @@ public class FollowOrderTradeRecord implements Serializable {
         this.poundage = poundage;
     }
 
-    public Integer getNetPositionSum() {
+    public Double getNetPositionSum() {
         return netPositionSum;
     }
 
-    public void setNetPositionSum(Integer netPositionSum) {
-        this.netPositionSum = netPositionSum;
+    public String getUpdateDate() {
+        return updateDate;
     }
 
+    public void setUpdateDate(String updateDate) {
+        this.updateDate = updateDate;
+    }
 
+    public String getCreateDate() {
+        return createDate;
+    }
+
+    public void setCreateDate(String createDate) {
+        this.createDate = createDate;
+    }
+
+    public void setNetPositionSum(Double netPositionSum) {
+        this.netPositionSum = netPositionSum;
+    }
 
     public Integer getVersion() {
         return version;
