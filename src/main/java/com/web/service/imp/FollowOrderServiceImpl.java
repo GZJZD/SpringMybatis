@@ -51,17 +51,23 @@ public class FollowOrderServiceImpl implements IFollowOrderService {
         followOrderDao.insert(followOrder);
     }
 
-    //todo demo 返回的是集合
     @Override
     public List<FollowOrder> getListFollowOrder() {
 
-        //通过客户的名字找到对应的跟单id
-        // 再通过获取对应策略找到对应的品种,
-        // 对比数据源的品种是否为同一个
-        //followOrderClientService.getListByClientId()
+        return followOrderDao.selectAll();
+    }
 
+    @Override
+    public List<FollowOrder> getListFollowOrderByClientName(String clientName) {
+
+        //通过客户的名字找到对应的客户id
+        //followOrderClientService.getListByClientId()
+        // 再通过客户的id找到中间表的跟单id，list<ids>
+        //然后逐个找到对应的跟单
+        // 对比数据源的品种是否为同一个
         return null;
     }
+
 
     @Override
     public FollowOrder getFollowOrder(Long id) {
@@ -76,9 +82,10 @@ public class FollowOrderServiceImpl implements IFollowOrderService {
     @Override
     public void madeAnOrder(DataSource data) {
         //1.先获取符合的跟单
-       // List<FollowOrder> listFollowOrder = getListFollowOrder();
+       // List<FollowOrder> listFollowOrder = getListFollowOrderByClientName(data.login);
        // for (FollowOrder followOrder : listFollowOrder) {
-        // List<FollowOrder> listFollowOrder = getListFollowOrder();
+
+        //todo demo过后删除
         FollowOrder followOrder = FollowOrderGenerateUtil.getFollowOrder();
 
         if(getFollowOrder(1L) ==null){
@@ -86,7 +93,6 @@ public class FollowOrderServiceImpl implements IFollowOrderService {
         }else{
             followOrder = getFollowOrder(1L);
         }
-
         followOrder.setAccount(FollowOrderGenerateUtil.getAccount());
         //todo 因为死策略是跟所有客户,所以需要判断是否符合策略的品种
             if (data.getVarietyCode().equals(followOrder.getVariety().getVarietyCode())) {
@@ -292,6 +298,8 @@ public class FollowOrderServiceImpl implements IFollowOrderService {
         followOrderTradeRecord.setHandNumber(counts);
         //设置净头寸的值
         followOrderTradeRecord.setNetPositionSum(followOrder.getNetPositionSum());
+        //添加创建时间
+        followOrderTradeRecord.setCreateDate(DateUtil.getStringDate());
         //新增操作
         followOrderTradeRecordService.save(followOrderTradeRecord);
 

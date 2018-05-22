@@ -20,7 +20,16 @@ public interface IFollowOrderService {
      *@param
      *@Date: 12:48 2018/5/8
      */
-     List<FollowOrder> getListFollowOrder();
+    List<FollowOrder> getListFollowOrder();
+
+
+    /**
+     * 通过客户的名字找到对应的跟单集合
+     *@Author: May
+     *@param clientName
+     *@Date: 14:30 2018/5/22
+     */
+    List<FollowOrder> getListFollowOrderByClientName(String clientName);
     /** 返回跟单
      *@Author: May
      *@param
@@ -37,6 +46,8 @@ public interface IFollowOrderService {
      *@Date: 14:24 2018/4/23
      */
     void madeAnOrder(DataSource data);
+
+
     /**判断该账号是否登录了
      *@Author: May
      *@param

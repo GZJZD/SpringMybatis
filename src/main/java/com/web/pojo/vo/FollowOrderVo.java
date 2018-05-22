@@ -8,7 +8,7 @@ import com.web.pojo.FollowOrder;
  *@param
  *@Date: 10:46 2018/5/21
  */
-public class FollowOrderVO {
+public class FollowOrderVo {
     //策略
     private FollowOrder followOrder;
 

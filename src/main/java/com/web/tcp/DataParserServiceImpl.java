@@ -92,9 +92,9 @@ public class DataParserServiceImpl implements DataParserService,Runnable{
         try {
             FileWriter fw = new FileWriter(f, true);
             BufferedWriter bw = new BufferedWriter(fw);
-            bw.append(DateUtil.getStringDate()+"- - - - - - - - >        ");
+            bw.append(DateUtil.getStringDate()+"- - - - - - - - > "+tcpData);
 
-            bw.append(tcpData);
+          //  bw.append(tcpData);
             bw.newLine();
             bw.close();
             fw.close();
