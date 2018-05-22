@@ -21,16 +21,19 @@
     <result column="create_user" property="createUser" jdbcType="VARCHAR" />
     <result column="update_by_user" property="updateByUser" jdbcType="VARCHAR" />
     </resultMap>
-    <!--<sql id="Base_Column_List" >-->
-    <!--id, pass_name, pass_wrod, only_id,update_time,create_time-->
-    <!--</sql>-->
 
-    <!--<select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >-->
-    <!--select-->
-    <!--<include refid="Base_Column_List" />-->
-    <!--from message-->
-    <!--where id = #{id,jdbcType=INTEGER}-->
-    <!--</select>-->
+    <sql id="Base_Column_List" >
+    id, user_code, platform_code, agency_name ,hold_number ,close_gain_loss ,produce_code ,open_time ,close_time ,in_money ,out_money ,
+    hand_number ,price ,create_date ,update_date ,create_user ,update_by_user
+    </sql>
+
+    <select id="findAll" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select
+    <include refid="Base_Column_List" />
+    from tb_order_user
+
+    </select>
+
 
 
 </mapper>
