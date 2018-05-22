@@ -157,7 +157,12 @@
     </dependency>
 
     <!-- log end -->
-
+    <!--分页：pagehelper-->
+    <dependency>
+      <groupId>com.github.pagehelper</groupId>
+      <artifactId>pagehelper-spring-boot-starter</artifactId>
+      <version>1.2.3</version>
+    </dependency>
     <!-- 映入JSON -->
     <dependency>
       <groupId>org.codehaus.jackson</groupId>
