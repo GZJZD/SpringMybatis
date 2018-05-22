@@ -18,7 +18,7 @@
 		<!-- 持久化 如果设置为非持久化MQ服务器重启后MQ中的数据会丢失-->
 		<property name="deliveryPersistent" value="true"/>
 		<!--这里注意:如果不开启事务，消息在异常的情况下是不会重试的-->
-		<property name="sessionTransacted" value="false"/>
+		<property name="sessionTransacted" value="true"/>
 	</bean>
 	<!--登录-->
 	<bean id="orderJmsTemplate" class="org.springframework.jms.core.JmsTemplate">
@@ -31,7 +31,7 @@
 		<!-- 持久化 如果设置为非持久化MQ服务器重启后MQ中的数据会丢失-->
 		<property name="deliveryPersistent" value="true"/>
 		<!--这里注意:如果不开启事务，消息在异常的情况下是不会重试的-->
-		<property name="sessionTransacted" value="false"/>
+		<property name="sessionTransacted" value="true"/>
 	</bean>
 
 
