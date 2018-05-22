@@ -1,10 +1,6 @@
 package com.web.pojo.vo;
 
 import com.web.pojo.FollowOrder;
-import com.web.util.BaseUtil;
-
-import java.io.Serializable;
-import java.util.Date;
 
 /**
  * 跟单

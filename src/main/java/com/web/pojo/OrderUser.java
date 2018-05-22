@@ -1,6 +1,6 @@
 package com.web.pojo;
 
-import com.web.util.BaseUtil;
+import com.web.util.common.BaseUtil;
 
 /**
  * 客户列表
@@ -59,6 +59,7 @@ public class OrderUser  extends BaseUtil {
      * 手数
      */
     private Double handNumber;
+
     /**
      * 价位
      */

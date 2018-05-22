@@ -1,6 +1,6 @@
 package com.web.pojo;
 
-import com.web.util.BaseUtil;
+import com.web.util.common.BaseUtil;
 
 /**
  * 策略

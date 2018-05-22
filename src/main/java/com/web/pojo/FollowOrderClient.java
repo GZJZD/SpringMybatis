@@ -1,10 +1,6 @@
 package com.web.pojo;
 
-import com.web.util.BaseUtil;
-
-import java.io.Serializable;
-import java.util.Date;
-import java.util.List;
+import com.web.util.common.BaseUtil;
 
 /**
  * 记录客户与跟单之间的联系

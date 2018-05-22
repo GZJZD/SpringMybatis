@@ -1,8 +1,6 @@
 package com.web.pojo;
 
-import com.web.util.BaseUtil;
-
-import java.util.Date;
+import com.web.util.common.BaseUtil;
 
 /**
  * 合约信息
