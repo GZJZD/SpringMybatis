@@ -234,7 +234,12 @@
       <artifactId>activemq-pool</artifactId>
       <version>5.15.2</version>
     </dependency>
-
+    <!-- Mybatis 分页插件 PageHelper 5.0.2包 -->
+    <dependency>
+      <groupId>com.github.pagehelper</groupId>
+      <artifactId>pagehelper</artifactId>
+      <version>5.0.2</version>
+    </dependency>
 
   </dependencies>
   <build>
