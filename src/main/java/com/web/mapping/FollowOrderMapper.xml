@@ -31,13 +31,13 @@
       <result column="username" property="username" />
       <result column="password" property="password" />
     </association>-->
-   <!-- <association property="variety" columnPrefix="v_"  javaType="com.web.pojo.Variety">
+    <association property="variety" columnPrefix="v_"  javaType="com.web.pojo.Variety">
       <id column="id" property="id"/>
       <result property="varietyCode" column="variety_code"/>
       <result property="varietyName" column="variety_name"/>
-    </association>-->
-    <association property="variety" javaType="com.web.pojo.Variety" column="variety_id"
-                 select="com.web.dao.VarietyDao.selectByPrimaryKey"/>
+    </association>
+<!--    <association property="variety" javaType="com.web.pojo.Variety" column="variety_id"
+                 select="com.web.dao.VarietyDao.selectByPrimaryKey"/>-->
   </resultMap>
   <delete id="deleteByPrimaryKey" parameterType="java.lang.Long" >
     delete from follow_order
@@ -144,12 +144,16 @@
     select
     <include refid="base_List"/>
     from follow_order f
+    join variety v on v.id = f.variety_id
     where f.id = #{id}
+
   </select>
   <select id="selectAll" resultMap="BaseResultMap" >
     select
     <include refid="base_List"/>
     from follow_order f
+    join variety v on v.id = f.variety_id
+
   </select>
 
   <sql id="base_List">
@@ -178,6 +182,9 @@
     f.update_by_user,
     f.create_date,
     f.create_user,
-    f.version
+    f.version,
+    v.id v_id,
+    v.variety_code v_variety_code,
+    v.variety_name v_variety_name
   </sql>
 </mapper>

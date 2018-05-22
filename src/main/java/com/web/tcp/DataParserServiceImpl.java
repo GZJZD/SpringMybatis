@@ -5,6 +5,7 @@ import com.web.pojo.DataSource;
 import com.web.service.IFollowOrderService;
 import com.web.tcp.service.DataParserService;
 import com.web.util.ApplicationContextHolder;
+import com.web.util.DateUtil;
 import org.apache.log4j.Logger;
 
 import java.io.BufferedWriter;
@@ -90,6 +91,8 @@ public class DataParserServiceImpl implements DataParserService,Runnable{
         try {
             FileWriter fw = new FileWriter(f, true);
             BufferedWriter bw = new BufferedWriter(fw);
+            bw.append(DateUtil.getStringDate()+"- - - - - - - - >        ");
+
             bw.append(tcpData);
             bw.newLine();
             bw.close();
