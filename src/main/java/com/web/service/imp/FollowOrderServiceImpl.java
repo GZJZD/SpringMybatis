@@ -214,10 +214,10 @@ public class FollowOrderServiceImpl implements IFollowOrderService {
         Double netPositionSum = followOrder.getNetPositionSum();
         if (data.getCmd().equals(StatusUtil.BUY.getIndex())) {
             //多，增加净头寸
-            netPositionSum = DoubleUtil.add(netPositionSum, data.getCounts());
+            netPositionSum = DoubleUtil.add(netPositionSum, data.getHandNumber());
         } else {
             //空，减少净头寸
-            netPositionSum = DoubleUtil.sub(netPositionSum, data.getCounts());
+            netPositionSum = DoubleUtil.sub(netPositionSum, data.getHandNumber());
         }
         followOrder.setNetPositionSum(netPositionSum);
         updateFollowOrder(followOrder);
@@ -276,14 +276,14 @@ public class FollowOrderServiceImpl implements IFollowOrderService {
      * @Date: 11:38 2zero18/5/1zero
      */
     private void SendMsgByTrade(FollowOrder followOrder,Integer cmd, Integer openClose,
-                                Double counts, DataSource data) {
+                                Double handNumber, DataSource data) {
 
 
         FollowOrderTradeRecord followOrderTradeRecord = new FollowOrderTradeRecord();
         //设置新开仓单号
-        followOrderTradeRecord.setNewOpenOrderNumber(data.getNewOpenOrderNum());
+        followOrderTradeRecord.setNewTicket(data.getNewTicket());
         //设置开仓单号
-        followOrderTradeRecord.setOpenOrderNumber(data.getOpenOrderNum());
+        followOrderTradeRecord.setTicket(data.getTicket());
         //设置跟单id
         followOrderTradeRecord.setFollowOrderId(followOrder.getId());
         //设置品种的id
@@ -295,7 +295,7 @@ public class FollowOrderServiceImpl implements IFollowOrderService {
         //设置多空
         followOrderTradeRecord.setTradeDirection(cmd);
         //设置手数
-        followOrderTradeRecord.setHandNumber(counts);
+        followOrderTradeRecord.setHandNumber(handNumber);
         //设置净头寸的值
         followOrderTradeRecord.setNetPositionSum(followOrder.getNetPositionSum());
         //添加创建时间
@@ -304,7 +304,7 @@ public class FollowOrderServiceImpl implements IFollowOrderService {
         followOrderTradeRecordService.save(followOrderTradeRecord);
 
         //设置对接号
-        followOrderTradeRecord.setSignalNumber(data.getOpenOrderNum()+followOrder.getId()+followOrderTradeRecord.getId());
+        followOrderTradeRecord.setSignalNumber(data.getTicket()+followOrder.getId()+followOrderTradeRecord.getId());
         //再update
         followOrderTradeRecordService.updateTradeRecord(followOrderTradeRecord);
 
@@ -315,7 +315,7 @@ public class FollowOrderServiceImpl implements IFollowOrderService {
         //设置交易对象的新开仓单号
         orderParameter.setSignalNumber(followOrderTradeRecord.getSignalNumber());
         //设置交易对象下单手数
-        orderParameter.setHandNum(counts);
+        orderParameter.setHandNum(handNumber);
         //设置多空，为空单
         orderParameter.setCmd(cmd);
         //开仓
@@ -336,14 +336,14 @@ public class FollowOrderServiceImpl implements IFollowOrderService {
      * @Author: May
      * @Date: 11:51 2zero18/5/1zero
      */
-  /*  private void saveDocumentaryDetail(DocumentaryDetail documentaryDetail, Integer cmd, Double counts) {
+  /*  private void saveDocumentaryDetail(DocumentaryDetail documentaryDetail, Integer cmd, Double handNumber) {
         documentaryDetail.setCmd(cmd);
         //设置跟单明细的手数
-        documentaryDetail.setCounts(counts);
+        documentaryDetail.setHandNumber(handNumber);
         //设置跟单明细剩下的手数
-        documentaryDetail.setLeftoverCounts(counts);
+        documentaryDetail.setLeftoverHandNumber(handNumber);
         //设置tcp的新开仓单号
-        // documentaryDetail.setNewOpenOrderNum();
+        // documentaryDetail.setNewTicket();
         //新增一个跟单明细
         //documentaryDetailService.insert(documentaryDetail);
     }
@@ -360,18 +360,18 @@ public class FollowOrderServiceImpl implements IFollowOrderService {
         List<DocumentaryDetail> dataList = documentaryDetailService.selectDataByASC();
         for (DocumentaryDetail documentaryDetail : dataList) {
             if (interim != zero) {
-                Double counts = documentaryDetail.getLeftoverCounts();
-                if (counts > interim) {
-                    documentaryDetail.setLeftoverCounts(counts - interim);
+                Double handNumber = documentaryDetail.getLeftoverHandNumber();
+                if (handNumber > interim) {
+                    documentaryDetail.setLeftoverHandNumber(handNumber - interim);
                     documentaryDetailService.updateByPrimaryKey(documentaryDetail);
                     break;
                 }
-                if (counts <= interim) {
-                    documentaryDetail.setLeftoverCounts(0.0);
+                if (handNumber <= interim) {
+                    documentaryDetail.setLeftoverHandNumber(0.0);
                     documentaryDetail.setClosePrice(88.8);
                     documentaryDetail.setCloseTime(new Date());
                     documentaryDetailService.updateByPrimaryKey(documentaryDetail);
-                    interim = DoubleUtil.sub(interim, counts);
+                    interim = DoubleUtil.sub(interim, handNumber);
                 }
             }
         }

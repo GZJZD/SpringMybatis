@@ -14,8 +14,8 @@
         <result column="account_id" property="accountId"/>
         <result column="follow_order_id" property="followOrderId"/>
         <result column="trade_status" property="tradeStatus"/>
-        <result column="open_order_number" property="openOrderNumber"/>
-        <result column="new_open_order_number" property="newOpenOrderNumber"/>
+        <result column="ticket" property="ticket"/>
+        <result column="new_ticket" property="newTicket"/>
         <result column="poundage" property="poundage"/>
         <result column="net_position_sum" property="netPositionSum"/>
         <result column="update_date" property="updateDate"  />
@@ -31,13 +31,13 @@
       hand_number, trade_time, trade_direction, 
       open_close_type, market_price, signal_number, 
       account_id, follow_order_id, trade_status, 
-      open_order_number, new_open_order_number, 
+      ticket, new_ticket,
       poundage,net_position_sum,update_date,create_date,version)
     values ( #{varietyId}, #{varietyCode},
       #{handNumber}, #{tradeTime}, #{tradeDirection}, 
       #{openCloseType}, #{marketPrice}, #{signalNumber}, 
       #{accountId}, #{followOrderId}, #{tradeStatus}, 
-      #{openOrderNumber}, #{newOpenOrderNumber}, 
+      #{ticket}, #{newTicket},
       #{poundage},#{netPositionSum},#{updateDate},#{createDate},#{version})
   </insert>
     <update id="updateByPrimaryKey" parameterType="com.web.pojo.FollowOrderTradeRecord">
@@ -77,11 +77,11 @@
             <if test="tradeStatus != null">
                 trade_status = #{tradeStatus},
             </if>
-            <if test="openOrderNumber != null">
-                open_order_number = #{openOrderNumber},
+            <if test="ticket != null">
+                ticket = #{ticket},
             </if>
-            <if test="newOpenOrderNumber != null">
-                new_open_order_number = #{newOpenOrderNumber},
+            <if test="newTicket != null">
+                new_ticket = #{newTicket},
             </if>
             <if test="poundage != null">
                 poundage = #{poundage},
@@ -134,8 +134,8 @@
     account_id,
     follow_order_id,
     trade_status,
-    open_order_number,
-    new_open_order_number,
+    ticket,
+    new_ticket,
     net_position_sum,
     update_date,
     create_date,

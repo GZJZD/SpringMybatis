@@ -8,7 +8,7 @@ import java.util.Date;
  *@param
  *@Date: 15:46 2018/5/21
  */
-public class FollowOrderClientDetail implements Serializable {
+public class FollowOrderDetail implements Serializable {
     private Long id;
     //客户名
     private String clientName;
@@ -18,6 +18,10 @@ public class FollowOrderClientDetail implements Serializable {
     private Integer tradeDirection;
     //手数
     private Double handNumber;
+    //剩下手数
+    private Double remainHandNumber;
+    //交易id
+    private Long followOrderTradeRecordId;
     //开仓价
     private Double openPrice;
     //开仓时间
@@ -33,14 +37,13 @@ public class FollowOrderClientDetail implements Serializable {
     //客户盈亏
     private Double clientProfit;
     //开仓单号
-    private Integer openOrderNumber;
+    private Integer ticket;
     //修改人id
     private Long updateByUser;
     //修改时间
     private String updateDate;
     //创建时间
     private String createDate;
-
     //跟单id
     private Long followOrderId;
     //版本
@@ -160,12 +163,12 @@ public class FollowOrderClientDetail implements Serializable {
         this.clientProfit = clientProfit;
     }
 
-    public Integer getOpenOrderNumber() {
-        return openOrderNumber;
+    public Integer getTicket() {
+        return ticket;
     }
 
-    public void setOpenOrderNumber(Integer openOrderNumber) {
-        this.openOrderNumber = openOrderNumber;
+    public void setTicket(Integer ticket) {
+        this.ticket = ticket;
     }
 
     public Long getFollowOrderId() {
@@ -190,5 +193,21 @@ public class FollowOrderClientDetail implements Serializable {
 
     public void setUpdateByUser(Long updateByUser) {
         this.updateByUser = updateByUser;
+    }
+
+    public Double getRemainHandNumber() {
+        return remainHandNumber;
+    }
+
+    public void setRemainHandNumber(Double remainHandNumber) {
+        this.remainHandNumber = remainHandNumber;
+    }
+
+    public Long getFollowOrderTradeRecordId() {
+        return followOrderTradeRecordId;
+    }
+
+    public void setFollowOrderTradeRecordId(Long followOrderTradeRecordId) {
+        this.followOrderTradeRecordId = followOrderTradeRecordId;
     }
 }

@@ -1,12 +1,14 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
-<mapper namespace="com.web.dao.FollowOrderClientDetailDao" >
-  <resultMap id="BaseResultMap" type="com.web.pojo.FollowOrderClientDetail" >
+<mapper namespace="com.web.dao.FollowOrderDetailDao" >
+  <resultMap id="BaseResultMap" type="com.web.pojo.FollowOrderDetail" >
     <id column="id" property="id"  />
     <result column="client_name" property="clientName"  />
     <result column="variety_name" property="varietyName"  />
     <result column="trade_direction" property="tradeDirection"  />
     <result column="hand_number" property="handNumber"  />
+    <result column="remain_hand_number" property="remainHandNumber"/>
+    <result column="follow_order_trade_record_id" property="followOrderTradeRecordId"/>
     <result column="open_price" property="openPrice"  />
     <result column="open_time" property="openTime"  />
     <result column="close_price" property="closePrice"  />
@@ -14,7 +16,7 @@
     <result column="poundage" property="poundage"  />
     <result column="profit_loss" property="profitLoss"  />
     <result column="client_profit" property="clientProfit"  />
-    <result column="open_order_number" property="openOrderNumber"  />
+    <result column="ticket" property="ticket"  />
     <result column="update_date" property="updateDate"  />
     <result column="update_by_user" property="updateByUser"/>
     <result column="create_date" property="createDate"/>
@@ -22,25 +24,25 @@
     <result column="version" property="version"  />
   </resultMap>
   <delete id="deleteByPrimaryKey" parameterType="java.lang.Long" >
-    delete from follow_order_client_detail
+    delete from follow_order_detail
     where id = #{id}
   </delete>
-  <insert id="insert" parameterType="com.web.pojo.FollowOrderClientDetail" useGeneratedKeys="true" keyProperty="id" >
-    insert into follow_order_client_detail (client_name, variety_name, trade_direction, 
-      hand_number, open_price, open_time, 
+  <insert id="insert" parameterType="com.web.pojo.FollowOrderDetail" useGeneratedKeys="true" keyProperty="id" >
+    insert into follow_order_detail (client_name, variety_name, trade_direction, 
+      hand_number,remain_hand_number,follow_order_trade_record_id, open_price, open_time,
       close_price, close_time, poundage, 
-      profit_loss, client_profit, open_order_number, 
+      profit_loss, client_profit, ticket,
       update_date,update_by_user,create_date, follow_order_id, version
       )
     values (#{clientName}, #{varietyName}, #{tradeDirection}, 
-      #{handNumber}, #{openPrice}, #{openTime}, 
+      #{handNumber},#{remainHandNumber},#{followOrderTradeRecordId}, #{openPrice}, #{openTime},
       #{closePrice}, #{closeTime}, #{poundage}, 
-      #{profitLoss}, #{clientProfit}, #{openOrderNumber}, 
+      #{profitLoss}, #{clientProfit}, #{ticket},
       #{updateDate}, #{updateByUser} ,#{createDate},#{followOrderId},#{version}
       )
   </insert>
-  <update id="updateByPrimaryKey" parameterType="com.web.pojo.FollowOrderClientDetail" >
-    update follow_order_client_detail
+  <update id="updateByPrimaryKey" parameterType="com.web.pojo.FollowOrderDetail" >
+    update follow_order_detail
     <set>
       <if test="clientName != null">
         client_name = #{clientName},
@@ -53,6 +55,12 @@
       </if>
       <if test="handNumber != null">
         hand_number = #{handNumber},
+      </if>
+      <if test="remainHandNumber != null">
+        remain_hand_number = #{remainHandNumber},
+      </if>
+      <if test="followOrderTradeRecordId != null">
+        follow_order_trade_record_id = #{followOrderTradeRecordId},
       </if>
       <if test="openPrice != null">
         open_price = #{openPrice},
@@ -75,8 +83,8 @@
       <if test="clientProfit != null">
         client_profit = #{clientProfit},
       </if>
-      <if test="openOrderNumber != null">
-        open_order_number = #{openOrderNumber},
+      <if test="ticket != null">
+        ticket = #{ticket},
       </if>
 
       <if test="followOrderId != null">
@@ -98,13 +106,13 @@
   <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
     select
     <include refid="base_List"/>
-    from follow_order_client_detail
+    from follow_order_detail
     where id = #{id}
   </select>
   <select id="selectAll" resultMap="BaseResultMap" >
     select
     <include refid="base_List"/>
-    from follow_order_client_detail
+    from follow_order_detail
   </select>
 
   <sql id="base_List">
@@ -113,6 +121,8 @@
     variety_name,
     trade_direction,
     hand_number,
+    remain_hand_number,
+    follow_order_trade_record_id,
     open_price,
     open_time,
     close_price,
@@ -120,7 +130,7 @@
     poundage,
     profit_loss,
     client_profit,
-    open_order_number,
+    ticket,
     update_date,
     update_by_user,
     create_date,

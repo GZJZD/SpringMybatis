@@ -34,9 +34,9 @@ public class FollowOrderTradeRecord implements Serializable {
     //交易状态:成功/失败
     private Integer tradeStatus;
     //开仓单号
-    private String openOrderNumber;
+    private String ticket;
     //新开仓单号
-    private String newOpenOrderNumber;
+    private String newTicket;
     //手续费
     private Double poundage;
     //下单时净头寸的值
@@ -144,20 +144,20 @@ public class FollowOrderTradeRecord implements Serializable {
         this.tradeStatus = tradeStatus;
     }
 
-    public String getOpenOrderNumber() {
-        return openOrderNumber;
+    public String getTicket() {
+        return ticket;
     }
 
-    public void setOpenOrderNumber(String openOrderNumber) {
-        this.openOrderNumber = openOrderNumber;
+    public void setTicket(String ticket) {
+        this.ticket = ticket;
     }
 
-    public String getNewOpenOrderNumber() {
-        return newOpenOrderNumber;
+    public String getNewTicket() {
+        return newTicket;
     }
 
-    public void setNewOpenOrderNumber(String newOpenOrderNumber) {
-        this.newOpenOrderNumber = newOpenOrderNumber;
+    public void setNewTicket(String newTicket) {
+        this.newTicket = newTicket;
     }
 
     public Double getPoundage() {

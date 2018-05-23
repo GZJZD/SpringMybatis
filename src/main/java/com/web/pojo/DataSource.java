@@ -15,13 +15,13 @@ public class DataSource {
     //账号
     private String login;
     //开仓单号
-    private String openOrderNum;
+    private String ticket;
     //新开仓单号
-    private String newOpenOrderNum;
+    private String newTicket;
     //商品
     private String varietyCode;
     //手数
-    private Double counts;
+    private Double handNumber;
     //价位
     private Double price;
     //时间
@@ -53,17 +53,17 @@ public class DataSource {
         this.login = login;
     }
 
-    public String getOpenOrderNum() {
-        return openOrderNum;
+    public String getTicket() {
+        return ticket;
     }
-    public void setOpenOrderNum(String openOrderNum) {
-        this.openOrderNum = openOrderNum;
+    public void setTicket(String ticket) {
+        this.ticket = ticket;
     }
-    public String getNewOpenOrderNum() {
-        return newOpenOrderNum;
+    public String getNewTicket() {
+        return newTicket;
     }
-    public void setNewOpenOrderNum(String newOpenOrderNum) {
-        this.newOpenOrderNum = newOpenOrderNum;
+    public void setNewTicket(String newTicket) {
+        this.newTicket = newTicket;
     }
     public String getVarietyCode() {
         return varietyCode;
@@ -71,11 +71,11 @@ public class DataSource {
     public void setVarietyCode(String varietyCode) {
         this.varietyCode = varietyCode;
     }
-    public Double getCounts() {
-        return counts;
+    public Double getHandNumber() {
+        return handNumber;
     }
-    public void setCounts(Double counts) {
-        this.counts = counts;
+    public void setHandNumber(Double handNumber) {
+        this.handNumber = handNumber;
     }
     public Double getPrice() {
         return price;
@@ -123,10 +123,10 @@ public class DataSource {
         return "DataSource{" +
                 "head='" + head + '\'' +
                 ", login='" + login + '\'' +
-                ", openOrderNum='" + openOrderNum + '\'' +
-                ", newOpenOrderNum='" + newOpenOrderNum + '\'' +
+                ", ticket='" + ticket + '\'' +
+                ", newTicket='" + newTicket + '\'' +
                 ", varietyCode='" + varietyCode + '\'' +
-                ", counts=" + counts +
+                ", handNumber=" + handNumber +
                 ", price=" + price +
                 ", createTime=" + createTime +
                 ", cmd=" + cmd +

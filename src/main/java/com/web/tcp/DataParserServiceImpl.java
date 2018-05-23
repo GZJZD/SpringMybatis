@@ -47,10 +47,10 @@ public class DataParserServiceImpl implements DataParserService,Runnable{
         try {
             dataSource.setHead(splitArr[index++]);//头
             dataSource.setLogin(splitArr[index++]);//账号
-            dataSource.setOpenOrderNum(splitArr[index++]);//开仓单号
-            dataSource.setNewOpenOrderNum(splitArr[index++]);//新开仓单号
+            dataSource.setTicket(splitArr[index++]);//开仓单号
+            dataSource.setNewTicket(splitArr[index++]);//新开仓单号
             dataSource.setVarietyCode(splitArr[index++]);//商品
-            dataSource.setCounts(Double.parseDouble(splitArr[index++]));//手数
+            dataSource.setHandNumber(Double.parseDouble(splitArr[index++]));//手数
             dataSource.setPrice(Double.parseDouble(splitArr[index++]));//价位
             dataSource.setCreateTime(splitArr[index++]);//时间
             dataSource.setCmd(Integer.parseInt(splitArr[index++]));//多空
