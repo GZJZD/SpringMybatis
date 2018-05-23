@@ -2,6 +2,7 @@ package com.web.dao;
 
 
 import com.web.pojo.FollowOrderDetail;
+import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
 
@@ -12,7 +13,9 @@ public interface FollowOrderDetailDao {
 
     FollowOrderDetail selectByPrimaryKey(Long id);
 
-    List<FollowOrderDetail> selectAll();
-
     int updateByPrimaryKey(FollowOrderDetail record);
+
+    List<FollowOrderDetail> getDetailListByFollowOrderId(Long followOrderId);
+
+    List<FollowOrderDetail> getDetailListByOrderIdAndDirection(@Param("followOrderId") Long followOrderId, @Param("direction") Integer direction);
 }

@@ -109,10 +109,22 @@
     from follow_order_detail
     where id = #{id}
   </select>
-  <select id="selectAll" resultMap="BaseResultMap" >
+
+
+
+    <select id="getDetailListByFollowOrderId" resultMap="BaseResultMap">
+      select
+      <include refid="base_List"/>
+      from follow_order_detail
+      where follow_order_id = #{followOrderId}
+    </select>
+  <select id="getDetailListByOrderIdAndDirection" resultMap="BaseResultMap">
     select
     <include refid="base_List"/>
     from follow_order_detail
+    where follow_order_id = #{followOrderId} and trade_direction = #{direction} and remain_hand_number != 0
+    order by open_time asc
+
   </select>
 
   <sql id="base_List">

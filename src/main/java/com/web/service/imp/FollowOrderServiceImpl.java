@@ -11,8 +11,8 @@ import com.web.util.common.DoubleUtil;
 
 import com.web.util.FollowOrderGenerateUtil;
 import com.web.util.StatusUtil;
-import com.web.util.common.DateUtil;
-import com.web.util.common.DoubleUtil;
+import com.web.util.query.PageResult;
+import com.web.util.query.QueryObject;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -52,9 +52,12 @@ public class FollowOrderServiceImpl implements IFollowOrderService {
     }
 
     @Override
-    public List<FollowOrder> getListFollowOrder() {
-
-        return followOrderDao.selectAll();
+    public PageResult getListFollowOrder(QueryObject queryObject) {
+        int rows = followOrderDao.queryForCount(queryObject);
+        if(rows==0){
+            return new PageResult(queryObject.getPageSize());
+        }
+        return new PageResult(queryObject.getCurrentPage(),queryObject.getPageSize(),rows,followOrderDao.selectAll(queryObject));
     }
 
     @Override

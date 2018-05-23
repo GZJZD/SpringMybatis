@@ -115,7 +115,7 @@
     <include refid="base_List"/>
     from follow_order_trade_record
   </select>
-    <select id="getTradeRecordBySignalNumber" resultType="com.web.pojo.FollowOrderTradeRecord">
+    <select id="getTradeRecordBySignalNumber" resultMap="BaseResultMap">
         select
         <include refid="base_List"/>
         from follow_order_trade_record

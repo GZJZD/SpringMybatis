@@ -11,6 +11,8 @@ public enum StatusUtil {
     CLOSE("平",1),
     TRADING_START("交易中",0),
     TRADING_PAUSE("交易暂停",1),
+    TRADING_SUCCESS("交易成功",1),
+    TRADING_FAILURE("交易失败",0),
     DIRECTION_REVERSE("反向跟单",0),
     DIRECTION_POSITIVE("正向跟单",1),
     MARKET_PRICE("市价",1),
