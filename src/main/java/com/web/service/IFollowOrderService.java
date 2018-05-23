@@ -3,6 +3,8 @@ package com.web.service;
 
 import com.web.pojo.DataSource;
 import com.web.pojo.FollowOrder;
+import com.web.util.query.PageResult;
+import com.web.util.query.QueryObject;
 
 import java.util.List;
 
@@ -15,12 +17,14 @@ public interface IFollowOrderService {
 
 
     void save(FollowOrder followOrder);
+
     /** 返回跟单集合
      *@Author: May
-     *@param
      *@Date: 12:48 2018/5/8
+     * @param
+     * @param queryObject
      */
-    List<FollowOrder> getListFollowOrder();
+    PageResult getListFollowOrder(QueryObject queryObject);
 
 
     /**

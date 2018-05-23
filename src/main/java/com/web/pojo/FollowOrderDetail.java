@@ -37,7 +37,7 @@ public class FollowOrderDetail implements Serializable {
     //客户盈亏
     private Double clientProfit;
     //开仓单号
-    private Integer ticket;
+    private String ticket;
     //修改人id
     private Long updateByUser;
     //修改时间
@@ -113,7 +113,13 @@ public class FollowOrderDetail implements Serializable {
         this.openPrice = openPrice;
     }
 
+    public void setTicket(String ticket) {
+        this.ticket = ticket;
+    }
 
+    public String getTicket() {
+        return ticket;
+    }
 
     public Double getClosePrice() {
         return closePrice;
@@ -161,14 +167,6 @@ public class FollowOrderDetail implements Serializable {
 
     public void setClientProfit(Double clientProfit) {
         this.clientProfit = clientProfit;
-    }
-
-    public Integer getTicket() {
-        return ticket;
-    }
-
-    public void setTicket(Integer ticket) {
-        this.ticket = ticket;
     }
 
     public Long getFollowOrderId() {

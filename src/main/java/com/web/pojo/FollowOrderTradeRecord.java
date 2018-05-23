@@ -172,6 +172,10 @@ public class FollowOrderTradeRecord implements Serializable {
         return netPositionSum;
     }
 
+    public void setNetPositionSum(Double netPositionSum) {
+        this.netPositionSum = netPositionSum;
+    }
+
     public String getUpdateDate() {
         return updateDate;
     }
@@ -186,10 +190,6 @@ public class FollowOrderTradeRecord implements Serializable {
 
     public void setCreateDate(String createDate) {
         this.createDate = createDate;
-    }
-
-    public void setNetPositionSum(Double netPositionSum) {
-        this.netPositionSum = netPositionSum;
     }
 
     public Integer getVersion() {
