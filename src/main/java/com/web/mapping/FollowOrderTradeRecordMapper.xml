@@ -124,7 +124,8 @@
 
     <sql id="base_List">
     id,
-    variety_id, variety_code,
+    variety_id,
+    variety_code,
     hand_number,
     trade_time,
     trade_direction,
@@ -139,6 +140,7 @@
     net_position_sum,
     update_date,
     create_date,
-    poundage
+    poundage,
+    version
   </sql>
 </mapper>

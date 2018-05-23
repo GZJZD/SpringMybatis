@@ -154,9 +154,12 @@ public class FollowOrderTradeRecordService implements IFollowOrderTradeRecordSer
                 orderDetail.setOpenTime(followOrderTradeRecord.getTradeTime());
                 //设置平仓价格
                 orderDetail.setOpenPrice(followOrderTradeRecord.getMarketPrice());
+                //设置剩下手数
+                orderDetail.setRemainHandNumber(followOrderTradeRecord.getHandNumber());
             }
             //设置手数
             orderDetail.setHandNumber(followOrderTradeRecord.getHandNumber());
+
             //设置交易方向
             orderDetail.setTradeDirection(followOrderTradeRecord.getTradeDirection());
             //设置品种的名称

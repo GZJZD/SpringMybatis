@@ -47,7 +47,7 @@ public class FollowOrderDetail implements Serializable {
     //跟单id
     private Long followOrderId;
     //版本
-    private Integer version;
+    private Integer version=0;
 
     public String getUpdateDate() {
         return updateDate;
