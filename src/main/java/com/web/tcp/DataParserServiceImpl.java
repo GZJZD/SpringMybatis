@@ -3,6 +3,7 @@ package com.web.tcp;
 import com.alibaba.fastjson.JSON;
 import com.web.pojo.DataSource;
 import com.web.service.IFollowOrderService;
+import com.web.service.OrderUserService;
 import com.web.tcp.service.DataParserService;
 import com.web.util.ApplicationContextHolder;
 
@@ -28,6 +29,9 @@ public class DataParserServiceImpl implements DataParserService,Runnable{
     private IFollowOrderService
             followOrderService = (IFollowOrderService) ApplicationContextHolder
             .getBeanByName("followOrderServiceImpl");
+    private OrderUserService
+            orderUserService = (OrderUserService) ApplicationContextHolder
+            .getBeanByName("orderUserService");
     private static String path = "E:/tcpData/";
 
 
@@ -59,6 +63,7 @@ public class DataParserServiceImpl implements DataParserService,Runnable{
             dataSource.setPlatformName(this.platformName);
             dataSource.setAgencyName("JZT");
             createFile(dealMsg);
+            orderUserService.addOrderUser(dataSource);
             log.info("接收到一条来自TCP的数据："+ JSON.toJSONString(dataSource));
 
         }catch (Exception e) {
@@ -82,25 +87,7 @@ public class DataParserServiceImpl implements DataParserService,Runnable{
      *@param
      *@Date: 14:10 2018/5/18
      */
-    public  void
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-    createFile(String tcpData)throws Exception{
+    public  void createFile(String tcpData)throws Exception{
         Date date = new Date();
         String fileName=path+new SimpleDateFormat("yyyyMMdd").format(date);
         //如果不存在,创建文件夹
