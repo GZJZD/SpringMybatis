@@ -470,7 +470,7 @@ function dateShow(){
 					count: 100,
 					layout: ['count', 'prev', 'page', 'next', 'limit', 'skip'],
 					jump: function(obj) {
-						console.log(obj)
+						// console.log(obj)
 					}
 				});
 			

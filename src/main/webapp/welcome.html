@@ -127,10 +127,11 @@
 		</div>
 		<!-- 注意：如果你直接复制所有代码到本地，上述js路径需要改成你本地的 -->
 		<script type="text/javascript">
+			var url ="orderUser/get.Action";
 		//	table_Id, method, url, unique_Id, sortOrder, columns
-			var tableId ="#table";
+			var tableId =$("#table");
 			var method = "post";
-			var url_  ="demo.json";
+			var url_  =url;
 			var unique_Id = "id";
 			var sortOrder = "asc";
 			var columns = [{
@@ -147,10 +148,10 @@
 						title: 'ID'
 					},
 					{
-						field: 'name',
+						field: 'updateByUser',
 						title: '名字'
 					}, {
-						field: 'stargazers_count',
+						field: 'updateDate',
 						title: '隨便'
 					}, {
 						field: 'forks_count',
@@ -163,7 +164,7 @@
 						align: 'center',
 						valign: 'middle',
 						formatter: actionFormatter
-					},
+					}
 				];
 			
 			$(function(){
