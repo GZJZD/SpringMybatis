@@ -3,8 +3,8 @@
 
 	<head>
 		<meta charset="UTF-8">
-		<title>跟单明细</title>
-		<link rel="stylesheet" href="../../css/bootstrap.min.css" />
+		<title>11跟单明细</title>
+		<link rel="stylesheet" href="http://netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap.min.css" rel="stylesheet">
 		<link rel="stylesheet" href="../../css/font.css">
 		<link rel="stylesheet" href="../../css/common.css">
 		<link rel="stylesheet" href="css/documentary-details.css">
@@ -50,7 +50,7 @@
 						<li>跟单参数</li>
 					</ul>
 					<div class="layui-tab-content" style="height: 100px;">
-						<div class="layui-tab-item layui-show">
+						<div class="layui-tab-item ">
 							<table class="layui-table">
 								<thead>
 									<tr>
@@ -106,7 +106,13 @@
 								</tbody>
 							</table>
 						</div>
-						<div class="layui-tab-item">内容2</div>
+						<div class="layui-tab-item layui-show">
+
+							<table id="detailTable">
+
+							</table>
+
+						</div>
 						<div class="layui-tab-item">内容3</div>
 						<div class="layui-tab-item">内容4</div>
 						<div class="layui-tab-item">内容5</div>
@@ -118,7 +124,48 @@
 		</div>
 
 		<script type="text/javascript" src="../../js/common.js"></script>
+		<script type="text/javascript">
+            var tableId =$("#detailTable");
+            var method = "post";
+            //var url_  ="demo.json";
+            var url_  ="/getPositionDetails.Action?followOrderId=1";
+            var unique_Id = "detailId";
+            var sortOrder = "asc";
+			var columns = [{
+			 title: '全选',
+			 field: 'select',
+			 //复选框
+			 checkbox: true,
 
+			 align: 'center',
+			 valign: 'middle'
+			 },
+			 {
+			 field: 'detailId',
+			 title: 'ID'
+			 },
+
+			 {
+			 field: 'ID',
+			 title: '操作',
+
+			 align: 'center',
+			 valign: 'middle',
+			 formatter: actionFormatter
+			 }
+			 ];
+
+            $(function(){
+
+				showByTableId(tableId,method,url_,unique_Id,sortOrder,columns);
+			})
+            //根据窗口调整表格高度
+            $(window).resize(function() {
+                $('#detailTable').bootstrapTable('resetView', {
+                    height: tableHeight()
+                })
+            })
+		</script>
 	</body>
 
 </html>

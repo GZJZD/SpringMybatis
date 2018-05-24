@@ -116,11 +116,13 @@
 									<th>跟单方案</th>
 									<th>跟单账号</th>
 									<th>品种</th>
+									<th>跟单方式</th>
 									<th>开始时间</th>
 									<th>跟单成功率</th>
 									<th>持仓盈亏</th>
 									<th>平仓盈亏</th>
 									<th>手续费</th>
+									<th>盈亏效率</th>
 									<th>客户盈亏</th>
 									<th>跟单状态</th>
 									<th>操作</th>
@@ -141,6 +143,8 @@
 									<td>2525</td>
 									<td>北京市 海淀区</td>
 									<td>2017-01-01 11:11:42</td>
+									<td>122.0</td>
+									<td>555</td>
 									<td class="td-status">
 										<span class="layui-btn layui-btn-normal layui-btn-mini">已启用</span></td>
 									<td class="td-manage">
@@ -157,7 +161,10 @@
 											<i class="layui-icon">&#xe640;</i>
 										</a>
 
-										<a title="查看" onclick="common_details('跟单明细','documentary-details.html',)" href="javascript:;">
+										<!--<a title="查看" onclick="common_details('跟单明细','documentary-details.html','getPositionDetails?')" href="javascript:;">
+											<i class="layui-icon"> &#xe615;</i>
+										</a>-->
+										<a title="查看" onclick="common_details('1','跟单明细','documentary-details.html')" href="javascript:;">
 											<i class="layui-icon"> &#xe615;</i>
 										</a>
 									</td>
@@ -206,7 +213,6 @@
           });
       }
 
-			
 			
 		</script>
 
