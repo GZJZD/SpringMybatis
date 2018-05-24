@@ -4,18 +4,19 @@
 
     <resultMap id="BaseResultMap" type="com.web.pojo.OrderUser" >
     <id column="id" property="id" jdbcType="BIGINT" />
-    <result column="user_code" property="userCode" jdbcType="BIGINT" />
-    <result column="platform_code" property="platformCode" jdbcType="BIGINT" />
-    <result column="agency_name" property="agencyName" jdbcType="VARCHAR" />
-    <result column="hold_number" property="holdNumber" jdbcType="BIGINT" />
-    <result column="close_gain_loss" property="closeGainLoss" jdbcType="NUMERIC" />
-    <result column="produce_code" property="produceCode" jdbcType="NUMERIC" />
+    <result column="user_code" property="userCode" jdbcType="VARCHAR" />
+    <result column="produce_code" property="produceCode" jdbcType="VARCHAR" />
+    <result column="hand_number" property="handNumber" jdbcType="NUMERIC" />
     <result column="open_time" property="openTime" jdbcType="VARCHAR" />
     <result column="close_time" property="closeTime" jdbcType="VARCHAR" />
-    <result column="in_money" property="inMoney" jdbcType="NUMERIC" />
-    <result column="out_money" property="outMoney" jdbcType="NUMERIC" />
-    <result column="hand_number" property="handNumber" jdbcType="NUMERIC" />
     <result column="price" property="price" jdbcType="NUMERIC" />
+    <result column="ticket" property="ticket" jdbcType="VARCHAR" />
+    <result column="open_price" property="openPrice" jdbcType="DOUBLE" />
+    <result column="agency_name" property="agencyName" jdbcType="VARCHAR" />
+    <result column="plat_form_code" property="platFormCode" jdbcType="VARCHAR" />
+    <result column="profit" property="profit" jdbcType="DOUBLE" />
+    <result column="close_price" property="closePrice" jdbcType="DOUBLE" />
+    <result column="long_short" property="longShort" jdbcType="INTEGER" />
     <result column="create_date" property="createDate" jdbcType="VARCHAR" />
     <result column="update_date" property="updateDate" jdbcType="VARCHAR" />
     <result column="create_user" property="createUser" jdbcType="VARCHAR" />
@@ -23,8 +24,8 @@
     </resultMap>
 
     <sql id="Base_Column_List" >
-    id, user_code, platform_code, agency_name ,hold_number ,close_gain_loss ,produce_code ,open_time ,close_time ,in_money ,out_money ,
-    hand_number ,price ,create_date ,update_date ,create_user ,update_by_user
+    id, user_code, produce_code, hand_number ,open_time ,close_time ,price ,ticket ,open_price ,agency_name ,plat_form_code ,profit ,
+     close_price,long_short ,create_date ,update_date ,create_user ,update_by_user
     </sql>
 
     <select id="findAll" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
@@ -34,6 +35,12 @@
 
     </select>
 
+    <insert id="addOrderUser" parameterType="com.web.pojo.OrderUser" useGeneratedKeys="true" keyProperty="id">
+      INSERT  INTO tb_order_user(<include refid="Base_Column_List" />)
+
+        VALUES(#{id}, #{userCode},#{produceCode},#{handNumber},#{openTime},#{closeTime},#{prive},#{ticket},#{openPrice},#{agencyName},#{platFrom},
+        #{profit},#{closePrice},#{longShort},#{createDate},#{updateDate},#{createUser},#{updateByUser})
+    </insert>
 
 
 </mapper>
