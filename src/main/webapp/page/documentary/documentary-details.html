@@ -127,36 +127,66 @@
 
 		<script type="text/javascript" src="../../js/common.js"></script>
 		<script type="text/javascript">
-            var tableId =$("#detailTable");
+            var tableId = $("#detailTable");
             var method = "post";
             //var url_  ="demo.json";
-            var url_  ="/getPositionDetails.Action?followOrderId=1";
+            var url_ = "/getPositionDetails.Action?followOrderId=1";
             var unique_Id = "detailId";
             var sortOrder = "asc";
-			var columns = [{
-			 title: '全选',
-			 field: 'select',
-			 //复选框
-			 checkbox: true,
+            var columns = [{
+                title: '全选',
+                field: 'select',
+                //复选框
+                checkbox: true,
 
-			 align: 'center',
-			 valign: 'middle'
-			 },
-			 {
-			 field: 'detailId',
-			 title: 'ID'
-			 },
+                align: 'center',
+                valign: 'middle'
+            }, {
+                field: 'detailId',
+                title: 'ID'
+            }, {
+                field: 'netPositionSum',
+                title: '净头寸'
+            }, {
+                field: 'varietyName',
+                title: '品种'
+            }, {
+                field: 'openCloseType',
+                title: '类型'
+            }, {
+                field: 'handNumber',
+                title: '手数'
+            }, {
+                field: 'tradeDirection',
+                title: '方向'
+            },{
+                field: 'marketPrice',
+                title: '点位'
+            },{
+                field: 'tradeTime',
+                title: '下单时间'
+            },{
+                field: 'poundage',
+                title: '手续费'
+            },{
+                field: 'profit',
+                title: '盈亏'
+            },
+                {
+                    field: 'remainHandNumber',
+                    title: '操作',
 
-			 {
-			 field: 'ID',
-			 title: '操作',
-
-			 align: 'center',
-			 valign: 'middle',
-			 formatter: actionFormatter
-			 }
-			 ];
-
+                    align: 'center',
+                    valign: 'middle',
+                    formatter: function (value, row, index) {
+                        if(value == "0.0"){
+                            return "-";
+                        }else{
+                            return "<a href='javascript:;' class='btn btn-xs green'> 手动平仓</a>"
+                        }
+                    }
+                }
+            ];
             $(function(){
 
 				showByTableId(tableId,method,url_,unique_Id,sortOrder,columns);
