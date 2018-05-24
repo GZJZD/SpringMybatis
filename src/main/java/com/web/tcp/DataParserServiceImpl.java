@@ -57,6 +57,7 @@ public class DataParserServiceImpl implements DataParserService,Runnable{
             dataSource.setOpenClose(Integer.parseInt(splitArr[index++]));//开平
             dataSource.setProfit(Double.parseDouble(splitArr[index++]));//平仓盈亏
             dataSource.setPlatformName(this.platformName);
+            dataSource.setAgencyName("JZT");
             createFile(dealMsg);
             log.info("接收到一条来自TCP的数据："+ JSON.toJSONString(dataSource));
 
@@ -81,7 +82,25 @@ public class DataParserServiceImpl implements DataParserService,Runnable{
      *@param
      *@Date: 14:10 2018/5/18
      */
-    public  void createFile(String tcpData)throws Exception{
+    public  void
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    createFile(String tcpData)throws Exception{
         Date date = new Date();
         String fileName=path+new SimpleDateFormat("yyyyMMdd").format(date);
         //如果不存在,创建文件夹

@@ -35,6 +35,8 @@ public class DataSource {
     private Double profit;
     //数据源的平台
     private String platformName;
+    //代理人
+    private String agencyName;
 
 
     //set,get...
@@ -116,6 +118,14 @@ public class DataSource {
 
     public void setPlatformName(String platformName) {
         this.platformName = platformName;
+    }
+
+    public String getAgencyName() {
+        return agencyName;
+    }
+
+    public void setAgencyName(String agencyName) {
+        this.agencyName = agencyName;
     }
 
     @Override
