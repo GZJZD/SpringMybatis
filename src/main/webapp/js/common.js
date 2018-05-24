@@ -537,14 +537,14 @@ function showByTableId(table_Id, method, url, unique_Id, sortOrder, columns) {
 		columns: columns,
 		onLoadSuccess: function() {},
 		onLoadError: function() {
-			//                  showTips("数据加载失败！");
+			                 showTips("数据加载失败！");
 		},
 		onDblClickRow: function(row, $element) {
 			console.log(row);
 			var id = row.id;
 			EditViewById(id, 'view');
 			console.log(id);
-		},
+		}
 
 	});
 
