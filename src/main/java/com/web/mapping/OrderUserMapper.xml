@@ -24,7 +24,7 @@
     </resultMap>
 
     <sql id="Base_Column_List" >
-    id, user_code, produce_code, hand_number ,open_time ,close_time ,price ,ticket ,open_price ,agency_name ,plat_form_code ,profit ,
+    id,user_code ,produce_code ,hand_number ,open_time ,close_time ,price ,ticket ,open_price ,agency_name ,plat_form_code ,profit ,
      close_price,long_short ,create_date ,update_date ,create_user ,update_by_user
     </sql>
 
@@ -38,7 +38,7 @@
     <insert id="addOrderUser" parameterType="com.web.pojo.OrderUser" useGeneratedKeys="true" keyProperty="id">
       INSERT  INTO tb_order_user(<include refid="Base_Column_List" />)
 
-        VALUES(#{id}, #{userCode},#{produceCode},#{handNumber},#{openTime},#{closeTime},#{prive},#{ticket},#{openPrice},#{agencyName},#{platFrom},
+        VALUES(#{id}, #{userCode},#{produceCode},#{handNumber},#{openTime},#{closeTime},#{price},#{ticket},#{openPrice},#{agencyName},#{platformCode},
         #{profit},#{closePrice},#{longShort},#{createDate},#{updateDate},#{createUser},#{updateByUser})
     </insert>
 
