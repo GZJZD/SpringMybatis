@@ -1,6 +1,7 @@
 package com.web.service;
 
 import com.web.pojo.FollowOrderDetail;
+import com.web.pojo.vo.NetPositionDetailVo;
 
 import java.util.List;
 
@@ -18,7 +19,7 @@ public interface IFollowOrderDetailService {
      *@param
      *@Date: 11:22 2018/5/23
      */
-    List<FollowOrderDetail> getDetailListByFollowOrderId(Long followOrderId);
+    List<NetPositionDetailVo> getDetailListByFollowOrderId(Long followOrderId);
 
     /**净头寸平仓
      * 找到对应的开多 or  开空 明细，并且剩下手数不为0的明细记录

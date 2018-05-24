@@ -22,7 +22,7 @@ public class TcpConfig {
 
         @PostConstruct
         public static void init(){
-            fixedThreadPool.execute( new NetworkManger("192.168.3.155",12000,"orders75"));
+//            fixedThreadPool.execute( new NetworkManger("192.168.3.15511",12000,"orders75"));
 /*
             fixedThreadPool.execute( new NetworkManger("116.62.195.204",12001,"orders76"));
 */
