@@ -8,9 +8,11 @@
 		<link rel="stylesheet" href="../../css/font.css">
 		<link rel="stylesheet" href="../../css/common.css">
 		<link rel="stylesheet" href="css/documentary-details.css">
-		<script type="text/javascript" src="https://cdn.bootcss.com/jquery/3.2.1/jquery.min.js"></script>
+		<script type="text/javascript" src="../../lib/jquery/jquery-3.2.1.min.js"></script>
+		<script src="../../lib/bootstrap/js/bootstrap-table.js"></script>
 		<script src="http://netdna.bootstrapcdn.com/bootstrap/3.0.0/js/bootstrap.min.js"></script>
 		<script type="text/javascript" src="../../lib/layui/layui.js" charset="utf-8"></script>
+		<script src="../../lib/bootstrap/js/bootstrap-table-zh-CN.min.js"></script>
 
 	</head>
 
@@ -165,6 +167,21 @@
                     height: tableHeight()
                 })
             })
+
+            //操作栏的格式化
+            function actionFormatter(value, row, index) {
+                var id = row.id;
+                var result = "";
+                var editUrl ="page/clientUser/client-edit.html";
+                var edit_w = 600;
+                var edit_h = 400;
+                var details = "查看明細";
+                result += "<a href='javascript:;' class='btn btn-xs green' onclick=\"EditViewById('" + id + "', view='view','"+editUrl+"','"+edit_w+"','"+edit_h+"')\" title='查看明細'><span class='glyphicon glyphicon-search'></span></a>";
+                result += "<a href='javascript:;' class='btn btn-xs green' onclick=\"EditViewById('" + id + "', view='view','"+editUrl+"','"+edit_w+"','"+edit_h+"')\" title='修改'><span class='glyphicon glyphicon-search'></span></a>";
+                result += "<a href='javascript:;' class='btn btn-xs red' onclick=\"DeleteByIds('" + id + "')\" title='删除'><span class='glyphicon glyphicon-remove'></span></a>";
+
+                return result;
+            }
 		</script>
 	</body>
 
