@@ -147,16 +147,51 @@
 						field: 'id',
 						title: 'ID'
 					},
-					{
-						field: 'updateByUser',
-						title: '名字'
-					}, {
-						field: 'updateDate',
-						title: '隨便'
-					}, {
-						field: 'forks_count',
-						title: '總數'
-					},
+                {
+                    field: 'userCode',
+                    title: '客户编号'
+                },
+                {
+                    field: 'userCode',
+                    title: '客户姓名'
+                }
+                ,
+                {
+                    field: 'platFormCode',
+                    title: '平台'
+                },
+                {
+                    field: 'agencyName',
+                    title: '代理人'
+                },
+                {
+                    field: '',
+                    title: '持仓盈亏'
+                },
+                {
+                    field: '',
+                    title: '平仓盈亏'
+                },
+                {
+                    field: '',
+                    title: '累计盈亏'
+                },
+                {
+                    field: '',
+                    title: '胜率'
+                },
+                {
+                    field: '',
+                    title: '回报率'
+                },
+                {
+                    field: '',
+                    title: '盈亏效率'
+                },
+                {
+                    field: '',
+                    title: '客户类型'
+                },
 					{
 						field: 'ID',
 						title: '操作',
@@ -223,13 +258,13 @@
 			function actionFormatter(value, row, index) {
 				var id = row.id;
 				var result = "";
-				var editUrl ="page/clientUser/client-edit.html";
-				var edit_w = 600;
-				var edit_h = 400;
+				var editUrl ="page/clientUser/client-detail.html";
+				var edit_w = 1500;
+				var edit_h = 800;
 				var details = "查看明細";
-				result += "<a href='javascript:;' class='btn btn-xs green' onclick=\"EditViewById('" + id + "', view='view','"+editUrl+"','"+edit_w+"','"+edit_h+"')\" title='查看明細'><span class='glyphicon glyphicon-search'></span></a>";
-				result += "<a href='javascript:;' class='btn btn-xs green' onclick=\"EditViewById('" + id + "', view='view','"+editUrl+"','"+edit_w+"','"+edit_h+"')\" title='修改'><span class='glyphicon glyphicon-search'></span></a>";
-				result += "<a href='javascript:;' class='btn btn-xs red' onclick=\"DeleteByIds('" + id + "')\" title='删除'><span class='glyphicon glyphicon-remove'></span></a>";
+
+				result += "<a href='javascript:;' class='btn btn-xs green' onclick=\"EditViewById('" + id + "', view='客户明细','"+editUrl+"','"+edit_w+"','"+edit_h+"')\" title='查看'><span class='glyphicon glyphicon-search'></span></a>";
+
 
 				return result;
 			}
