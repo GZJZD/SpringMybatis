@@ -28,7 +28,7 @@
      close_price,long_short ,create_date ,update_date ,create_user ,update_by_user
     </sql>
 
-    <select id="findAll" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    <select id="findAll" resultMap="BaseResultMap">
     select
     <include refid="Base_Column_List" />
     from tb_order_user
@@ -42,5 +42,28 @@
         #{profit},#{closePrice},#{longShort},#{createDate},#{updateDate},#{createUser},#{updateByUser})
     </insert>
 
+    <select id="findByTicket"
+            parameterType="String"
+            resultType="com.web.pojo.OrderUser">
+      SELECT
+        <include refid="Base_Column_List" />
+        FROM  tb_order_user
+        WHERE  where ticket=#{ticket}
+
+    </select>
+
+
+    <update id="update" parameterType="com.web.pojo.OrderUser">
+        update tb_order_user
+        <set>
+            <if test="closeTime != null">
+                close_time = #{closeTime},
+            </if>
+            <if test="handNumber != null">
+                hand_number =#{handNumber}
+            </if>
+        </set>
+        where ticket = #{ticket}
+    </update>
 
 </mapper>

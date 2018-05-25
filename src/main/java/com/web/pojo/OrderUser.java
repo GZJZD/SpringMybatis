@@ -59,7 +59,7 @@ public class OrderUser  extends BaseUtil {
     /**
      * 平台
      */
-    private String platformCode;
+    private String platFormCode;
 
     /**
      * 代理人
@@ -95,10 +95,6 @@ public class OrderUser  extends BaseUtil {
      * 出金
      */
     private Double outMoney;
-
-
-
-
 
 
     public String getUserCode() {
@@ -189,12 +185,13 @@ public class OrderUser  extends BaseUtil {
         this.price = price;
     }
 
-    public String getPlatformCode() {
-        return platformCode;
+
+    public String getPlatFormCode() {
+        return platFormCode;
     }
 
-    public void setPlatformCode(String platformCode) {
-        this.platformCode = platformCode;
+    public void setPlatFormCode(String platFormCode) {
+        this.platFormCode = platFormCode;
     }
 
     public String getAgencyName() {
