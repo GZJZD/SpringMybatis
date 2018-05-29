@@ -10,10 +10,8 @@
         <result column="trade_direction" property="tradeDirection"/>
         <result column="open_close_type" property="openCloseType"/>
         <result column="market_price" property="marketPrice"/>
-        <result column="signal_number" property="signalNumber"/>
         <result column="account_id" property="accountId"/>
         <result column="follow_order_id" property="followOrderId"/>
-        <result column="trade_status" property="tradeStatus"/>
         <result column="ticket" property="ticket"/>
         <result column="new_ticket" property="newTicket"/>
         <result column="poundage" property="poundage"/>
@@ -29,14 +27,14 @@
     <insert id="insert" parameterType="com.web.pojo.FollowOrderTradeRecord" useGeneratedKeys="true" keyProperty="id">
     insert into follow_order_trade_record ( variety_id, variety_code,
       hand_number, trade_time, trade_direction, 
-      open_close_type, market_price, signal_number, 
-      account_id, follow_order_id, trade_status, 
+      open_close_type, market_price,
+      account_id, follow_order_id,
       ticket, new_ticket,
       poundage,net_position_sum,update_date,create_date,version)
     values ( #{varietyId}, #{varietyCode},
       #{handNumber}, #{tradeTime}, #{tradeDirection}, 
-      #{openCloseType}, #{marketPrice}, #{signalNumber}, 
-      #{accountId}, #{followOrderId}, #{tradeStatus}, 
+      #{openCloseType}, #{marketPrice},
+      #{accountId}, #{followOrderId},
       #{ticket}, #{newTicket},
       #{poundage},#{netPositionSum},#{updateDate},#{createDate},#{version})
   </insert>
@@ -65,18 +63,14 @@
             <if test="marketPrice != null">
                 market_price = #{marketPrice},
             </if>
-            <if test="signalNumber != null">
-                signal_number = #{signalNumber},
-            </if>
+
             <if test="accountId != null">
                 account_id = #{accountId},
             </if>
             <if test="followOrderId != null">
                 follow_order_id = #{followOrderId},
             </if>
-            <if test="tradeStatus != null">
-                trade_status = #{tradeStatus},
-            </if>
+
             <if test="ticket != null">
                 ticket = #{ticket},
             </if>
@@ -121,6 +115,14 @@
         from follow_order_trade_record
         where signal_number = #{signalNumber}
     </select>
+    <select id="getFollowOrderTotalAmount" resultType="java.lang.Integer">
+        select count(id) from follow_order_trade_record
+        where follow_order_id =#{followOrderId}
+    </select>
+    <select id="getFollowOrderSuccessTotalAmount" resultType="java.lang.Integer">
+         select count(id) from follow_order_trade_record
+          where hand_number != 0 and trade_time is not null and follow_order_id = #{followOrderId}
+    </select>
 
     <sql id="base_List">
     id,
@@ -131,10 +133,8 @@
     trade_direction,
     open_close_type,
     market_price,
-    signal_number,
     account_id,
     follow_order_id,
-    trade_status,
     ticket,
     new_ticket,
     net_position_sum,

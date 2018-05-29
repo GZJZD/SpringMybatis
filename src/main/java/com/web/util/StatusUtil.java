@@ -9,8 +9,13 @@ public enum StatusUtil {
     SELL("空",1),
     OPEN("开",0),
     CLOSE("平",1),
-    TRADING_START("交易中",0),
-    TRADING_PAUSE("交易暂停",1),
+    TRADING_START("净头寸交易中",0),
+    TRADING_PAUSE("净头寸交易暂停",1),
+    //发出两条交易信息
+    TRADING_OPENCLOSE("净头寸开平",2),
+    //一条交易信息返回
+    TRADING_OPENCLOSE_ONE("净头寸一条交易信息返回状态",3),
+
     TRADING_SUCCESS("交易成功",1),
     TRADING_FAILURE("交易失败",0),
     DIRECTION_REVERSE("反向跟单",0),

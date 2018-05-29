@@ -25,14 +25,12 @@ public class FollowOrderTradeRecord implements Serializable {
     private Integer openCloseType;
     //市场价
     private Double marketPrice;
-    //对接号:开仓单号-跟单编号-自增Id
-    private String signalNumber;
+
     //交易账号id
     private Long accountId;
     //跟单id
     private Long followOrderId;
-    //交易状态:成功/失败
-    private Integer tradeStatus;
+
     //开仓单号
     private String ticket;
     //新开仓单号
@@ -112,13 +110,6 @@ public class FollowOrderTradeRecord implements Serializable {
         this.marketPrice = marketPrice;
     }
 
-    public String getSignalNumber() {
-        return signalNumber;
-    }
-
-    public void setSignalNumber(String signalNumber) {
-        this.signalNumber = signalNumber;
-    }
 
     public Long getAccountId() {
         return accountId;
@@ -136,13 +127,7 @@ public class FollowOrderTradeRecord implements Serializable {
         this.followOrderId = followOrderId;
     }
 
-    public Integer getTradeStatus() {
-        return tradeStatus;
-    }
 
-    public void setTradeStatus(Integer tradeStatus) {
-        this.tradeStatus = tradeStatus;
-    }
 
     public String getTicket() {
         return ticket;
