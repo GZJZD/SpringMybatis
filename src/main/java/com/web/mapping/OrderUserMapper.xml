@@ -30,7 +30,7 @@
 
     <select id="findAll" resultMap="BaseResultMap">
     select
-    <include refid="Base_Column_List" />
+        <include refid="Base_Column_List" />
     from tb_order_user
 
     </select>
@@ -38,7 +38,7 @@
     <insert id="addOrderUser" parameterType="com.web.pojo.OrderUser" useGeneratedKeys="true" keyProperty="id">
       INSERT  INTO tb_order_user(<include refid="Base_Column_List" />)
 
-        VALUES(#{id}, #{userCode},#{produceCode},#{handNumber},#{openTime},#{closeTime},#{price},#{ticket},#{openPrice},#{agencyName},#{platformCode},
+        VALUES(#{id}, #{userCode},#{produceCode},#{handNumber},#{openTime},#{closeTime},#{price},#{ticket},#{openPrice},#{agencyName},#{platFormCode},
         #{profit},#{closePrice},#{longShort},#{createDate},#{updateDate},#{createUser},#{updateByUser})
     </insert>
 
@@ -48,22 +48,57 @@
       SELECT
         <include refid="Base_Column_List" />
         FROM  tb_order_user
-        WHERE  where ticket=#{ticket}
+        WHERE  where ticket = #{ticket}
 
     </select>
 
 
-    <update id="update" parameterType="com.web.pojo.OrderUser">
+    <update id="update" parameterType="com.web.pojo.OrderUser" >
         update tb_order_user
         <set>
             <if test="closeTime != null">
                 close_time = #{closeTime},
             </if>
             <if test="handNumber != null">
-                hand_number =#{handNumber}
+                hand_number = #{handNumber}
             </if>
         </set>
         where ticket = #{ticket}
     </update>
 
+    <select id="countOrderUser" parameterType="com.web.pojo.vo.OrderUserVo" resultMap="BaseResultMap">
+        SELECT
+           <include refid="Base_Column_List" />
+        FROM
+            tb_order_user
+        WHERE
+            <if test="produceCode != null and produceCode != '' "> produce_code = #{produceCode}</if>
+
+            <if test="startTime != null and startTime != '' "> create_time = #{startTime} </if>
+            <if test="endTime != null and endTime != '' "> and create_time = #{endTime} </if>
+            <if test="platformName != null and platformName != '' "> and  plat_form_code = #{platformName} </if>
+            <if test="contract != null and contract != '' ">
+              and contract = #{contract}
+            </if>
+            <if test="agencyName != null and agencyName  !='' ">
+              and agency_name = #{agencyName}
+            </if>
+            <if test="userType != null"></if>
+    </select>
+
+
+    <select id="findByUserIdList" parameterType="com.web.pojo.OrderUser" resultMap="BaseResultMap">
+        SELECT
+        <include refid="Base_Column_List" />
+        FROM
+        tb_order_user
+        <if test="list.size>0">
+            where user_code IN
+            /*集合形式传入用户id*/
+            <foreach collection="list" item="stu" open="(" separator="," close=")">
+                #{stu}
+            </foreach>
+        </if>
+
+    </select>
 </mapper>
