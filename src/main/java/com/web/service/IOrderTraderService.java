@@ -1,8 +1,8 @@
 package com.web.service;
 
 
-import com.web.pojo.Account;
-import com.web.pojo.vo.OrderParameter;
+import com.web.pojo.vo.OrderTrade;
+import com.web.pojo.vo.UserLogin;
 
 /**
  * 此类用于发送消息到交易系统
@@ -16,7 +16,7 @@ public interface IOrderTraderService {
      *@param
      *@Date: 14:14 2018/4/25
      */
-     void login(Account account);
+     void userLogin(UserLogin userLogin);
 
     /**
      * 删除交易账号时，发送注销
@@ -24,22 +24,22 @@ public interface IOrderTraderService {
      *@param
      *@Date: 14:15 2018/4/25
      */
-     void loginOut(Account account);
+     void userLogout(UserLogin userLogin);
 
     /**
-     *保单
+     * 开仓
      *@Author: May
      *@param
      *@Date: 14:19 2018/4/25
      */
-     void addOrder(OrderParameter orderParameter);
+     void orderOpen(OrderTrade orderTrade);
 
     /**
-     * 撤单
+     * 平仓
      *@Author: May
      *@param
      *@Date: 14:23 2018/4/25
      */
-     void cancelOrder();
+     void orderClose(OrderTrade orderTrade);
 
 }

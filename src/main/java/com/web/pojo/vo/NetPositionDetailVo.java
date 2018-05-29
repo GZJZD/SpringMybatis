@@ -14,7 +14,7 @@ public class NetPositionDetailVo {
     //开平类型
     private Integer openCloseType;
     //手数
-    private Double handNumber;
+    private String handNumber;
     //多空方向
     private Integer tradeDirection;
     //价格
@@ -86,11 +86,11 @@ public class NetPositionDetailVo {
         this.openCloseType = openCloseType;
     }
 
-    public Double getHandNumber() {
+    public String getHandNumber() {
         return handNumber;
     }
 
-    public void setHandNumber(Double handNumber) {
+    public void setHandNumber(String handNumber) {
         this.handNumber = handNumber;
     }
 

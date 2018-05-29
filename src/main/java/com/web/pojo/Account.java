@@ -8,6 +8,8 @@ package com.web.pojo;
  */
 
 public class Account {
+
+
 	private Long id;
 	//用户名
 	private String username;

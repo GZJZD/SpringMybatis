@@ -16,10 +16,12 @@ public class FollowOrderDetail implements Serializable {
     private String varietyName;
     //交易方向:买入/卖出
     private Integer tradeDirection;
-    //手数
+    //实际手数
     private Double handNumber;
     //剩下手数
     private Double remainHandNumber;
+    //应交易的数量
+    private Double OriginalHandNumber;
     //交易id
     private Long followOrderTradeRecordId;
     //开仓价
@@ -207,5 +209,13 @@ public class FollowOrderDetail implements Serializable {
 
     public void setFollowOrderTradeRecordId(Long followOrderTradeRecordId) {
         this.followOrderTradeRecordId = followOrderTradeRecordId;
+    }
+
+    public Double getOriginalHandNumber() {
+        return OriginalHandNumber;
+    }
+
+    public void setOriginalHandNumber(Double originalHandNumber) {
+        OriginalHandNumber = originalHandNumber;
     }
 }

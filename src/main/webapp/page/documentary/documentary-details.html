@@ -17,7 +17,6 @@
 	</head>
 
 	<body>
-
 		<div id="">
 			<div class="layui-fluid">
 				<!--<fieldset class="layui-elem-field layui-field-title">
@@ -25,19 +24,19 @@
 				</fieldset>-->
 				<div class="layui-row">
 					<div class="layui-col-sm3">
-						<div class="grid-demo grid-demo-bg1 font-one">100/200</div>
-						<div class="grid-demo grid-demo-bg1 font-tow">跟单数/手数</div>
+						<div class="grid-demo grid-demo-bg1 font-one" id="orderNum">0/0</div>
+						<div class="grid-demo grid-demo-bg1 font-tow" >跟单数/手数</div>
 					</div>
 					<div class="layui-col-sm3">
-						<div class="grid-demo font-one">44442</div>
+						<div class="grid-demo font-one" id="offsetGainAndLoss">0</div>
 						<div class="grid-demo font-tow">平仓盈亏($)</div>
 					</div>
 					<div class="layui-col-sm3">
-						<div class="grid-demo grid-demo-bg1 font-one">-144</div>
+						<div class="grid-demo grid-demo-bg1 font-one" id="positionGainAndLoss">0</div>
 						<div class="grid-demo grid-demo-bg1 font-tow">持仓盈亏($)</div>
 					</div>
 					<div class="layui-col-sm3">
-						<div class="grid-demo font-one">1212</div>
+						<div class="grid-demo font-one" id="poundageTotal">0</div>
 						<div class="grid-demo font-tow">手续费</div>
 					</div>
 				</div>
@@ -110,7 +109,7 @@
 						</div>
 						<div class="layui-tab-item layui-show">
 
-							<table id="detailTable">
+							<table id="detailTable" class="table-bordered table-striped">
 
 							</table>
 
@@ -127,10 +126,13 @@
 
 		<script type="text/javascript" src="../../js/common.js"></script>
 		<script type="text/javascript">
+
             var tableId = $("#detailTable");
             var method = "post";
+
             //var url_  ="demo.json";
-            var url_ = "/getPositionDetails.Action?followOrderId=1";
+           // var url_ = "/getPositionDetails.Action?followOrderId="+followOrderId;
+
             var unique_Id = "detailId";
             var sortOrder = "asc";
             var columns = [{
@@ -141,10 +143,19 @@
 
                 align: 'center',
                 valign: 'middle'
-            }, {
-                field: 'detailId',
-                title: 'ID'
-            }, {
+            },{
+                title : '序号',
+
+                formatter: function (value, row, index) {
+                    //获取每页显示的数量
+                    var pageSize=$('#detailTable').bootstrapTable('getOptions').pageSize;
+                    //获取当前是第几页
+                    var pageNumber=$('#detailTable').bootstrapTable('getOptions').pageNumber;
+                    //返回序号，注意index是从0开始的，所以要加上1
+                    return pageSize * (pageNumber - 1) + index + 1;
+                }
+			}
+          , {
                 field: 'netPositionSum',
                 title: '净头寸'
             }, {
@@ -182,15 +193,25 @@
                         if(value == "0.0"){
                             return "-";
                         }else{
-                            return "<a href='javascript:;' class='btn btn-xs green'> 手动平仓</a>"
+                            return "<a href='javascript:;' class='btn btn-xs green'><span style='color: #4cae4c'>手动平仓</span></a>"
                         }
                     }
                 }
             ];
+            function child(id,orderNum,offsetGainAndLoss,poundageTotal){
+				$("#orderNum").html(orderNum);
+				$("#offsetGainAndLoss").html(offsetGainAndLoss);
+				$("#positionGainAndLoss").html(0);
+				$("#poundageTotal").html(poundageTotal);
+                url_ = "/getPositionDetails.Action?followOrderId="+id;
+                showByTableId(tableId,method,url_,unique_Id,sortOrder,columns);
+
+            }
             $(function(){
 
 				showByTableId(tableId,method,url_,unique_Id,sortOrder,columns);
 			})
+
             //根据窗口调整表格高度
             $(window).resize(function() {
                 $('#detailTable').bootstrapTable('resetView', {

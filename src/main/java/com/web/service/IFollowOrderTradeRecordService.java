@@ -1,6 +1,7 @@
 package com.web.service;
 
 import com.web.pojo.FollowOrderTradeRecord;
+import com.web.pojo.vo.OrderMsgResult;
 
 /**
  * Created by may on 2018/5/20.
@@ -17,17 +18,29 @@ public interface IFollowOrderTradeRecordService {
     /**
      * 返回的交易信息，修改交易记录
      *@Author: May
-     *@param msg
+     *@param orderMsgResult
      *@Date: 16:38 2018/5/22
      */
-    void updateRecordByComeBackTradeMsg(String msg);
+    void updateRecordByComeBackTradeMsg(OrderMsgResult orderMsgResult);
 
-    /**
-     * 通过交易返回的对接号找到对应的交易记录
-     *@Author: May
-     *@param
-     *@Date: 16:45 2018/5/22
+
+    /*
+     *
+     *  找到对应跟单的总交易数量
+     * @author may
+     * @date 2018/5/25 15:44
+     * @param   followOrderId
+     * @return
      */
-    FollowOrderTradeRecord getTradeRecordBySignalNumber(String signalNumber);
+    int getFollowOrderTotalAmount(Long followOrderId);
+    /*
+     *
+     *   找到对应跟单的成功交易数量
+     * @author may
+     * @date 2018/5/25 15:50
+     * @param
+     * @return
+     */
+    int getFollowOrderSuccessTotalAmount(Long followOrderId);
 
 }

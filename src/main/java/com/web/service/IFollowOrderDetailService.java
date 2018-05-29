@@ -1,7 +1,9 @@
 package com.web.service;
 
 import com.web.pojo.FollowOrderDetail;
+import com.web.pojo.vo.FollowOrderVo;
 import com.web.pojo.vo.NetPositionDetailVo;
+import com.web.util.query.QueryObject;
 
 import java.util.List;
 
@@ -12,12 +14,23 @@ import java.util.List;
 public interface IFollowOrderDetailService {
 
     void save(FollowOrderDetail followOrderDetail);
+
+   /*  
+    *    
+    * 客户平仓，通过开仓单号找到对应的明细
+    * @author may  
+    * @date 2018/5/25 14:37  
+    * @param   
+    * @return   
+    */  
+    FollowOrderDetail getFollowOrderDetailByTicket(String ticket);
+
     FollowOrderDetail getFollowOrderDetail(Long id);
     /**
      * 通过对应的跟单id找到对应的明细，时间倒序
      *@Author: May
-     *@param
      *@Date: 11:22 2018/5/23
+     * @param followOrderId
      */
     List<NetPositionDetailVo> getDetailListByFollowOrderId(Long followOrderId);
 
@@ -28,6 +41,27 @@ public interface IFollowOrderDetailService {
      *@Date: 13:57 2018/5/23
      */
     List<FollowOrderDetail> getDetailListByOrderIdAndDirection(Long followOrderId,Integer direction);
+
+    /*
+     *
+     *   对应跟单的明细总平仓盈亏
+     * @author may
+     * @date 2018/5/25 15:59
+     * @param
+     * @return
+     */
+    Double getOffsetGainAndLossByFollowOrderId (Long followOrderId);
+
+    /*
+     *
+     *   对应跟单的明细总手续费
+     * @author may
+     * @date 2018/5/25 16:02
+     * @param
+     * @return
+     */
+    FollowOrderVo getCommissionTotalAndHandNumTotal(Long followOrderId);
+
 
     void updateDetail(FollowOrderDetail followOrderDetail);
 }

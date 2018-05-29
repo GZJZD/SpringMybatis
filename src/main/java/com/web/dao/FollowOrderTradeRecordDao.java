@@ -17,6 +17,10 @@ public interface FollowOrderTradeRecordDao {
 
     int updateByPrimaryKey(FollowOrderTradeRecord record);
 
-
     FollowOrderTradeRecord getTradeRecordBySignalNumber(String signalNumber);
+
+
+    int getFollowOrderTotalAmount(Long followOrderId);
+
+    int getFollowOrderSuccessTotalAmount(Long followOrderId);
 }
