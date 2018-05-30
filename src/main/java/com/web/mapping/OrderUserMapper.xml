@@ -5,7 +5,7 @@
     <resultMap id="BaseResultMap" type="com.web.pojo.OrderUser" >
     <id column="id" property="id" jdbcType="BIGINT" />
     <result column="user_code" property="userCode" jdbcType="VARCHAR" />
-    <result column="produce_code" property="produceCode" jdbcType="VARCHAR" />
+    <result column="product_code" property="productCode" jdbcType="VARCHAR" />
     <result column="hand_number" property="handNumber" jdbcType="NUMERIC" />
     <result column="open_time" property="openTime" jdbcType="VARCHAR" />
     <result column="close_time" property="closeTime" jdbcType="VARCHAR" />
@@ -24,7 +24,7 @@
     </resultMap>
 
     <sql id="Base_Column_List" >
-    id,user_code ,produce_code ,hand_number ,open_time ,close_time ,price ,ticket ,open_price ,agency_name ,plat_form_code ,profit ,
+    id,user_code ,product_code ,hand_number ,open_time ,close_time ,price ,ticket ,open_price ,agency_name ,plat_form_code ,profit ,
      close_price,long_short ,create_date ,update_date ,create_user ,update_by_user
     </sql>
 
@@ -32,24 +32,22 @@
     select
         <include refid="Base_Column_List" />
     from tb_order_user
-
     </select>
 
     <insert id="addOrderUser" parameterType="com.web.pojo.OrderUser" useGeneratedKeys="true" keyProperty="id">
       INSERT  INTO tb_order_user(<include refid="Base_Column_List" />)
 
-        VALUES(#{id}, #{userCode},#{produceCode},#{handNumber},#{openTime},#{closeTime},#{price},#{ticket},#{openPrice},#{agencyName},#{platFormCode},
+        VALUES(#{id}, #{userCode},#{productCode},#{handNumber},#{openTime},#{closeTime},#{price},#{ticket},#{openPrice},#{agencyName},#{platFormCode},
         #{profit},#{closePrice},#{longShort},#{createDate},#{updateDate},#{createUser},#{updateByUser})
     </insert>
 
     <select id="findByTicket"
-            parameterType="String"
-            resultType="com.web.pojo.OrderUser">
+            parameterType="java.lang.String"
+            resultMap="BaseResultMap">
       SELECT
         <include refid="Base_Column_List" />
         FROM  tb_order_user
-        WHERE  where ticket = #{ticket}
-
+        WHERE  ticket = #{ticket}
     </select>
 
 
@@ -66,16 +64,34 @@
         where ticket = #{ticket}
     </update>
 
+    <select id="findByUserIdList"   resultMap="BaseResultMap">
+
+        SELECT
+        <include refid="Base_Column_List" />
+        FROM
+        tb_order_user
+        WHERE user_code IN
+        <foreach collection="list" index="index" item="item" open="(" separator="," close=")">
+            <if test="list.size>0">
+                #{item}
+            </if>
+        </foreach>
+        <if test="productCode != null and productCode != '' "> and product_code = #{productCode} </if>
+        <if test="startTime != null and startTime != '' "> and create_date = #{startTime} </if>
+        <if test="endTime != null and endTime != '' "> and create_date <![CDATA[ <= ]]> #{endTime} </if>
+
+    </select>
+
     <select id="countOrderUser" parameterType="com.web.pojo.vo.OrderUserVo" resultMap="BaseResultMap">
         SELECT
            <include refid="Base_Column_List" />
         FROM
             tb_order_user
         WHERE
-            <if test="produceCode != null and produceCode != '' "> produce_code = #{produceCode}</if>
+            <if test="productCode != null and productCode != '' "> product_code = #{productCode}</if>
 
-            <if test="startTime != null and startTime != '' "> create_time = #{startTime} </if>
-            <if test="endTime != null and endTime != '' "> and create_time = #{endTime} </if>
+            <if test="startTime != null and startTime != '' ">and create_date = #{startTime} </if>
+            <if test="endTime != null and endTime != '' "> and create_date  <![CDATA[ <= ]]> #{endTime} </if>
             <if test="platformName != null and platformName != '' "> and  plat_form_code = #{platformName} </if>
             <if test="contract != null and contract != '' ">
               and contract = #{contract}
@@ -85,20 +101,11 @@
             </if>
             <if test="userType != null"></if>
     </select>
-
-
-    <select id="findByUserIdList" parameterType="com.web.pojo.OrderUser" resultMap="BaseResultMap">
-        SELECT
-        <include refid="Base_Column_List" />
-        FROM
-        tb_order_user
-        <if test="list.size>0">
-            where user_code IN
-            /*集合形式传入用户id*/
-            <foreach collection="list" item="stu" open="(" separator="," close=")">
-                #{stu}
-            </foreach>
-        </if>
+    <select id="findOrderUserByTicket">
 
     </select>
+
+
+
+
 </mapper>

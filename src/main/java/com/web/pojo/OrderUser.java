@@ -19,7 +19,7 @@ public class OrderUser  extends BaseUtil {
     /**
      * 商品
      */
-    private String produceCode;
+    private String productCode;
 
     /**
      * 多空
@@ -113,12 +113,12 @@ public class OrderUser  extends BaseUtil {
         this.ticket = ticket;
     }
 
-    public String getProduceCode() {
-        return produceCode;
+    public String getProductCode() {
+        return productCode;
     }
 
-    public void setProduceCode(String produceCode) {
-        this.produceCode = produceCode;
+    public void setProductCode(String productCode) {
+        this.productCode = productCode;
     }
 
     public Integer getLongShort() {

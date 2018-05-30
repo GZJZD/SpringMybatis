@@ -36,25 +36,18 @@ public class BaseUtil implements Serializable {
 
     public String getCreateDate() {
         return createDate;
-
     }
 
     public void setCreateDate(String createDate) {
         this.createDate = createDate;
-        if (createDate == null && createDate.isEmpty()) {
-            createDate = DateUtil.getHour();
-        }
     }
 
     public String getUpdateDate() {
-
         return updateDate;
     }
 
     public void setUpdateDate(String updateDate) {
         this.updateDate = updateDate;
-        updateDate = DateUtil.getHour();
-
     }
 
     public Long getCreateUser() {
