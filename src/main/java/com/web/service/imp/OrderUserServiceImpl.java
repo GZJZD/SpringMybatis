@@ -6,6 +6,7 @@ import com.web.pojo.DataSource;
 import com.web.pojo.OrderUser;
 import com.web.pojo.vo.OrderUserVo;
 import com.web.service.OrderUserService;
+import com.web.util.common.DateUtil;
 import com.web.util.common.DoubleUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -55,15 +56,34 @@ public class OrderUserServiceImpl implements OrderUserService {
             orderUser.setTicket(dataSource.getNewTicket());//新开仓单号
             orderUser.setOpenTime(dataSource.getCreateTime());//开仓时间
             orderUser.setUserCode(dataSource.getLogin()); //账号
-            orderUser.setAgencyName("test");//跟单人
+            orderUser.setAgencyName(dataSource.getAgencyName());//代理人
             orderUser.setPlatFormCode(dataSource.getPlatformName());//平台名称
-            orderUser.setProduceCode(dataSource.getVarietyCode());//商品
+            orderUser.setProductCode(dataSource.getVarietyCode());//商品
             orderUser.setHandNumber( dataSource.getHandNumber());//手数);
             orderUser.setLongShort(dataSource.getCmd());//多空
             orderUser.setPrice(dataSource.getPrice());//价位
             orderUser.setProfit(dataSource.getProfit());//平仓盈亏
+            orderUser.setOpenPrice(dataSource.getPrice());//开仓价
+            orderUser.setCreateDate(DateUtil.getStringDate());//创建时间
             orderUserDao.addOrderUser(orderUser);
             return  "添加成功";
+    }
+    public String saveClose(DataSource dataSource){
+        OrderUser orderUser = new OrderUser();
+        orderUser.setCloseTime(dataSource.getCreateTime());//平仓时间&
+        orderUser.setTicket(dataSource.getNewTicket());//新开仓单号
+        orderUser.setUserCode(dataSource.getLogin()); //账号
+        orderUser.setAgencyName(dataSource.getAgencyName());//代理人
+        orderUser.setPlatFormCode(dataSource.getPlatformName());//平台名称
+        orderUser.setProductCode(dataSource.getVarietyCode());//商品
+        orderUser.setHandNumber( dataSource.getHandNumber());//手数);
+        orderUser.setLongShort(dataSource.getCmd());//多空
+        orderUser.setPrice(dataSource.getPrice());//价位
+        orderUser.setProfit(dataSource.getProfit());//平仓盈亏
+        orderUser.setClosePrice(dataSource.getPrice());//平仓价
+        orderUser.setCreateDate(DateUtil.getStringDate());//创建时间
+        orderUserDao.addOrderUser(orderUser);
+        return  "添加成功";
     }
 
     public String updateOrAdd(DataSource dataSource){
@@ -71,19 +91,19 @@ public class OrderUserServiceImpl implements OrderUserService {
             OrderUser orderUser = findByTicket(dataSource.getTicket());
             Double difference;
         if(orderUser == null){
-           message = save(dataSource);
+           message = saveClose(dataSource);
             return message;
         }
         if(dataSource.getTicket().equals(dataSource.getNewTicket())){
             orderUser.setCloseTime(dataSource.getCreateTime());
             orderUser.setHandNumber(dataSource.getHandNumber());
             message = update(orderUser);
-
         }
 
         if(!dataSource.getTicket().equals(dataSource.getNewTicket())){
             //平开
                 if(orderUser.getHandNumber() > dataSource.getHandNumber()){
+                    double handNumber=orderUser.getHandNumber();
                     //先平仓
                     orderUser.setHandNumber(dataSource.getHandNumber());
                     orderUser.setCloseTime(dataSource.getCreateTime());
@@ -92,7 +112,7 @@ public class OrderUserServiceImpl implements OrderUserService {
                     //后开仓
                     DataSource newDataSource = new DataSource();
                     newDataSource = dataSource;
-                    difference = DoubleUtil.sub(orderUser.getHandNumber(),dataSource.getHandNumber()); //计算差值
+                    difference = DoubleUtil.sub(handNumber,dataSource.getHandNumber()); //计算差值
                     newDataSource.setHandNumber(difference);
                     save(newDataSource);
                     message = "平仓成功";
@@ -101,10 +121,11 @@ public class OrderUserServiceImpl implements OrderUserService {
         return message;
     }
 
-
+    //通过开仓单号 查询交易信息
     public OrderUser findByTicket(String  ticket){
         OrderUser orderUser = new OrderUser();
         if(!StringUtils.isEmpty(ticket)){
+            ticket.trim();
             orderUser = orderUserDao.findByTicket(ticket);
         }
         return orderUser;
@@ -114,6 +135,7 @@ public class OrderUserServiceImpl implements OrderUserService {
     public String update(OrderUser orderUser){
          String message =null;
         if(orderUser != null){
+            orderUser.setUpdateDate(DateUtil.getStringDate());
             orderUserDao.update(orderUser);
             message = "平仓成功" ;
         }else{ message = "平仓修改失败";}
@@ -175,5 +197,26 @@ public class OrderUserServiceImpl implements OrderUserService {
 
         return list;
     }
+
+    /**
+     * 根据用户id & 时间 & 商品
+     */
+    @Override
+    public List<OrderUser> findByUserIdList(List<String>list ,String startTime,String endTime,String productCode) {
+
+        List<OrderUser> orderUserList = new ArrayList<>();
+        if(list.size() >0 && startTime != null && !StringUtils.isEmpty(startTime) && productCode != null && !StringUtils.isEmpty(productCode)){
+            orderUserList = orderUserDao.findByUserIdList(list,startTime,endTime,productCode);
+        }
+        return orderUserList;
+    }
+
+
+
+
+
+
+
+
 
 }

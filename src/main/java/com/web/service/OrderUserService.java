@@ -13,4 +13,5 @@ public interface OrderUserService {
     OrderUser findByTicket(String ticket);
     String update(OrderUser orderUser);
     List<OrderUserVo> countOrderUser(OrderUserVo orderUserVo);
+    List<OrderUser>findByUserIdList(List<String>list ,String startTime,String endTime,String productCode);
 }
