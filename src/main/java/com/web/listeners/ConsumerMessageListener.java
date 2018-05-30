@@ -9,6 +9,7 @@ import com.web.service.IFollowOrderService;
 import com.web.service.IFollowOrderTradeRecordService;
 import com.web.util.StatusUtil;
 import net.sf.json.JSONObject;
+import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import javax.jms.JMSException;
@@ -28,10 +29,17 @@ public class ConsumerMessageListener implements MessageListener {
     private IFollowOrderService followOrderService;
     @Autowired
     private IFollowOrderTradeRecordService followOrderTradeRecordService;
+    private static Logger log = Logger.getLogger(ConsumerMessageListener.class.getName());
+
     public void onMessage(Message message) {
         //这里我们知道生产者发送的就是一个纯文本消息，所以这里可以直接进行强制转换
         TextMessage textMsg = (TextMessage) message;
-        System.out.println("接收到一个纯文本消息。");
+        try {
+            log.info("接收到一个纯文本消息。11111111"+textMsg.getText());
+
+        } catch (JMSException e) {
+            e.printStackTrace();
+        }
         try {
             String text = textMsg.getText();
             //将JSON转换成成JAVABean对象

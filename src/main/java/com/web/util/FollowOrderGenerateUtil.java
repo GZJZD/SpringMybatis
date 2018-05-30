@@ -48,8 +48,8 @@ public  class FollowOrderGenerateUtil {
     }
 
     public static Account getAccount() {
-        TradePlatform tradePlatform = new TradePlatform(1L, "EF");
-        Account account = new Account(1L, "xiao", "123", tradePlatform);
+        TradePlatform tradePlatform = new TradePlatform(1L, "8001");
+        Account account = new Account(1L, "text1", "text1", tradePlatform);
         return account;
     }
 
