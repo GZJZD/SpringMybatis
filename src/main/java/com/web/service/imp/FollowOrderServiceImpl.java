@@ -405,23 +405,25 @@ public class FollowOrderServiceImpl implements IFollowOrderService {
         //设置交易对象的交易账号
         orderTrade.setUserId(followOrder.getAccount().getUsername());
         //设置平台对应的品种合约代码 todo 实现该功能
-        orderTrade.setInstrumentId(followOrder.getVariety().getVarietyCode());
+        orderTrade.setInstrumentId("GC1808");
         //设置买卖方向
         orderTrade.setOrderDirection(orderDirection);
         if (openClose.equals(StatusUtil.CLOSE.getIndex())) {
             //平仓
             orderTrade.setTypeId("orderClose");
             orderTrade.setOrderVolume(handNumber);
+            log.info("发送一条交易信息：" + orderTrade.toString());
             //发送平仓交易请求
             orderTraderService.orderClose(orderTrade);
         } else {
             //开仓
             orderTrade.setTypeId("orderOpen");
+            log.info("发送一条交易信息：" + orderTrade.toString());
             orderTrade.setVolumeTotalOriginal(handNumber);
             orderTraderService.orderOpen(orderTrade);
         }
 
-        log.info("发送一条交易信息：" + orderTrade.toString());
+
     }
 
 
