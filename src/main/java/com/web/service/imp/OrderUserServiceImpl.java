@@ -124,8 +124,7 @@ public class OrderUserServiceImpl implements OrderUserService {
     //通过开仓单号 查询交易信息
     public OrderUser findByTicket(String  ticket){
         OrderUser orderUser = new OrderUser();
-        if(!StringUtils.isEmpty(ticket)){
-            ticket.trim();
+        if(ticket != null && !StringUtils.isEmpty(ticket)){
             orderUser = orderUserDao.findByTicket(ticket);
         }
         return orderUser;
