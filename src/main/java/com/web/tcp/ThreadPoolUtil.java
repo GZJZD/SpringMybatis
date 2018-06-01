@@ -9,7 +9,7 @@ import java.util.concurrent.Executors;
  */
 public class ThreadPoolUtil {
     private  static ThreadPoolUtil instance;
-    private static ExecutorService fixedThreadPool = Executors.newFixedThreadPool(3);
+    private static ExecutorService fixedThreadPool = Executors.newFixedThreadPool(1);
     public static ThreadPoolUtil getInstance(){
         if(instance==null){
             synchronized (ThreadPoolUtil.class){

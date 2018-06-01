@@ -21,7 +21,7 @@ public class ProducerMsgServiceImpl implements IProducerMsgService {
     @Qualifier("jmsTemplate")
     private JmsTemplate jmsTemplate;
     public void sendMessage(final String message) {
-        System.out.println("---------------发了一个订单消息：" + message);
+
         jmsTemplate.send(new MessageCreator() {
             public Message createMessage(Session session) throws JMSException {
                 return session.createTextMessage(message);

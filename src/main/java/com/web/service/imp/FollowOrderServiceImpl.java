@@ -1,6 +1,7 @@
 package com.web.service.imp;
 
 
+import com.alibaba.fastjson.JSON;
 import com.web.dao.FollowOrderDao;
 import com.web.pojo.*;
 import com.web.pojo.vo.FollowOrderVo;
@@ -144,7 +145,7 @@ public class FollowOrderServiceImpl implements IFollowOrderService {
     }
 
     @Override
-    public void madeAnOrder(DataSource data) {
+    public synchronized void madeAnOrder(DataSource data) {
         //1.先获取符合的跟单
         // List<FollowOrder> listFollowOrder = getListFollowOrderByClientName(data.login);
         // for (FollowOrder followOrder : listFollowOrder) {
@@ -181,8 +182,11 @@ public class FollowOrderServiceImpl implements IFollowOrderService {
 
             //获取原有的持仓数
             Double oldHoldNum = followOrder.getNetPositionHoldNumber();
+            log.info("原本的净头寸的值："+followOrder.getNetPositionSum());
             //获取累加的净头寸
             Double headNum = getNowNetPositionSum(data, followOrder);
+            //现在的持仓数
+            log.info("现在的净头寸的值："+headNum);
             //应持仓多少手
             int newHoldNum = (int) (headNum / followOrder.getNetPositionChange());
             //判断策略的正反方向跟单
@@ -278,7 +282,7 @@ public class FollowOrderServiceImpl implements IFollowOrderService {
     }
 
 
-    private Double getNowNetPositionSum(DataSource data, FollowOrder followOrder) {
+    private synchronized Double getNowNetPositionSum(DataSource data, FollowOrder followOrder) {
         //获取现有的净头寸
         Double netPositionSum = followOrder.getNetPositionSum();
         if (data.getCmd().equals(StatusUtil.BUY.getIndex())) {
@@ -303,19 +307,16 @@ public class FollowOrderServiceImpl implements IFollowOrderService {
             login.setUserId(followOrder.getAccount().getUsername());
             login.setPassword(followOrder.getAccount().getPassword());
             Account account = followOrder.getAccount();
+            log.info("发送一条登陆信息："+JSON.toJSONString(login));
             //发送MQ去登录
             orderTraderService.userLogin(login);
-            //设计启动
-            // followOrder.setFollowOrderStatus(StatusUtil.FOLLOW_ORDER_START.getIndex());
-            //设计启动时间
-            //followOrder.setStartTime(DateUtil.getStringDate());
-            //更改表的状态
+
 
         }
     }
 
     @Override
-    public void updateHoldNumByTradeAndFollowOrder(FollowOrder followOrder, FollowOrderTradeRecord followOrderTradeRecord) {
+    public synchronized void updateHoldNumByTradeAndFollowOrder(FollowOrder followOrder, FollowOrderTradeRecord followOrderTradeRecord) {
         //设置持仓值,获取原来的持仓值
         Double oldHoldNum = followOrder.getNetPositionHoldNumber();
 
@@ -412,19 +413,24 @@ public class FollowOrderServiceImpl implements IFollowOrderService {
             //平仓
             orderTrade.setTypeId("orderClose");
             orderTrade.setOrderVolume(handNumber);
-            log.info("发送一条交易信息：" + orderTrade.toString());
             //发送平仓交易请求
             orderTraderService.orderClose(orderTrade);
+            log.info("发送一条交易信息：" + orderTrade.toString());
+
+
         } else {
             //开仓
             orderTrade.setTypeId("orderOpen");
-            log.info("发送一条交易信息：" + orderTrade.toString());
             orderTrade.setVolumeTotalOriginal(handNumber);
             orderTraderService.orderOpen(orderTrade);
+            log.info("发送一条交易信息：" + orderTrade.toString());
+
         }
 
 
     }
+
+    //public void  setStatus(Integer)
 
 
 }

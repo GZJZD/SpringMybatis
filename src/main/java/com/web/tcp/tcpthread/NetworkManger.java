@@ -10,7 +10,7 @@ import java.net.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-public class NetworkManger extends Thread{
+public class NetworkManger extends Thread {
     //由香港提供的数据是固定以HEAD;开头的
     private Pattern compile = Pattern.compile("HEAD;");
     //一条完整的交易数据的分号数量是11个
@@ -23,32 +23,34 @@ public class NetworkManger extends Thread{
     //平台名字
     private String platformName;
     //ip
-    private  String ip ;
+    private String ip;
     //端口
     private Integer port;
 
-    public NetworkManger(String ip,Integer port,String platformName){
-        this.ip=ip;
-        this.port=port;
+    public NetworkManger(String ip, Integer port, String platformName) {
+        this.ip = ip;
+        this.port = port;
         this.platformName = platformName;
     }
 
     @Override
     public void run() {
-
-        // 与服务端建立连接
-        ConnectToServerByTcp();
-        //接收数据
-        receiveData();
+        while (true) {
+            // 与服务端建立连接
+            ConnectToServerByTcp();
+            //接收数据
+            receiveData();
+        }
     }
 
 
     /**
      * 接收tcp的数据
-     *@Author: May
-     *@Date: 16:55 2018/5/17
+     *
+     * @Author: May
+     * @Date: 16:55 2018/5/17
      */
-    public void receiveData(){
+    public synchronized void receiveData() {
         try {
             InputStream inputStream = socket.getInputStream();
             int content = -1;
@@ -58,14 +60,14 @@ public class NetworkManger extends Thread{
             int semicolons = 0;
             Matcher matcher = null;
             // 循环append服务端数据
-            while((content = inputStream.read()) != -1){
+            while ((content = inputStream.read()) != -1) {
                 char ch = (char) content;
                 if (ch == ';') {
                     ++semicolons;
                 }
                 sBuilder.append(ch);
 
-                if(semicolons == 11){
+                if (semicolons == 11) {
                     matcher = compile.matcher(sBuilder);
                     if (matcher.find()) {
                         int start = matcher.start();
@@ -78,7 +80,7 @@ public class NetworkManger extends Thread{
                             }
                         }
                         if (start == 0 || semicolons == MAX_SEMICOLONS) {
-                            System.out.println(sBuilder.toString()+"*****************************");
+                            System.out.println(sBuilder.toString() + "*****************************");
                             //System.out.println(sBuilder.toString());
                             //完成一次交易数据的监听,将数据交于其他线程处理
 //                             madeOrderThreadPool.execute(new DealServiceImpl(sBuilder.toString(),platformSocket.getPlatformName()));
@@ -91,10 +93,10 @@ public class NetworkManger extends Thread{
                 }
             }
 
-        } catch (SocketTimeoutException e){
+        } catch (SocketTimeoutException e) {
             System.out.println("服务器连接超时,重新连接ing");
             int startTime = 5000;
-            NetworkManger networkManger = new NetworkManger(ip,port,platformName);
+            NetworkManger networkManger = new NetworkManger(ip, port, platformName);
             try {
                 if (socket != null) {
                     socket.close();
@@ -110,36 +112,42 @@ public class NetworkManger extends Thread{
                 e1.printStackTrace();
             }
 
-        } catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
             System.out.println("error lest");
         }
     }
 
 
-    public  Socket ConnectToServerByTcp() {
+    public synchronized Socket ConnectToServerByTcp() {
 // 建立通讯连接
         boolean connectOk = true;
+        boolean test = true;
         try {
             // 创建一个流套接字并将其连接到指定主机上的指定端口号
-            socket = new Socket();
-            SocketAddress socketAddress = new InetSocketAddress(ip, port);
-            //数据接收的响应时间设置
-          //  socket.setSoTimeout(10000);
-            socket.connect(socketAddress,10000); // 连接超时限制在5秒
-            //       otherSocket.setSoTimeout(1000 * timeOutSecond);//设置读操作超时时间5到180秒
+            if (test) {
+                socket = new Socket();
+                SocketAddress socketAddress = new InetSocketAddress(ip, port);
+                //数据接收的响应时间设置
+                // socket.setSoTimeout(7000);
+                socket.connect(socketAddress, 5000); // 连接超时限制在5秒
+                //       otherSocket.setSoTimeout(1000 * timeOutSecond);//设置读操作超时时间5到180秒
+                test = false;
+            }
 
-        }catch (SocketTimeoutException e) {
+        } catch (SocketTimeoutException e) {
             e.printStackTrace();
             timeNum += 2;
             connectOk = false;
+            test = true;
             Logger.getLogger(NetworkManger.class).error("连接超时," + timeNum + "秒后进行重连");
-        }
-        catch (ConnectException e) {
+        } catch (ConnectException e) {
+            test = true;
             connectOk = false;
             e.printStackTrace();
             Logger.getLogger(NetworkManger.class).error("连接失败" + timeNum + "秒后进行重连");
         } catch (IOException e) {
+            test = true;
             connectOk = false;
             e.printStackTrace();
         }
@@ -154,6 +162,7 @@ public class NetworkManger extends Thread{
                     e.printStackTrace();
                 }
                 socket = null;
+                test = true;
                 ConnectToServerByTcp();
             }
             //
