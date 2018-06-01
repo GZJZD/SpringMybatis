@@ -21,7 +21,7 @@
 		<script src="lib/bootstrap/js/bootstrap-table.js"></script>
 		<script src="http://netdna.bootstrapcdn.com/bootstrap/3.0.0/js/bootstrap.min.js"></script>
 		<script src="lib/bootstrap/js/bootstrap-table-zh-CN.min.js"></script>
-		
+
 
 		<style>
 			.layui-elem-quote {
@@ -118,8 +118,10 @@
 					注意
 				</div>-->
 				<div class="table-case">
-					<div class="table-title orderUserList-id"><span class="glyphicon glyphicon-user"></span>客户列表</div>
-					<a  class="create-id"href="#"><div class="table-title"><span class="glyphicon glyphicon-user"></span>跟单</div></a>
+					<div class="table-title orderUserList-id"><span class="glyphicon glyphicon-user"></span>客户列表
+						<button class="table-title create-but" onclick="showCreate()"><i class="layui-icon">&#xe60c;</i> 跟单</button>
+					</div>
+
 					<div class="tab">
 						<table id="table"></table>
 					</div>
@@ -129,10 +131,9 @@
 		<!-- 注意：如果你直接复制所有代码到本地，上述js路径需要改成你本地的 -->
 		<script type="text/javascript">
 			var url ="orderUser/get.Action";
-		//	table_Id, method, url, unique_Id, sortOrder, columns
 			var tableId =$("#table");
 			var method = "post";
-			var url_  =url;
+			var url_  = url;
 			var unique_Id = "id";
 			var sortOrder = "asc";
 			var columns = [{
@@ -140,7 +141,7 @@
 						field: 'select',
 						//复选框
 						checkbox: true,
-						
+
 						align: 'center',
 						valign: 'middle'
 					},
@@ -196,13 +197,12 @@
 					{
 						field: 'ID',
 						title: '操作',
-						
 						align: 'center',
 						valign: 'middle',
 						formatter: actionFormatter
 					}
 				];
-			
+
 			$(function(){
 				showByTableId(tableId,method,url_,unique_Id,sortOrder,columns);
 			})
@@ -213,9 +213,7 @@
 				})
 			})
 
-			
-				
-			
+
 			//三个参数，value代表该列的值
 			function operateFormatter(value, row, index) {
 				if(value == 2) {
@@ -226,6 +224,7 @@
 					return '数据错误'
 				}
 			}
+
 			//请求服务数据时所传参数
 			function queryParams(params) {
 				return {
@@ -237,7 +236,7 @@
 					Tel: $('#search_tel').val()
 				}
 			}
-			//查询事件  
+			//查询事件
 			function SearchData() {
 				$(tableId).bootstrapTable('refresh', {
 					pageNumber: 1
@@ -254,7 +253,7 @@
 					url: 'Jsion/demo.json'
 				});
 			})
-				
+
 			//操作栏的格式化
 			function actionFormatter(value, row, index) {
 				var id = row.id;
@@ -263,34 +262,67 @@
 				var edit_w = 1500;
 				var edit_h = 800;
 				var details = "查看明細";
-
 				result += "<a href='javascript:;' class='btn btn-xs green' onclick=\"EditViewById('" + id + "', view='客户明细','"+editUrl+"','"+edit_w+"','"+edit_h+"')\" title='查看'><span class='glyphicon glyphicon-search'></span></a>";
-
-
 				return result;
 			}
-	
 
+			//创建跟单
+			function showCreate(){
+                var opts = tableId.bootstrapTable('getSelections');
+                if(opts == "") {
+                   layer.msg("请选择用户");
+                } else {
+                    var idArray = [];
+                    for(var i = 0; i < opts.length; i++) {
+                        idArray.push(opts[i].id);
+                    }
+					var title = "跟单配置";
+                    var url = "page/clientUser/client-add.html";
+                    var w=1000;
+                    var h=600;
+                    if(title == null || title == '') {
+                        title = false;
+                    };
+                    if(url == null || url == '') {
+                        url = "404.html";
+                    };
+                    if(w == null || w == '') {
+                        w = ($(window).width() * 0.9);
+                    };
+                    if(h == null || h == '') {
+                        h = ($(window).height() - 50);
+                    };
+                    layer.open({
+                        type: 2,
+                        area: [w + 'px', h + 'px'],
+                        fix: false, //不固定
+                        maxmin: true,
+                        shadeClose: true,
+                        shade: 0.4,
+                        title: title,
+                        content: url,
+                    });
+                }
 
-//			//批量删除  
-//			function BtchDeleteBook() {
-//				var opts = $('tableId).bootstrapTable('getSelections');
-//				if(opts == "") {
-//					alert("请选择要删除的数据");
-//				} else {
-//					var idArray = [];
-//					for(var i = 0; i < opts.length; i++) {
-//						idArray.push(opts[i].BookId);
-//					}
-//					if(confirm("确定要删除吗：" + idArray + "吗？")) {
-//						alert("执行删除操作");
-//					}
-//				}
-//			}
-
-			function DeleteByIds(id) {
-				alert(id);
 			}
+
+
+// //			//批量删除
+// 			function BtchDeleteBook() {
+// 				var opts = tableId.bootstrapTable('getSelections');
+// 				if(opts == "") {
+// 					layer.msg('请选择跟单客户');
+// 				} else {
+// 					var idArray = [];
+// 					for(var i = 0; i < opts.length; i++) {
+// 						idArray.push(opts[i].BookId);
+// 					}
+// 					if(confirm("确定要删除吗：" + idArray + "吗？")) {
+// 						alert("执行删除操作");
+// 					}
+// 				}
+// 			}
+
 		</script>
 		<script src="js/common.js"></script>
 	</body>
