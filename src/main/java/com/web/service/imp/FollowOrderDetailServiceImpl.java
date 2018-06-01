@@ -82,9 +82,10 @@ public class FollowOrderDetailServiceImpl implements IFollowOrderDetailService {
                 netPositionDetailVo.setMarketPrice(tradeRecord.getMarketPrice());
                 //设置交易时间
                 String tradeTime = tradeRecord.getTradeTime();
-
-                netPositionDetailVo.setTradeTime(tradeTime.substring(0,4)+"-"+tradeTime.substring(4,6)+"-"+tradeTime.substring(6,8)+"  "
-                        +tradeTime.substring(8,10)+":"+tradeTime.substring(10,12)+":"+tradeTime.substring(12,14));
+                if(!"".equals(tradeTime)) {
+                    netPositionDetailVo.setTradeTime(tradeTime.substring(0, 4) + "-" + tradeTime.substring(4, 6) + "-" + tradeTime.substring(6, 8) + "  "
+                            + tradeTime.substring(8, 10) + ":" + tradeTime.substring(10, 12) + ":" + tradeTime.substring(12, 14));
+                }
 
                 //设置手续费
                 netPositionDetailVo.setPoundage(tradeRecord.getPoundage());

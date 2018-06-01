@@ -5,6 +5,7 @@ package com.web.listeners;
 import com.web.pojo.Account;
 import com.web.pojo.vo.LoginMsgResult;
 import com.web.pojo.vo.OrderMsgResult;
+import com.web.pojo.vo.OrderTrade;
 import com.web.service.IFollowOrderService;
 import com.web.service.IFollowOrderTradeRecordService;
 import com.web.util.StatusUtil;
@@ -35,7 +36,7 @@ public class ConsumerMessageListener implements MessageListener {
         //这里我们知道生产者发送的就是一个纯文本消息，所以这里可以直接进行强制转换
         TextMessage textMsg = (TextMessage) message;
         try {
-            log.info("接收到一个纯文本消息。11111111"+textMsg.getText());
+            log.info("接收到交易端得消息"+textMsg.getText());
 
         } catch (JMSException e) {
             e.printStackTrace();
@@ -46,6 +47,7 @@ public class ConsumerMessageListener implements MessageListener {
             if(Pattern.compile("orderOpen").matcher(text).find()||Pattern.compile("orderClose").matcher(text).find()){
                 JSONObject msgResult = JSONObject.fromObject(text);
                 OrderMsgResult orderMsgResult = (OrderMsgResult) JSONObject.toBean(msgResult, OrderMsgResult.class);
+               // OrderTrade orderTrade = (OrderTrade) JSONObject.toBean(msgResult, OrderTrade.class);
                 followOrderTradeRecordService.updateRecordByComeBackTradeMsg(orderMsgResult);
             }else if(Pattern.compile("userLogout").matcher(text).find()||Pattern.compile("userLogin").matcher(text).find()){
                 JSONObject msgResult = JSONObject.fromObject(text);
@@ -57,7 +59,7 @@ public class ConsumerMessageListener implements MessageListener {
                 }
             }
 
-            System.out.println("消息内容是：" + textMsg.getText());
+
         } catch (JMSException e) {
             e.printStackTrace();
         }

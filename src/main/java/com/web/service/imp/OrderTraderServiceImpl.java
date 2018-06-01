@@ -7,6 +7,7 @@ import com.web.pojo.vo.UserLogin;
 import com.web.service.IOrderTraderService;
 import com.web.service.IProducerMsgService;
 
+import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -27,6 +28,7 @@ public class OrderTraderServiceImpl implements IOrderTraderService {
 
     @Override
     public void userLogin(UserLogin userLogin) {
+
         producerMsgService.sendMessage(JSON.toJSONString(userLogin));
     }
 

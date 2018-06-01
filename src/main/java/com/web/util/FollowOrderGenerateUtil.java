@@ -42,8 +42,8 @@ public  class FollowOrderGenerateUtil {
         followOrder.setFollowOrderName("净头寸初始化策略");
         followOrder.setNetPositionStatus(StatusUtil.TRADING_PAUSE.getIndex());
         followOrder.setFollowOrderStatus(StatusUtil.FOLLOW_ORDER_STOP.getIndex());
-        followOrderService.checkLogin(followOrder);
         followOrderService.save(followOrder);
+        followOrderService.checkLogin(followOrder);
         return followOrder;
     }
 
