@@ -74,8 +74,6 @@
 
 
 
-
-
 	<!-- p2p登录信息 -->
 	<bean id="orderDestination" class="org.apache.activemq.command.ActiveMQQueue">
 		<!-- 订阅消息的名字 -->
@@ -89,20 +87,20 @@
 	<bean id="orderContainer"
 		  class="org.springframework.jms.listener.DefaultMessageListenerContainer">
 		<property name="connectionFactory" ref="connectionFactory" />
-		<property name="destinationName" value="order" />
+		<property name="destinationName" value="orderTrade" />
 		<property name="messageListener" ref="consumerMessageListener" />
 		<!--这里注意:如果不开启事务，消息在异常的情况下是不会重试的-->
 		<property name="sessionTransacted" value="true"/>
 	</bean>
 
-	<bean id="consumerMessageListener1" class="com.web.listeners.ConsumerMessageListener1"/>
-	<!-- 交易消息监听容器 -->
+	<!--<bean id="consumerMessageListener1" class="com.web.listeners.ConsumerMessageListener1"/>
+	&lt;!&ndash; 交易消息监听容器 &ndash;&gt;
 	<bean id="orderContainer1"
 		  class="org.springframework.jms.listener.DefaultMessageListenerContainer">
 		<property name="connectionFactory" ref="connectionFactory" />
 		<property name="destinationName" value="order" />
 		<property name="messageListener" ref="consumerMessageListener" />
-		<!--这里注意:如果不开启事务，消息在异常的情况下是不会重试的-->
+		&lt;!&ndash;这里注意:如果不开启事务，消息在异常的情况下是不会重试的&ndash;&gt;
 		<property name="sessionTransacted" value="true"/>
-	</bean>
+	</bean>-->
 </beans>
