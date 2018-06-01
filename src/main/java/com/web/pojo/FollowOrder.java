@@ -58,8 +58,8 @@ public class FollowOrder extends BaseUtil{
     //净头寸的值
     private Double netPositionSum;
 
-    //持仓值
-    private Integer netPositionHoldNumber;
+    //持仓值 todo:修改数据库的类型为double
+    private Double netPositionHoldNumber;
 
     //判断是否正在交易
     private Integer netPositionStatus;
@@ -218,11 +218,12 @@ public class FollowOrder extends BaseUtil{
         this.netPositionSum = netPositionSum;
     }
 
-    public Integer getNetPositionHoldNumber() {
+
+    public Double getNetPositionHoldNumber() {
         return netPositionHoldNumber;
     }
 
-    public void setNetPositionHoldNumber(Integer netPositionHoldNumber) {
+    public void setNetPositionHoldNumber(Double netPositionHoldNumber) {
         this.netPositionHoldNumber = netPositionHoldNumber;
     }
 
@@ -242,4 +243,30 @@ public class FollowOrder extends BaseUtil{
         this.version = version;
     }
 
+    @Override
+    public String toString() {
+        return "FollowOrder{" +
+                "followOrderName='" + followOrderName + '\'' +
+                ", account=" + account +
+                ", variety=" + variety +
+                ", followManner=" + followManner +
+                ", maxProfit=" + maxProfit +
+                ", maxProfitNumber=" + maxProfitNumber +
+                ", maxLoss=" + maxLoss +
+                ", maxLossNumber=" + maxLossNumber +
+                ", accountLoss=" + accountLoss +
+                ", orderPoint=" + orderPoint +
+                ", clientPoint=" + clientPoint +
+                ", clientPointNumber=" + clientPointNumber +
+                ", netPositionDirection=" + netPositionDirection +
+                ", netPositionChange=" + netPositionChange +
+                ", netPositionFollowNumber=" + netPositionFollowNumber +
+                ", netPositionSum=" + netPositionSum +
+                ", netPositionHoldNumber=" + netPositionHoldNumber +
+                ", netPositionStatus=" + netPositionStatus +
+                ", startTime='" + startTime + '\'' +
+                ", followOrderStatus=" + followOrderStatus +
+                ", version=" + version +
+                '}';
+    }
 }

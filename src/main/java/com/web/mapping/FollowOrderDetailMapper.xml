@@ -7,6 +7,7 @@
     <result column="variety_name" property="varietyName"  />
     <result column="trade_direction" property="tradeDirection"  />
     <result column="hand_number" property="handNumber"  />
+    <result column="original_hand_number" property="OriginalHandNumber"/>
     <result column="remain_hand_number" property="remainHandNumber"/>
     <result column="follow_order_trade_record_id" property="followOrderTradeRecordId"/>
     <result column="open_price" property="openPrice"  />
@@ -23,19 +24,24 @@
     <result column="follow_order_id" property="followOrderId"  />
     <result column="version" property="version"  />
   </resultMap>
+  <resultMap id="testMap" type="com.web.pojo.vo.FollowOrderVo">
+    <result column="poundageTotal" property="poundageTotal"/>
+    <result column="handNumberTotal" property="handNumberTotal"/>
+  </resultMap>
+
   <delete id="deleteByPrimaryKey" parameterType="java.lang.Long" >
     delete from follow_order_detail
     where id = #{id}
   </delete>
   <insert id="insert" parameterType="com.web.pojo.FollowOrderDetail" useGeneratedKeys="true" keyProperty="id" >
     insert into follow_order_detail (client_name, variety_name, trade_direction, 
-      hand_number,remain_hand_number,follow_order_trade_record_id, open_price, open_time,
+      hand_number,original_hand_number,remain_hand_number,follow_order_trade_record_id, open_price, open_time,
       close_price, close_time, poundage, 
       profit_loss, client_profit, ticket,
       update_date,update_by_user,create_date, follow_order_id, version
       )
     values (#{clientName}, #{varietyName}, #{tradeDirection}, 
-      #{handNumber},#{remainHandNumber},#{followOrderTradeRecordId}, #{openPrice}, #{openTime},
+      #{handNumber},#{OriginalHandNumber},#{remainHandNumber},#{followOrderTradeRecordId}, #{openPrice}, #{openTime},
       #{closePrice}, #{closeTime}, #{poundage}, 
       #{profitLoss}, #{clientProfit}, #{ticket},
       #{updateDate}, #{updateByUser} ,#{createDate},#{followOrderId},#{version}
@@ -55,6 +61,9 @@
       </if>
       <if test="handNumber != null">
         hand_number = #{handNumber},
+      </if>
+      <if test="OriginalHandNumber != null">
+        original_hand_number = #{OriginalHandNumber},
       </if>
       <if test="remainHandNumber != null">
         remain_hand_number = #{remainHandNumber},
@@ -116,7 +125,8 @@
       select
       <include refid="base_List"/>
       from follow_order_detail
-      where follow_order_id = #{followOrderId}
+      where follow_order_id = #{followOrderId} order by id asc
+
     </select>
   <select id="getDetailListByOrderIdAndDirection" resultMap="BaseResultMap">
     select
@@ -126,6 +136,29 @@
     order by open_time asc
 
   </select>
+  <select id="getFollowOrderDetailByTicket" resultMap="BaseResultMap">
+    select
+    <include refid="base_List"/>
+    from follow_order_detail
+    where ticket = #{ticket}
+  </select>
+  <select id="getOffsetGainAndLossByFollowOrderId" resultType="java.lang.Double">
+    select sum(profit_loss)
+    from follow_order_detail
+    where follow_order_id = #{followOrderId} and close_time is not  null
+  </select>
+  <select id="getCommissionTotalAndHandNumTotal" resultMap="testMap">
+    select sum(poundage) as poundageTotal,sum(hand_number) as handNumberTotal
+    from follow_order_detail
+    where follow_order_id = #{followOrderId}
+
+  </select>
+  <select id="getTotal" resultMap="testMap">
+     select sum(poundage) as text_poundage ,sum(profit_loss) as text
+    from follow_order_detail
+    where follow_order_id = #{followOrderId}
+
+  </select>
 
   <sql id="base_List">
     id,
@@ -133,6 +166,7 @@
     variety_name,
     trade_direction,
     hand_number,
+    original_hand_number,
     remain_hand_number,
     follow_order_trade_record_id,
     open_price,

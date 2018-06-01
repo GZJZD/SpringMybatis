@@ -3,8 +3,11 @@ package com.web.service;
 
 import com.web.pojo.DataSource;
 import com.web.pojo.FollowOrder;
+import com.web.pojo.FollowOrderTradeRecord;
+import com.web.pojo.vo.FollowOrderVo;
 import com.web.util.query.PageResult;
 import com.web.util.query.QueryObject;
+import sun.awt.geom.AreaOp;
 
 import java.util.List;
 
@@ -17,8 +20,11 @@ public interface IFollowOrderService {
 
 
     void save(FollowOrder followOrder);
+    void updateFollowOrder(FollowOrder followOrder);
 
-    /** 返回跟单集合
+    //修改跟单的状态
+    void updateFollowOrderStatus(Long followOrderId,Integer status);
+    /** 返回跟单集合,分页
      *@Author: May
      *@Date: 12:48 2018/5/8
      * @param
@@ -26,6 +32,7 @@ public interface IFollowOrderService {
      */
     PageResult getListFollowOrder(QueryObject queryObject);
 
+    List<FollowOrder> selectListFollowOrder();
 
     /**
      * 通过客户的名字找到对应的跟单集合
@@ -41,7 +48,15 @@ public interface IFollowOrderService {
      */
      FollowOrder getFollowOrder(Long id);
 
-     void updateFollowOrder(FollowOrder followOrder);
+     /*
+      *
+      *  返回页面的跟单映射
+      * @author may
+      * @date 2018/5/25 15:37
+      * @param
+      * @return
+      */
+    List<FollowOrderVo> getListFollowOrderVo();
 
     /**
      * 实现交易逻辑
@@ -59,5 +74,7 @@ public interface IFollowOrderService {
      */
     void checkLogin( FollowOrder followOrder);
 
+    //设置持仓值
+    void updateHoldNumByTradeAndFollowOrder(FollowOrder followOrder, FollowOrderTradeRecord followOrderTradeRecord);
 
 }

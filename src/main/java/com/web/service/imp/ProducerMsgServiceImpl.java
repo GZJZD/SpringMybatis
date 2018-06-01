@@ -16,13 +16,13 @@ import javax.jms.Session;
  * 生产者发送订单信息
  */
 @Service@Transactional
-public class OrderProducerMsgServiceImpl implements IProducerMsgService {
+public class ProducerMsgServiceImpl implements IProducerMsgService {
     @Autowired
-    @Qualifier("orderJmsTemplate")
-    private JmsTemplate orderJmsTemplate;
+    @Qualifier("jmsTemplate")
+    private JmsTemplate jmsTemplate;
     public void sendMessage(final String message) {
         System.out.println("---------------发了一个订单消息：" + message);
-        orderJmsTemplate.send(new MessageCreator() {
+        jmsTemplate.send(new MessageCreator() {
             public Message createMessage(Session session) throws JMSException {
                 return session.createTextMessage(message);
             }

@@ -2,6 +2,7 @@ package com.web.controller;
 
 import com.web.pojo.FollowOrder;
 import com.web.pojo.FollowOrderDetail;
+import com.web.pojo.vo.FollowOrderVo;
 import com.web.pojo.vo.NetPositionDetailVo;
 import com.web.service.IFollowOrderDetailService;
 import com.web.service.IFollowOrderService;
@@ -22,6 +23,8 @@ import java.util.List;
  */
 @Controller
 public class FollowOrderController {
+
+
     @Autowired
     private IFollowOrderService followOrderService;
     @Autowired
@@ -35,13 +38,22 @@ public class FollowOrderController {
 
     @RequestMapping(value = "getPositionDetails.Action")
     @ResponseBody
-    public  List<NetPositionDetailVo> getPositionDetails(Model model, Long followOrderId){
+    public  List<NetPositionDetailVo> getPositionDetails( Long followOrderId){
         List<NetPositionDetailVo> netPositionDetailVos = followOrderDetailService.
                 getDetailListByFollowOrderId(followOrderId);
-        for (NetPositionDetailVo netPositionDetailVo : netPositionDetailVos) {
-            System.out.println(netPositionDetailVo);
-        }
-
         return netPositionDetailVos;
     }
+
+    @RequestMapping("getListFollowOrder.Action")
+    @ResponseBody
+    public List<FollowOrderVo> getListFollowOrder(){
+        List<FollowOrderVo> listFollowOrderVo = followOrderService.getListFollowOrderVo();
+        for (FollowOrderVo followOrderVo : listFollowOrderVo) {
+            System.out.println(followOrderVo.getFollowOrder().getFollowOrderStatus()+"+++++++++++++++++++++++++++++++++++++++++++++++++++");
+            System.out.println(followOrderVo);
+        }
+        return followOrderService.getListFollowOrderVo();
+    }
+
+
 }

@@ -9,9 +9,12 @@ import org.springframework.beans.factory.annotation.Autowired;
  * 初始化死策略
  * Created by may on 2018/5/11.
  */
-public abstract class FollowOrderGenerateUtil {
+public  class FollowOrderGenerateUtil {
     private static FollowOrder followOrder = new FollowOrder();
-
+    @Autowired
+    private IFollowOrderService
+            followOrderService = (IFollowOrderService) ApplicationContextHolder
+            .getBeanByName("followOrderServiceImpl");
     /**
      * 初始化策略
      *
@@ -20,7 +23,7 @@ public abstract class FollowOrderGenerateUtil {
      * @Date: 10:21 2018/5/9
      */
 
-    public static FollowOrder getFollowOrder() {
+    public  FollowOrder getFollowOrder() {
 
         followOrder.setAccount(FollowOrderGenerateUtil.getAccount());
         //设计品种
@@ -35,16 +38,18 @@ public abstract class FollowOrderGenerateUtil {
         followOrder.setNetPositionChange(10);
         followOrder.setNetPositionFollowNumber(1);
         followOrder.setNetPositionSum(0.0);
-        followOrder.setNetPositionHoldNumber(0);
+        followOrder.setNetPositionHoldNumber(0.0);
         followOrder.setFollowOrderName("净头寸初始化策略");
         followOrder.setNetPositionStatus(StatusUtil.TRADING_PAUSE.getIndex());
         followOrder.setFollowOrderStatus(StatusUtil.FOLLOW_ORDER_STOP.getIndex());
+        followOrderService.checkLogin(followOrder);
+        followOrderService.save(followOrder);
         return followOrder;
     }
 
     public static Account getAccount() {
-        TradePlatform tradePlatform = new TradePlatform(1L, "EF");
-        Account account = new Account(1L, "xiao", "123", tradePlatform);
+        TradePlatform tradePlatform = new TradePlatform(1L, "8001");
+        Account account = new Account(1L, "text1", "text1", tradePlatform);
         return account;
     }
 

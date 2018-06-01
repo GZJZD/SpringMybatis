@@ -140,6 +140,18 @@
     where id = #{id} and version = #{version}
 
   </update>
+  <update id="updateFollowOrderStatus">
+    update follow_order
+    <set>
+      <if test="status != null">
+        follow_order_status = #{status},
+      </if>
+      <if test="startTime != null">
+        start_time = #{startTime},
+      </if>
+    </set>
+    where id = #{followOrderId}
+  </update>
   <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
     select
     <include refid="base_List"/>
@@ -158,8 +170,14 @@
   <select id="queryForCount" resultType="java.lang.Integer">
     select count(id) from follow_order
   </select>
+    <select id="selectListFollowOrder" resultMap="BaseResultMap">
+      select
+      <include refid="base_List"/>
+      from follow_order f
+      join variety v on v.id = f.variety_id
+    </select>
 
-  <sql id="base_List">
+    <sql id="base_List">
     f.id,
     f.follow_order_name,
     f.account_id,
