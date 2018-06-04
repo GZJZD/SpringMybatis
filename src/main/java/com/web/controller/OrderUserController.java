@@ -25,7 +25,7 @@ public class OrderUserController {
 
 
 
-    @RequestMapping(value = "/get.Action")
+    @RequestMapping(value = "/findAll.Action")
     @ResponseBody
     public  List<OrderUser> findAll(){
         String str = JSONArray.toJSONString(orderUserService.findAll());
@@ -33,4 +33,5 @@ public class OrderUserController {
         return orderUserList;
 
     }
+
 }

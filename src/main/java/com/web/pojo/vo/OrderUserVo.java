@@ -80,7 +80,7 @@ public class OrderUserVo {
     /**
      * 商品
      */
-    private String produceCode;
+    private String productCode;
 
 
 
@@ -241,12 +241,12 @@ public class OrderUserVo {
         this.contract = contract;
     }
 
-    public String getProduceCode() {
-        return produceCode;
+    public String getProductCode() {
+        return productCode;
     }
 
-    public void setProduceCode(String produceCode) {
-        this.produceCode = produceCode;
+    public void setProductCode(String productCode) {
+        this.productCode = productCode;
     }
 
     public String getLatestOrderTime() {
