@@ -1,8 +1,8 @@
 package com.web.util;
 
+import com.web.common.FollowOrderEnum;
 import com.web.pojo.*;
 import com.web.service.IFollowOrderService;
-import com.web.service.imp.FollowOrderServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 
 /**
@@ -31,17 +31,17 @@ public  class FollowOrderGenerateUtil {
         followOrder.setVariety(variety);
         followOrder.setVersion(0);
         //设计状态
-        //  Tactics.setStatus(StatusUtil.Tactics_STOP.getIndex());
+        //  Tactics.setStatus(FollowOrderEnum.FollowStatus.Tactics_STOP.getIndex());
         //设计策略的跟单参数,反向跟单,净头寸每变化10手跟1手
-        followOrder.setFollowManner(StatusUtil.FOLLOWMANNER_NET_POSITION.getIndex());
-        followOrder.setNetPositionDirection(StatusUtil.DIRECTION_REVERSE.getIndex());
+        followOrder.setFollowManner(FollowOrderEnum.FollowStatus.FOLLOWMANNER_NET_POSITION.getIndex());
+        followOrder.setNetPositionDirection(FollowOrderEnum.FollowStatus.DIRECTION_REVERSE.getIndex());
         followOrder.setNetPositionChange(10);
         followOrder.setNetPositionFollowNumber(1);
         followOrder.setNetPositionSum(0.0);
         followOrder.setNetPositionHoldNumber(0.0);
         followOrder.setFollowOrderName("净头寸初始化策略");
-        followOrder.setNetPositionStatus(StatusUtil.TRADING_PAUSE.getIndex());
-        followOrder.setFollowOrderStatus(StatusUtil.FOLLOW_ORDER_STOP.getIndex());
+        followOrder.setNetPositionStatus(FollowOrderEnum.FollowStatus.NET_POSITION_TRADING_PAUSE.getIndex());
+        followOrder.setFollowOrderStatus(FollowOrderEnum.FollowStatus.FOLLOW_ORDER_STOP.getIndex());
         followOrderService.save(followOrder);
         followOrderService.checkLogin(followOrder);
         return followOrder;

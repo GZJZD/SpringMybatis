@@ -1,16 +1,14 @@
 package com.web.listeners;
 
 
-
-import com.web.pojo.Account;
 import com.web.pojo.vo.LoginMsgResult;
 import com.web.pojo.vo.OrderMsgResult;
-import com.web.pojo.vo.OrderTrade;
 import com.web.service.IFollowOrderService;
 import com.web.service.IFollowOrderTradeRecordService;
-import com.web.util.StatusUtil;
+import com.web.common.FollowOrderEnum;
 import net.sf.json.JSONObject;
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import javax.jms.JMSException;
@@ -30,7 +28,7 @@ public class ConsumerMessageListener implements MessageListener {
     private IFollowOrderService followOrderService;
     @Autowired
     private IFollowOrderTradeRecordService followOrderTradeRecordService;
-    private static Logger log = Logger.getLogger(ConsumerMessageListener.class.getName());
+    private static Logger log = LogManager.getLogger(ConsumerMessageListener.class.getName());
 
     public void onMessage(Message message) {
         //这里我们知道生产者发送的就是一个纯文本消息，所以这里可以直接进行强制转换
@@ -55,7 +53,7 @@ public class ConsumerMessageListener implements MessageListener {
                 if(loginMsgResult.getTypeId().equals("userLogin")){
                     //设计启动
                     followOrderService.updateFollowOrderStatus(Long.valueOf(loginMsgResult.getRequestId()),
-                            StatusUtil.FOLLOW_ORDER_START.getIndex());
+                            FollowOrderEnum.FollowStatus.FOLLOW_ORDER_START.getIndex());
                 }
             }
 

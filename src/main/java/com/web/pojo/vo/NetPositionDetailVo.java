@@ -1,6 +1,6 @@
 package com.web.pojo.vo;
 
-import com.web.util.StatusUtil;
+import com.web.common.FollowOrderEnum;
 
 /**
  * 净头寸明细的映射
@@ -63,7 +63,7 @@ public class NetPositionDetailVo {
 
     public String getOpenCloseType() {
 
-        return openCloseType == StatusUtil.CLOSE.getIndex()? StatusUtil.CLOSE.getName() : StatusUtil.OPEN.getName();
+        return openCloseType == FollowOrderEnum.FollowStatus.CLOSE.getIndex()? FollowOrderEnum.FollowStatus.CLOSE.getName() : FollowOrderEnum.FollowStatus.OPEN.getName();
     }
 
     public Double getRemainHandNumber() {
@@ -95,7 +95,7 @@ public class NetPositionDetailVo {
     }
 
     public String getTradeDirection() {
-        return tradeDirection == StatusUtil.SELL.getIndex()? "卖出" : "买入";
+        return tradeDirection == FollowOrderEnum.FollowStatus.SELL.getIndex()? "卖出" : "买入";
     }
 
     public void setTradeDirection(Integer tradeDirection) {

@@ -24,8 +24,8 @@ public class TcpConfig {
         public static void init(){
           //fixedThreadPool.execute( new NetworkManger("192.168.3.114",12000,"orders75"));
 
-           fixedThreadPool.execute( new NetworkManger("116.62.195.204",12000,"orders75"));
-            fixedThreadPool.execute( new NetworkManger("116.62.195.204",12001,"orders76"));
+           //fixedThreadPool.execute( new NetworkManger("116.62.195.204",12000,"orders75"));
+            //fixedThreadPool.execute( new NetworkManger("116.62.195.204",12001,"orders76"));
 
         }
 

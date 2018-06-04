@@ -8,7 +8,8 @@ import com.web.util.common.BaseUtil;
  *@param
  *@Date: 10:40 2018/5/21
  */
-public class FollowOrder extends BaseUtil{
+public class
+FollowOrder extends BaseUtil{
 
     //策略名称
     private String followOrderName;
