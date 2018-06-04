@@ -23,7 +23,7 @@
     <!-- log4j日志包版本号 -->
     <slf4j.version>1.7.18</slf4j.version>
 
-   <log4j.version>1.2.17</log4j.version>
+    <log4j.version>1.2.17</log4j.version>
 
   </properties>
 
@@ -147,7 +147,7 @@
     </dependency>
 
     <!-- 添加日志相关jar包 -->
-  <dependency>
+    <dependency>
       <groupId>log4j</groupId>
       <artifactId>log4j</artifactId>
       <version>${log4j.version}</version>
