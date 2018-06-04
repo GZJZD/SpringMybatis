@@ -2,65 +2,57 @@ $(function(){
     setParameter();
 });
 
- function showTableBase(tableId,data_){
+function showTableBase(tableId,data_){
+    var columns = [
+        {
+            field: 'id',
+            title: 'ID'
+        },
+        {
+            field: 'userCode',
+            title: '客户编号'
+        },
+        {
+            field: 'userCode',
+            title: '客户姓名'
+        },
 
+        {
+            field: 'profit',
+            title: '平仓盈亏'
+        },
 
-     var columns = [
-         {
-             field: 'id',
-             title: 'ID'
-         },
-         {
-             field: 'userCode',
-             title: '客户编号'
-         },
-         {
-             field: 'userCode',
-             title: '客户姓名'
-         },
+        {
+            field: 'profit_loss_than',
+            title: '盈亏效率'
+        },
+        {
+            field:'orderType',
+            title:'跟单类型',
+            align: 'center',
+            valign: 'middle',
+        },
+        {
+            field:'handType',
+            title:'手数类型',
+            align: 'center',
+            valign: 'middle',
+        }
+        ,{
+            field:'handNumber',
+            title:'手数',
+            align: 'center',
+            valign: 'middle',
+        }
+    ];
 
-         {
-             field: 'profit',
-             title: '平仓盈亏'
-         },
+    $(tableId).bootstrapTable({
+        data :data_,
+        columns:columns
+    });
+}
 
-         {
-             field: 'profit_loss_than',
-             title: '盈亏效率'
-         },
-         {
-             field:'orderType',
-             title:'跟单类型',
-             align: 'center',
-             valign: 'middle',
-
-
-         },
-         {
-             field:'handType',
-             title:'手数类型',
-             align: 'center',
-             valign: 'middle',
-
-         }
-         ,{
-             field:'handNumber',
-             title:'手数',
-             align: 'center',
-             valign: 'middle',
-
-         }
-
-     ];
-
-     $(tableId).bootstrapTable({
-         data :data_,
-         columns:columns
-
-     });
-
- }
- //table数据赋值
+//table数据赋值
 function  setParameter() {
 
     var opts = parent.$("#table").bootstrapTable('getData');
@@ -125,13 +117,11 @@ function  setParameter() {
     $(tableId).bootstrapTable({
         data :data_,
         columns:columns
-
     });
 
 }
 function goOn(status){
     if(status ==1){
-
         layui.use('element', function(){
             var element = layui.element;
             element.progress('demo', '66%');
@@ -151,28 +141,25 @@ function goOn(status){
         $(".two-div").css('background-color','#f0eff0');
         $(".table-div").hide();
         $(".title-fiel").hide();
-        //设置展示数据
 
+        //设置展示数据
         var fayuan_data = new Array();
-       $("#mytable tbody").find('tr').each(function(){
-           var tdArr = $(this).children();
-           var id_ = tdArr.eq(0).html();//id
-           var userCode = tdArr.eq(1).html();//用户编号
-           var profit = tdArr.eq(2).html();//平仓盈亏
-           var profit_loss_than  =tdArr.eq(3).html();//盈亏率
-           var handNumber = tdArr.eq(7).find('input').val();//手数
-           var json_ = {"id":id_,"userCode":userCode,"profit":profit,"profit_loss_than":profit_loss_than,"handNumber":handNumber};
-           fayuan_data.push(json_);
-       });
-        var newjsonObj = JSON.stringify(fayuan_data)
+        $("#mytable tbody").find('tr').each(function(){
+            var tdArr = $(this).children();
+            var id_ = tdArr.eq(0).html();//id
+            var userCode = tdArr.eq(1).html();//用户编号
+            var profit = tdArr.eq(2).html();//平仓盈亏
+            var profit_loss_than  =tdArr.eq(3).html();//盈亏率
+            var handNumber = tdArr.eq(7).find('input').val();//手数
+            var json_ = {"id":id_,"userCode":userCode,"profit":profit,"profit_loss_than":profit_loss_than,"handNumber":handNumber};
+            fayuan_data.push(json_);
+        });
+        var newjsonObj = JSON.stringify(fayuan_data);
         var data_ = $.parseJSON(newjsonObj);
         var tableId =$("#datails-table");
         $(".detalis-div").show();
         showTableBase(tableId,data_);
-
-
     }
-
 
 }
 //每个返回按钮事件
@@ -200,6 +187,8 @@ function returnBlack(status){
         $('.table-div').show();
         $('.first-div').hide();
         $('.detalis-div').hide();
+
+
     }
 }
 //操作栏的格式化
@@ -249,3 +238,37 @@ function handNumber(){
     return result;
 }
 
+/**
+ * 设置勾选状态
+ * id_
+ */
+function setStatus(status){
+    //下单点位
+    if(status == 'setPT'){
+        var val = $('input[name="setPT"]:checked').val();
+        $('#setPT').val(val);
+    }
+    //单笔最大止盈
+    if(status == 'profitAndLoss'){
+        var val = $('input[name="profitAndLoss"]:checked').val();
+        $('#setPT').val(val);
+    }
+    //单笔最大止损
+    if(status == 'lossLimit'){
+        var val = $('input[name="lossLimit"]:checked').val();
+        $('#lossLimit').val(val);
+    }
+    //账户止损
+    if(status == 'ZHlossLimit'){
+        var val = $('input[name="ZHlossLimit"]:checked').val();
+        $('#ZHlossLimit').val(val);
+
+    }
+    //跟每单或净头寸
+    if(status == 'singleOrLoose'){
+        var val = $('input[name="singleOrLoose"]:checked').val();
+        $('#singleOrLoose').val(val);
+    }
+
+
+}

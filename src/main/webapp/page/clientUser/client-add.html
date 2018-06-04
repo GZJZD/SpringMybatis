@@ -32,7 +32,7 @@
     }
     .if-ok{
         position:absolute;
-        left: 347px;
+        left: 295px;
 
     }
     .input-number{
@@ -72,152 +72,165 @@
     .detalis-div{
         display: none;
     }
+    input[type="radio"], input[type="checkbox"]{
+        margin: 13px 0 0;
+    }
+    .disPaly{
+        display: none;
+    }
 </style>
 <body>
-<div class="title-div um-vp pr">
+    <div class="title-div um-vp pr">
 
-    <div class="h100" id="page_0">
-        <div class="ub ub-ac ub-pc">
-            <div class="ub-f1 ub ub-pc ub-ac">
-                <div class="tips color_fff active one-div">1</div>
-                <div class="ma_l_1">参数设置</div>
+        <div class="h100" id="page_0">
+            <div class="ub ub-ac ub-pc">
+                <div class="ub-f1 ub ub-pc ub-ac">
+                    <div class="tips color_fff active one-div">1</div>
+                    <div class="ma_l_1">参数设置</div>
+                </div>
+                <div class="ub-f1 ub ub-pc ub-ac">
+                    <div class="tips olor_fff  two-div">2</div>
+                    <div class=" ma_l_1">客户配置</div>
+                </div>
+                <div class="ub-f1 ub ub-pc ub-ac">
+                    <div class="tips olor_fff   three-div">3</div>
+                    <div class=" ma_l_1">确认</div>
+                </div>
             </div>
-            <div class="ub-f1 ub ub-pc ub-ac">
-                <div class="tips olor_fff  two-div">2</div>
-                <div class=" ma_l_1">客户配置</div>
-            </div>
-            <div class="ub-f1 ub ub-pc ub-ac">
-                <div class="tips olor_fff   three-div">3</div>
-                <div class=" ma_l_1">确认</div>
-            </div>
+
         </div>
 
-    </div>
-
-    <div class="layui-progress layui-progress-big" lay-filter="demo">
-        <div  class="layui-progress-bar layui-bg-green "id="percent" lay-percent="33%"></div>
-    </div>
-</div>
-<div class="container-fluid">
-
-    <fieldset class="layui-elem-field layui-field-title title-fiel" style="margin-top: 20px;">
-        <legend>请配置你的跟单参数</legend>
-    </fieldset>
-    <div class="layui-form" >
-        <div class="first-div">
-
-            <div class="layui-form-item">
-                <div class="layui-inline">
-                    <label class="layui-form-label">策略名称</label>
-                    <div class="layui-input-inline">
-                        <input type="tel" name="phone"  autocomplete="off" class="layui-input">
-                    </div>
-                </div>
-            </div>
-
-
-            <div class="layui-form-item">
-                <div class="layui-inline">
-                    <label class="layui-form-label">下单点位</label>
-                    <div class="layui-input-block">
-                        <input type="radio" name="市价" value="1" title="市价" checked="">
-                        <input type="radio" name="市价" value="2" title="限价:比客户点位">
-                    </div>
-                </div>
-
-                <div class="layui-inline if-ok">
-                    <div class="layui-input-inline">
-                        <select name="modules"  lay-search="">
-                            <option value="1">差</option>
-                            <option value="2">好</option>
-                        </select>
-                    </div>
-                </div>
-                <div class="layui-inline input-number">
-                    <div class="layui-input-block">
-                        <input type="number" name="phone"  autocomplete="off" class="layui-input">
-                    </div>
-                </div>
-            </div>
-            <div class="layui-form-item">
-                <div class="layui-inline">
-                    <label class="layui-form-label">单笔最大止盈</label>
-                    <div class="layui-input-block">
-                        <input type="radio" name="wangxing" value="1" title="不设" checked="">
-                        <input type="radio" name="wangxing" value="2" title="点/手">
-                        <input  type="number" name="phone"  autocomplete="off" class="layui-input set-input"></input>
-                    </div>
-                </div>
-            </div>
-            <div class="layui-form-item">
-                <div class="layui-inline">
-                    <label class="layui-form-label">单笔最大止损</label>
-                    <div class="layui-input-block">
-                        <input type="radio" name="minMoney" value="1" title="不设" checked="">
-                        <input type="radio" name="minMoney" value="2" title="点/手">
-                        <input type="number" name="phone"  autocomplete="off" class="layui-input set-input"></input>
-                    </div>
-                </div>
-            </div>
-            <div class="layui-form-item">
-                <div class="layui-inline">
-                    <label class="layui-form-label">账户止损</label>
-                    <div class="layui-input-block">
-                        <input type="radio" name="no" value="1" title="不设" checked="">
-                        <input type="radio" name="no" value="2" title="美金">
-                        <input type="number" name="phone"  autocomplete="off" class="layui-input set-input"></input>
-                    </div>
-                </div>
-            </div>
-
-            <div class="layui-inline">
-                <label class="layui-form-label">跟单账号</label>
-                <div class="layui-input-inline">
-                    <select name="modules" lay-verify="required" lay-search="">
-
-                        <option value="1">layer</option>
-                        <option value="2">form</option>
-                        <option value="3">layim</option>
-                        <option value="4">element</option>
-                        <option value="5">laytpl</option>
-                        <option value="6">upload</option>
-                        <option value="7">laydate</option>
-                        <option value="8">laypage</option>
-                        <option value="9">flow</option>
-                        <option value="10">util</option>
-                        <option value="11">code</option>
-                        <option value="12">tree</option>
-                        <option value="13">layedit</option>
-                        <option value="14">nav</option>
-                        <option value="15">tab</option>
-                        <option value="16">table</option>
-                        <option value="17">select</option>
-                        <option value="18">checkbox</option>
-                        <option value="19">switch</option>
-                        <option value="20">radio</option>
-                    </select>
-                </div>
-            </div>
-
-            <div class="layui-form-item">
-                <label class="layui-form-label">跟单方式:</label>
-                <div class="layui-input-block">
-                    <input type="radio" name="sex" value="1" title="跟每一单" checked="">
-                    <input type="radio" name="sex" value="2" title="跟净头寸">
-                </div>
-            </div>
-
-            <div class="layui-form-item">
-                <div class="layui-input-block">
-                    <button type="reset" class="layui-btn layui-btn-primary">重置</button>
-                    <button type="submit" class="layui-btn" lay-submit="" lay-filter="demo1" onclick="goOn(1)">继续<i class="layui-icon layui-icon-face-smile"></i>   </button>
-                </div>
-            </div>
+        <div class="layui-progress layui-progress-big" lay-filter="demo">
+            <div  class="layui-progress-bar layui-bg-green "id="percent" lay-percent="33%"></div>
         </div>
-
     </div>
 
-</div>
+
+    <!--设置参数区-->
+    <div class="container-fluid">
+
+            <fieldset class="layui-elem-field layui-field-title title-fiel" style="margin-top: 20px;">
+                <legend>请配置你的跟单参数</legend>
+            </fieldset>
+            <!--<div class="layui-form" >-->
+                <div class="first-div">
+
+                    <div class="layui-form-item">
+                        <div class="layui-inline">
+                            <label class="layui-form-label">策略名称</label>
+                            <div class="layui-input-inline">
+                                <input type="tel" id="tacticsName" name=""  autocomplete="off" class="layui-input">
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="layui-form-item">
+                        <div class="layui-inline">
+                            <label class="layui-form-label">下单点位</label>
+                            <div class="layui-input-block">
+                                <input class="disPaly" type="text" id="setPT" value="1"/>
+                                <input type="radio" onclick="setStatus('setPT')" name="setPT" value="1" title="市价" checked="">市价</input>
+                                <input type="radio" onclick="setStatus('setPT')" name="setPT" value="2" title="限价:比客户点位">限价:比客户点位</input>
+                            </div>
+                        </div>
+
+                        <div class="layui-inline if-ok">
+                            <div class="layui-input-inline">
+                                <select class="form-control" name="" >
+                                    <option value="1">按比例</option>
+                                    <option value="2">按固定手术</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="layui-inline input-number">
+                            <div class="layui-input-block">
+                             <input type="number" name="phone"  autocomplete="off" class="layui-input">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="layui-form-item">
+                        <div class="layui-inline">
+                            <label class="layui-form-label">单笔最大止盈</label>
+                            <div class="layui-input-block">
+                                <input class="disPaly" type="text" id="profitAndLoss" value="1"/>
+                                <input type="radio" name="profitAndLoss" onclick="setStatus('profitAndLoss')" name="setPT" value="1" title="市价" checked="">市价</input>
+                                <!--<input type="radio" name="profitAndLoss" onclick="setStatus('profitAndLoss')" value="1" title="不设" hecked="" >不设</input>-->
+                                <input type="radio" name="profitAndLoss" onclick="setStatus('profitAndLoss')"  value="2" title="点/手">点/手</input>
+                                <input  type="number" name="phone"  autocomplete="off" class="layui-input set-input"></input>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="layui-form-item">
+                        <div class="layui-inline">
+                            <label class="layui-form-label">单笔最大止损</label>
+                            <div class="layui-input-block">
+                                <input class="disPaly" type="text" id="lossLimit" value="1"/>
+                                <input type="radio" name="lossLimit" onclick="setStatus('lossLimit')" value="1" title="不设" checked="">不设</input>
+                                <input type="radio" name="lossLimit" onclick="setStatus('lossLimit')" value="2" title="点/手">点/手</input>
+                                <input type="number" name="phone"  autocomplete="off" class="layui-input set-input"></input>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="layui-form-item">
+                        <div class="layui-inline">
+                            <label class="layui-form-label">账户止损</label>
+                            <div class="layui-input-block">
+                                <input class="disPaly" type="text" id="ZHlossLimit" value="1"/>
+                                <input type="radio" name="ZHlossLimit" onclick="setStatus('ZHlossLimit')" value="1" title="不设" checked="">不设</input>
+                                <input type="radio" name="ZHlossLimit"onclick="setStatus('ZHlossLimit')" value="2" title="美金">美金</input>
+                                <input type="number" name="phone"  autocomplete="off" class="layui-input set-input"></input>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="layui-inline">
+                        <label class="layui-form-label">跟单账号</label>
+                        <div class="layui-input-inline">
+                            <select name="modules" lay-verify="required" lay-search="">
+
+                                <option value="1">layer</option>
+                                <option value="2">form</option>
+                                <option value="3">layim</option>
+                                <option value="4">element</option>
+                                <option value="5">laytpl</option>
+                                <option value="6">upload</option>
+                                <option value="7">laydate</option>
+                                <option value="8">laypage</option>
+                                <option value="9">flow</option>
+                                <option value="10">util</option>
+                                <option value="11">code</option>
+                                <option value="12">tree</option>
+                                <option value="13">layedit</option>
+                                <option value="14">nav</option>
+                                <option value="15">tab</option>
+                                <option value="16">table</option>
+                                <option value="17">select</option>
+                                <option value="18">checkbox</option>
+                                <option value="19">switch</option>
+                                <option value="20">radio</option>
+                            </select>
+                       </div>
+                    </div>
+
+                     <div class="layui-form-item">
+                        <label class="layui-form-label">跟单方式:</label>
+                        <div class="layui-input-block">
+                            <input class="disPaly" type="text" id="singleOrLoose" value="1"/>
+                            <input type="radio" name="singleOrLoose" onclick="setStatus('singleOrLoose')" value="1" title="跟每一单" checked="">跟每一单</input>
+                            <input type="radio" name="singleOrLoose" onclick="setStatus('singleOrLoose')" value="2" title="跟净头寸">跟净头寸</input>
+                        </div>
+                     </div>
+
+                        <div class="layui-form-item">
+                            <div class="layui-input-block">
+                                <button type="submit" class="layui-btn" lay-submit="" lay-filter="demo1" onclick="goOn(1)">继续<i class="layui-icon layui-icon-face-smile"></i>   </button>
+                            </div>
+                        </div>
+                    </div>
+
+            <!--</div>-->
+
+     </div>
 
     <!-- 表单提交-->
     <div class="table-div">
