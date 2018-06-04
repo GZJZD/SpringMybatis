@@ -21,9 +21,11 @@
     <mysql-driver.version>5.1.29</mysql-driver.version>
 
     <!-- log4j日志包版本号 -->
+<!--
     <slf4j.version>1.7.18</slf4j.version>
+-->
 
-   <!--<log4j.version>1.2.17</log4j.version>-->
+   <log4j.version>1.2.17</log4j.version>
 
   </properties>
 
@@ -147,29 +149,38 @@
     </dependency>
 
     <!-- 添加日志相关jar包 -->
-  <!--<dependency>
+<!--  <dependency>
       <groupId>log4j</groupId>
       <artifactId>log4j</artifactId>
       <version>${log4j.version}</version>
     </dependency>-->
-    <dependency>
+    <!--<dependency>
       <groupId>org.slf4j</groupId>
       <artifactId>slf4j-api</artifactId>
       <version>${slf4j.version}</version>
-    </dependency>
+    </dependency>-->
    <!-- <dependency>
       <groupId>org.slf4j</groupId>
       <artifactId>slf4j-log4j12</artifactId>
       <version>${slf4j.version}</version>
     </dependency>-->
-
-    <!-- log end -->
-    <!--分页：pagehelper-->
+      <dependency>
+        <groupId>org.apache.logging.log4j</groupId>
+        <artifactId>log4j-api</artifactId>
+        <version>2.5</version>
+      </dependency>
+      <dependency>
+        <groupId>org.apache.logging.log4j</groupId>
+        <artifactId>log4j-core</artifactId>
+        <version>2.5</version>
+      </dependency>
     <dependency>
-      <groupId>com.github.pagehelper</groupId>
-      <artifactId>pagehelper-spring-boot-starter</artifactId>
-      <version>1.2.3</version>
+      <groupId>com.lmax</groupId>
+      <artifactId>disruptor</artifactId>
+      <version>3.3.6</version>
     </dependency>
+    <!-- log end -->
+
     <!-- 映入JSON -->
     <dependency>
       <groupId>org.codehaus.jackson</groupId>
