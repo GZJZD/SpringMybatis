@@ -8,7 +8,8 @@ import com.web.tcp.service.DataParserService;
 import com.web.util.ApplicationContextHolder;
 
 import com.web.util.common.DateUtil;
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 
 import java.io.BufferedWriter;
@@ -36,7 +37,7 @@ public class DataParserServiceImpl implements DataParserService,Runnable{
     private static String path = "/tcpData/";
 
 
-    private static Logger log = Logger.getLogger(DataParserServiceImpl.class.getName());
+    private static Logger log = LogManager.getLogger(DataParserServiceImpl.class.getName());
 
     public DataParserServiceImpl(String socketData, String platformName) {
         this.socketData = socketData;
@@ -63,14 +64,14 @@ public class DataParserServiceImpl implements DataParserService,Runnable{
             dataSource.setProfit(Double.parseDouble(splitArr[index++]));//平仓盈亏
             dataSource.setPlatformName(this.platformName);
             dataSource.setAgencyName("JZT");
-            Logger.getLogger(this.getClass()).info("接收到一条来自TCP的数据："+ JSON.toJSONString(dataSource));
+            log.info("接收到一条来自TCP的数据："+ JSON.toJSONString(dataSource));
             createFile(dealMsg);
             orderUserService.addOrderUser(dataSource);
 
         }catch (Exception e) {
             //数据的构造失败，毁灭当前信息
             e.printStackTrace();
-            Logger.getLogger(this.getClass()).error("数据的构造失败，毁灭当前信息");
+            log.error("数据的构造失败，毁灭当前信息");
         }
         return dataSource;
     }

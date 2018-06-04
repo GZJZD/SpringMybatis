@@ -73,7 +73,7 @@ public class FollowOrderDetailServiceImpl implements IFollowOrderDetailService {
                     netPositionDetailVo.setHandNumber(followOrderDetail.getHandNumber()+
                             "("+followOrderDetail.getOriginalHandNumber()+")");
                 }else{
-                    netPositionDetailVo.setHandNumber(followOrderDetail.getHandNumber()+"");
+                    netPositionDetailVo.setHandNumber((followOrderDetail.getHandNumber() ==null ?0:followOrderDetail.getHandNumber())+"");
                 }
 
                 //设置交易方向：多空

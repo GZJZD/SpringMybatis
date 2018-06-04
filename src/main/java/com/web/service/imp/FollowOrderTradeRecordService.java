@@ -9,14 +9,13 @@ import com.web.pojo.vo.OrderMsgResult;
 import com.web.service.IFollowOrderDetailService;
 import com.web.service.IFollowOrderService;
 import com.web.service.IFollowOrderTradeRecordService;
-import com.web.util.StatusUtil;
+import com.web.common.FollowOrderEnum;
 import com.web.util.common.DateUtil;
 import com.web.util.common.DoubleUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -76,15 +75,15 @@ public class FollowOrderTradeRecordService implements IFollowOrderTradeRecordSer
 
                     if (followOrder != null) {
                         //修改该跟单状态,如果状态是普通的交易状态 or 是两条交易信息已经返回一条就将状态改成交易暂停
-                        if(followOrder.getNetPositionStatus().equals(StatusUtil.TRADING_START.getIndex())||
-                                followOrder.getNetPositionStatus().equals(StatusUtil.TRADING_OPENCLOSE_ONE.getIndex())){
+                        if(followOrder.getNetPositionStatus().equals(FollowOrderEnum.FollowStatus.NET_POSITION_TRADING_START.getIndex())||
+                                followOrder.getNetPositionStatus().equals(FollowOrderEnum.FollowStatus.NET_POSITION_TRADING_OPENCLOSE_ONE.getIndex())){
                             //设置成交易暂停
-                            followOrder.setNetPositionStatus(StatusUtil.TRADING_PAUSE.getIndex());
-                        }else if(followOrder.getNetPositionStatus().equals(StatusUtil.TRADING_OPENCLOSE.getIndex())){
+                            followOrder.setNetPositionStatus(FollowOrderEnum.FollowStatus.NET_POSITION_TRADING_PAUSE.getIndex());
+                        }else if(followOrder.getNetPositionStatus().equals(FollowOrderEnum.FollowStatus.NET_POSITION_TRADING_OPENCLOSE.getIndex())){
                             //设置交易已经返回一条信息
-                            followOrder.setNetPositionStatus(StatusUtil.TRADING_OPENCLOSE_ONE.getIndex());
+                            followOrder.setNetPositionStatus(FollowOrderEnum.FollowStatus.NET_POSITION_TRADING_OPENCLOSE_ONE.getIndex());
                         }
-                        if (followOrder.getFollowManner().equals(StatusUtil.FOLLOWMANNER_NET_POSITION.getIndex())) {
+                        if (followOrder.getFollowManner().equals(FollowOrderEnum.FollowStatus.FOLLOWMANNER_NET_POSITION.getIndex())) {
                             //净头寸
                             //设置持仓值
                             followOrderService.updateHoldNumByTradeAndFollowOrder(followOrder,tradeRecord);
@@ -124,7 +123,7 @@ public class FollowOrderTradeRecordService implements IFollowOrderTradeRecordSer
         if(followOrderTradeRecord != null){
             if(followOrderTradeRecord.getNetPositionSum() == null){
                 //客户
-                if(followOrderTradeRecord.getOpenCloseType().equals(StatusUtil.CLOSE.getIndex())){
+                if(followOrderTradeRecord.getOpenCloseType().equals(FollowOrderEnum.FollowStatus.CLOSE.getIndex())){
                     //平仓,
                     FollowOrderDetail detail = followOrderDetailService.
                             getFollowOrderDetailByTicket(followOrderTradeRecord.getTicket());
@@ -139,17 +138,17 @@ public class FollowOrderTradeRecordService implements IFollowOrderTradeRecordSer
                 }
             }else{
                 //净头寸
-                if(followOrderTradeRecord.getOpenCloseType().equals(StatusUtil.CLOSE.getIndex())){
+                if(followOrderTradeRecord.getOpenCloseType().equals(FollowOrderEnum.FollowStatus.CLOSE.getIndex())){
                     //平仓，找到对应的开多 or  开空 明细，并且剩下手数不为0的集合
                     List<FollowOrderDetail> followOrderDetails ;
-                    if(followOrderTradeRecord.getTradeDirection().equals(StatusUtil.BUY.getIndex())){
+                    if(followOrderTradeRecord.getTradeDirection().equals(FollowOrderEnum.FollowStatus.BUY.getIndex())){
                         //找到最早开仓的多单明细
                         followOrderDetails = followOrderDetailService.getDetailListByOrderIdAndDirection(followOrderTradeRecord.
-                                getFollowOrderId(), StatusUtil.SELL.getIndex());
+                                getFollowOrderId(), FollowOrderEnum.FollowStatus.SELL.getIndex());
                     }else{
                         //找到最早的的空单明细
                         followOrderDetails = followOrderDetailService.getDetailListByOrderIdAndDirection(followOrderTradeRecord.
-                                getFollowOrderId(), StatusUtil.BUY.getIndex());
+                                getFollowOrderId(), FollowOrderEnum.FollowStatus.BUY.getIndex());
                     }
 
                     //获取交易的手数

@@ -3,7 +3,8 @@ package com.web.tcp.tcpthread;
 import com.web.tcp.DataParserServiceImpl;
 import com.web.tcp.PlatformSocket;
 import com.web.tcp.ThreadPoolUtil;
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.io.*;
 import java.net.*;
@@ -37,7 +38,11 @@ public class NetworkManger extends Thread {
     public void run() {
         while (true) {
             // 与服务端建立连接
-            ConnectToServerByTcp();
+            try {
+                ConnectToServerByTcp();
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
             //接收数据
             receiveData();
         }
@@ -119,7 +124,7 @@ public class NetworkManger extends Thread {
     }
 
 
-    public synchronized Socket ConnectToServerByTcp() {
+    public synchronized Socket ConnectToServerByTcp() throws InterruptedException {
 // 建立通讯连接
         boolean connectOk = true;
         boolean test = true;
@@ -140,25 +145,38 @@ public class NetworkManger extends Thread {
             timeNum += 2;
             connectOk = false;
             test = true;
-            Logger.getLogger(NetworkManger.class).error("连接超时," + timeNum + "秒后进行重连");
+            LogManager.getLogger(NetworkManger.class).error("连接超时," + timeNum + "秒后进行重连");
+
+                Thread.sleep(timeNum*1000);
+
         } catch (ConnectException e) {
+            timeNum += 2;
             test = true;
             connectOk = false;
             e.printStackTrace();
-            Logger.getLogger(NetworkManger.class).error("连接失败" + timeNum + "秒后进行重连");
+            LogManager.getLogger(NetworkManger.class).error("连接失败" + timeNum + "秒后进行重连");
+            Thread.sleep(timeNum*1000);
+
         } catch (IOException e) {
+            timeNum += 2;
             test = true;
             connectOk = false;
             e.printStackTrace();
+            try {
+                Thread.sleep(timeNum*1000);
+            } catch (InterruptedException e1) {
+                e1.printStackTrace();
+            }
         }
         if (!connectOk) {
             if (socket != null) {
                 try {
-                    Thread.sleep(timeNum * 1000);
+
+
                     socket.close();
                 } catch (IOException e) {
-                    e.printStackTrace();
-                } catch (InterruptedException e) {
+                    timeNum += 2;
+                    Thread.sleep(timeNum * 1000);
                     e.printStackTrace();
                 }
                 socket = null;
