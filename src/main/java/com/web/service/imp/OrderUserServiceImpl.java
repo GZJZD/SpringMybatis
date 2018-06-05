@@ -157,23 +157,24 @@ public class OrderUserServiceImpl implements OrderUserService {
         for (OrderUser orderUser : orderUserlist){
             OrderUserVo orderUserVo1 = new OrderUserVo();
             //持仓数
-             double totalHandNumber=0;
+             double totalHandNumber = 0.00;
              //价位
-             double price =0;
+             double price = 0.00;
             //平仓盈亏
-            double profit = 0;
+            double profit = 0.00;
             //累计盈亏
             //胜率
             //回报率
             //盈亏效率
-             double profit_loss_than = 0;
-             double winRate=0; //胜率
+             double profit_loss_than = 0.00;
+             double winRate = 0.00; //胜率
             //客户类型
              for (OrderUser orderUser1 : orderUserlist){
-                 if(orderUser.getUserCode().equals(orderUser.getUserCode())){
+                 if(orderUser1.getUserCode().equals(orderUser.getUserCode())){
                      //持仓总数
-                     if(StringUtils.isEmpty(orderUser1.getCloseTime())){
+                     if(orderUser1.getCloseTime() == null && StringUtils.isEmpty(orderUser1.getCloseTime())){
                          totalHandNumber = DoubleUtil.add( orderUser1.getHandNumber(),totalHandNumber);//持仓总数
+
                      }
                      //平仓盈亏
                     if(orderUser1.getCloseTime() != null && !StringUtils.isEmpty(orderUser1.getCloseTime()) && orderUser1.getProfit() != null){
@@ -182,6 +183,7 @@ public class OrderUserServiceImpl implements OrderUserService {
 
                  }
              }
+
              orderUserVo1.setWinRate(winRate);//胜率
              orderUserVo1.setAgencyName("代理人");// 代理人
              orderUserVo1.setPlatformName(orderUser.getPlatFormCode()); //平台名称
@@ -192,6 +194,7 @@ public class OrderUserServiceImpl implements OrderUserService {
              orderUserVo1.setProfit_loss_than(profit_loss_than);  //盈亏效率
              orderUserVo1.setTotalGainAndLoss(DoubleUtil.add(totalHandNumber,profit));//累计盈亏
              list.add(orderUserVo1);
+
         }
 
         return list;
