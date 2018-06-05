@@ -344,6 +344,13 @@ input[type='number'],input[type='password']{
   color: #1e81d2;
 }
 
+.color_7e91a5{
+  color: #7e91a5;
+}
+.color_7e8d9f{
+  color: #7e8d9f;
+}
+
 .color_969696{
   color: #969696;
 }
@@ -391,14 +398,17 @@ input[type='number'],input[type='password']{
   border-bottom: 1px solid #ddd;
 }
 .bor_b_ee5050{
-  border-bottom: 5px solid #ee5050;
+  border-bottom: 5px;
+
 }
 
 
 .bor1{border: 1px solid #e5e5e5;}
 .bor2{border: 1px solid #ee5050;}
 .bor3{border: 1px dashed #e5e5e5;}
-.bor4{border: 1px solid #aaa;}
+.bor4{
+  border: 1px solid #aaa;
+}
 .bor5{border: 1px dashed #aaa;}
 .bor6{border: 1px solid #ccc;}
 .bor7{border: 1px solid #fff;}
@@ -545,13 +555,23 @@ input[type='number'],input[type='password']{
 }
 
 .font-one {
+  text-align:center;
   font-size: 40px;
   color: #7f90a4;
 }
 
 .font-tow {
+  text-align:center;
   color: #5b9bd1;
 }
 .navigation-div{
   background-color:#fff ;
+}
+
+a{
+  text-decoration:none
+}
+
+.super-a:hover{
+  border-bottom: 5px solid #e4b9c0;
 }

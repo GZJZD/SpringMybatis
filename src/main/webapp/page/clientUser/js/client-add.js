@@ -50,6 +50,7 @@ function showTableBase(tableId,data_){
         data :data_,
         columns:columns
     });
+
 }
 
 //table数据赋值
@@ -118,10 +119,10 @@ function  setParameter() {
         data :data_,
         columns:columns
     });
-
 }
+
 function goOn(status){
-    if(status ==1){
+    if(status == 1){
         layui.use('element', function(){
             var element = layui.element;
             element.progress('demo', '66%');
@@ -141,6 +142,9 @@ function goOn(status){
         $(".two-div").css('background-color','#f0eff0');
         $(".table-div").hide();
         $(".title-fiel").hide();
+        var leght = $("#datails-table tbody").find('tr').length;
+
+
 
         //设置展示数据
         var fayuan_data = new Array();
@@ -154,11 +158,19 @@ function goOn(status){
             var json_ = {"id":id_,"userCode":userCode,"profit":profit,"profit_loss_than":profit_loss_than,"handNumber":handNumber};
             fayuan_data.push(json_);
         });
+
         var newjsonObj = JSON.stringify(fayuan_data);
         var data_ = $.parseJSON(newjsonObj);
         var tableId =$("#datails-table");
+        if(leght > 0){
+            $(tableId).bootstrapTable('destroy');
+
+        }
+            showTableBase(tableId,data_);
+
+
         $(".detalis-div").show();
-        showTableBase(tableId,data_);
+
     }
 
 }
@@ -212,11 +224,12 @@ function member_del(id, obj) {
             icon: 1,
             time: 1000
         });
-        var date = $("#mytable").bootstrapTable('getData');
-        console.log(date)
+        // var date = $("#mytable").bootstrapTable('getData');
+        // console.log(date)
     });
 
 }
+
 //设置跟单类型下拉框
 function setType(value,row,index){
     var result='';
@@ -269,6 +282,29 @@ function setStatus(status){
         var val = $('input[name="singleOrLoose"]:checked').val();
         $('#singleOrLoose').val(val);
     }
+}
+
+/**
+ *   提交
+ */
+ function add(){
+    var leght = $("#datails-table tbody").find('tr').length;
+    console.log(leght);
+    if(leght < 1){
+     return layer.msg('请选择用户');
+    }
+    //构造用户数组
+    var fayuan_data = new Array();
+    $("#mytable tbody").find('tr').each(function(){
+        var tdArr = $(this).children();
+        var id_ = tdArr.eq(0).html();//id
+        var userCode = tdArr.eq(1).html();//用户编号
+        var profit = tdArr.eq(2).html();//平仓盈亏
+        var profit_loss_than  =tdArr.eq(3).html();//盈亏率
+        var handNumber = tdArr.eq(7).find('input').val();//手数
+        var json_ = {"id":id_,"userCode":userCode,"profit":profit,"profit_loss_than":profit_loss_than,"handNumber":handNumber};
+        fayuan_data.push(json_);
+    });
 
 
 }
