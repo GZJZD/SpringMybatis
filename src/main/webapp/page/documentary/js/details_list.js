@@ -4,7 +4,7 @@ var method = "post";
 
 //var url_  ="demo.json";
 // var url_ = "/getPositionDetails.Action?followOrderId="+followOrderId;
-
+var followOrderId;
 var unique_Id = "detailId";
 var sortOrder = "asc";
 var columns = [{
@@ -62,21 +62,48 @@ var columns = [{
         align: 'center',
         valign: 'middle',
         formatter: function (value, row, index) {
+            var detailId= row.detailId;
             if(value == "0.0"){
                 return "-";
             }else{
-                return "<a href='javascript:;' class='btn btn-xs green'><span style='color: #4cae4c'>手动平仓</span></a>"
+                return "<a href='javascript:;' class='btn btn-xs green' onclick='manually_close_position("+detailId+")' >  <span style='color: #4cae4c'>手动平仓</span></a>"
             }
         }
     }
 ];
+function manually_close_position(id) {
+    layer.confirm("确认要手动平仓吗？",function (index) {
+        $.ajax({
+            url:"/sm/followOrder/manuallyClosePosition.Action?detailId="+id,
+            success:function (data) {
+                var obj=eval('('+data+')');
+                if(obj.success){
+                    alert(1311)
+                    layer.msg('平仓成功', {icon: 6,time:1000},function () {
+                        location.reload();
+                        $(".layui-laypage-btn").click();
+                    });
+
+
+                }else{
+                    layer.msg('系统出现故障，请联系管理员，进行下一步操作', {icon: 6, time: 1000});
+
+                }
+
+
+            }
+        })
+    })
+
+}
 function child(id,orderNum,offsetGainAndLoss,poundageTotal){
     $("#orderNum").html(orderNum);
     $("#offsetGainAndLoss").html(offsetGainAndLoss);
     $("#positionGainAndLoss").html(0);
     $("#poundageTotal").html(poundageTotal);
-    url_ = "/sm-1.0-SNAPSHOT/getPositionDetails.Action?followOrderId="+id;
+    url_ = "/sm/followOrder/getPositionDetails.Action?followOrderId="+id;
    // url_ = "/getPositionDetails.Action?followOrderId="+id;
+    followOrderId = id;
     showByTableId(tableId,method,url_,unique_Id,sortOrder,columns);
 
 }
@@ -91,6 +118,7 @@ $(window).resize(function() {
         height: tableHeight()
     })
 })
+
 
 //操作栏的格式化
 function actionFormatter(value, row, index) {
