@@ -127,7 +127,6 @@ public class FollowOrderServiceImpl implements IFollowOrderService {
                     followOrderVo.setPoundageTotal(commission.setScale(2,   BigDecimal.ROUND_HALF_UP).doubleValue());
                     followOrderVo.setHandNumberTotal(handNum.setScale(2,   BigDecimal.ROUND_HALF_UP).doubleValue());
                 }
-
                 //todo demo过后删除
                 followOrder.setAccount(FollowOrderGenerateUtil.getAccount());
                 followOrderVo.setFollowOrder(followOrder);
@@ -152,14 +151,18 @@ public class FollowOrderServiceImpl implements IFollowOrderService {
                 followOrderVo.setAllTotal(followOrderTradeRecordService.getFollowOrderTotalAmount(followOrder.getId()));
 
                 followOrderVos.add(followOrderVo);
-                followOrderPageVo.setPositionGainAndLossTotalSum(DoubleUtil.add(followOrderVo.getPositionGainAndLoss(),followOrderPageVo.getPositionGainAndLossTotalSum()));
-                followOrderPageVo.setClientProfitTotalSum(DoubleUtil.add(followOrderVo.getClientProfit(),followOrderPageVo.getClientProfitTotalSum()));
-                followOrderPageVo.setPoundageTotalSum(DoubleUtil.add(followOrderVo.getPoundageTotal(),followOrderPageVo.getPoundageTotalSum()));
-                followOrderPageVo.setOffsetGainAndLossTotalSum(DoubleUtil.add(followOrderVo.getOffsetGainAndLoss(),followOrderPageVo.getOffsetGainAndLossTotalSum()));
-
+                followOrderPageVo.setPositionGainAndLossTotalSum(DoubleUtil.add(followOrderVo.getPositionGainAndLoss(),
+                        followOrderPageVo.getPositionGainAndLossTotalSum()));
+                followOrderPageVo.setClientProfitTotalSum(DoubleUtil.add(followOrderVo.getClientProfit(),
+                        followOrderPageVo.getClientProfitTotalSum()));
+                followOrderPageVo.setPoundageTotalSum(DoubleUtil.add(followOrderVo.getPoundageTotal(),
+                        followOrderPageVo.getPoundageTotalSum()));
+                followOrderPageVo.setOffsetGainAndLossTotalSum(DoubleUtil.add(followOrderVo.getOffsetGainAndLoss(),
+                        followOrderPageVo.getOffsetGainAndLossTotalSum()));
             }
         }
-        followOrderPageVo.setProfitAndLossRateTotalSum(DoubleUtil.div(followOrderPageVo.getOffsetGainAndLossTotalSum(),followOrderPageVo.getPoundageTotalSum(),2));
+        followOrderPageVo.setProfitAndLossRateTotalSum(DoubleUtil.div(followOrderPageVo.getOffsetGainAndLossTotalSum(),
+                followOrderPageVo.getPoundageTotalSum(),2));
         return followOrderVos;
     }
 

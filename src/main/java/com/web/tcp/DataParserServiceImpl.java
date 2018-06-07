@@ -37,7 +37,6 @@ public class DataParserServiceImpl implements DataParserService,Runnable{
             .getBeanByName("orderUserService");
     private static String path = "/tcpData/";
 
-
     private static Logger log = LogManager.getLogger(DataParserServiceImpl.class.getName());
 
     public DataParserServiceImpl(String socketData, String platformName) {
@@ -49,7 +48,6 @@ public class DataParserServiceImpl implements DataParserService,Runnable{
     public synchronized DataSource constructor(String dealMsg) {
         String[] splitArr = dealMsg.split(";");
         int index = 0;
-        System.out.println(splitArr);
         DataSource dataSource = new DataSource();
         try {
             dataSource.setHead(splitArr[index++]);//头
@@ -71,7 +69,6 @@ public class DataParserServiceImpl implements DataParserService,Runnable{
             }
             dataSource.setProfit(Double.parseDouble(splitArr[index++]));//平仓盈亏
             dataSource.setPlatformName(this.platformName);
-            System.out.println(dataSource.getPlatformName());
             dataSource.setAgencyName("JZT");
             log.info("接收到一条来自TCP的数据："+ JSON.toJSONString(dataSource));
             createFile(dealMsg);
@@ -111,7 +108,6 @@ public class DataParserServiceImpl implements DataParserService,Runnable{
             BufferedWriter bw = new BufferedWriter(fw);
             bw.append(DateUtil.getStringDate()+"- - - - - - - - > "+tcpData);
 
-          //  bw.append(tcpData);
             bw.newLine();
             bw.close();
             fw.close();
