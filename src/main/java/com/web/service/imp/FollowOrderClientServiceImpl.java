@@ -2,6 +2,7 @@ package com.web.service.imp;
 
 import com.web.dao.FollowOrderClientDao;
 import com.web.pojo.FollowOrderClient;
+import com.web.pojo.FollowOrderDetail;
 import com.web.service.IFollowOrderClientService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -16,13 +17,22 @@ import java.util.List;
 public class FollowOrderClientServiceImpl implements IFollowOrderClientService {
     @Autowired
     private FollowOrderClientDao followOrderClientDao;
+
+
     @Override
-    public FollowOrderClient get(Long id) {
-        return followOrderClientDao.selectByPrimaryKey(id);
+    public List<FollowOrderClient> getListByUserCode(String userCode) {
+        return followOrderClientDao.selectByUserCode(userCode);
     }
 
     @Override
-    public List<FollowOrderClient> getListByClientId(Long clientId) {
-        return followOrderClientDao.selectByClientId(clientId);
+    public void deleteByFollowOrderId(Long followOrderId) {
+        followOrderClientDao.deleteByFollowOrderId(followOrderId);
     }
+
+    @Override
+    public void save(FollowOrderClient record) {
+        followOrderClientDao.insert(record);
+    }
+
+
 }

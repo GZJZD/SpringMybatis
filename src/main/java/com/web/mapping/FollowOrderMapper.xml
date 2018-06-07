@@ -10,6 +10,7 @@
     <result column="max_loss" property="maxLoss"  />
     <result column="max_loss_number" property="maxLossNumber" />
     <result column="account_loss" property="accountLoss" />
+    <result column="account_loss_number" property="accountLossNumber" />
     <result column="order_point" property="orderPoint" />
     <result column="client_point" property="clientPoint" />
     <result column="client_point_number" property="clientPointNumber"  />
@@ -46,14 +47,14 @@
   <insert id="insert" parameterType="com.web.pojo.FollowOrder" useGeneratedKeys="true" keyProperty="id" >
     insert into follow_order (follow_order_name, account_id,variety_id, follow_manner,
       max_profit, max_profit_number, max_loss, 
-      max_loss_number, account_loss, order_point, 
+      max_loss_number, account_loss,account_loss_number, order_point,
       client_point, client_point_number, net_position_direction, 
       net_position_change, net_position_follow_number, 
       net_position_sum, net_position_hold_number, net_position_status,start_time,follow_order_status,
       update_date,update_by_user,create_date,create_user,version)
     values (#{followOrderName}, #{account.id},#{variety.id}, #{followManner},
       #{maxProfit}, #{maxProfitNumber}, #{maxLoss}, 
-      #{maxLossNumber}, #{accountLoss}, #{orderPoint}, 
+      #{maxLossNumber}, #{accountLoss},#{accountLossNumber}, #{orderPoint},
       #{clientPoint}, #{clientPointNumber}, #{netPositionDirection}, 
       #{netPositionChange}, #{netPositionFollowNumber}, 
      #{netPositionSum}, #{netPositionHoldNumber}, #{netPositionStatus},#{startTime},#{followOrderStatus},
@@ -89,6 +90,9 @@
       </if>
       <if test="accountLoss != null">
         account_loss = #{accountLoss},
+      </if>
+      <if test="accountLossNumber != null">
+        account_loss_number = #{accountLossNumber},
       </if>
       <if test="orderPoint != null">
         order_point = #{orderPoint},
@@ -188,6 +192,7 @@
     f.max_loss,
     f.max_loss_number,
     f.account_loss,
+    f.account_loss_number,
     f.order_point,
     f.client_point,
     f.client_point_number,

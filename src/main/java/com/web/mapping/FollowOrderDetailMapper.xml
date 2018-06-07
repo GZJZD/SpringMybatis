@@ -125,7 +125,7 @@
       select
       <include refid="base_List"/>
       from follow_order_detail
-      where follow_order_id = #{followOrderId} order by id asc
+      where follow_order_id = #{followOrderId} order by id desc
 
     </select>
   <select id="getDetailListByOrderIdAndDirection" resultMap="BaseResultMap">
@@ -159,8 +159,15 @@
     where follow_order_id = #{followOrderId}
 
   </select>
+    <select id="getNOCloseDetailListByFollowOrderId" resultMap="BaseResultMap">
+      select
+      id,trade_direction,remain_hand_number,ticket
+      from follow_order_detail
+      where follow_order_id = #{followOrderId} and (remain_hand_number != 0 and remain_hand_number is not null) or
+       (close_time is null and remain_hand_number is null)
+    </select>
 
-  <sql id="base_List">
+    <sql id="base_List">
     id,
     client_name,
     variety_name,

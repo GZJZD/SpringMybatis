@@ -2,8 +2,8 @@ $(function () {
     var tableId = $("#followOrderTable");
     var method = "get";
     //var url_  ="demo.json";
-  //  var url_ = "/getListFollowOrder.Action";
-    var url_ = "/sm-1.0-SNAPSHOT/getListFollowOrder.Action";
+   // var url_ = "/getListFollowOrder.Action";
+    var url_ = "/sm/followOrder/getListFollowOrder.Action";
     var unique_Id = "detailId";
     var sortOrder = "asc";
     var columns = [{
@@ -95,17 +95,17 @@ $(function () {
                 var offsetGainAndLoss = row.offsetGainAndLoss;
                 var poundageTotal = row.poundageTotal;
                 if (value == "1") {
-                    return "<a onclick='documentary_stop(this," + followOrderId + ")' href='javascript:;' title='暂停'> <i class='layui-icon'>&#xe651;</i> </a>" +
-                        "<a onclick='documentary_stop(this," + followOrderId + ")' href='javascript:;' title='停止'> <i class='layui-icon'>&#x1006;</i> </a>" +
+                    return "<a onclick='follow_order_stop(this," + followOrderId + ")' href='javascript:;' title='暂停'> <i class='layui-icon'>&#xe651;</i> </a>" +
+                        "<a onclick='follow_order_stop(this," + followOrderId + ")' href='javascript:;' title='停止'> <i class='layui-icon'>&#x1006;</i> </a>" +
                         "<a title=\"查看\" onclick=\"follow_details("+successTotal+","+orderNum+","+offsetGainAndLoss+","+poundageTotal+"," + followOrderId + ",'/跟单明细','/" +
-                        "sm-1.0-SNAPSHOT/page/documentary/documentary-details.html')\" href=\"javascript:;\"><i class=\"layui-icon\"> &#xe615;</i></a>" +
+                        "sm/page/documentary/documentary-details.html',1400,750)\" href=\"javascript:;\"><i class=\"layui-icon\"> &#xe615;</i></a>" +
                         "<a title=\"编辑\" onclick=\"common_show()('编辑','member-edit.html',600,400)\" href=\"javascript:;\">\n" +
                         "<i class=\"layui-icon\">&#xe642;</i>" +
                         "</a>";
                 } else {
-                    return "<a onclick='documentary_stop(this," + followOrderId + ")' href='javascript:;' title='启用'> <i class='layui-icon'>&#xe652;</i> </a>" +
-                        "<a onclick='documentary_stop(this," + followOrderId + ")' href='javascript:;' title='停止'> <i class='layui-icon'>&#x1006;</i> </a>" +
-                        "<a title=\"查看\" onclick=\"follow_details("+successTotal+","+orderNum+","+offsetGainAndLoss+","+poundageTotal+"," + followOrderId + ",'跟单明细','sm-1.0-SNAPSHOT/page/documentary/documentary-details.html')\" href=\"javascript:;\"><i class=\"layui-icon\"> &#xe615;</i></a>" +
+                    return "<a onclick='follow_order_stop(this," + followOrderId + ")' href='javascript:;' title='启用'> <i class='layui-icon'>&#xe652;</i> </a>" +
+                        "<a onclick='follow_order_stop(this," + followOrderId + ")' href='javascript:;' title='停止'> <i class='layui-icon'>&#x1006;</i> </a>" +
+                        "<a title=\"查看\" onclick=\"follow_details("+successTotal+","+orderNum+","+offsetGainAndLoss+","+poundageTotal+"," + followOrderId + ",'跟单明细','/sm/page/documentary/documentary-details.html')\" href=\"javascript:;\"><i class=\"layui-icon\"> &#xe615;</i></a>" +
                         "<a title=\"编辑\" onclick=\"common_show()('编辑','member-edit.html',600,400)\" href=\"javascript:;\">\n" +
                         "<i class=\"layui-icon\">&#xe642;</i>" +
                         "</a>";
@@ -113,19 +113,25 @@ $(function () {
             }
         }
     ];
-    /*弹出层*/
     /*
-        参数解释：
-        title   标题
-        url     请求的url
-        id      需要操作的数据id
-        w       弹出层宽度（缺省调默认值）
-        h       弹出层高度（缺省调默认值）
-    */
+    * 发送请求获取跟单页面的统计数据
+    * */
+    $.ajax({
+        url:"/sm/followOrder/getFollowOrderPageVo.Action",
+        success:function (data) {
+            var obj=eval('('+data+')');
+            $("#positionSum").html(obj.positionGainAndLossTotalSum);
+            $("#clientSum").html(obj.clientProfitTotalSum);
+            $("#poundageSum").html(obj.poundageTotalSum);
+            $("#rateSum").html(obj.profitAndLossRateTotalSum);
+
+        }
+    });
+
 
     $(function () {
         showByTableId(tableId, method, url_, unique_Id, sortOrder, columns);
-    })
+    });
     //根据窗口调整表格高度
     $(window).resize(function () {
         $('#detailTable').bootstrapTable('resetView', {
@@ -137,31 +143,57 @@ $(function () {
 
 
 
-    /*用户-停用*/
-    function documentary_stop(obj, id) {
 
-        layer.confirm('确认要停用吗？确定后系统将不会继续跟进客户的做单数据', function (index) {
-
-            if ($(obj).attr('title') == '启用') {
-
-                //发异步把用户状态进行更改
-                $(obj).attr('title', '暂停')
-                $(obj).find('i').html('&#xe651;');
-
-                $(obj).parents("tr").find(".td-status").find('span').addClass('layui-btn-disabled').html('已停用');
-                layer.msg('已启用!', {icon: 6, time: 1000});
-
-            } else {
-                $(obj).attr('title', '启用')
-                $(obj).find('i').html('&#xe652;');
-
-                $(obj).parents("tr").find(".td-status").find('span').removeClass('layui-btn-disabled').html('已启用');
-                layer.msg('已暂停!', {icon: 5, time: 1000});
-            }
-
-        });
-    }
 })
+/*用户-停用*/
+function follow_order_stop(obj, id) {
+
+        if ($(obj).attr('title') == '启用') {
+            layer.confirm('确认要启用吗？确定后系统将会继续跟进客户的做单数据', function (index) {
+                update_status(id,obj,"暂停","启用",1,'&#xe651;');
+            })
+
+        } else if ($(obj).attr('title') == '暂停') {
+            layer.confirm('确认要暂停吗？确定后系统将不会继续跟进客户的做单数据', function (index) {
+                update_status(id,obj,"启用","暂停",2,'&#xe652;');
+
+            })
+        }else{
+            layer.confirm('确认要停止吗？确定后系统将不会继续跟进客户的做单数据，并同时平仓所有未平的跟单', function (index) {
+
+                update_status(id,obj,"停止","停止",0,'&#x1006;');
+            })
+        }
+
+
+}
+
+function update_status(id,obj,newTitle,oldTitle,status,i) {
+    $.ajax({
+        url:"/sm/followOrder/updateFollowOrderStatus.Action?id="+id+"&status="+status,
+        success:function (data) {
+            if(data.success){
+                //发异步把用户状态进行更改,'&#xe651;'
+                $(obj).attr('title', title)
+                $(obj).find('i').html(i);
+                $(obj).parents("tr").find(".td-status").find('span').addClass('layui-btn-disabled').html('已'+oldTitle);
+                location.reload()
+            }else {
+                //layer.msg(data.msg, {icon: 6, time: 1000});
+                location.reload()
+            }
+        }
+    })
+}
+/*弹出层*/
+/*
+    参数解释：
+    title   标题
+    url     请求的url
+    id      需要操作的数据id
+    w       弹出层宽度（缺省调默认值）
+    h       弹出层高度（缺省调默认值）
+*/
 function follow_details(successTotal,orderNum,offsetGainAndLoss,poundageTotal,id, title, url, w, h) {
 
     if (title == null || title == '') {

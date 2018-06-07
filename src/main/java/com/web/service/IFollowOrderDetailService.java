@@ -62,6 +62,15 @@ public interface IFollowOrderDetailService {
      */
     FollowOrderVo getCommissionTotalAndHandNumTotal(Long followOrderId);
 
-
+   /*
+    *
+    *   获取未平的所有明细
+    * @author may
+    * @date 2018/6/5 18:29
+    * @param
+    * @return
+    */
+    List<FollowOrderDetail> getNOCloseDetailListByFollowOrderId(Long followOrderId);
     void updateDetail(FollowOrderDetail followOrderDetail);
+
 }

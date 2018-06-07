@@ -4,6 +4,7 @@ import com.web.tcp.tcpthread.NetworkManger;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.PostConstruct;
+import javax.annotation.PreDestroy;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ExecutorService;
@@ -19,13 +20,27 @@ public class TcpConfig {
         public List<String> phoneBlacklist = new ArrayList<String>();
         //初始化3个线程执行对应的连接操作
         private static ExecutorService fixedThreadPool = Executors.newFixedThreadPool(3);
-
+        private static NetworkManger orders75;
+        private static NetworkManger orders76;
+        private static NetworkManger orders77;
         @PostConstruct
         public static void init(){
-          //fixedThreadPool.execute( new NetworkManger("192.168.3.114",12000,"orders75"));
 
-           //fixedThreadPool.execute( new NetworkManger("116.62.195.204",12000,"orders75"));
-            //fixedThreadPool.execute( new NetworkManger("116.62.195.204",12001,"orders76"));
+           // fixedThreadPool.execute( new NetworkManger("116.62.195.204",12000,"orders75"));
+           // fixedThreadPool.execute( new NetworkManger("116.62.195.204",12001,"orders76"));
+            orders77= new NetworkManger("192.168.3.114",12001,"orders77");
+            //orders75= new NetworkManger("116.62.195.204",12000,"orders75");
+            //orders76= new NetworkManger("116.62.195.204",12001,"orders76");
+            //fixedThreadPool.execute( orders76);
+            //fixedThreadPool.execute( orders75);
+            fixedThreadPool.execute( orders77);
+
+        }
+        @PreDestroy
+        public static void destroy(){
+            orders77.disconnection();
+            //orders76.disconnection();
+            //orders75.disconnection();
 
         }
 
