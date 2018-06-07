@@ -14,13 +14,7 @@
 		<link rel="stylesheet" type="text/css" href="http://cdn.bootcss.com/bootstrap-select/2.0.0-beta1/css/bootstrap-select.css">
 		<link rel="stylesheet" href="./css/font.css">
 		<link rel="stylesheet" href="./css/xadmin.css">
-		<script type="text/javascript" src="lib/jquery/jquery-3.2.1.min.js"></script>
-		<script type="text/javascript" src="./lib/layui/layui.js" charset="utf-8"></script>
-		<script type="text/javascript" src="./js/xadmin.js"></script>
-		<script type="text/javascript" src="http://cdn.bootcss.com/bootstrap-select/2.0.0-beta1/js/bootstrap-select.js"></script>
-		<script src="lib/bootstrap/js/bootstrap-table.js"></script>
-		<script src="http://netdna.bootstrapcdn.com/bootstrap/3.0.0/js/bootstrap.min.js"></script>
-		<script src="lib/bootstrap/js/bootstrap-table-zh-CN.min.js"></script>
+
 
 
 		<style>
@@ -79,40 +73,40 @@
 
 					按平台：
 					<div class="form-group">
-						<select class="form-control" name="">
-							<option value="">11111</option>
+						<select class="form-control " id="platform-id" name="">
+							<option selected="selected" value="">11111</option>
 						</select>
 					</div>
 					按品种
 					<div class="form-group">
-						<select id="bs3Select" class="selectpicker show-tick form-control" multiple data-live-search="true">
-							<option selected>cow</option>
-							<option>bull</option>
-							<option class="get-class" disabled>ox</option>
+						<input type="text"  style="display: none"></input>
+						<select id="product-val-id" class="selectpicker show-tick form-control" multiple data-live-search="true">
+							<option selected="selected" value="XAUUSD.e">黄金</option>
+							<option value="shiyou">石油</option>
 
 						</select>
 					</div>
 					按合约
 					<div class="form-group">
-						<select id="" class="selectpicker show-tick form-control" multiple data-live-search="true">
-							<option selected>cow111111</option>
+						<select id="contract-id" class="selectpicker show-tick form-control" multiple data-live-search="true">
+							<option selected="selected">cow111111</option>
 							<option>bull1111</option>
 							<option class="get-class" disabled>ox</option>
 						</select>
 					</div>
 					按代理人
 					<div class="form-group">
-						<select class="form-control" name="">
+						<select class="form-control" name="" id="agencyName-id">
 							<option value="">11111</option>
 						</select>
 					</div>
 					按客户
 					<div class="form-group">
-						<select class="form-control" name="">
+						<select class="form-control" name="" id="userCode-id">
 							<option value="">11111</option>
 						</select>
 					</div>
-					<button class="btn btn-primary">搜索</button>
+					<button class="btn btn-primary" onclick="findByParameter()">搜索</button>
 				</div>
 				<!--<div class="tip bg-warning">
 					注意
@@ -128,82 +122,97 @@
 				</div>
 			</div>
 		</div>
+
+		<script type="text/javascript" src="lib/jquery/jquery-3.2.1.min.js"></script>
+		<script type="text/javascript" src="./lib/layui/layui.js" charset="utf-8"></script>
+		<script type="text/javascript" src="./js/xadmin.js"></script>
+		<script src="lib/bootstrap/js/bootstrap-table.js"></script>
+		<script src="http://netdna.bootstrapcdn.com/bootstrap/3.0.0/js/bootstrap.min.js"></script>
+		<script src="lib/bootstrap/js/bootstrap-table-zh-CN.min.js"></script>
+		<script type="text/javascript" src="http://cdn.bootcss.com/bootstrap-select/2.0.0-beta1/js/bootstrap-select.js"></script>
 		<!-- 注意：如果你直接复制所有代码到本地，上述js路径需要改成你本地的 -->
 		<script type="text/javascript">
-			var url ="orderUser/findAll.Action";
-			var tableId =$("#table");
-			var method = "post";
-			var url_  = url;
-			var unique_Id = "id";
-			var sortOrder = "asc";
-			var columns = [{
-						title: '全选',
-						field: 'select',
-						//复选框
-						checkbox: true,
-
-						align: 'center',
-						valign: 'middle'
-					},
-					{
-						field: 'id',
-						title: 'ID'
-					},
-                {
-                    field: 'userCode',
-                    title: '客户编号'
-                },
-                {
-                    field: 'userCode',
-                    title: '客户姓名'
-                }
-                ,
-                {
-                    field: 'platFormCode',
-                    title: '平台'
-                },
-                {
-                    field: 'agencyName',
-                    title: '代理人'
-                },
-                {
-                    field: '',
-                    title: '持仓盈亏'
-                },
-                {
-                    field: '',
-                    title: '平仓盈亏'
-                },
-                {
-                    field: '',
-                    title: '累计盈亏'
-                },
-                {
-                    field: '',
-                    title: '胜率'
-                },
-                {
-                    field: '',
-                    title: '回报率'
-                },
-                {
-                    field: '',
-                    title: '盈亏效率'
-                },
-                {
-                    field: '',
-                    title: '客户类型'
-                },
-					{
-						field: 'ID',
-						title: '操作',
-						align: 'center',
-						valign: 'middle',
-						formatter: actionFormatter
-					}
-				];
-
+            var tableId =$("#table");
 			$(function(){
+                var productCode = $("#product-val-id option:selected").val();
+                var startTime = '';
+                // $('#startTime-id').val();
+                var endTime = '';
+                // $('#endTime-id').val();
+                var platformName = '';
+                var agencyName = '';
+                var contract = '';
+                var userCode = '';
+                var url ="orderUser/countOrderUser.Action?productCode="+productCode+'&endTime='+endTime+'&startTime='+startTime+'&platformName='+platformName+'&agencyName='+agencyName+'&contract='+contract+'&userCode='+userCode;
+                var method = "post";
+                var url_  = url;
+                var unique_Id = "userCode";
+                var sortOrder = "asc";
+                var columns = [
+                    {
+                        title: '全选',
+                        field: 'select',
+                        //复选框
+                        checkbox: true,
+
+                        align: 'center',
+                        valign: 'middle'
+                    },
+
+                    {
+                        field: 'userCode',
+                        title: '客户编号'
+                    },
+                    {
+                        field: 'userName',
+                        title: '客户姓名'
+                    }
+                    ,
+                    {
+                        field: 'platformName',
+                        title: '平台'
+                    },
+                    {
+                        field: 'agencyName',
+                        title: '代理人'
+                    },
+                    {
+                        field: 'totalHandNumber',
+                        title: '持仓盈亏'
+                    },
+                    {
+                        field: 'offset_gain_and_loss',
+                        title: '平仓盈亏'
+                    },
+                    {
+                        field: 'totalGainAndLoss',
+                        title: '累计盈亏'
+                    },
+                    {
+                        field: 'winRate',
+                        title: '胜率'
+                    },
+                    {
+                        field: 'rateOfReturn',
+                        title: '回报率'
+                    },
+                    {
+                        field: 'profit_loss_than',
+                        title: '盈亏效率'
+                    },
+                    {
+                        field: '',
+                        title: '客户类型'
+                    },
+                    {
+                        field: 'userCode',
+                        title: '操作',
+                        align: 'center',
+                        valign: 'middle',
+                        formatter: actionFormatter
+                    }
+                ];
+
 				showByTableId(tableId,method,url_,unique_Id,sortOrder,columns);
 			})
 			//根据窗口调整表格高度
@@ -256,7 +265,7 @@
 
 			//操作栏的格式化
 			function actionFormatter(value, row, index) {
-				var id = row.id;
+				var id = row.userCode;
 				var result = "";
 				var editUrl ="page/clientUser/client-detail.html";
 				var edit_w = 1900;
@@ -306,6 +315,50 @@
 
 			}
 
+            /**
+			 * 条件查询
+             */
+			function findByParameter(){
+                var productCode;
+				(($("#product-val-id option:selected").val()) == 'undefined')?(productCode=''):(productCode=($("#product-val-id option:selected").val()));
+				var startTime;
+                (($('#test1').val()) == 'undefined')?(startTime=''):(startTime=($("#test1").val()));
+                var endTime;
+                (($('#test2').val()) == 'undefined')?(endTime=''):(endTime=($("#test2").val()));
+                var platformName=$("#platform-id option:selected").val();
+                (($('#platform-id option:selected').val()) == 'undefined')?(platformName=''):(platformName=($("#platform-id option:selected").val()));
+                var agencyName = '';
+                (($('#agencyName-id option:selected').val()) == 'undefined')?(agencyName=''):(agencyName=($("#agencyName-id option:selected").val()));
+                var contract = '';
+                (($('#contract-id option:selected').val()) == 'undefined')?(contract=''):(contract=($("#contract-id option:selected").val()));
+                var userCode = '';
+                (($('#userCode-id option:selected').val()) == 'undefined')?(userCode=''):(userCode=($("#userCode-id option:selected").val()));
+                var url ="orderUser/countOrderUser.Action?productCode="+productCode+'&endTime='+endTime+'&startTime='+startTime+'&platformName='+platformName+'&agencyName='+agencyName+'&contract='+contract+'&userCode='+userCode;
+                $.ajax({
+                    url:url,
+                    type:'POST', //GET
+                    async:true,    //或false,是否异步
+                    data:{
+
+                    },
+                    timeout:5000,    //超时时间
+                    dataType:'json',    //返回的数据格式：json/xml/html/script/jsonp/text
+                    beforeSend:function(xhr){
+
+                    },
+                    success:function(data,textStatus,jqXHR){
+                        console.log(data);
+                    },
+                    error:function(xhr,textStatus){
+
+                    },
+                    complete:function(){
+
+                    }
+                })
+
+
+			}
 
 // //			//批量删除
 // 			function BtchDeleteBook() {
@@ -352,6 +405,7 @@
 		}
 
 		</script>
+
 		<script src="js/common.js"></script>
 	</body>
 
