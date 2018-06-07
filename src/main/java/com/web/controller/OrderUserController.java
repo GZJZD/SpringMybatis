@@ -3,6 +3,7 @@ package com.web.controller;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.web.pojo.OrderUser;
+import com.web.pojo.vo.OrderUserVo;
 import com.web.service.OrderUserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -34,4 +35,29 @@ public class OrderUserController {
 
     }
 
+    /**
+     * 用戶列表的计算 & 列表展示
+     * @param endTime 结束时间
+     * @param startTime 开始时间
+     * @param platformName  平台
+     * @param productCode 商品代码
+     * @param agencyName 代理人
+     * @param contract 合约
+     * @param userCode 用户代码
+     * @return
+     */
+    @RequestMapping(value = "/countOrderUser.Action")
+    @ResponseBody
+    public List<OrderUserVo> countOrderUser(String endTime ,String startTime,String platformName,String productCode,String agencyName,String contract,String userCode ){
+        OrderUserVo orderUserVo = new OrderUserVo();
+        orderUserVo.setStartTime(startTime);
+        orderUserVo.setEndTime(endTime);
+        orderUserVo.setProductCode(productCode);
+        orderUserVo.setAgencyName(agencyName);
+        orderUserVo.setPlatformName(platformName);
+        orderUserVo.setContract(contract);
+        orderUserVo.setUserCode(userCode);
+        List<OrderUserVo> orderUserVos = orderUserService.countOrderUser(orderUserVo);
+        return orderUserVos;
+    }
 }

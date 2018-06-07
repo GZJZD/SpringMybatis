@@ -4,6 +4,7 @@ import com.web.common.OrderUserEnum;
 import com.web.dao.OrderUserDao;
 import com.web.pojo.DataSource;
 import com.web.pojo.OrderUser;
+import com.web.pojo.vo.OrderUserDetailsVo;
 import com.web.pojo.vo.OrderUserVo;
 import com.web.service.OrderUserService;
 import com.web.util.common.DateUtil;
@@ -13,6 +14,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
 import java.util.ArrayList;
+import java.util.LinkedHashSet;
 import java.util.List;
 
 @Service("orderUserService")
@@ -108,6 +110,7 @@ public class OrderUserServiceImpl implements OrderUserService {
                     orderUser.setHandNumber(dataSource.getHandNumber());
                     orderUser.setCloseTime(dataSource.getCreateTime());
                     orderUser.setLongShort(dataSource.getCmd());
+                    orderUser.setUpdateDate(DateUtil.getStringDate());//修改时间
                     update(orderUser);
                     //后开仓
                     DataSource newDataSource = new DataSource();
@@ -174,7 +177,6 @@ public class OrderUserServiceImpl implements OrderUserService {
                      //持仓总数
                      if(orderUser1.getCloseTime() == null && StringUtils.isEmpty(orderUser1.getCloseTime())){
                          totalHandNumber = DoubleUtil.add( orderUser1.getHandNumber(),totalHandNumber);//持仓总数
-
                      }
                      //平仓盈亏
                     if(orderUser1.getCloseTime() != null && !StringUtils.isEmpty(orderUser1.getCloseTime()) && orderUser1.getProfit() != null){
@@ -185,9 +187,9 @@ public class OrderUserServiceImpl implements OrderUserService {
              }
 
              orderUserVo1.setWinRate(winRate);//胜率
-             orderUserVo1.setAgencyName("代理人");// 代理人
+             orderUserVo1.setAgencyName("阿里巴巴集团");// 代理人
              orderUserVo1.setPlatformName(orderUser.getPlatFormCode()); //平台名称
-             orderUserVo1.setUserName("wangxing");//用户名称
+             orderUserVo1.setUserName("马云");//用户名称
              orderUserVo1.setUserCode(orderUser.getUserCode()); //客户
              orderUserVo1.setPosition_gain_and_loss(totalHandNumber);//持仓盈亏
              orderUserVo1.setOffset_gain_and_loss(profit);//平仓盈亏
@@ -213,12 +215,64 @@ public class OrderUserServiceImpl implements OrderUserService {
         return orderUserList;
     }
 
+    /**
+     * 查询用户明细 & 统计各项指标
+     * @param userCode   用户id
+     * @param productCode  产品id
+     * @return
+     */
+    @Override
+    public List<OrderUserVo> getUserDetails(String userCode, String productCode) {
+
+        if(userCode != null && !StringUtils.isEmpty(userCode) && productCode != null && !StringUtils.isEmpty(productCode) ){
+                    int index = 0;
+                    int endIndex =10;
+                    List<OrderUser> orderUserList = orderUserDao.getUserDetails(userCode,productCode);
+                    LinkedHashSet<String> set = new LinkedHashSet<String>(orderUserList.size());
+                    OrderUserDetailsVo detailsVo = new OrderUserDetailsVo();
+                    List<OrderUser> handList = new ArrayList<>();
+                    List<OrderUser> profitList = new ArrayList<>();
+                    double remainMoney = 0.00;//余额
+                    double totalHandNumber = 0.00;//持仓数
+                    double profit = 0.00; //平仓盈亏
+                    long countNumber = orderUserList.size(); //做单数
+        for(OrderUser orderUser : orderUserList){
+                totalHandNumber = DoubleUtil.add(totalHandNumber,orderUser.getHandNumber());//累计持仓数
+                if(orderUser.getCloseTime() != null && !StringUtils.isEmpty(orderUser.getCloseTime()) && orderUser.getProfit() != null){
+                    profit = DoubleUtil.add(profit,orderUser.getProfit()) ; //平仓盈亏
+                    profitList.add(orderUser); //构造平仓List
+                }
+
+                if(orderUser.getCloseTime() == null || StringUtils.isEmpty(orderUser.getCloseTime())){
+                    handList.add(orderUser);//构造持仓list
+                }
+                if(orderUser.getCreateDate() != null && !StringUtils.isEmpty(orderUser.getCreateDate())){
+                    set.add(orderUser.getCreateDate().substring(index,endIndex).trim());//计算做单天数
+                }
 
 
+            }
+            //构造vo类
+            detailsVo.setDoOrderDays(set.size()); //做单天数
+            detailsVo.setHoldList(handList);//持仓数据
+            detailsVo.setProfitList(profitList);//平仓数据
+            detailsVo.setPosition_gain_and_loss(profit);//平仓盈亏
+            detailsVo.setOffset_gain_and_loss(totalHandNumber);//持仓盈亏   ****还需要计算
+            detailsVo.setPlatformName("支付宝");//平台
+            detailsVo.setLoginTime("2017-08-21 18:50:12");//注册时间
+            detailsVo.setAgencyName("马云");//代理人
+
+        }
+
+        return null;
+    }
 
 
+    /**
+     * 持仓记录 & 平仓记录
+     */
+    public void getHandAndProfit(){
 
-
-
+    }
 
 }

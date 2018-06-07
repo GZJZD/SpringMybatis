@@ -66,36 +66,26 @@ public class OrderUser  extends BaseUtil {
      */
     private String agencyName;
 
+    public OrderUser() {
 
-    /**************后期可能新追加字段*******************/
+    }
 
-    /**
-     * 买入价
-     */
-    private Double bid;
-    /**
-     * 卖出价
-     */
-    private Double ask;
+    public OrderUser(String userCode, String ticket, String productCode, Integer longShort, Double handNumber, Double openPrice, Double closePrice, String openTime, String closeTime, Double profit, Double price, String platFormCode, String agencyName) {
+        this.userCode = userCode;
+        this.ticket = ticket;
+        this.productCode = productCode;
+        this.longShort = longShort;
+        this.handNumber = handNumber;
+        this.openPrice = openPrice;
+        this.closePrice = closePrice;
+        this.openTime = openTime;
+        this.closeTime = closeTime;
+        this.profit = profit;
+        this.price = price;
+        this.platFormCode = platFormCode;
+        this.agencyName = agencyName;
 
-    /**
-     * 每日高价
-     */
-    private Double high;
-    /**
-     * 每日最低价
-     */
-    private Double low;
-
-    /**
-     * 入金
-     */
-    private Double inMoney;
-    /**
-     * 出金
-     */
-    private Double outMoney;
-
+    }
 
     public String getUserCode() {
         return userCode;
@@ -185,7 +175,6 @@ public class OrderUser  extends BaseUtil {
         this.price = price;
     }
 
-
     public String getPlatFormCode() {
         return platFormCode;
     }
@@ -200,53 +189,5 @@ public class OrderUser  extends BaseUtil {
 
     public void setAgencyName(String agencyName) {
         this.agencyName = agencyName;
-    }
-
-    public Double getBid() {
-        return bid;
-    }
-
-    public void setBid(Double bid) {
-        this.bid = bid;
-    }
-
-    public Double getAsk() {
-        return ask;
-    }
-
-    public void setAsk(Double ask) {
-        this.ask = ask;
-    }
-
-    public Double getHigh() {
-        return high;
-    }
-
-    public void setHigh(Double high) {
-        this.high = high;
-    }
-
-    public Double getLow() {
-        return low;
-    }
-
-    public void setLow(Double low) {
-        this.low = low;
-    }
-
-    public Double getInMoney() {
-        return inMoney;
-    }
-
-    public void setInMoney(Double inMoney) {
-        this.inMoney = inMoney;
-    }
-
-    public Double getOutMoney() {
-        return outMoney;
-    }
-
-    public void setOutMoney(Double outMoney) {
-        this.outMoney = outMoney;
     }
 }

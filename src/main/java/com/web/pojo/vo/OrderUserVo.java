@@ -89,46 +89,6 @@ public class OrderUserVo {
 
 
 
-
-
-
-
-    /**
-     * 最近下单时间
-     */
-    private String latestOrderTime;
-
-    /**
-     * 入金
-     */
-    private Double inMoney;
-    /**
-     * 出金
-     */
-    private Double outMoney;
-
-    /**
-     * 手续费总额
-     */
-    private Double serviceChargeTotal;
-
-
-
-
-
-
-
-    /**
-     * 做单数
-     */
-    private Double do_singular;
-
-    /**
-     * 做单天数
-     */
-    private Integer total_Day;
-
-
     public String getUserCode() {
         return userCode;
     }
@@ -249,51 +209,5 @@ public class OrderUserVo {
         this.productCode = productCode;
     }
 
-    public String getLatestOrderTime() {
-        return latestOrderTime;
-    }
 
-    public void setLatestOrderTime(String latestOrderTime) {
-        this.latestOrderTime = latestOrderTime;
-    }
-
-    public Double getInMoney() {
-        return inMoney;
-    }
-
-    public void setInMoney(Double inMoney) {
-        this.inMoney = inMoney;
-    }
-
-    public Double getOutMoney() {
-        return outMoney;
-    }
-
-    public void setOutMoney(Double outMoney) {
-        this.outMoney = outMoney;
-    }
-
-    public Double getServiceChargeTotal() {
-        return serviceChargeTotal;
-    }
-
-    public void setServiceChargeTotal(Double serviceChargeTotal) {
-        this.serviceChargeTotal = serviceChargeTotal;
-    }
-
-    public Double getDo_singular() {
-        return do_singular;
-    }
-
-    public void setDo_singular(Double do_singular) {
-        this.do_singular = do_singular;
-    }
-
-    public Integer getTotal_Day() {
-        return total_Day;
-    }
-
-    public void setTotal_Day(Integer total_Day) {
-        this.total_Day = total_Day;
-    }
 }
