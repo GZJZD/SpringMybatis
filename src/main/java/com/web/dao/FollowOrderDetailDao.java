@@ -18,6 +18,16 @@ public interface FollowOrderDetailDao {
 
     List<FollowOrderDetail> getDetailListByFollowOrderId(Long followOrderId);
 
+    /*
+     *
+     *   获取未平的所有明细
+     * @author may
+     * @date 2018/6/5 18:29
+     * @param
+     * @return
+     */
+    List<FollowOrderDetail> getNOCloseDetailListByFollowOrderId(Long followOrderId);
+
     List<FollowOrderDetail> getDetailListByOrderIdAndDirection(@Param("followOrderId") Long followOrderId, @Param("direction") Integer direction);
 
     FollowOrderDetail getFollowOrderDetailByTicket(String ticket);

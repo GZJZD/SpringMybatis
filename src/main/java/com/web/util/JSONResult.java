@@ -5,7 +5,6 @@ public class JSONResult {
     private boolean success = true;
     private String msg;
     public JSONResult(String msg){
-        this.success = success;
         this.msg = msg;
     }
     public JSONResult(boolean success, String msg){

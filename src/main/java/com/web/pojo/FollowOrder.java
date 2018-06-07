@@ -24,19 +24,22 @@ FollowOrder extends BaseUtil{
     private Integer followManner;
 
     //最大止盈
-    private Double maxProfit;
+    private Integer maxProfit;
 
     //止盈点/手
     private Double maxProfitNumber;
 
     //最大止损
-    private Double maxLoss;
+    private Integer maxLoss;
 
     //止损点/手
     private Double maxLossNumber;
 
     //账户止损
-    private Double accountLoss;
+    private Integer accountLoss;
+
+    //账户止损(美金)
+    private Double accountLossNumber;
 
     //下单点位:市价or限价
     private Integer orderPoint;
@@ -74,29 +77,12 @@ FollowOrder extends BaseUtil{
     //版本
     private Integer version=0;
 
-
     public String getFollowOrderName() {
         return followOrderName;
     }
 
     public void setFollowOrderName(String followOrderName) {
         this.followOrderName = followOrderName;
-    }
-
-    public String getStartTime() {
-        return startTime;
-    }
-
-    public void setStartTime(String startTime) {
-        this.startTime = startTime;
-    }
-
-    public Integer getFollowOrderStatus() {
-        return followOrderStatus;
-    }
-
-    public void setFollowOrderStatus(Integer followOrderStatus) {
-        this.followOrderStatus = followOrderStatus;
     }
 
     public Account getAccount() {
@@ -123,11 +109,11 @@ FollowOrder extends BaseUtil{
         this.followManner = followManner;
     }
 
-    public Double getMaxProfit() {
+    public Integer getMaxProfit() {
         return maxProfit;
     }
 
-    public void setMaxProfit(Double maxProfit) {
+    public void setMaxProfit(Integer maxProfit) {
         this.maxProfit = maxProfit;
     }
 
@@ -139,11 +125,11 @@ FollowOrder extends BaseUtil{
         this.maxProfitNumber = maxProfitNumber;
     }
 
-    public Double getMaxLoss() {
+    public Integer getMaxLoss() {
         return maxLoss;
     }
 
-    public void setMaxLoss(Double maxLoss) {
+    public void setMaxLoss(Integer maxLoss) {
         this.maxLoss = maxLoss;
     }
 
@@ -155,12 +141,20 @@ FollowOrder extends BaseUtil{
         this.maxLossNumber = maxLossNumber;
     }
 
-    public Double getAccountLoss() {
+    public Integer getAccountLoss() {
         return accountLoss;
     }
 
-    public void setAccountLoss(Double accountLoss) {
+    public void setAccountLoss(Integer accountLoss) {
         this.accountLoss = accountLoss;
+    }
+
+    public Double getAccountLossNumber() {
+        return accountLossNumber;
+    }
+
+    public void setAccountLossNumber(Double accountLossNumber) {
+        this.accountLossNumber = accountLossNumber;
     }
 
     public Integer getOrderPoint() {
@@ -219,7 +213,6 @@ FollowOrder extends BaseUtil{
         this.netPositionSum = netPositionSum;
     }
 
-
     public Double getNetPositionHoldNumber() {
         return netPositionHoldNumber;
     }
@@ -236,38 +229,27 @@ FollowOrder extends BaseUtil{
         this.netPositionStatus = netPositionStatus;
     }
 
+    public String getStartTime() {
+        return startTime;
+    }
+
+    public void setStartTime(String startTime) {
+        this.startTime = startTime;
+    }
+
+    public Integer getFollowOrderStatus() {
+        return followOrderStatus;
+    }
+
+    public void setFollowOrderStatus(Integer followOrderStatus) {
+        this.followOrderStatus = followOrderStatus;
+    }
+
     public Integer getVersion() {
         return version;
     }
 
     public void setVersion(Integer version) {
         this.version = version;
-    }
-
-    @Override
-    public String toString() {
-        return "FollowOrder{" +
-                "followOrderName='" + followOrderName + '\'' +
-                ", account=" + account +
-                ", variety=" + variety +
-                ", followManner=" + followManner +
-                ", maxProfit=" + maxProfit +
-                ", maxProfitNumber=" + maxProfitNumber +
-                ", maxLoss=" + maxLoss +
-                ", maxLossNumber=" + maxLossNumber +
-                ", accountLoss=" + accountLoss +
-                ", orderPoint=" + orderPoint +
-                ", clientPoint=" + clientPoint +
-                ", clientPointNumber=" + clientPointNumber +
-                ", netPositionDirection=" + netPositionDirection +
-                ", netPositionChange=" + netPositionChange +
-                ", netPositionFollowNumber=" + netPositionFollowNumber +
-                ", netPositionSum=" + netPositionSum +
-                ", netPositionHoldNumber=" + netPositionHoldNumber +
-                ", netPositionStatus=" + netPositionStatus +
-                ", startTime='" + startTime + '\'' +
-                ", followOrderStatus=" + followOrderStatus +
-                ", version=" + version +
-                '}';
     }
 }

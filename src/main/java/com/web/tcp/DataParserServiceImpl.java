@@ -1,6 +1,7 @@
 package com.web.tcp;
 
 import com.alibaba.fastjson.JSON;
+import com.web.common.FollowOrderEnum;
 import com.web.pojo.DataSource;
 import com.web.service.IFollowOrderService;
 import com.web.service.OrderUserService;
@@ -61,8 +62,16 @@ public class DataParserServiceImpl implements DataParserService,Runnable{
             dataSource.setCreateTime(splitArr[index++]);//时间
             dataSource.setCmd(Integer.parseInt(splitArr[index++]));//多空
             dataSource.setOpenClose(Integer.parseInt(splitArr[index++]));//开平
+            if (dataSource.getOpenClose().equals(FollowOrderEnum.FollowStatus.CLOSE.getIndex())){
+                if(dataSource.getCmd().equals(FollowOrderEnum.FollowStatus.BUY.getIndex())){
+                    dataSource.setCmd(FollowOrderEnum.FollowStatus.SELL.getIndex());
+                }else{
+                    dataSource.setCmd(FollowOrderEnum.FollowStatus.BUY.getIndex());
+                }
+            }
             dataSource.setProfit(Double.parseDouble(splitArr[index++]));//平仓盈亏
             dataSource.setPlatformName(this.platformName);
+            System.out.println(dataSource.getPlatformName());
             dataSource.setAgencyName("JZT");
             log.info("接收到一条来自TCP的数据："+ JSON.toJSONString(dataSource));
             createFile(dealMsg);
