@@ -86,7 +86,6 @@ public class FollowOrderDetailServiceImpl implements IFollowOrderDetailService {
                     netPositionDetailVo.setTradeTime(tradeTime.substring(0, 4) + "-" + tradeTime.substring(4, 6) + "-" + tradeTime.substring(6, 8) + "  "
                             + tradeTime.substring(8, 10) + ":" + tradeTime.substring(10, 12) + ":" + tradeTime.substring(12, 14));
                 }
-
                 //设置手续费
                 netPositionDetailVo.setPoundage(tradeRecord.getPoundage());
                 //设置剩下的手数
@@ -111,7 +110,6 @@ public class FollowOrderDetailServiceImpl implements IFollowOrderDetailService {
     @Override
     public Double getOffsetGainAndLossByFollowOrderId(Long followOrderId) {
         FollowOrderVo total = followOrderDetailDao.getTotal(followOrderId);
-        System.out.println(total+"++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++");
         return followOrderDetailDao.getOffsetGainAndLossByFollowOrderId(followOrderId);
     }
 
