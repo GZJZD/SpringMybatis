@@ -12,10 +12,10 @@ public class FollowOrderClient extends BaseUtil{
     private Long id;
     //跟单id
     private Long followOrderId;
-    //客户id
-    private Long clientId;
+    //客户的编号
+    private String userCode;
     //跟单方式:反向/正向
-    private Integer followManner;
+    private Integer followDirection;
     //手数类型:按比例/固定手数
     private Integer handNumberType;
     //手数
@@ -40,20 +40,20 @@ public class FollowOrderClient extends BaseUtil{
         this.followOrderId = followOrderId;
     }
 
-    public Long getClientId() {
-        return clientId;
+    public String getUserCode() {
+        return userCode;
     }
 
-    public void setClientId(Long clientId) {
-        this.clientId = clientId;
+    public void setUserCode(String userCode) {
+        this.userCode = userCode;
     }
 
-    public Integer getFollowManner() {
-        return followManner;
+    public Integer getFollowDirection() {
+        return followDirection;
     }
 
-    public void setFollowManner(Integer followManner) {
-        this.followManner = followManner;
+    public void setFollowDirection(Integer followDirection) {
+        this.followDirection = followDirection;
     }
 
     public Integer getHandNumberType() {

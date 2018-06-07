@@ -84,10 +84,16 @@ public class FollowOrderTradeRecordService implements IFollowOrderTradeRecordSer
                             followOrder.setNetPositionStatus(FollowOrderEnum.FollowStatus.NET_POSITION_TRADING_OPENCLOSE_ONE.getIndex());
                         }
                         if (followOrder.getFollowManner().equals(FollowOrderEnum.FollowStatus.FOLLOWMANNER_NET_POSITION.getIndex())) {
-                            //净头寸
-                            //设置持仓值
-                            followOrderService.updateHoldNumByTradeAndFollowOrder(followOrder,tradeRecord);
+                            if(!followOrder.getFollowOrderStatus().equals(FollowOrderEnum.FollowStatus.FOLLOW_ORDER_STOP.getIndex())) {
+                                //净头寸
+                                //设置持仓值
+                                followOrderService.updateHoldNumByTradeAndFollowOrder(followOrder, tradeRecord);
+                            }else{
+                                followOrder.setNetPositionSum(0.0);
+                                followOrder.setNetPositionHoldNumber(0.0);
+                            }
                             followOrderService.updateFollowOrder(followOrder);
+
                         } else {
                             //todo 客户
                         }

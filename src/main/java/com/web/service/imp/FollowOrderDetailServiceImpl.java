@@ -127,4 +127,9 @@ public class FollowOrderDetailServiceImpl implements IFollowOrderDetailService {
             throw new RuntimeException("乐观锁异常：" +FollowOrderDetail.class);
         }
     }
+
+    @Override
+    public List<FollowOrderDetail> getNOCloseDetailListByFollowOrderId(Long followOrderId) {
+        return followOrderDetailDao.getNOCloseDetailListByFollowOrderId(followOrderId);
+    }
 }

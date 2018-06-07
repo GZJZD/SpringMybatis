@@ -2,6 +2,7 @@ package com.web.common;
 
 public  class FollowOrderEnum {
     public  enum FollowStatus{
+        //跟单
         BUY("多",0),
         SELL("空",1),
         OPEN("开",0),
@@ -13,20 +14,37 @@ public  class FollowOrderEnum {
         //一条交易信息返回
         NET_POSITION_TRADING_OPENCLOSE_ONE("净头寸一条交易信息返回状态",3),
 
-        DIRECTION_REVERSE("反向跟单",0),
-        DIRECTION_POSITIVE("正向跟单",1),
-        MARKET_PRICE("市价",1),
-        LIMIT_PRICE("限价",0),
+        //跟单状态
         FOLLOW_ORDER_STOP("停止",0),
         FOLLOW_ORDER_START("启动",1),
         FOLLOW_ORDER_TEMPORARY_STOP("暂停",2),
         FOLLOW_ORDER_LOGOUT_STOP("账号停止",3),
 
-        FOLLOW_MANNER_USER("跟用户",0),
+        //策略
+        DIRECTION_REVERSE("反向跟单",0),
+
+        //下单点位
+        LIMIT_PRICE("限价",0),
+        CLIENT_POINT_BAD("差",0),
+
+        //最大止盈
+        SET_MAXPROFIT("设置最大止盈",0),
+
+        //最大止损
+        SET_MAXLOSS("设置最大止损",0),
+
+        //账户止损
+        SET_ACCOUNTLOSS("设置账户止损",0),
+
+        //跟单方式
         FOLLOWMANNER_NET_POSITION("净头寸",1),
 
-        CLIENT_POINT_GOOD("好",1),
-        CLIENT_POINT_BAD("差",0);
+        //客户:手数类型
+        CLIENT_HAND_NUMBER_TYPE("固定手数",0)
+
+        ;
+
+
 
 
 

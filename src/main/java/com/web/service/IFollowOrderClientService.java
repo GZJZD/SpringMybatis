@@ -1,6 +1,7 @@
 package com.web.service;
 
 import com.web.pojo.FollowOrderClient;
+import com.web.pojo.FollowOrderDetail;
 
 import java.util.List;
 
@@ -9,11 +10,17 @@ import java.util.List;
  * Created by may on 2018/5/19.
  */
 public interface IFollowOrderClientService {
-    FollowOrderClient get(Long id);
-    /**通过客户的id找到相关联的了跟单
+
+    /**通过客户编号找到相关联的了跟单
      *@Author: May
      *@param
      *@Date: 10:39 2018/5/21
      */
-    List<FollowOrderClient> getListByClientId(Long clientId);
+    List<FollowOrderClient> getListByUserCode(String userCode);
+
+    void deleteByFollowOrderId(Long followOrderId);
+
+    void save(FollowOrderClient record);
+
+
 }

@@ -6,6 +6,8 @@ import com.web.tcp.ThreadPoolUtil;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import javax.annotation.PostConstruct;
+import javax.annotation.PreDestroy;
 import java.io.*;
 import java.net.*;
 import java.util.regex.Matcher;
@@ -17,8 +19,8 @@ public class NetworkManger extends Thread {
     //一条完整的交易数据的分号数量是11个
     private final int MAX_SEMICOLONS = 11;
     //平台套接字对象
-    private PlatformSocket platformSocket;
-    private static Socket socket = null;
+
+    private  Socket socket = null;
     //时间间隔
     private static int timeNum = 0;
     //平台名字
@@ -28,15 +30,16 @@ public class NetworkManger extends Thread {
     //端口
     private Integer port;
 
-    public NetworkManger(String ip, Integer port, String platformName) {
+    private static boolean isConnect = true;
+    public  NetworkManger(String ip, Integer port, String platformName) {
         this.ip = ip;
         this.port = port;
         this.platformName = platformName;
     }
 
     @Override
-    public void run() {
-        while (true) {
+    public synchronized void run() {
+        while (isConnect) {
             // 与服务端建立连接
             try {
                 ConnectToServerByTcp();
@@ -89,7 +92,7 @@ public class NetworkManger extends Thread {
                             //System.out.println(sBuilder.toString());
                             //完成一次交易数据的监听,将数据交于其他线程处理
 //                             madeOrderThreadPool.execute(new DealServiceImpl(sBuilder.toString(),platformSocket.getPlatformName()));
-                            ThreadPoolUtil.getInstance().getThreadPoole().execute(new DataParserServiceImpl(sBuilder.toString(), platformName));
+                            ThreadPoolUtil.getInstance().getThreadPoole().execute(new DataParserServiceImpl(sBuilder.toString(), this.platformName));
                             semicolons = 0;
                             sBuilder.delete(0, sBuilder.length());
                         }
@@ -182,12 +185,33 @@ public class NetworkManger extends Thread {
                 socket = null;
                 test = true;
                 ConnectToServerByTcp();
+
             }
             //
             if (timeNum > 0)
                 timeNum = 0;
         }
         return socket;
+    }
+
+    /*
+     *
+     *   tomcat关闭时断开连接
+     * @author may
+     * @date 2018/6/6 15:28
+     * @param
+     * @return
+     */
+    public  void  disconnection (){
+
+        try {
+            this.socket.close();
+            isConnect  = false;
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
     }
 
 
