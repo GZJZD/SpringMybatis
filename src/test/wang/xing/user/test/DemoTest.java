@@ -17,6 +17,7 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import javax.persistence.criteria.Order;
 import java.util.ArrayList;
+import java.util.LinkedHashSet;
 import java.util.List;
 
 @RunWith(SpringJUnit4ClassRunner.class)
@@ -123,16 +124,49 @@ public class DemoTest {
 
     }
 
+    /**
+     * 测试 接口是否调通
+     */
     @Test
     public void TestCount(){
         String endTime="";
         String startTime="";
-        String productCode = "黄金";
+        String productCode = "XAUUSD.e";
+        String platformName="";
+        String agencyName="";
+        String contract = "";
+        String userCode = "";
         OrderUserVo orderUserVo = new OrderUserVo();
+        orderUserVo.setUserCode(userCode);
+        orderUserVo.setContract(contract);
+        orderUserVo.setPlatformName(platformName);
+        orderUserVo.setAgencyName(agencyName);
         orderUserVo.setProductCode(productCode);
         orderUserVo.setEndTime(endTime);
         orderUserVo.setStartTime(startTime);
-     List<OrderUserVo> orderUserList=    orderUserService.countOrderUser(orderUserVo);
-        System.out.println(orderUserList.size());
+        List<OrderUserVo> orderUserList =    orderUserService.countOrderUser(orderUserVo);
+
+        for(OrderUserVo o :orderUserList){
+            System.out.println(o.getTotalGainAndLoss());//累计盈亏list
+            System.out.println(o.getPosition_gain_and_loss());//盈亏效率
+            System.out.println(o.getOffset_gain_and_loss());//平仓盈亏
+        }
+
     }
+    /**
+     * 测试日期切割 & 根据日期去重 & 统计天数
+     */
+
+   public void TestgetDays(){
+       List<OrderUser> orderUserList = orderUserService.findAll();
+        LinkedHashSet<String> set = new LinkedHashSet<String>(orderUserList.size());
+       for(OrderUser orderUser : orderUserList){
+           set.add(orderUser.getCreateDate().substring(0,10).trim());
+           System.out.println("CreateTime:"+orderUser.getCreateDate().substring(0,10).trim());
+       }
+
+        System.out.println("做单天数:"+set.size());
+   }
+
+
 }

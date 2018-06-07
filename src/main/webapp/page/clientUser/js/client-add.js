@@ -4,10 +4,7 @@ $(function(){
 
 function showTableBase(tableId,data_){
     var columns = [
-        {
-            field: 'id',
-            title: 'ID'
-        },
+
         {
             field: 'userCode',
             title: '客户编号'
@@ -55,16 +52,15 @@ function showTableBase(tableId,data_){
 
 //table数据赋值
 function  setParameter() {
-
-    var opts = parent.$("#table").bootstrapTable('getData');
+    $("#mytable").bootstrapTable('destroy');
+    var opts = parent.$("#table").bootstrapTable('getSelections');
+    console.log(opts);
     var newjsonObj = JSON.stringify(opts)
     var data_ = $.parseJSON(newjsonObj);
     var tableId =$("#mytable");
+
     var columns = [
-        {
-            field: 'id',
-            title: 'ID'
-        },
+
         {
             field: 'userCode',
             title: '客户编号'
@@ -107,7 +103,7 @@ function  setParameter() {
         }
         ,
         {
-            field: 'ID',
+            field: 'userCode',
             title: '操作',
             align: 'center',
             valign: 'middle',
@@ -143,9 +139,6 @@ function goOn(status){
         $(".table-div").hide();
         $(".title-fiel").hide();
         var leght = $("#datails-table tbody").find('tr').length;
-
-
-
         //设置展示数据
         var fayuan_data = new Array();
         $("#mytable tbody").find('tr').each(function(){
@@ -167,7 +160,7 @@ function goOn(status){
 
         }
             showTableBase(tableId,data_);
-
+        //设置参数
 
         $(".detalis-div").show();
 

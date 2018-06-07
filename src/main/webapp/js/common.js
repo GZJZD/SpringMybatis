@@ -514,7 +514,11 @@ function showByTableId(table_Id, method, url, unique_Id, sortOrder, columns) {
 		sortable: true, //是否启用排序
 		sortOrder: sortOrder, //排序方式
 		clickToSelect: true, // 是否启用点击选中行
+<<<<<<< Updated upstream
 		pageSize: 5, //单页记录数
+=======
+		pageSize: 10, //单页记录数
+>>>>>>> Stashed changes
 		pageList: [50, 100], //分页步进值
 		//			search: true, //是否显示表格搜索，此搜索是客户端搜索，不会进服务端，所以，个人感觉意义不大
 		strictSearch: true,
