@@ -83,23 +83,20 @@
 
             跟单账号：
             <div class="form-group">
-                <select class="form-control" name="">
-                    <option value="">8001-text1</option>
+                <select id="account_id" class="form-control" name="">
+                    <option value="-1" selected>8001-text1</option>
                 </select>
             </div>
 
 
             按品种
             <div class="form-group">
-                <select id="bs3Select" class="selectpicker show-tick form-control" multiple data-live-search="true">
-                    <option selected>cow</option>
-                    <option>bull</option>
-                    <option class="get-class" disabled>ox</option>
-
+                <select id="variety_id" class= "form-control" >
+                    <option value="-1">全部</option>
                 </select>
             </div>
 
-            <button class="btn btn-primary">搜索</button>
+            <button class="btn btn-primary" onclick="orderByParameter()">搜索</button>
         </div>
         <div class="tip bg-warning">
             注意!数据手动刷新时跟新，最近更新时间：2017.11.1.11:10:00
