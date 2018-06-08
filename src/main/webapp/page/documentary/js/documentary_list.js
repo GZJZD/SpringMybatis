@@ -1,9 +1,11 @@
-$(function () {
-    var tableId = $("#followOrderTable");
+
+    var varietyNum= $("#variety_id option:selected").val();
+    var accountNum= $("#variety_id option:selected").val();
+    var tableOrderId = $("#followOrderTable");
     var method = "get";
     //var url_  ="demo.json";
    // var url_ = "/getListFollowOrder.Action";
-    var url_ = "/sm/followOrder/getListFollowOrder.Action";
+    var url_ = "/sm/followOrder/getListFollowOrder.Action?varietyId="+varietyNum+"&accountId="+accountNum;
     var unique_Id = "detailId";
     var sortOrder = "asc";
     var columns = [{
@@ -113,24 +115,28 @@ $(function () {
             }
         }
     ];
-    /*
-    * 发送请求获取跟单页面的统计数据
-    * */
-    $.ajax({
-        url:"/sm/followOrder/getFollowOrderPageVo.Action",
-        success:function (data) {
-            var obj=eval('('+data+')');
-            $("#positionSum").html(obj.positionGainAndLossTotalSum);
-            $("#clientSum").html(obj.clientProfitTotalSum);
-            $("#poundageSum").html(obj.poundageTotalSum);
-            $("#rateSum").html(obj.profitAndLossRateTotalSum);
 
-        }
-    });
 
 
     $(function () {
-        showByTableId(tableId, method, url_, unique_Id, sortOrder, columns);
+        /*
+           * 发送请求获取跟单页面的统计数据
+       * */
+        $.ajax({
+            url:"/sm/followOrder/getFollowOrderPageVo.Action",
+            success:function (data) {
+                var obj=eval('('+data+')');
+                $("#positionSum").html(obj.positionGainAndLossTotalSum);
+                $("#clientSum").html(obj.clientProfitTotalSum);
+                $("#poundageSum").html(obj.poundageTotalSum);
+                $("#rateSum").html(obj.profitAndLossRateTotalSum);
+
+            }
+        });
+
+        findByVariety();
+        showByTableId(tableOrderId, method, url_, unique_Id, sortOrder, columns);
+
     });
     //根据窗口调整表格高度
     $(window).resize(function () {
@@ -141,10 +147,6 @@ $(function () {
 
 
 
-
-
-
-})
 /*用户-停用*/
 function follow_order_stop(obj, id) {
 
@@ -165,12 +167,69 @@ function follow_order_stop(obj, id) {
             })
         }
 
+}
+/*
+* 条件查询
+* */
 
+function orderByParameter() {
+    var varietyNum= $("#variety_id option:selected").val();
+    var accountNum= $("#account_id option:selected").val();
+    var url = "/sm/followOrder/getListFollowOrder.Action?varietyId="+varietyNum+"&accountId="+accountNum;
+    $(tableOrderId).bootstrapTable('destroy');
+    showByTableId(tableOrderId, method, url, unique_Id, sortOrder, columns);
 }
 
+/*
+* 品种筛选
+* */
+function findByVariety() {
+    $.ajax({
+        url:"/sm/followOrder/getListVariety.Action",
+        type:'GET', //GET
+        async:true,    //或false,是否异步
+        data:{
+
+        },
+        timeout:5000,    //超时时间
+        dataType:'json',    //返回的数据格式：json/xml/html/script/jsonp/text
+        beforeSend:function(xhr){
+
+        },
+        success:function (data) {
+            //
+            var obj=eval('('+data+')');
+            var content = "";
+            $.each(obj,function (index,ele) {
+                content += "<option value="+ele.id+">"+ele.varietyCode+"</option>"
+            });
+            $("#variety_id").append(content);
+        },
+        error:function(xhr,textStatus){
+
+        },
+        complete:function(){
+
+        }
+    })
+}
+
+/*
+* 修改跟单状态
+* */
 function update_status(id,obj,newTitle,oldTitle,status,i) {
     $.ajax({
         url:"/sm/followOrder/updateFollowOrderStatus.Action?id="+id+"&status="+status,
+        type:'POST', //GET
+        async:true,    //或false,是否异步
+        data:{
+
+        },
+        timeout:5000,    //超时时间
+        dataType:'json',    //返回的数据格式：json/xml/html/script/jsonp/text
+        beforeSend:function(xhr){
+
+        },
         success:function (data) {
             if(data.success){
                 //发异步把用户状态进行更改,'&#xe651;'
@@ -182,6 +241,12 @@ function update_status(id,obj,newTitle,oldTitle,status,i) {
                 //layer.msg(data.msg, {icon: 6, time: 1000});
                 location.reload()
             }
+        },
+        error:function(xhr,textStatus){
+
+        },
+        complete:function(){
+
         }
     })
 }

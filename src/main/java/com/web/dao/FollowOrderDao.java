@@ -17,7 +17,7 @@ public interface FollowOrderDao {
     //分页
     List<FollowOrder> selectAll(QueryObject queryObject);
 
-    List<FollowOrder> selectListFollowOrder();
+    List<FollowOrder> selectListFollowOrder(@Param("varietyId") Long varietyId, @Param("accountId") Long accountId);
     int updateByPrimaryKey(FollowOrder record);
     int queryForCount(QueryObject qo);
 

@@ -9,11 +9,10 @@ import com.web.pojo.vo.FollowOrderVo;
 import com.web.pojo.vo.NetPositionDetailVo;
 import com.web.service.IFollowOrderDetailService;
 import com.web.service.IFollowOrderService;
+import com.web.service.IVarietyService;
 import com.web.util.JSONResult;
 import com.web.util.query.PageResult;
 import com.web.util.query.QueryObject;
-import org.apache.commons.logging.Log;
-import org.apache.logging.log4j.LogManager;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -34,6 +33,8 @@ public class FollowOrderController {
     private IFollowOrderService followOrderService;
     @Autowired
     private IFollowOrderDetailService followOrderDetailService;
+    @Autowired
+    private IVarietyService varietyService;
 
     @RequestMapping("/pageTest")
     @ResponseBody
@@ -52,8 +53,8 @@ public class FollowOrderController {
 
     @RequestMapping("/getListFollowOrder.Action")
     @ResponseBody
-    public List<FollowOrderVo> getListFollowOrder(){
-        List<FollowOrderVo> listFollowOrderVo = followOrderService.getListFollowOrderVo();
+    public List<FollowOrderVo> getListFollowOrder(Long varietyId,Long accountId){
+        List<FollowOrderVo> listFollowOrderVo = followOrderService.getListFollowOrderVo(varietyId,accountId);
         return listFollowOrderVo;
     }
 
@@ -108,6 +109,10 @@ public class FollowOrderController {
         return followOrderService.getFollowOrderPageVo();
     }
 
-
+    @RequestMapping("/getListVariety.Action")
+    @ResponseBody
+    public String getListVariety(){
+       return JSON.toJSONString(varietyService.getVarietyList());
+    }
 
 }
