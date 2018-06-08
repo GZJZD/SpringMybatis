@@ -54,7 +54,7 @@ public interface IFollowOrderDetailService {
 
     /*
      *
-     *   对应跟单的明细总手续费
+     *   对应跟单的明细总手续费和手数
      * @author may
      * @date 2018/5/25 16:02
      * @param
