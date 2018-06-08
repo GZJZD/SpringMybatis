@@ -36,22 +36,75 @@ public class OrderUserServiceImpl implements OrderUserService {
                 if ( dataSource == null){
                     message ="数据为空";
                 }else{
-
+                //开仓
+                if (dataSource.getOpenClose() == OrderUserEnum.openOrClose.open.getCode()){
+                    message = save(dataSource);
+                }
                 //平仓
                 if( dataSource.getOpenClose() == OrderUserEnum.openOrClose.close.getCode()){
                     message = updateOrAdd(dataSource);
                 }
 
-                //开仓
-                if (dataSource.getOpenClose() == OrderUserEnum.openOrClose.open.getCode()){
-                    message = save(dataSource);
-                }
+
 
             }
                     return message;
     }
 
+    public String updateOrAdd(DataSource dataSource){
+            String message = null;
+            OrderUser orderUser = findByTicket(dataSource.getTicket());
+            Integer longShor = orderUser.getLongShort(); //历史多空
+            Double openPrice = orderUser.getOpenPrice();// 历史开仓价格
+            Double difference;
+        if(orderUser == null){
+            message = saveClose(dataSource);
+            return message;
+        }
+        if(dataSource.getTicket().equals(dataSource.getNewTicket())){
 
+                orderUser.setCloseTime(dataSource.getCreateTime()); //平仓时间
+    //            orderUser.setHandNumber(dataSource.getHandNumber());
+                orderUser.setProfit(dataSource.getProfit()); //平仓盈亏
+                orderUser.setClosePrice(dataSource.getPrice()); //平仓价格
+                orderUser.setLongShort(dataSource.getCmd());//开多  ，平 空
+                message = update(orderUser);
+
+        }
+
+        if(!dataSource.getTicket().equals(dataSource.getNewTicket())){
+            //平开
+            if(orderUser.getHandNumber() > dataSource.getHandNumber()){
+                double handNumber = orderUser.getHandNumber();
+                //先平仓
+                orderUser.setHandNumber(dataSource.getHandNumber()); // 手数
+                orderUser.setCloseTime(dataSource.getCreateTime()); //平仓时间
+                orderUser.setLongShort(dataSource.getCmd());//多空
+                orderUser.setProfit(dataSource.getProfit()); //平仓盈亏
+                orderUser.setClosePrice(dataSource.getPrice());//平仓价格
+                orderUser.setUpdateDate(DateUtil.getStringDate());//修改时间
+                update(orderUser);
+                //后开仓
+                DataSource newDataSource = new DataSource();
+                newDataSource = dataSource;
+                difference = DoubleUtil.sub(handNumber,dataSource.getHandNumber()); //计算差值
+                newDataSource.setHandNumber(difference);
+                newDataSource.setCmd(longShor);
+                newDataSource.setPrice(openPrice);
+                save(newDataSource);
+                message = "平仓成功";
+            }
+        }
+        return message;
+    }
+
+
+    /**
+     * 新增
+     * @param dataSource tcp 数据包
+     *
+     * @return
+     */
     public String save(DataSource dataSource){
             OrderUser orderUser = new OrderUser();
 //            orderUser.setCloseTime(dataSource.getCreateTime());//平仓时间&
@@ -70,6 +123,12 @@ public class OrderUserServiceImpl implements OrderUserService {
             orderUserDao.addOrderUser(orderUser);
             return  "添加成功";
     }
+
+    /**
+     *
+     * @param dataSource
+     * @return
+     */
     public String saveClose(DataSource dataSource){
         OrderUser orderUser = new OrderUser();
         orderUser.setCloseTime(dataSource.getCreateTime());//平仓时间&
@@ -88,45 +147,7 @@ public class OrderUserServiceImpl implements OrderUserService {
         return  "添加成功";
     }
 
-    public String updateOrAdd(DataSource dataSource){
-            String message = null;
-            OrderUser orderUser = findByTicket(dataSource.getTicket());
-            Double difference;
-        if(orderUser == null){
-           message = saveClose(dataSource);
-            return message;
-        }
-        if(dataSource.getTicket().equals(dataSource.getNewTicket())){
-            orderUser.setCloseTime(dataSource.getCreateTime());
-            orderUser.setHandNumber(dataSource.getHandNumber());
-            orderUser.setProfit(dataSource.getProfit());
-            orderUser.setClosePrice(dataSource.getPrice());
-            message = update(orderUser);
-        }
 
-        if(!dataSource.getTicket().equals(dataSource.getNewTicket())){
-            //平开
-                if(orderUser.getHandNumber() > dataSource.getHandNumber()){
-                    double handNumber=orderUser.getHandNumber();
-                    //先平仓
-                    orderUser.setHandNumber(dataSource.getHandNumber());
-                    orderUser.setCloseTime(dataSource.getCreateTime());
-                    orderUser.setLongShort(dataSource.getCmd());
-                    orderUser.setProfit(dataSource.getProfit());
-                    orderUser.setClosePrice(dataSource.getPrice());
-                    orderUser.setUpdateDate(DateUtil.getStringDate());//修改时间
-                    update(orderUser);
-                    //后开仓
-                    DataSource newDataSource = new DataSource();
-                    newDataSource = dataSource;
-                    difference = DoubleUtil.sub(handNumber,dataSource.getHandNumber()); //计算差值
-                    newDataSource.setHandNumber(difference);
-                    save(newDataSource);
-                    message = "平仓成功";
-                }
-        }
-        return message;
-    }
 
     //通过开仓单号 查询交易信息
     public OrderUser findByTicket(String  ticket){
@@ -141,7 +162,7 @@ public class OrderUserServiceImpl implements OrderUserService {
     public String update(OrderUser orderUser){
          String message =null;
         if(orderUser != null){
-            orderUser.setUpdateDate(DateUtil.getStringDate());
+            orderUser.setUpdateDate(DateUtil.getStringDate());//修改时间
             orderUserDao.update(orderUser);
             message = "平仓成功" ;
         }else{ message = "平仓修改失败";}
