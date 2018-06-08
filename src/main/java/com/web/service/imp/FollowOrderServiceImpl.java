@@ -24,7 +24,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
-import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -96,8 +95,8 @@ public class FollowOrderServiceImpl implements IFollowOrderService {
         followOrderDao.updateByPrimaryKey(followOrder);
     }
     @Override
-    public List<FollowOrder> selectListFollowOrder() {
-        return followOrderDao.selectListFollowOrder();
+    public List<FollowOrder> selectListFollowOrder(Long varietyId, Long accountId) {
+        return followOrderDao.selectListFollowOrder(varietyId,accountId);
     }
 
     @Override
@@ -110,9 +109,9 @@ public class FollowOrderServiceImpl implements IFollowOrderService {
     }
 
     @Override
-    public List<FollowOrderVo> getListFollowOrderVo() {
+    public List<FollowOrderVo> getListFollowOrderVo(Long varietyId, Long accountId ) {
         List<FollowOrderVo> followOrderVos = new ArrayList<>();
-        List<FollowOrder> followOrders = selectListFollowOrder();
+        List<FollowOrder> followOrders = selectListFollowOrder(varietyId,accountId);
         followOrderPageVo = new FollowOrderPageVo();
         if (followOrders.size() != 0) {
             for (FollowOrder followOrder : followOrders) {
@@ -162,7 +161,7 @@ public class FollowOrderServiceImpl implements IFollowOrderService {
             }
         }
         followOrderPageVo.setProfitAndLossRateTotalSum(DoubleUtil.div(followOrderPageVo.getOffsetGainAndLossTotalSum(),
-                followOrderPageVo.getPoundageTotalSum(),2));
+                followOrderPageVo.getPoundageTotalSum() == 0.0 ? 1.0: followOrderPageVo.getPoundageTotalSum(),2));
         return followOrderVos;
     }
 
@@ -174,7 +173,7 @@ public class FollowOrderServiceImpl implements IFollowOrderService {
         // for (FollowOrder followOrder : listFollowOrder) {
         FollowOrder followOrder;
         //todo demo过后删除
-        List<FollowOrder> followOrders = selectListFollowOrder();
+        List<FollowOrder> followOrders = selectListFollowOrder(null,null);
         if (followOrders.size() == 0) {
             FollowOrderGenerateUtil followOrderGenerateUtil = new FollowOrderGenerateUtil();
             followOrder = followOrderGenerateUtil.getFollowOrder();

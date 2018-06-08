@@ -179,8 +179,19 @@
       <include refid="base_List"/>
       from follow_order f
       join variety v on v.id = f.variety_id
+      <include refid="base_where"/>
     </select>
 
+  <sql id="base_where">
+    <where>
+      <if test="varietyId != null and varietyId != -1">
+       and f.variety_id = #{varietyId}
+      </if>
+      <if test="accountId != null and accountId != -1">
+        and f.account_id = #{accountId}
+      </if>
+    </where>
+  </sql>
     <sql id="base_List">
     f.id,
     f.follow_order_name,

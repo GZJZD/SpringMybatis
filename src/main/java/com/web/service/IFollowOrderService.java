@@ -34,7 +34,7 @@ public interface IFollowOrderService {
      */
     PageResult getListFollowOrder(QueryObject queryObject);
 
-    List<FollowOrder> selectListFollowOrder();
+
 
     /**
      * 通过客户的名字找到对应的跟单集合
@@ -58,7 +58,7 @@ public interface IFollowOrderService {
      * @param
      * @return
      */
-    List<FollowOrderVo> getListFollowOrderVo();
+    List<FollowOrderVo> getListFollowOrderVo(Long varietyId, Long accountId);
 
     /**
      * 实现交易逻辑
@@ -125,4 +125,5 @@ public interface IFollowOrderService {
      */
     FollowOrderPageVo getFollowOrderPageVo();
 
+    List<FollowOrder> selectListFollowOrder(Long varietyId, Long accountId);
 }
