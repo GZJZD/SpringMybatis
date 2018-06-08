@@ -27,7 +27,7 @@ public class FollowOrderVo {
     //客户盈亏
     private Double clientProfit;
 
-    //盈亏率:总平仓盈亏除以总手续费
+    //盈亏率:总平仓盈亏除以手数
     private Double profitAndLossRate;
 
     //跟单成功率:成功的交易数

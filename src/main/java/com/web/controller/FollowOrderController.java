@@ -2,8 +2,10 @@ package com.web.controller;
 
 import com.alibaba.fastjson.JSON;
 import com.web.common.FollowOrderEnum;
+import com.web.pojo.Account;
 import com.web.pojo.FollowOrder;
 import com.web.pojo.FollowOrderClient;
+import com.web.pojo.Variety;
 import com.web.pojo.vo.FollowOrderPageVo;
 import com.web.pojo.vo.FollowOrderVo;
 import com.web.pojo.vo.NetPositionDetailVo;
@@ -60,9 +62,35 @@ public class FollowOrderController {
 
     @RequestMapping(value = "/createFollowOrder.Action")
     @ResponseBody
-    public JSONResult createFollowOrder(FollowOrder followOrder, List<FollowOrderClient> followOrderClients){
+    public JSONResult createFollowOrder(String followOrderName,Long accountId,Long varietyId,Integer maxProfit,Double maxProfitNumber,
+                                        Integer maxLoss,Double maxLossNumber,Integer accountLoss,Double accountLossNumber,Integer orderPoint,
+                                        Integer clientPoint,Double clientPointNumber,Integer followManner,Integer netPositionDirection,
+                                        Integer netPositionChange,Integer netPositionFollowNumber,
+                                        List<FollowOrderClient> followOrderClients){
         try {
+            FollowOrder followOrder = new FollowOrder();
+            followOrder.setFollowOrderName(followOrderName);
+            Account account = new Account();
+            account.setId(accountId);
+            followOrder.setAccount(account);
+            Variety variety = new Variety();
+            variety.setId(varietyId);
+            followOrder.setVariety(variety);
+            followOrder.setMaxProfit(maxProfit);
+            followOrder.setMaxProfitNumber(maxProfitNumber);
+            followOrder.setMaxLoss(maxLoss);
+            followOrder.setMaxLossNumber(maxLossNumber);
+            followOrder.setAccountLoss(accountLoss);
+            followOrder.setAccountLossNumber(accountLossNumber);
+            followOrder.setOrderPoint(orderPoint);
+            followOrder.setClientPoint(clientPoint);
+            followOrder.setClientPointNumber(clientPointNumber);
+            followOrder.setFollowManner(followManner);
+            followOrder.setNetPositionDirection(netPositionDirection);
+            followOrder.setNetPositionChange(netPositionChange);
+            followOrder.setNetPositionFollowNumber(netPositionFollowNumber);
            followOrderService.createFollowOrder(followOrder,followOrderClients);
+
         }catch (Exception e){
             e.printStackTrace();
             return new JSONResult(false,"创建跟单失败");
