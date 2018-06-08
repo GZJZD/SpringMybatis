@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8" />
+    <link rel="stylesheet" type="text/css" href="../../lib/bootstrap/css/bootstrap.min.css" />
+    <link rel="stylesheet" type="text/css" href="http://cdn.bootcss.com/bootstrap-select/2.0.0-beta1/css/bootstrap-select.css">
+    <title></title>
+</head>
+
+<body>
+<!--<select id="slpk" class="selectpicker" data-live-search="true" multiple></select>-->
+
+<div class="form-group">
+    <label class="col-sm-3 control-label">客资类型：</label>
+    <div class="col-sm-4">
+        <select id="usertype" name="usertype" class="selectpicker show-tick form-control" multiple data-max-options="3" data-live-search="true">
+            <option value="0" style="background: #5cb85c; color: #fff;">苹果</option>
+            <option value="1" data-icon="glyphicon-heart">菠萝</option>
+            <option value="2" data-content="<span class='label label-success'>香蕉</span>">香蕉</option>
+            <option value="3" data-content="<span class='label label-success'>火龙果</span>">火龙果</option>
+            <option value="4" data-content="<span class='label label-success'>梨子</span>">梨子</option>
+            <option value="5">草莓</option>
+            <option value="6">哈密瓜</option>
+            <option value="7">椰子</option>
+            <option value="8">猕猴桃</option>
+            <option value="9">桃子</option>
+        </select>
+    </div>
+</div>
+</body>
+<script src="../../lib/jquery/jquery-3.2.1.min.js" type="text/javascript" charset="utf-8"></script>
+<script src="../../lib/bootstrap/js/bootstrap.min.js" type="text/javascript" charset="utf-8"></script>
+<script type="text/javascript" src="http://cdn.bootcss.com/bootstrap-select/2.0.0-beta1/js/bootstrap-select.js"></script>
+<script type="text/javascript">
+    $(function() {
+        $(".selectpicker").selectpicker({
+            noneSelectedText: '请选择',
+            countSelectedText: function(){}
+        });
+    });
+    function selectValue() {
+        //获取选择的值
+        alert($('#usertype').selectpicker('val'));
+    }
+</script>
+
+</html>

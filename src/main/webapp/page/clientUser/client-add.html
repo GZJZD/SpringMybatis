@@ -118,7 +118,7 @@
                         <div class="layui-inline">
                             <label class="layui-form-label">策略名称</label>
                             <div class="layui-input-inline">
-                                <input type="tel" id="tacticsName" name=""  autocomplete="off" class="layui-input">
+                                <input type="tel" id="followOrderName" name=""  autocomplete="off" class="layui-input">
                             </div>
                         </div>
                     </div>
@@ -127,23 +127,23 @@
                         <div class="layui-inline">
                             <label class="layui-form-label">下单点位</label>
                             <div class="layui-input-block">
-                                <input class="disPaly" type="text" id="setPT" value="1"/>
-                                <input type="radio" onclick="setStatus('setPT')" name="setPT" value="1" title="市价" checked="">市价</input>
-                                <input type="radio" onclick="setStatus('setPT')" name="setPT" value="2" title="限价:比客户点位">限价:比客户点位</input>
+                                <input class="disPaly" type="text" id="orderPoint" value="1"/>
+                                <input type="radio" onclick="setStatus('orderPoint')" name="orderPoint" value="1" title="市价" checked="">市价</input>
+                                <input type="radio" onclick="setStatus('orderPoint')" name="orderPoint" value="0" title="限价:比客户点位">限价:比客户点位</input>
                             </div>
                         </div>
 
-                        <div class="layui-inline if-ok">
+                        <div class="layui-inline if-ok bili-class"  >
                             <div class="layui-input-inline">
-                                <select class="form-control" name="" >
-                                    <option value="1">按比例</option>
-                                    <option value="2">按固定手术</option>
+                                <select class="form-control clientPoint-class" name="" >
+                                    <option value="1">好</option>
+                                    <option value="0">差</option>
                                 </select>
                             </div>
                         </div>
-                        <div class="layui-inline input-number">
+                        <div class="layui-inline input-number bili-class" >
                             <div class="layui-input-block">
-                             <input type="number" name="phone"  autocomplete="off" class="layui-input">
+                             <input type="number" name="phone"  id="clientPointNumber-id" autocomplete="off" class="layui-input">
                             </div>
                         </div>
                     </div>
@@ -151,11 +151,11 @@
                         <div class="layui-inline">
                             <label class="layui-form-label">单笔最大止盈</label>
                             <div class="layui-input-block">
-                                <input class="disPaly" type="text" id="profitAndLoss" value="1"/>
-                                <input type="radio" name="profitAndLoss" onclick="setStatus('profitAndLoss')" name="setPT" value="1" title="市价" checked="">市价</input>
+                                <input class="disPaly" type="text" id="maxProfit" value="1"/>
+                                <input type="radio" name="maxProfit" onclick="setStatus('maxProfit')" name="setPT" value="1" title="市价" checked="">市价</input>
                                 <!--<input type="radio" name="profitAndLoss" onclick="setStatus('profitAndLoss')" value="1" title="不设" hecked="" >不设</input>-->
-                                <input type="radio" name="profitAndLoss" onclick="setStatus('profitAndLoss')"  value="2" title="点/手">点/手</input>
-                                <input  type="number" name="phone"  autocomplete="off" class="layui-input set-input"></input>
+                                <input type="radio" name="maxProfit" onclick="setStatus('maxProfit')"  value="0" title="点/手">点/手</input>
+                                <input  type="number" id="maxProfit-id"  autocomplete="off" class="layui-input set-input"></input>
                             </div>
                         </div>
                     </div>
@@ -163,10 +163,10 @@
                         <div class="layui-inline">
                             <label class="layui-form-label">单笔最大止损</label>
                             <div class="layui-input-block">
-                                <input class="disPaly" type="text" id="lossLimit" value="1"/>
-                                <input type="radio" name="lossLimit" onclick="setStatus('lossLimit')" value="1" title="不设" checked="">不设</input>
-                                <input type="radio" name="lossLimit" onclick="setStatus('lossLimit')" value="2" title="点/手">点/手</input>
-                                <input type="number" name="phone"  autocomplete="off" class="layui-input set-input"></input>
+                                <input class="disPaly" type="text" id="maxLoss" value="1"/>
+                                <input type="radio" name="maxLoss" onclick="setStatus('maxLoss')" value="1" title="不设" checked="">不设</input>
+                                <input type="radio" name="maxLoss" onclick="setStatus('maxLoss')" value="0" title="点/手">点/手</input>
+                                <input type="number" id="maxLoss-id"  autocomplete="off" class="layui-input set-input"></input>
                             </div>
                         </div>
                     </div>
@@ -174,10 +174,10 @@
                         <div class="layui-inline">
                             <label class="layui-form-label">账户止损</label>
                             <div class="layui-input-block">
-                                <input class="disPaly" type="text" id="ZHlossLimit" value="1"/>
-                                <input type="radio" name="ZHlossLimit" onclick="setStatus('ZHlossLimit')" value="1" title="不设" checked="">不设</input>
-                                <input type="radio" name="ZHlossLimit"onclick="setStatus('ZHlossLimit')" value="2" title="美金">美金</input>
-                                <input type="number" name="phone"  autocomplete="off" class="layui-input set-input"></input>
+                                <input class="disPaly" type="text" id="accountLoss" value="1"/>
+                                <input type="radio" name="accountLoss" onclick="setStatus('accountLoss')" value="1" title="不设" checked="">不设</input>
+                                <input type="radio" name="accountLoss"onclick="setStatus('accountLoss')" value="0" title="美金">美金</input>
+                                <input type="number" name="phone" id="accountLoss-id"  autocomplete="off" class="layui-input set-input"></input>
                             </div>
                         </div>
                     </div>
@@ -185,7 +185,7 @@
                     <div class="layui-inline">
                         <label class="layui-form-label">跟单账号</label>
                         <div class="layui-input-inline">
-                            <select name="modules" lay-verify="required" lay-search="">
+                            <select id="GD-id" name="modules" lay-verify="required" lay-search="">
 
                                 <option value="1">layer</option>
                                 <option value="2">form</option>
@@ -214,9 +214,9 @@
                      <div class="layui-form-item">
                         <label class="layui-form-label">跟单方式:</label>
                         <div class="layui-input-block">
-                            <input class="disPaly" type="text" id="singleOrLoose" value="1"/>
-                            <input type="radio" name="singleOrLoose" onclick="setStatus('singleOrLoose')" value="1" title="跟每一单" checked="">跟每一单</input>
-                            <input type="radio" name="singleOrLoose" onclick="setStatus('singleOrLoose')" value="2" title="跟净头寸">跟净头寸</input>
+                            <input class="disPaly" type="text" id="followManner" value="1"/>
+                            <input type="radio" name="followManner" onclick="setStatus('followManner')" value="1" title="跟每一单" checked="">跟每一单</input>
+                            <input type="radio" name="followManner" onclick="setStatus('followManner')" value="2" title="跟净头寸">跟净头寸</input>
                         </div>
                      </div>
 
@@ -256,7 +256,7 @@
 
                     <div class="layui-form-item">
                         <div class="layui-inline">
-                            <label class="layui-form-label">策略名称</label>
+                            <label  class="layui-form-label">策略名称</label>
 
                         </div>
                     </div>
@@ -312,7 +312,7 @@
         <div class="layui-form-item">
             <div class="layui-input-block">
                 <button type="submit" class="layui-btn layui-btn-primary" onclick="returnBlack(2)">返回</button>
-                <button type="submit" class="layui-btn" lay-submit="" lay-filter="demo1" onclick="add()">提交<i class="layui-icon layui-icon-face-smile"></i>   </button>
+                <button type="submit" class="layui-btn" lay-submit="" lay-filter="demo1" onclick="commit()">提交<i class="layui-icon layui-icon-face-smile"></i>   </button>
             </div>
         </div>
     </div>
