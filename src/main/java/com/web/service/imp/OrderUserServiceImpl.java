@@ -99,6 +99,8 @@ public class OrderUserServiceImpl implements OrderUserService {
         if(dataSource.getTicket().equals(dataSource.getNewTicket())){
             orderUser.setCloseTime(dataSource.getCreateTime());
             orderUser.setHandNumber(dataSource.getHandNumber());
+            orderUser.setProfit(dataSource.getProfit());
+            orderUser.setClosePrice(dataSource.getPrice());
             message = update(orderUser);
         }
 
@@ -110,6 +112,8 @@ public class OrderUserServiceImpl implements OrderUserService {
                     orderUser.setHandNumber(dataSource.getHandNumber());
                     orderUser.setCloseTime(dataSource.getCreateTime());
                     orderUser.setLongShort(dataSource.getCmd());
+                    orderUser.setProfit(dataSource.getProfit());
+                    orderUser.setClosePrice(dataSource.getPrice());
                     orderUser.setUpdateDate(DateUtil.getStringDate());//修改时间
                     update(orderUser);
                     //后开仓

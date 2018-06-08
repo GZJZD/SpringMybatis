@@ -45,13 +45,15 @@ public class FollowOrderTradeRecordService implements IFollowOrderTradeRecordSer
     public void updateTradeRecord(FollowOrderTradeRecord followOrderTradeRecord) {
         int count = followOrderTradeRecordDao.updateByPrimaryKey(followOrderTradeRecord);
         followOrderTradeRecordDao.selectByPrimaryKey(followOrderTradeRecord.getId());
-        System.out.println(followOrderTradeRecord.getVersion() + "======================");
-        System.out.println(followOrderTradeRecord.toString());
         if (count <= 0) {
             throw new RuntimeException("乐观锁出现异常:" + FollowOrderTradeRecord.class);
         }
     }
 
+    /**
+     *
+     * @param orderMsgResult
+     */
     @Override
     public void updateRecordByComeBackTradeMsg(OrderMsgResult orderMsgResult) {
         if(orderMsgResult != null) {
@@ -72,7 +74,6 @@ public class FollowOrderTradeRecordService implements IFollowOrderTradeRecordSer
                     tradeRecord.setHandNumber(orderMsgResult.getTradeVolume());
                 }
                 FollowOrder followOrder = followOrderService.getFollowOrder(tradeRecord.getFollowOrderId());
-
                     if (followOrder != null) {
                         //修改该跟单状态,如果状态是普通的交易状态 or 是两条交易信息已经返回一条就将状态改成交易暂停
                         if(followOrder.getNetPositionStatus().equals(FollowOrderEnum.FollowStatus.NET_POSITION_TRADING_START.getIndex())||
@@ -97,10 +98,7 @@ public class FollowOrderTradeRecordService implements IFollowOrderTradeRecordSer
                         } else {
                             //todo 客户
                         }
-
-
                     }
-               // }
                 if(orderMsgResult.getTradeVolume() != null && orderMsgResult.getTradeVolume() == 0.0){
                     //交易为0
                     tradeRecord.setHandNumber(0.0);
@@ -111,7 +109,6 @@ public class FollowOrderTradeRecordService implements IFollowOrderTradeRecordSer
                 //设置修改时间
                 tradeRecord.setUpdateDate(DateUtil.getStringDate());
                 followOrderTradeRecordDao.updateByPrimaryKey(tradeRecord);
-
             }
         }
 
@@ -136,7 +133,6 @@ public class FollowOrderTradeRecordService implements IFollowOrderTradeRecordSer
                     if(detail != null){
                         if(followOrderTradeRecord.getTicket().equals(followOrderTradeRecord.getNewTicket())){
                             //开仓单号和开仓单号一致就不需要新建开仓
-
                         }else{
                             //新建开仓单号
                         }

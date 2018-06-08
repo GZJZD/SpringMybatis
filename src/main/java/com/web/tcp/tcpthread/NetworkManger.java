@@ -88,7 +88,7 @@ public class NetworkManger extends Thread {
                             }
                         }
                         if (start == 0 || semicolons == MAX_SEMICOLONS) {
-                            System.out.println(sBuilder.toString() + "*****************************");
+
                             //System.out.println(sBuilder.toString());
                             //完成一次交易数据的监听,将数据交于其他线程处理
 //                             madeOrderThreadPool.execute(new DealServiceImpl(sBuilder.toString(),platformSocket.getPlatformName()));
