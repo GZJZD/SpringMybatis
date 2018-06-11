@@ -52,6 +52,8 @@ public class FollowOrderServiceImpl implements IFollowOrderService {
     //发送MQ
     @Autowired
     private IOrderTraderService orderTraderService;
+    @Autowired
+    private IVarietyService varietyService;//品种
 
 
     @Override
@@ -91,8 +93,8 @@ public class FollowOrderServiceImpl implements IFollowOrderService {
         followOrderDao.updateByPrimaryKey(followOrder);
     }
     @Override
-    public List<FollowOrder> selectListFollowOrder(Long varietyId, Long accountId) {
-        return followOrderDao.selectListFollowOrder(varietyId,accountId);
+    public List<FollowOrder> selectListFollowOrder(FollowOrderPageVo followOrderPageVo) {
+        return followOrderDao.selectListFollowOrder(followOrderPageVo);
     }
     /*
     * 修改跟单的状态
@@ -115,9 +117,9 @@ public class FollowOrderServiceImpl implements IFollowOrderService {
      * @return
      */
     @Override
-    public List<FollowOrderVo> getListFollowOrderVo(Long varietyId, Long accountId ) {
+    public List<FollowOrderVo> getListFollowOrderVo(FollowOrderPageVo followOrderPageVo ) {
         List<FollowOrderVo> followOrderVos = new ArrayList<>();
-        List<FollowOrder> followOrders = selectListFollowOrder(varietyId,accountId);
+        List<FollowOrder> followOrders = selectListFollowOrder(followOrderPageVo);
         followOrderPageVo = new FollowOrderPageVo();
         if (followOrders.size() != 0) {
             for (FollowOrder followOrder : followOrders) {
@@ -175,7 +177,7 @@ public class FollowOrderServiceImpl implements IFollowOrderService {
         // for (FollowOrder followOrder : listFollowOrder) {
         FollowOrder followOrder;
         //todo demo过后删除
-        List<FollowOrder> followOrders = selectListFollowOrder(null,null);
+        List<FollowOrder> followOrders = selectListFollowOrder(null);
         if (followOrders.size() == 0) {
             FollowOrderGenerateUtil followOrderGenerateUtil = new FollowOrderGenerateUtil();
             followOrder = followOrderGenerateUtil.getFollowOrder();
@@ -363,32 +365,15 @@ public class FollowOrderServiceImpl implements IFollowOrderService {
      */
     @Override
     public void createFollowOrder(FollowOrder followOrder, List<FollowOrderClient> followOrderClients) {
-        FollowOrder order = new FollowOrder();
-        order.setFollowOrderName(followOrder.getFollowOrderName());
-        Account account=new Account();
-        account.setId(followOrder.getAccount().getId());
-        order.setAccount(account);
-        Variety variety = new Variety();
-        variety.setId(followOrder.getVariety().getId());
+        FollowOrder order = followOrder;
+
+        Variety variety = varietyService.getVarietyByCode(followOrder.getVariety().getVarietyCode());
         order.setVariety(variety);
-        order.setFollowManner(followOrder.getFollowManner());
-        order.setMaxProfit(followOrder.getMaxProfit());
         order.setFollowOrderStatus(FollowOrderEnum.FollowStatus.FOLLOW_ORDER_STOP.getIndex());
+        //todo demo后删除
         order.setAccount(FollowOrderGenerateUtil.getAccount());
         if(order.getFollowManner().equals(FollowOrderEnum.FollowStatus.FOLLOWMANNER_NET_POSITION.getIndex())){
             order.setNetPositionStatus(FollowOrderEnum.FollowStatus.NET_POSITION_TRADING_PAUSE.getIndex());
-        }
-        if(order.getMaxProfit().equals(FollowOrderEnum.FollowStatus.SET_MAXPROFIT.getIndex())){
-            order.setMaxProfitNumber(followOrder.getMaxProfitNumber());
-        }
-        order.setMaxLoss(followOrder.getMaxLoss());
-        if(order.getMaxLoss().equals(FollowOrderEnum.FollowStatus.SET_MAXLOSS.getIndex())){
-            order.setMaxLossNumber(followOrder.getMaxLossNumber());
-        }
-
-        order.setAccountLoss(followOrder.getAccountLoss());
-        if(order.getAccountLoss().equals(FollowOrderEnum.FollowStatus.SET_ACCOUNTLOSS.getIndex())){
-            order.setAccountLossNumber(followOrder.getAccountLossNumber());
         }
         order.setOrderPoint(followOrder.getOrderPoint());
         if(order.getOrderPoint().equals(FollowOrderEnum.FollowStatus.LIMIT_PRICE.getIndex())){
@@ -573,16 +558,5 @@ public class FollowOrderServiceImpl implements IFollowOrderService {
                 orderDetail.getTicket(),followOrder.getVariety().getVarietyCode());
     }
 
-    /*
-     *
-     *   返回页面总计算
-     * @author may
-     * @date 2018/6/7 14:33
-     * @param
-     * @return
-     */
-    @Override
-    public FollowOrderPageVo getFollowOrderPageVo() {
-        return followOrderPageVo;
-    }
+
 }

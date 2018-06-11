@@ -1,6 +1,7 @@
 package com.web.service;
 
 import com.web.pojo.FollowOrderDetail;
+import com.web.pojo.vo.FollowOrderPageVo;
 import com.web.pojo.vo.FollowOrderVo;
 import com.web.pojo.vo.NetPositionDetailVo;
 import com.web.util.query.QueryObject;
@@ -73,4 +74,6 @@ public interface IFollowOrderDetailService {
     List<FollowOrderDetail> getNOCloseDetailListByFollowOrderId(Long followOrderId);
     void updateDetail(FollowOrderDetail followOrderDetail);
 
+
+    FollowOrderPageVo getFollowOrderPageVo();
 }

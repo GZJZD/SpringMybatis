@@ -2,6 +2,7 @@
     var varietyNum= $("#variety_id option:selected").val();
     var accountNum= $("#variety_id option:selected").val();
     var tableOrderId = $("#followOrderTable");
+    var tableHistoryOrderId = $("#historyFollowOrderTable");
     var method = "get";
     //var url_  ="demo.json";
    // var url_ = "/getListFollowOrder.Action";
@@ -124,12 +125,32 @@
        * */
         $.ajax({
             url:"/sm/followOrder/getFollowOrderPageVo.Action",
+            type:'GET', //GET
+            async:true,    //或false,是否异步
+            data:{
+
+            },
+            timeout:5000,    //超时时间
+            dataType:'json',    //返回的数据格式：json/xml/html/script/jsonp/text
+            beforeSend:function(xhr){
+
+            },
             success:function (data) {
-                var obj=eval('('+data+')');
-                $("#positionSum").html(obj.positionGainAndLossTotalSum);
-                $("#clientSum").html(obj.clientProfitTotalSum);
-                $("#poundageSum").html(obj.poundageTotalSum);
-                $("#rateSum").html(obj.profitAndLossRateTotalSum);
+                var obj=data;
+                $("#history_close_position").html(obj.historyHandNumber+"/"+obj.historyProfit);
+                if(obj.holdPositionHandNumber == null){
+                    $("#hold_position").html(0+"/"+0);
+                }else{
+                    $("#hold_position").html(obj.holdPositionHandNumber+"/"+obj.holdPositionProfit);
+
+                }
+                $("#profit_rate").html(obj.profitAndLossRate);
+                $("#win_rate").html(obj.winRate+"%");
+            },
+            error:function(xhr,textStatus){
+
+            },
+            complete:function(){
 
             }
         });
@@ -137,6 +158,13 @@
         findByVariety();
         showByTableId(tableOrderId, method, url_, unique_Id, sortOrder, columns);
 
+
+        $("#historyOrder").click(function () {
+            $(tableHistoryOrderId).bootstrapTable('destroy');
+            var url_history = "/sm/followOrder/getListFollowOrder.Action?varietyId="+varietyNum+"&accountId="+accountNum+"&status=0";
+
+            showByTableId(tableHistoryOrderId, method, url_history, unique_Id, sortOrder, columns);
+        })
     });
     //根据窗口调整表格高度
     $(window).resize(function () {
@@ -172,10 +200,24 @@ function follow_order_stop(obj, id) {
 * 条件查询
 * */
 
-function orderByParameter() {
+function orderByParameter(num) {
     var varietyNum= $("#variety_id option:selected").val();
     var accountNum= $("#account_id option:selected").val();
-    var url = "/sm/followOrder/getListFollowOrder.Action?varietyId="+varietyNum+"&accountId="+accountNum;
+    var startTime;
+    var endTime;
+    if(num){
+        varietyNum= $("#variety_id option:selected").val();
+        accountNum= $("#account_id option:selected").val();
+        (($('#test1').val()) == 'undefined')?(startTime=''):(startTime=($("#test1").val()));
+        (($('#test2').val()) == 'undefined')?(endTime=''):(endTime=($("#test2").val()));
+    }else{
+        varietyNum= $("#history_variety_id option:selected").val();
+        accountNum= $("#history_account_id option:selected").val();
+        (($('#history-start-time').val()) == 'undefined')?(startTime=''):(startTime=($("#history-start-time").val()));
+        (($('#history-end-time').val()) == 'undefined')?(endTime=''):(endTime=($("#history-end-time").val()));
+    }
+
+    var url = "/sm/followOrder/getListFollowOrder.Action?varietyId="+varietyNum+"&accountId="+accountNum+"&startTime="+startTime+"&endTime="+endTime;
     $(tableOrderId).bootstrapTable('destroy');
     showByTableId(tableOrderId, method, url, unique_Id, sortOrder, columns);
 }
@@ -204,6 +246,7 @@ function findByVariety() {
                 content += "<option value="+ele.id+">"+ele.varietyCode+"</option>"
             });
             $("#variety_id").append(content);
+            $("#history_variety_id").append(content);
         },
         error:function(xhr,textStatus){
 
@@ -233,13 +276,17 @@ function update_status(id,obj,newTitle,oldTitle,status,i) {
         success:function (data) {
             if(data.success){
                 //发异步把用户状态进行更改,'&#xe651;'
-                $(obj).attr('title', title)
+                $(obj).attr('title', newTitle)
                 $(obj).find('i').html(i);
                 $(obj).parents("tr").find(".td-status").find('span').addClass('layui-btn-disabled').html('已'+oldTitle);
-                location.reload()
+                layer.msg("状态修改成功", {icon: 6, time: 1000},function () {
+                    location.reload()
+                });
             }else {
                 //layer.msg(data.msg, {icon: 6, time: 1000});
-                location.reload()
+                layer.msg("系统出现故障，请联系相关人员进行相应的操作", {icon: 6, time: 1000},function () {
+                    location.reload()
+                });
             }
         },
         error:function(xhr,textStatus){

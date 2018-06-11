@@ -13,6 +13,7 @@ import com.web.service.IFollowOrderDetailService;
 import com.web.service.IFollowOrderService;
 import com.web.service.IVarietyService;
 import com.web.util.JSONResult;
+import com.web.util.common.DateUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -20,6 +21,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.LogManager;
 
 /**
  * created by may on 2018/5/23.
@@ -48,8 +50,19 @@ public class FollowOrderController {
 
     @RequestMapping("/getListFollowOrder.Action")
     @ResponseBody
-    public List<FollowOrderVo> getListFollowOrder(Long varietyId,Long accountId){
-        List<FollowOrderVo> listFollowOrderVo = followOrderService.getListFollowOrderVo(varietyId,accountId);
+    public List<FollowOrderVo> getListFollowOrder(Long varietyId,Long accountId,String endTime ,String startTime,Integer status ){
+        FollowOrderPageVo followOrderPageVo = new FollowOrderPageVo();
+        followOrderPageVo.setVarietyId(varietyId);
+        followOrderPageVo.setStatus(status);
+        followOrderPageVo.setAccountId(accountId);
+        if(endTime != null ){
+            String date = DateUtil.dateToStrLong(DateUtil.getEndDate(DateUtil.strToDate(endTime)));
+            followOrderPageVo.setEndTime(date);
+        }
+        if(startTime != null){
+            followOrderPageVo.setStartTime(startTime);
+        }
+        List<FollowOrderVo> listFollowOrderVo = followOrderService.getListFollowOrderVo(followOrderPageVo);
         return listFollowOrderVo;
     }
 
@@ -135,7 +148,7 @@ public class FollowOrderController {
     @RequestMapping("/getFollowOrderPageVo.Action")
     @ResponseBody
     public FollowOrderPageVo getFollowOrderPageVo(){
-        return followOrderService.getFollowOrderPageVo();
+        return followOrderDetailService.getFollowOrderPageVo();
     }
 
     @RequestMapping("/getListVariety.Action")

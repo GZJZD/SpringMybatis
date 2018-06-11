@@ -2,6 +2,7 @@ package com.web.dao;
 
 
 import com.web.pojo.FollowOrderDetail;
+import com.web.pojo.vo.FollowOrderPageVo;
 import com.web.pojo.vo.FollowOrderVo;
 import org.apache.ibatis.annotations.Param;
 
@@ -36,6 +37,17 @@ public interface FollowOrderDetailDao {
 
     FollowOrderVo getCommissionTotalAndHandNumTotal(Long followOrderId);
 
-    FollowOrderVo getTotal(Long followOrderId);
+    /*
+    * WEB页面中：历史跟单手数，历史收益，总平仓单数
+    * */
+    FollowOrderPageVo getFollowOrderPageVoIsClose();
+    /*
+    * 已经平仓而且盈利得单数
+    * */
+    Integer getFollowOrderPageVoIsCloseProfitNum();
 
+    /*
+    * WEB页面中：持仓手数，持仓收益
+    * */
+    FollowOrderPageVo getFollowOrderPageVoIsOpen();
 }

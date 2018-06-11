@@ -45,72 +45,138 @@
         <span class="bg-red note color-w">NOTE:</span> 文档尚未产出：
         <a href="">文档地址</a>
     </div>
-    <fieldset class="layui-elem-field layui-field-title">
-        <legend>跟单数据</legend>
-    </fieldset>
-    <div class="content">
-        <div class="row block">
-            <div class="col-xs-3">
-                <div class="area text-right">
-                    <div class="font-24"><span class="font-24" id="positionSum"></span></div>
-                    <div class="font-25">历史跟单手数/收益</div>
-                    <div class="a-foot text-left">手续费</div>
+
+
+    <div class="navigation-div">
+        <div class="layui-tab layui-tab-brief" lay-filter="docDemoTabBrief">
+            <ul class="layui-tab-title">
+                <li>跟单组合</li>
+                <li id="historyOrder">跟单历史</li>
+            </ul>
+            <div class="layui-tab-content" style="height: 100px;">
+                <div class="layui-tab-item layui-show">
+                    <div class="content">
+                        <div class="row block">
+                            <div class="col-xs-3">
+                                <div class="area text-right">
+                                    <div class="font-24"><span class="font-24" id="history_close_position"></span></div>
+                                    <div class="font-25">历史跟单手数/收益</div>
+                                    <div class="a-foot text-left">手续费</div>
+                                </div>
+                            </div>
+                            <div class="col-xs-3">
+                                <div class="area text-right">
+                                    <div class="font-24"><span class="font-24" id="hold_position"></span></div>
+                                    <div class="font-25">持仓手数/收益</div>
+                                    <div class="a-foot text-left">手续费</div>
+                                </div>
+                            </div>
+                            <div class="col-xs-3">
+                                <div class="area text-right">
+                                    <div class="font-24"><span class="font-24" id="profit_rate"></span></div>
+                                    <div class="font-25">盈亏效率</div>
+                                    <div class="a-foot text-left">平仓盈亏/手续费</div>
+                                </div>
+                            </div>
+                            <div class="col-xs-3">
+                                <div class="area text-right">
+                                    <div class="font-24"><span class="font-24" id="win_rate"></span></div>
+                                    <div class="font-25">胜率</div>
+                                    <div class="a-foot text-left">盈利单数/总单数</div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="search">
+
+                            按起止时间：
+                            <div class="layui-input-inline">
+                                <input type="text" class="layui-input" id="test1" placeholder="起始日期">
+                                <input type="text" class="layui-input" id="test2" placeholder="终止日期">
+                            </div>
+
+                            跟单账号：
+                            <div class="form-group">
+                                <select id="account_id" class="form-control" name="">
+                                    <option value="-1" selected>8001-text1</option>
+                                </select>
+                            </div>
+
+                            按品种
+                            <div class="form-group">
+                                <select id="variety_id" class= "form-control" >
+                                    <option value="-1">全部</option>
+                                </select>
+                            </div>
+
+                            <button class="btn btn-primary" onclick="orderByParameter(1)">搜索</button>
+                        </div>
+                        <div class="tip bg-warning">
+                            注意!数据手动刷新时跟新，最近更新时间：2017.11.1.11:10:00
+                        </div>
+
+
+                        <div class="table-case">
+                            <div class="table-title"><span class="glyphicon glyphicon-user"></span>跟单列表</div>
+                            <div class="tab">
+                                <table id="followOrderTable" class="table-bordered"></table>
+                            </div>
+                        </div>
+
+                    </div>
                 </div>
-            </div>
-            <div class="col-xs-3">
-                <div class="area text-right">
-                    <div class="font-24"><span class="font-24" id="clientSum"></span></div>
-                    <div class="font-25">持仓手数/收益</div>
-                    <div class="a-foot text-left">手续费</div>
+                <div class="layui-tab-item" >
+
+                    <div class="content" >
+                        <div class="search">
+                            按起止时间：
+                            <div class="layui-input-inline">
+                                <!-- <input type="text" class="layui-input" id="order_start" placeholder="起始日期">
+                                 <input type="text" class="layui-input" id="order_end" placeholder="终止日期">-->
+
+                                <input type="text" class="layui-input" id="history-start-time" placeholder="起始日期">
+                                <input type="text" class="layui-input" id="history-end-time" placeholder="终止日期">
+                            </div>
+
+                            跟单账号：
+                            <div class="form-group">
+                                <select id="history_account_id" class="form-control" name="">
+                                    <option value="-1" selected>8001-text1</option>
+                                </select>
+                            </div>
+
+                            按品种
+                            <div class="form-group">
+                                <select id="history_variety_id" class= "form-control" >
+                                    <option value="-1">全部</option>
+                                </select>
+                            </div>
+
+                            <button class="btn btn-primary" onclick="orderByParameter(0)">搜索</button>
+                        </div>
+
+                        <div class="table-case">
+                            <div class="table-title"><span class="glyphicon glyphicon-user"></span>跟单历史</div>
+                            <div class="tab">
+                                <table id="historyFollowOrderTable" class="table-bordered"></table>
+                            </div>
+                        </div>
+                    </div>
                 </div>
-            </div>
-            <div class="col-xs-3">
-                <div class="area text-right">
-                    <div class="font-24"><span class="font-24" id="rateSum"></span></div>
-                    <div class="font-25">盈亏效率</div>
-                   <div class="a-foot text-left">平仓盈亏/手续费</div>
+
                 </div>
-            </div>
-            <div class="col-xs-3">
-                <div class="area text-right">
-                    <div class="font-24"><span class="font-24" id="poundageSum"></span></div>
-                    <div class="font-25">胜率</div>
-                   <div class="a-foot text-left">盈利单数/总单数</div>
-                </div>
-            </div>
-        </div>
-        <div class="search">
 
-            跟单账号：
-            <div class="form-group">
-                <select id="account_id" class="form-control" name="">
-                    <option value="-1" selected>8001-text1</option>
-                </select>
-            </div>
-
-
-            按品种
-            <div class="form-group">
-                <select id="variety_id" class= "form-control" >
-                    <option value="-1">全部</option>
-                </select>
-            </div>
-
-            <button class="btn btn-primary" onclick="orderByParameter()">搜索</button>
-        </div>
-        <div class="tip bg-warning">
-            注意!数据手动刷新时跟新，最近更新时间：2017.11.1.11:10:00
-        </div>
-
-
-        <div class="table-case">
-            <div class="table-title"><span class="glyphicon glyphicon-user"></span>跟单列表</div>
-            <div class="tab">
-                <table id="followOrderTable" class="table-bordered"></table>
             </div>
         </div>
 
     </div>
+
+
+
+
+
+    <!-- 注意：如果你直接复制所有代码到本地，上述js路径需要改成你本地的 -->
+    <script type="text/javascript" src="../../js/common.js"></script>
+    <script type="text/javascript" src="js/documentary_list.js"></script>
 </div>
 
 <!--<div class="main_body">
@@ -118,9 +184,7 @@
     <div style="display: block;">2</div>
 </div>-->
 
-<!-- 注意：如果你直接复制所有代码到本地，上述js路径需要改成你本地的 -->
-<script type="text/javascript" src="../../js/common.js"></script>
-<script type="text/javascript" src="js/documentary_list.js"></script>
+
 
 
 

@@ -2,6 +2,7 @@ package com.web.dao;
 
 
 import com.web.pojo.FollowOrder;
+import com.web.pojo.vo.FollowOrderPageVo;
 import com.web.util.query.QueryObject;
 import org.apache.ibatis.annotations.Param;
 
@@ -14,10 +15,9 @@ public interface FollowOrderDao {
 
     FollowOrder selectByPrimaryKey(Long id);
 
-    //分页
     List<FollowOrder> selectAll(QueryObject queryObject);
 
-    List<FollowOrder> selectListFollowOrder(@Param("varietyId") Long varietyId, @Param("accountId") Long accountId);
+    List<FollowOrder> selectListFollowOrder(FollowOrderPageVo followOrderPageVo);
     int updateByPrimaryKey(FollowOrder record);
     int queryForCount(QueryObject qo);
 

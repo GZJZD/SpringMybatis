@@ -4,11 +4,13 @@ import com.web.dao.FollowOrderDetailDao;
 import com.web.pojo.FollowOrderDetail;
 import com.web.pojo.FollowOrderTradeRecord;
 import com.web.pojo.Variety;
+import com.web.pojo.vo.FollowOrderPageVo;
 import com.web.pojo.vo.FollowOrderVo;
 import com.web.pojo.vo.NetPositionDetailVo;
 import com.web.service.IFollowOrderDetailService;
 import com.web.service.IFollowOrderTradeRecordService;
 import com.web.service.IVarietyService;
+import com.web.util.common.DoubleUtil;
 import com.web.util.query.QueryObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -109,7 +111,7 @@ public class FollowOrderDetailServiceImpl implements IFollowOrderDetailService {
 
     @Override
     public Double getOffsetGainAndLossByFollowOrderId(Long followOrderId) {
-        FollowOrderVo total = followOrderDetailDao.getTotal(followOrderId);
+
         return followOrderDetailDao.getOffsetGainAndLossByFollowOrderId(followOrderId);
     }
 
@@ -124,6 +126,26 @@ public class FollowOrderDetailServiceImpl implements IFollowOrderDetailService {
         if(count<=0){
             throw new RuntimeException("乐观锁异常：" +FollowOrderDetail.class);
         }
+    }
+
+    /*
+    * web跟单页面的头统计
+    * */
+    @Override
+    public FollowOrderPageVo getFollowOrderPageVo() {
+        FollowOrderPageVo followOrderPageVo = followOrderDetailDao.getFollowOrderPageVoIsClose();//历史跟单手数，历史收益，总平仓单数
+        FollowOrderPageVo followOrderPageVoIsOpen = followOrderDetailDao.getFollowOrderPageVoIsOpen();
+        if(followOrderPageVoIsOpen !=null){
+            followOrderPageVo.setHoldPositionHandNumber(followOrderPageVoIsOpen.getHoldPositionHandNumber() );//持仓手数
+            followOrderPageVo.setHoldPositionProfit(followOrderPageVoIsOpen.getHoldPositionProfit());//持仓收益
+        }
+
+        followOrderPageVo.setClosePositionWinSum(followOrderDetailDao.getFollowOrderPageVoIsCloseProfitNum());//盈利单数
+        followOrderPageVo.setWinRate(DoubleUtil.div(Double.valueOf(followOrderPageVo.getClosePositionWinSum()),
+                Double.valueOf(followOrderPageVo.getClosePositionTotalNumber()),2));//胜率
+        followOrderPageVo.setProfitAndLossRate(DoubleUtil.div(followOrderPageVo.getHistoryProfit(),
+                followOrderPageVo.getHistoryHandNumber(),2));//盈亏效率
+        return followOrderPageVo;
     }
 
     @Override
