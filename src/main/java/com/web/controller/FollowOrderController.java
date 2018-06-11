@@ -55,20 +55,20 @@ public class FollowOrderController {
 
     @RequestMapping(value = "/createFollowOrder.Action")
     @ResponseBody
-    public JSONResult createFollowOrder(String followOrderName,Long accountId,Long varietyId,Integer maxProfit,Double maxProfitNumber,
+    public JSONResult createFollowOrder(String followOrderName,Long accountId,String varietyCode,Integer maxProfit,Double maxProfitNumber,
                                         Integer maxLoss,Double maxLossNumber,Integer accountLoss,Double accountLossNumber,Integer orderPoint,
                                         Integer clientPoint,Double clientPointNumber,Integer followManner,Integer netPositionDirection,
                                         Integer netPositionChange,Integer netPositionFollowNumber,
                                        String followOrderClients){
         try {
-            List<FollowOrderClient> followOrderClients1= new ArrayList<>();
+            List<FollowOrderClient> followOrderClients1 = JSON.parseArray(followOrderClients, FollowOrderClient.class);
             FollowOrder followOrder = new FollowOrder();
             followOrder.setFollowOrderName(followOrderName);
             Account account = new Account();
             account.setId(accountId);
             followOrder.setAccount(account);
             Variety variety = new Variety();
-            variety.setId(varietyId);
+            variety.setVarietyCode(varietyCode);
             followOrder.setVariety(variety);
             followOrder.setMaxProfit(maxProfit);
             followOrder.setMaxProfitNumber(maxProfitNumber);
