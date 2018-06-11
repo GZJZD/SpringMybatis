@@ -532,3 +532,6 @@ input[type='number'],input[type='password']{
 .zhengfan-select{
     width: 30px;
 }
+.layui-input-block {
+    width: 100%;
+}

@@ -166,6 +166,9 @@ function goOn(status){
             fayuan_data.push(json_);
         });
 
+
+
+
         var newjsonObj = JSON.stringify(fayuan_data);
         var data_ = $.parseJSON(newjsonObj);
         var tableId =$("#datails-table");
@@ -179,6 +182,12 @@ function goOn(status){
         $(".detalis-div").show();
 
     }
+
+}
+function setDetalsTitle() {
+        $('.orderName').text($("#followOrderName").val())//策略名称
+
+    ($("#orderPoint").val()==1?'市价':'');
 
 }
 //每个返回按钮事件
@@ -296,7 +305,7 @@ function setStatus(status){
 }
 
 /**
- *   提交
+ *   跟单创建提交
  */
 function commit(){
     var leght = $("#datails-table tbody").find('tr').length;
