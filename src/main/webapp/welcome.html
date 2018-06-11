@@ -112,13 +112,12 @@
 					注意
 				</div>-->
 				<div class="table-case">
-					<div class="table-title orderUserList-id"><span class="glyphicon glyphicon-user"></span>客户列表
-						<button class="table-title create-but" onclick="showCreate()"><i class="layui-icon">&#xe60c;</i> 跟单</button>
-					</div>
-
-					<div class="tab">
-						<table id="table"></table>
-					</div>
+						<div class="table-title orderUserList-id"><span class="glyphicon glyphicon-user"></span>客户列表
+							<button class="table-title create-but" onclick="showCreate()"><i class="layui-icon">&#xe60c;</i> 跟单</button>
+						</div>
+						<div class="tab">
+							<table id="table"></table>
+						</div>
 				</div>
 			</div>
 		</div>
@@ -320,18 +319,18 @@
              */
 			function findByParameter(){
                 var productCode;
-				(($("#product-val-id option:selected").val()) == 'undefined')?(productCode=''):(productCode=($("#product-val-id option:selected").val()));
-				var startTime;
-                (($('#test1').val()) == 'undefined')?(startTime=''):(startTime=($("#test1").val()));
+                var startTime;
                 var endTime;
-                (($('#test2').val()) == 'undefined')?(endTime=''):(endTime=($("#test2").val()));
                 var platformName=$("#platform-id option:selected").val();
-                (($('#platform-id option:selected').val()) == 'undefined')?(platformName=''):(platformName=($("#platform-id option:selected").val()));
                 var agencyName = '';
-                (($('#agencyName-id option:selected').val()) == 'undefined')?(agencyName=''):(agencyName=($("#agencyName-id option:selected").val()));
                 var contract = '';
-                (($('#contract-id option:selected').val()) == 'undefined')?(contract=''):(contract=($("#contract-id option:selected").val()));
                 var userCode = '';
+                (($("#product-val-id option:selected").val()) == 'undefined')?(productCode=''):(productCode=($("#product-val-id option:selected").val()));
+                (($('#test1').val()) == 'undefined')?(startTime=''):(startTime=($("#test1").val()));
+                (($('#test2').val()) == 'undefined')?(endTime=''):(endTime=($("#test2").val()));
+                (($('#platform-id option:selected').val()) == 'undefined')?(platformName=''):(platformName=($("#platform-id option:selected").val()));
+                (($('#agencyName-id option:selected').val()) == 'undefined')?(agencyName=''):(agencyName=($("#agencyName-id option:selected").val()));
+                (($('#contract-id option:selected').val()) == 'undefined')?(contract=''):(contract=($("#contract-id option:selected").val()));
                 (($('#userCode-id option:selected').val()) == 'undefined')?(userCode=''):(userCode=($("#userCode-id option:selected").val()));
                 var url ="orderUser/countOrderUser.Action?productCode="+productCode+'&endTime='+endTime+'&startTime='+startTime+'&platformName='+platformName+'&agencyName='+agencyName+'&contract='+contract+'&userCode='+userCode;
                 $.ajax({

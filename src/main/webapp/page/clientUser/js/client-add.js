@@ -315,7 +315,7 @@ function setStatus(status){
     var netPositionDirection = $("#followManner").val(); //跟单正反向
     var netPositionChange=1; //变化基数
     var netPositionFollowNumber = 1;
-    alert(maxProfit);
+    
     if(followOrderName == ''|| followOrderName == 'undefined'){
         return layer.msg('策略名称不能为空');
     }
