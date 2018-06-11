@@ -190,6 +190,22 @@
       <if test="accountId != null and accountId != -1">
         and f.account_id = #{accountId}
       </if>
+      <if test="startTime != null">
+        and f.start_time >= #{startTime}
+      </if>
+      <if test="startTime != null">
+        and f.start_time &gt;= #{startTime}
+      </if>
+      <if test="endTime != null">
+        and f.start_time &lt;= #{endTime}
+      </if>
+      <if test="status != null">
+        and f.follow_order_status = #{status}
+      </if>
+      <if test="status == null">
+        and f.follow_order_status != 0
+      </if>
+
     </where>
   </sql>
     <sql id="base_List">
