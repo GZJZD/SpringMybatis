@@ -89,7 +89,7 @@ public class FollowOrderController {
             followOrder.setNetPositionDirection(netPositionDirection);
             followOrder.setNetPositionChange(netPositionChange);
             followOrder.setNetPositionFollowNumber(netPositionFollowNumber);
-           followOrderService.createFollowOrder(followOrder,followOrderClients);
+            followOrderService.createFollowOrder(followOrder,followOrderClients);
 
         }catch (Exception e){
             e.printStackTrace();
@@ -140,7 +140,7 @@ public class FollowOrderController {
     @RequestMapping("/getListVariety.Action")
     @ResponseBody
     public String getListVariety(){
-       return JSON.toJSONString(varietyService.getVarietyList());
+        return JSON.toJSONString(varietyService.getVarietyList());
     }
 
 }
