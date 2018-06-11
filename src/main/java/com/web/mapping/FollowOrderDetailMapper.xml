@@ -29,6 +29,15 @@
     <result column="handNumberTotal" property="handNumberTotal"/>
   </resultMap>
 
+  <resultMap id="orderPageMap" type="com.web.pojo.vo.FollowOrderPageVo">
+    <result column="history_hand_number" property="historyHandNumber"/>
+    <result column="history_profit_loss" property="historyProfit"/>
+    <result column="close_position_total_number" property="closePositionTotalNumber"/>
+    <result column="open_hand_number" property="holdPositionHandNumber"/>
+    <result column="open_profit_loss" property="holdPositionProfit"/>
+
+  </resultMap>
+
   <delete id="deleteByPrimaryKey" parameterType="java.lang.Long" >
     delete from follow_order_detail
     where id = #{id}
@@ -153,12 +162,7 @@
     where follow_order_id = #{followOrderId}
 
   </select>
-  <select id="getTotal" resultMap="testMap">
-     select sum(poundage) as text_poundage ,sum(profit_loss) as text
-    from follow_order_detail
-    where follow_order_id = #{followOrderId}
 
-  </select>
     <select id="getNOCloseDetailListByFollowOrderId" resultMap="BaseResultMap">
       select
       id,trade_direction,remain_hand_number,ticket
@@ -166,8 +170,24 @@
       where follow_order_id = #{followOrderId} and (remain_hand_number != 0 and remain_hand_number is not null) or
        (close_time is null and remain_hand_number is null)
     </select>
+    <select id="getFollowOrderPageVoIsClose" resultMap="orderPageMap">
+      select sum(hand_number) history_hand_number, sum(profit_loss) history_profit_loss,count(id) close_position_total_number
+      from follow_order_detail
+      where remain_hand_number is  null and  close_time is not null
+    </select>
+  <select id="getFollowOrderPageVoIsOpen" resultMap="orderPageMap">
+    select sum(hand_number) open_hand_number, sum(profit_loss) open_profit_loss
+    from follow_order_detail
+    where (remain_hand_number != 0 and remain_hand_number is not null) or
+       (close_time is null and remain_hand_number is null)
+  </select>
+  <select id="getFollowOrderPageVoIsCloseProfitNum" resultType="java.lang.Integer">
+    select count(id)
+    from follow_order_detail
+    where remain_hand_number is  null and  close_time  is not null and profit_loss > 0
+  </select>
 
-    <sql id="base_List">
+  <sql id="base_List">
     id,
     client_name,
     variety_name,

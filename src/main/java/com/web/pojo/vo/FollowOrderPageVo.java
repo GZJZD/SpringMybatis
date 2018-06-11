@@ -11,28 +11,28 @@ public class FollowOrderPageVo {
     private Double holdPositionProfit; //持仓收益
 
     //盈亏效率:所有平仓单的平仓盈亏除以手数
-    private Double profitAndLossRateTotalSum=0.0;
+    private Double profitAndLossRate=0.0;
 
     //胜率：所有平仓单中盈利单数除以总平仓单数
-    private Double winRate;//胜率
+    private Double winRate;
+    //总平仓单数
+    private Integer closePositionTotalNumber;
+    //盈利单数
+    private Integer closePositionWinSum;
 
     /**************************************     跟单头所用字段 END     ******************************************/
+
+
+
+
 
     /***************************************     查询条件     ******************************************/
     private Long varietyId;//品种id
     private Long accountId; //账号ID
     private String  startTime; //起始时间
     private String endTime; //结束时间
+    private Integer status; //跟单状态
     /***************************************     查询条件end     ******************************************/
-
-    //手续费总和
-    private Double poundageTotalSum=0.0;
-    //持仓盈亏总和
-    private Double positionGainAndLossTotalSum=0.0;
-    //平仓盈亏总和
-    private Double offsetGainAndLossTotalSum=0.0;
-    //客户盈亏总和
-    private Double clientProfitTotalSum=0.0;
 
     public Double getHistoryHandNumber() {
         return historyHandNumber;
@@ -66,12 +66,12 @@ public class FollowOrderPageVo {
         this.holdPositionProfit = holdPositionProfit;
     }
 
-    public Double getProfitAndLossRateTotalSum() {
-        return profitAndLossRateTotalSum;
+    public Double getProfitAndLossRate() {
+        return profitAndLossRate;
     }
 
-    public void setProfitAndLossRateTotalSum(Double profitAndLossRateTotalSum) {
-        this.profitAndLossRateTotalSum = profitAndLossRateTotalSum;
+    public void setProfitAndLossRate(Double profitAndLossRate) {
+        this.profitAndLossRate = profitAndLossRate;
     }
 
     public Double getWinRate() {
@@ -80,6 +80,14 @@ public class FollowOrderPageVo {
 
     public void setWinRate(Double winRate) {
         this.winRate = winRate;
+    }
+
+    public Integer getClosePositionTotalNumber() {
+        return closePositionTotalNumber;
+    }
+
+    public void setClosePositionTotalNumber(Integer closePositionTotalNumber) {
+        this.closePositionTotalNumber = closePositionTotalNumber;
     }
 
     public Long getVarietyId() {
@@ -114,35 +122,21 @@ public class FollowOrderPageVo {
         this.endTime = endTime;
     }
 
-    public Double getPoundageTotalSum() {
-        return poundageTotalSum;
+    public Integer getStatus() {
+        return status;
     }
 
-    public void setPoundageTotalSum(Double poundageTotalSum) {
-        this.poundageTotalSum = poundageTotalSum;
+    public void setStatus(Integer status) {
+        this.status = status;
     }
 
-    public Double getPositionGainAndLossTotalSum() {
-        return positionGainAndLossTotalSum;
+    public Integer getClosePositionWinSum() {
+        return closePositionWinSum;
     }
 
-    public void setPositionGainAndLossTotalSum(Double positionGainAndLossTotalSum) {
-        this.positionGainAndLossTotalSum = positionGainAndLossTotalSum;
+    public void setClosePositionWinSum(Integer closePositionWinSum) {
+        this.closePositionWinSum = closePositionWinSum;
     }
 
-    public Double getOffsetGainAndLossTotalSum() {
-        return offsetGainAndLossTotalSum;
-    }
 
-    public void setOffsetGainAndLossTotalSum(Double offsetGainAndLossTotalSum) {
-        this.offsetGainAndLossTotalSum = offsetGainAndLossTotalSum;
-    }
-
-    public Double getClientProfitTotalSum() {
-        return clientProfitTotalSum;
-    }
-
-    public void setClientProfitTotalSum(Double clientProfitTotalSum) {
-        this.clientProfitTotalSum = clientProfitTotalSum;
-    }
 }

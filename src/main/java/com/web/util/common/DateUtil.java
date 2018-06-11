@@ -2,9 +2,11 @@ package com.web.util.common;
 
 import java.text.ParsePosition;
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
 
-public class DateUtil {
+public class
+DateUtil {
 
     /**
      * 获取现在时间
@@ -169,6 +171,23 @@ public class DateUtil {
         SimpleDateFormat formatter = new SimpleDateFormat(sformat);
         String dateString = formatter.format(currentTime);
         return dateString;
+    }
+
+    /**
+     * 得到某一天的最后一秒钟
+     */
+    public static Date getEndDate(Date now) {
+        if(now==null){
+            return null;
+        }
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(now);
+        calendar.add(Calendar.DATE, 1);
+        calendar.set(calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH),
+                calendar.get(Calendar.DATE), 0, 0, 0);
+        calendar.add(Calendar.SECOND, -1);
+        now = calendar.getTime();
+        return now;
     }
 
 }

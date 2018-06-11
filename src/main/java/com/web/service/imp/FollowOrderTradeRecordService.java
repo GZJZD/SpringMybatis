@@ -182,7 +182,7 @@ public class FollowOrderTradeRecordService implements IFollowOrderTradeRecordSer
                         }
                     }
                     //设置平仓时间
-                    orderDetail.setCloseTime(orderMsgResult.getTradeTime());
+                    orderDetail.setCloseTime(orderMsgResult.getTradeDate()+orderMsgResult.getTradeTime());
                     //设置平仓价格
                     orderDetail.setClosePrice(orderMsgResult.getTradePrice());
 

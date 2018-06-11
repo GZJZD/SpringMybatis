@@ -7,9 +7,6 @@ import com.web.pojo.FollowOrderClient;
 import com.web.pojo.FollowOrderTradeRecord;
 import com.web.pojo.vo.FollowOrderPageVo;
 import com.web.pojo.vo.FollowOrderVo;
-import com.web.util.query.PageResult;
-import com.web.util.query.QueryObject;
-
 
 import java.util.List;
 
@@ -27,19 +24,14 @@ public interface IFollowOrderService {
     //修改跟单的状态
     void updateFollowOrderStatus(Long followOrderId,Integer status);
 
-   // PageResult getListFollowOrder(QueryObject queryObject);
-
-
-
 
     List<FollowOrder> getListFollowOrderByClientName(String clientName);
 
     FollowOrder getFollowOrder(Long id);
 
-    List<FollowOrderVo> getListFollowOrderVo(Long varietyId, Long accountId);
+    List<FollowOrderVo> getListFollowOrderVo(FollowOrderPageVo followOrderPageVo);
 
     void madeAnOrder(DataSource data);
-
 
 
     void checkLogin( FollowOrder followOrder);
@@ -57,7 +49,6 @@ public interface IFollowOrderService {
 
     void manuallyClosePosition(Long detailId);
 
-    FollowOrderPageVo getFollowOrderPageVo();
 
-    List<FollowOrder> selectListFollowOrder(Long varietyId, Long accountId);
+    List<FollowOrder> selectListFollowOrder(FollowOrderPageVo followOrderPageVo);
 }
