@@ -9,6 +9,8 @@ import com.web.pojo.FollowOrder;
  *@Date: 10:46 2018/5/21
  */
 public class FollowOrderVo {
+
+    /***************************************     跟单列表所用字段     ******************************************/
     //策略
     private FollowOrder followOrder;
 
@@ -36,6 +38,8 @@ public class FollowOrderVo {
     private Integer allTotal;
     //手数
     private Double handNumberTotal;
+    /***************************************     跟单列表所用字段 END     ******************************************/
+
 
 
     public FollowOrder getFollowOrder() {

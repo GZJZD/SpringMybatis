@@ -2,6 +2,7 @@ package com.web.service.imp;
 
 
 import com.alibaba.fastjson.JSON;
+import com.web.common.FollowOrderEnum;
 import com.web.dao.FollowOrderDao;
 import com.web.pojo.*;
 import com.web.pojo.vo.FollowOrderPageVo;
@@ -9,14 +10,9 @@ import com.web.pojo.vo.FollowOrderVo;
 import com.web.pojo.vo.OrderTrade;
 import com.web.pojo.vo.UserLogin;
 import com.web.service.*;
-
-import com.web.common.FollowOrderEnum;
+import com.web.util.FollowOrderGenerateUtil;
 import com.web.util.common.DateUtil;
 import com.web.util.common.DoubleUtil;
-
-import com.web.util.FollowOrderGenerateUtil;
-import com.web.util.query.PageResult;
-import com.web.util.query.QueryObject;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -63,17 +59,13 @@ public class FollowOrderServiceImpl implements IFollowOrderService {
         followOrderDao.insert(followOrder);
     }
 
-    @Override
-    public PageResult getListFollowOrder(QueryObject queryObject) {
-        int rows = followOrderDao.queryForCount(queryObject);
-        if (rows == 0) {
-            return new PageResult(queryObject.getPageSize());
-        }
-        return new PageResult(queryObject.getCurrentPage(), queryObject.getPageSize(), rows, followOrderDao.selectAll(queryObject));
-    }
 
-
-
+    /**
+     * 通过客户的名字找到对应的跟单集合
+     *@Author: May
+     *@param clientName
+     *@Date: 14:30 2018/5/22
+     */
     @Override
     public List<FollowOrder> getListFollowOrderByClientName(String clientName) {
 
@@ -85,7 +77,11 @@ public class FollowOrderServiceImpl implements IFollowOrderService {
         return null;
     }
 
-
+    /** 返回跟单
+     *@Author: May
+     *@param
+     *@Date: 12:48 2018/5/8
+     */
     @Override
     public FollowOrder getFollowOrder(Long id) {
         return followOrderDao.selectByPrimaryKey(id);
@@ -98,7 +94,9 @@ public class FollowOrderServiceImpl implements IFollowOrderService {
     public List<FollowOrder> selectListFollowOrder(Long varietyId, Long accountId) {
         return followOrderDao.selectListFollowOrder(varietyId,accountId);
     }
-
+    /*
+    * 修改跟单的状态
+    * */
     @Override
     public void updateFollowOrderStatus(Long followOrderId, Integer status) {
         String startTime = null;
@@ -108,6 +106,14 @@ public class FollowOrderServiceImpl implements IFollowOrderService {
         followOrderDao.updateFollowOrderStatus(followOrderId, status, startTime);
     }
 
+    /*
+     *
+     *  返回页面的跟单映射
+     * @author may
+     * @date 2018/5/25 15:37
+     * @param
+     * @return
+     */
     @Override
     public List<FollowOrderVo> getListFollowOrderVo(Long varietyId, Long accountId ) {
         List<FollowOrderVo> followOrderVos = new ArrayList<>();
@@ -143,29 +149,25 @@ public class FollowOrderServiceImpl implements IFollowOrderService {
                 followOrderVo.setClientProfit(0.0);
                 //盈亏率
                 followOrderVo.setProfitAndLossRate(DoubleUtil.div(followOrderVo.getOffsetGainAndLoss()==null? 0.0 :followOrderVo.getOffsetGainAndLoss(),
-                        followOrderVo.getAllTotal() == 0.0 ?1.0 :followOrderVo.getPoundageTotal(), 2));
+                        followOrderVo.getAllTotal() == null ?1.0 :followOrderVo.getPoundageTotal(), 2));
                 //跟单成功
                 followOrderVo.setSuccessTotal(followOrderTradeRecordService.getFollowOrderSuccessTotalAmount(followOrder.getId()));
                 //跟单总数
                 followOrderVo.setAllTotal(followOrderTradeRecordService.getFollowOrderTotalAmount(followOrder.getId()));
 
                 followOrderVos.add(followOrderVo);
-                followOrderPageVo.setPositionGainAndLossTotalSum(DoubleUtil.add(followOrderVo.getPositionGainAndLoss(),
-                        followOrderPageVo.getPositionGainAndLossTotalSum()));
-                followOrderPageVo.setClientProfitTotalSum(DoubleUtil.add(followOrderVo.getClientProfit(),
-                        followOrderPageVo.getClientProfitTotalSum()));
-                followOrderPageVo.setPoundageTotalSum(DoubleUtil.add(followOrderVo.getPoundageTotal(),
-                        followOrderPageVo.getPoundageTotalSum()));
-                followOrderPageVo.setOffsetGainAndLossTotalSum(DoubleUtil.add(followOrderVo.getOffsetGainAndLoss(),
-                        followOrderPageVo.getOffsetGainAndLossTotalSum()));
+
             }
         }
-        followOrderPageVo.setProfitAndLossRateTotalSum(DoubleUtil.div(followOrderPageVo.getOffsetGainAndLossTotalSum(),
-                followOrderPageVo.getPoundageTotalSum() == 0.0 ? 1.0: followOrderPageVo.getPoundageTotalSum(),2));
         return followOrderVos;
     }
 
-
+    /**
+     * 实现交易逻辑
+     *@Author: May
+     *@param data
+     *@Date: 14:24 2018/4/23
+     */
     @Override
     public synchronized void madeAnOrder(DataSource data) {
         //1.先获取符合的跟单
@@ -194,7 +196,9 @@ public class FollowOrderServiceImpl implements IFollowOrderService {
         }
     }
 
-
+    /*
+    * 实现净头寸交易
+    * */
     public void netPositionOrder(FollowOrder followOrder, DataSource data) {
         //判断策略的状态是否在交易中,不在交易就进行判断
         if (followOrder.getNetPositionStatus().equals(FollowOrderEnum.FollowStatus.NET_POSITION_TRADING_PAUSE.getIndex())) {
@@ -302,11 +306,16 @@ public class FollowOrderServiceImpl implements IFollowOrderService {
         }
     }
 
+    /*
+    * 实现跟客户的交易
+    * */
     public void followUserOrder() {
         //跟客户的策略判断
     }
 
-
+    /*
+    * 净头寸值计算
+    * */
     private synchronized Double getNowNetPositionSum(DataSource data, FollowOrder followOrder) {
         //获取现有的净头寸
         Double netPositionSum = followOrder.getNetPositionSum();
@@ -321,7 +330,12 @@ public class FollowOrderServiceImpl implements IFollowOrderService {
         updateFollowOrder(followOrder);
         return netPositionSum;
     }
-
+    /*
+    **判断账号是否登录了
+     *@Author: May
+     *@param
+     *@Date: 12:12 2zero18/5/1zero
+     */
     public void checkLogin(FollowOrder followOrder) {
         //todo 跟单的启动是一创建就启动,还是第一个客户过来再启动?
         if (followOrder.getFollowOrderStatus().equals(FollowOrderEnum.FollowStatus.FOLLOW_ORDER_STOP.getIndex())) {
@@ -339,6 +353,14 @@ public class FollowOrderServiceImpl implements IFollowOrderService {
 
         }
     }
+    /*
+     *
+     *   创建跟单
+     * @author may
+     * @date 2018/6/4 17:03
+     * @param
+     * @return
+     */
     @Override
     public void createFollowOrder(FollowOrder followOrder, List<FollowOrderClient> followOrderClients) {
         FollowOrder order = new FollowOrder();
@@ -437,7 +459,13 @@ public class FollowOrderServiceImpl implements IFollowOrderService {
     }
 */
 
-
+    /**
+     * 封装交易对象，新增交易记录，发送交易信息
+     *
+     * @param
+     * @Author: May
+     * @Date: 11:38 2zero18/5/1zero
+     */
     public void sendMsgByTrade(FollowOrder followOrder, Integer orderDirection, Integer openClose,
                                 Double handNumber,String newTicket,String ticket,String varietyCode) {
 
@@ -498,6 +526,14 @@ public class FollowOrderServiceImpl implements IFollowOrderService {
 
     }
 
+    /*
+     *
+     *   平所有未平的跟单
+     * @author may
+     * @date 2018/6/5 19:08
+     * @param
+     * @return
+     */
     @Override
     public void closeAllOrderByFollowOrderId(Long followOrderId) {
         List<FollowOrderDetail> orderDetails = followOrderDetailService.getNOCloseDetailListByFollowOrderId(followOrderId);
@@ -512,6 +548,15 @@ public class FollowOrderServiceImpl implements IFollowOrderService {
                     orderDetail.getTicket(),followOrder.getVariety().getVarietyCode());
         }
     }
+
+    /*
+     *
+     *   通过明细得id，进行手动平仓
+     * @author may
+     * @date 2018/6/6 17:13
+     * @param
+     * @return
+     */
 
     @Override
     public void manuallyClosePosition(Long detailId) {
@@ -528,6 +573,14 @@ public class FollowOrderServiceImpl implements IFollowOrderService {
                 orderDetail.getTicket(),followOrder.getVariety().getVarietyCode());
     }
 
+    /*
+     *
+     *   返回页面总计算
+     * @author may
+     * @date 2018/6/7 14:33
+     * @param
+     * @return
+     */
     @Override
     public FollowOrderPageVo getFollowOrderPageVo() {
         return followOrderPageVo;

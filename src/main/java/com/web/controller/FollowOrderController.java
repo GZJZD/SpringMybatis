@@ -13,14 +13,12 @@ import com.web.service.IFollowOrderDetailService;
 import com.web.service.IFollowOrderService;
 import com.web.service.IVarietyService;
 import com.web.util.JSONResult;
-import com.web.util.query.PageResult;
-import com.web.util.query.QueryObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -38,12 +36,7 @@ public class FollowOrderController {
     @Autowired
     private IVarietyService varietyService;
 
-    @RequestMapping("/pageTest")
-    @ResponseBody
-    public PageResult getOrderTest(@ModelAttribute("qo") QueryObject queryObject){
-        PageResult result = followOrderService.getListFollowOrder(queryObject);
-        return result;
-    }
+
 
     @RequestMapping(value = "/getPositionDetails.Action")
     @ResponseBody
@@ -66,8 +59,9 @@ public class FollowOrderController {
                                         Integer maxLoss,Double maxLossNumber,Integer accountLoss,Double accountLossNumber,Integer orderPoint,
                                         Integer clientPoint,Double clientPointNumber,Integer followManner,Integer netPositionDirection,
                                         Integer netPositionChange,Integer netPositionFollowNumber,
-                                        List<FollowOrderClient> followOrderClients){
+                                       String followOrderClients){
         try {
+            List<FollowOrderClient> followOrderClients1= new ArrayList<>();
             FollowOrder followOrder = new FollowOrder();
             followOrder.setFollowOrderName(followOrderName);
             Account account = new Account();
@@ -89,7 +83,7 @@ public class FollowOrderController {
             followOrder.setNetPositionDirection(netPositionDirection);
             followOrder.setNetPositionChange(netPositionChange);
             followOrder.setNetPositionFollowNumber(netPositionFollowNumber);
-           followOrderService.createFollowOrder(followOrder,followOrderClients);
+           followOrderService.createFollowOrder(followOrder,followOrderClients1);
 
         }catch (Exception e){
             e.printStackTrace();
@@ -131,6 +125,9 @@ public class FollowOrderController {
         return new JSONResult("手动平仓成功");
     }
 
+    /*
+    *
+    * */
     @RequestMapping("/getFollowOrderPageVo.Action")
     @ResponseBody
     public FollowOrderPageVo getFollowOrderPageVo(){
