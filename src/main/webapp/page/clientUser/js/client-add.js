@@ -173,7 +173,7 @@ function goOn(status){
             $(tableId).bootstrapTable('destroy');
 
         }
-            showTableBase(tableId,data_);
+        showTableBase(tableId,data_);
         //设置参数
 
         $(".detalis-div").show();
@@ -273,14 +273,14 @@ function setStatus(status){
     //单笔最大止盈
     if(status == 'maxProfit'){
         var val = $('input[name="maxProfit"]:checked').val();
-         (val==1? $("#maxProfit-id").hide() : $("#maxProfit-id").show() );
+        (val==1? $("#maxProfit-id").hide() : $("#maxProfit-id").show() );
     }
     //单笔最大止损
     if(status == 'maxLoss'){
         var val = $('input[name="maxLoss"]:checked').val();
         $('#maxLoss').val(val);
         (val==1? $("#maxLoss-id").hide() : $("#maxLoss-id").show() );
-       }
+    }
     //账户止损
     if(status == 'accountLoss'){
         var val = $('input[name="accountLoss"]:checked').val();
@@ -298,10 +298,10 @@ function setStatus(status){
 /**
  *   提交
  */
- function commit(){
+function commit(){
     var leght = $("#datails-table tbody").find('tr').length;
     var followOrderName = $("#followOrderName").val();//策略名称
-    var id  = $("#GD-id option:selected").val();//跟单id
+    var id  = $("#GD-id option:selected").val();//跟单人id
     var varietyCode =  parent.$("#product-val-id option:selected").val(); //商品
     var maxProfit = $("#maxProfit").val(); //最大止盈
     var maxProfitNumber = $("#maxProfit-id").val(); //止盈点数
@@ -312,10 +312,10 @@ function setStatus(status){
     var orderPoint = $("#orderPoint").val();//下单点位
     var clientPoint = $(".clientPoint-class option:selected").val(); //比客户点位
     var clientPointNumber = $('#clientPointNumber-id').val(); //点位
-    var netPositionDirection = $("#followManner").val(); //跟单正反向
+   var followManner = $("#followManner").val(); //跟单正反向
+    var netPositionDirection='1';
     var netPositionChange=1; //变化基数
-    var netPositionFollowNumber = 1;
-    
+    var netPositionFollowNumber = 1;//手数
     if(followOrderName == ''|| followOrderName == 'undefined'){
         return layer.msg('策略名称不能为空');
     }
@@ -334,27 +334,29 @@ function setStatus(status){
         var json_ = {"userCode":userCode,"followDirection":followDirection,"handNumberType":handNumberType,"followHandNumber":followHandNumber};
         fayuan_data.push(json_);
     });
+    var str = JSON.stringify(fayuan_data);
     $.ajax({
-        url:"/followOrder/createFollowOrder.Action",
+        url:"/sm/followOrder/createFollowOrder.Action",
         type:'POST', //GET
         async:true,    //或false,是否异步
         data:{
-            followOrderClients:fayuan_data,
-            followOrderName:followOrderName,
-            id:id,
-            varietyCode:varietyCode,
-            maxProfit:maxProfit,
-            maxProfitNumber : maxProfitNumber,
-            maxLoss:maxLoss,
-            maxLossNumber : maxLossNumber,
-            accountLoss:accountLoss,
-            accountLossNumber:accountLossNumber,
-            orderPoint:orderPoint,
-            clientPoint :clientPoint,
-            clientPointNumber:clientPointNumber,
-            netPositionDirection:netPositionDirection,
-            netPositionChange:netPositionChange,
-            netPositionFollowNumber:netPositionFollowNumber,
+            followOrderClients:str, // 用户数组字符串
+            followOrderName:followOrderName, //策略名称
+            accountId:id,//跟单人id
+            varietyCode:varietyCode, //商品id
+            maxProfit:maxProfit,//最大止盈
+            maxProfitNumber : maxProfitNumber,//止盈点数
+            maxLoss:maxLoss, //止损
+            maxLossNumber : maxLossNumber,//止损点数
+            accountLoss:accountLoss,//账户止损
+            accountLossNumber:accountLossNumber, //账户止损金额
+            orderPoint:orderPoint,//下单点位
+            clientPoint :clientPoint, //比客户点位
+            clientPointNumber:clientPointNumber, //点位
+            netPositionDirection:netPositionDirection,//跟单正反向
+            netPositionChange:netPositionChange,//变化基数
+            netPositionFollowNumber:netPositionFollowNumber,//手数
+            followManner :followManner //跟单方式:用户or净头寸
         },
         // timeout:5000,    //超时时间
         dataType:'json',    //返回的数据格式：json/xml/html/script/jsonp/text
@@ -376,6 +378,6 @@ function setStatus(status){
  * 参数设置 区块js动态操作
  * */
 
- function disPaly(){
+function disPaly(){
 
 }

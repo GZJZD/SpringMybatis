@@ -1,5 +1,5 @@
+var url_="http://localhost:8080/sm";
 $(function() {
-
 	dateShow();
 
 	//加载弹出层
