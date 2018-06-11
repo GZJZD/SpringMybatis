@@ -196,6 +196,14 @@ function dateShow() {
 		laydate.render({
 			elem: '#test2'
 		});
+        //常规用法
+        laydate.render({
+            elem: '#history-start-time'
+        });
+        //常规用法
+        laydate.render({
+            elem: '#history-end-time'
+        });
 
 		//国际版
 		laydate.render({
