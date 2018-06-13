@@ -109,14 +109,106 @@
 						</div>
 						<div class="layui-tab-item layui-show">
 
-							<table id="detailTable" class="table-bordered table-striped">
+							<div class="clientSearch" >
+								<label class="layui-form-label">按起止时间：</label>
+								<div class="layui-inline if-ok bili-class">
+									<div class="layui-input-inline">
+										<input type="text" class="layui-input" id="test1" placeholder="起始日期">
+										<input type="text" class="layui-input" id="test2" placeholder="终止日期">
+									</div>
+								</div>
+							</div>
+							<div class="clientSearch" >
+								<label class="layui-form-label">是否平仓</label>
+								<div class="layui-inline if-ok bili-class">
+									<div class="layui-input-inline">
+										<select id="detailOpenOrClose"  class="form-contro search-bar">
+											<option value="-1" selected>全部</option>
+											<option value="1" >已平仓</option>
+											<option value="0" >持仓</option>
+										</select>
+									</div>
+								</div>
+							</div>
+							<div class=" clientSearch">
+								<button type="button " class="btn btn-primary">筛选</button>
+							</div>
 
+							<table id="detailTable" class="table-bordered table-striped">
 							</table>
+						</div>
+
+						<div class="layui-tab-item" style="width: 100%">
+
+							<div class=" clientSearch" >
+								<label class="layui-form-label">按客户</label>
+								<div class="layui-inline if-ok bili-class"  >
+									<div class="layui-input-inline">
+										<select id="clientName" class="form-control search-bar">
+											<option value="-1" selected>全部</option>
+											<option value="1072972" >1072972</option>
+										</select>
+									</div>
+								</div>
+							</div>
+							<div class="clientSearch" >
+								<label class="layui-form-label">是否平仓</label>
+								<div class="layui-inline if-ok bili-class">
+									<div class="layui-input-inline">
+										<select id="clientOpenOrClose"  class="form-contro search-bar">
+											<option value="-1" selected>全部</option>
+											<option value="1" >已平仓</option>
+											<option value="0" >持仓</option>
+										</select>
+									</div>
+								</div>
+							</div>
+							<div class=" clientSearch">
+								<label class="layui-form-label">是否跟单仓</label>
+								<div class="layui-inline if-ok bili-class"  >
+									<div class="layui-input-inline">
+										<select id="clientFollowOrder" class="form-control search-bar">
+											<option value="-1" selected>全部</option>
+											<option value="1">已跟单</option>
+											<option value="0">未跟单</option>
+										</select>
+									</div>
+								</div>
+							</div>
+
+							<div class=" clientSearch">
+								<button type="button " class="btn btn-primary">筛选</button>
+							</div>
+
+							<div class="table-case">
+								<div class="tab">
+									<table id="clientTable" class="table-bordered table-striped">
+									</table>
+								</div>
+
+							</div>
+						</div>
+						<div class="layui-tab-item">
+							<div class="row " >
+								<span   class="col-md-3 profile-desc-text font-three">跟单账号：</span>
+								<span  class="col-md-3 profile-desc-text font-three" id="accountName"></span>
+								<span  class="col-md-3 profile-desc-text font-three">品种：</span>
+								<span   class="col-md-3 profile-desc-text font-three" id="varietyName"></span>
+							</div>
+							<div class="row " >
+								<span   class="col-md-3 profile-desc-text font-three">单笔最大止盈：</span>
+								<span  class="col-md-3 profile-desc-text font-three" id="maxProfitNumber"></span>
+								<span  class="col-md-3 profile-desc-text font-three">单笔最大止损：</span>
+								<span   class="col-md-3 profile-desc-text font-three" id="maxLossNumber"></span>
+							</div>
+							<div class="row " >
+								<span   class="col-md-3 profile-desc-text font-three">下单点位：</span>
+								<span  class="col-md-3 profile-desc-text font-three" id="orderPointNumber"></span>
+								<span  class="col-md-3 profile-desc-text font-three">账号止损：</span>
+								<span   class="col-md-3 profile-desc-text font-three" id="accountLossNumber"></span>
+							</div>
 
 						</div>
-						<div class="layui-tab-item">内容3</div>
-						<div class="layui-tab-item">内容4</div>
-						<div class="layui-tab-item">内容5</div>
 					</div>
 				</div>
 
