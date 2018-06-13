@@ -66,7 +66,7 @@ public class FollowOrderDetailServiceImpl implements IFollowOrderDetailService {
                 netPositionDetailVo.setNetPositionSum(tradeRecord.getNetPositionSum());
                 //设置品种
                 Variety variety = varietyService.getVariety(tradeRecord.getVarietyId());
-                netPositionDetailVo.setVarietyName("黄金");
+                netPositionDetailVo.setVarietyName(variety.getVarietyName());
                 //设置开平
                 netPositionDetailVo.setOpenCloseType(tradeRecord.getOpenCloseType());
                 //设置手数
@@ -116,8 +116,13 @@ public class FollowOrderDetailServiceImpl implements IFollowOrderDetailService {
     }
 
     @Override
-    public FollowOrderVo getCommissionTotalAndHandNumTotal(Long followOrderId) {
-        return followOrderDetailDao.getCommissionTotalAndHandNumTotal(followOrderId);
+    public Double getOpenHandNumber(Long followOrderId) {
+        return followOrderDetailDao.getOpenHandNumber(followOrderId);
+    }
+
+    @Override
+    public Double getCommissionTotal(Long followOrderId) {
+        return followOrderDetailDao.getCommissionTotal(followOrderId);
     }
 
     @Override
@@ -137,14 +142,21 @@ public class FollowOrderDetailServiceImpl implements IFollowOrderDetailService {
         FollowOrderPageVo followOrderPageVoIsOpen = followOrderDetailDao.getFollowOrderPageVoIsOpen();
         if(followOrderPageVoIsOpen !=null){
             followOrderPageVo.setHoldPositionHandNumber(followOrderPageVoIsOpen.getHoldPositionHandNumber() );//持仓手数
-            followOrderPageVo.setHoldPositionProfit(followOrderPageVoIsOpen.getHoldPositionProfit());//持仓收益
+            followOrderPageVo.setHoldPositionProfit(followOrderPageVoIsOpen.getHoldPositionProfit()==null?0.0:followOrderPageVoIsOpen.getHoldPositionProfit());//持仓收益
+        }else{
+            followOrderPageVo.setHoldPositionHandNumber(0.0);
+            followOrderPageVo.setHoldPositionProfit(0.0);
         }
-
         followOrderPageVo.setClosePositionWinSum(followOrderDetailDao.getFollowOrderPageVoIsCloseProfitNum());//盈利单数
         followOrderPageVo.setWinRate(DoubleUtil.div(Double.valueOf(followOrderPageVo.getClosePositionWinSum()),
                 Double.valueOf(followOrderPageVo.getClosePositionTotalNumber()),2));//胜率
+
+        followOrderPageVo.setWinRate(DoubleUtil.mul(followOrderPageVo.getWinRate(),100.0));//胜率 * 100
+        //总手数=历史手数+持仓手数
+        Double handNumberTotal = DoubleUtil.add(followOrderPageVo.getHistoryHandNumber(),followOrderPageVo.getHoldPositionHandNumber());
         followOrderPageVo.setProfitAndLossRate(DoubleUtil.div(followOrderPageVo.getHistoryProfit(),
-                followOrderPageVo.getHistoryHandNumber(),2));//盈亏效率
+                handNumberTotal,2));//盈亏效率
+
         return followOrderPageVo;
     }
 

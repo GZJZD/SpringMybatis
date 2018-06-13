@@ -61,8 +61,12 @@ public interface IFollowOrderDetailService {
      * @param
      * @return
      */
-    FollowOrderVo getCommissionTotalAndHandNumTotal(Long followOrderId);
+    Double getCommissionTotal(Long followOrderId);
 
+    /*
+    * 统计对应跟单的开仓总手数
+    * */
+    Double getOpenHandNumber(Long followOrderId);
    /*
     *
     *   获取未平的所有明细

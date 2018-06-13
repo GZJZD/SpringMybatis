@@ -10,7 +10,7 @@ import com.web.pojo.FollowOrder;
  */
 public class FollowOrderVo {
 
-    /***************************************     跟单列表所用字段     ******************************************/
+
     //策略
     private FollowOrder followOrder;
 
@@ -34,11 +34,10 @@ public class FollowOrderVo {
 
     //跟单成功率:成功的交易数
     private Integer successTotal;
-    //全部的交易数
+    //全部的跟单数
     private Integer allTotal;
     //手数
     private Double handNumberTotal;
-    /***************************************     跟单列表所用字段 END     ******************************************/
 
 
 

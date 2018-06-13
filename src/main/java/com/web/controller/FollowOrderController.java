@@ -9,6 +9,7 @@ import com.web.pojo.Variety;
 import com.web.pojo.vo.FollowOrderPageVo;
 import com.web.pojo.vo.FollowOrderVo;
 import com.web.pojo.vo.NetPositionDetailVo;
+import com.web.service.IFollowOrderClientService;
 import com.web.service.IFollowOrderDetailService;
 import com.web.service.IFollowOrderService;
 import com.web.service.IVarietyService;
@@ -19,9 +20,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import java.util.ArrayList;
 import java.util.List;
-import java.util.logging.LogManager;
 
 /**
  * created by may on 2018/5/23.
@@ -37,17 +36,42 @@ public class FollowOrderController {
     private IFollowOrderDetailService followOrderDetailService;
     @Autowired
     private IVarietyService varietyService;
+    @Autowired
+    private IFollowOrderClientService followOrderClientService;
 
 
-
-    @RequestMapping(value = "/getPositionDetails.Action")
+    /*
+     * 跟单明细列表展示
+     * @param followOrderId 跟单id
+     * @return
+     */
+    @RequestMapping(value = "/getListDetails.Action")
     @ResponseBody
-    public  List<NetPositionDetailVo> getPositionDetails( Long followOrderId){
-        List<NetPositionDetailVo> netPositionDetailVos = followOrderDetailService.
-                getDetailListByFollowOrderId(followOrderId);
-        return netPositionDetailVos;
+    public  List<?> getListDetails( Long followOrderId){
+        FollowOrder followOrder = followOrderService.getFollowOrder(followOrderId);
+        if(followOrder!=null){
+            if(followOrder.getFollowManner().equals(FollowOrderEnum.FollowStatus.FOLLOWMANNER_NET_POSITION.getIndex())){
+               //净头寸
+                List<NetPositionDetailVo> netPositionDetailVos = followOrderDetailService.
+                        getDetailListByFollowOrderId(followOrderId);
+                return netPositionDetailVos;
+            }else{
+                //客户
+                return null;
+            }
+        }
+        return null;
     }
 
+    /*
+     * 跟单列表展示
+     * @param varietyId 品种id
+     * @param accountId 账号id
+     * @param endTime 结束时间
+     * @param startTime 开始时间
+     * @param status 跟单状态
+     * @return
+     */
     @RequestMapping("/getListFollowOrder.Action")
     @ResponseBody
     public List<FollowOrderVo> getListFollowOrder(Long varietyId,Long accountId,String endTime ,String startTime,Integer status ){
@@ -55,17 +79,39 @@ public class FollowOrderController {
         followOrderPageVo.setVarietyId(varietyId);
         followOrderPageVo.setStatus(status);
         followOrderPageVo.setAccountId(accountId);
-        if(endTime != null ){
+        if(endTime != null && !"".equals(endTime)){
             String date = DateUtil.dateToStrLong(DateUtil.getEndDate(DateUtil.strToDate(endTime)));
             followOrderPageVo.setEndTime(date);
         }
-        if(startTime != null){
+        if(startTime != null && !"".equals(startTime)){
             followOrderPageVo.setStartTime(startTime);
         }
         List<FollowOrderVo> listFollowOrderVo = followOrderService.getListFollowOrderVo(followOrderPageVo);
         return listFollowOrderVo;
     }
 
+    /*
+     * 创建跟单
+     *
+     * @param followOrderName：跟单名称
+     * @param accountId：账号id
+     * @param varietyCode：品种名称
+     * @param maxProfit：最大止盈
+     * @param maxProfitNumber：最大止盈数
+     * @param maxLoss：最大止损
+     * @param maxLossNumber：最大止损数
+     * @param accountLoss：账户止损
+     * @param accountLossNumber：账户止损数
+     * @param orderPoint：下单点位
+     * @param clientPoint：客户点位
+     * @param clientPointNumber：客户点位数
+     * @param followManner：跟单方式
+     * @param netPositionDirection：净头寸方向
+     * @param netPositionChange：净头寸变化值
+     * @param netPositionFollowNumber：跟几首
+     * @param followOrderClients：跟单与客户的关联表
+     * @return
+     */
     @RequestMapping(value = "/createFollowOrder.Action")
     @ResponseBody
     public JSONResult createFollowOrder(String followOrderName,Long accountId,String varietyCode,Integer maxProfit,Double maxProfitNumber,
@@ -93,11 +139,11 @@ public class FollowOrderController {
             followOrder.setClientPoint(clientPoint);
             followOrder.setClientPointNumber(clientPointNumber);
             followOrder.setFollowManner(followManner);
-            followOrder.setNetPositionDirection(netPositionDirection);
-            followOrder.setNetPositionChange(netPositionChange);
-            followOrder.setNetPositionFollowNumber(netPositionFollowNumber);
-
-
+            if(followOrder.getFollowManner().equals(FollowOrderEnum.FollowStatus.FOLLOWMANNER_NET_POSITION.getIndex())){
+                followOrder.setNetPositionDirection(netPositionDirection);
+                followOrder.setNetPositionChange(netPositionChange);
+                followOrder.setNetPositionFollowNumber(netPositionFollowNumber);
+            }
 
            followOrderService.createFollowOrder(followOrder,followOrderClients1);
 
@@ -108,6 +154,12 @@ public class FollowOrderController {
         }
         return new JSONResult("创建跟单成功");
     }
+    /*
+     *  跟单状态修改
+     * @param   id  跟单id
+     * @param   status  跟单状态
+     * @return
+     */
     @RequestMapping(value = "/updateFollowOrderStatus.Action")
     @ResponseBody
     public JSONResult updateFollowOrderStatus(Long id,Integer status){
@@ -125,9 +177,7 @@ public class FollowOrderController {
     /*
      *
      *   手动平仓
-     * @author may
-     * @date 2018/6/6 16:46
-     * @param
+     * @param detailId 明细id
      * @return
      */
     @RequestMapping("/manuallyClosePosition.Action")
@@ -143,7 +193,7 @@ public class FollowOrderController {
     }
 
     /*
-    *
+    * 跟单列表头展示
     * */
     @RequestMapping("/getFollowOrderPageVo.Action")
     @ResponseBody
@@ -151,10 +201,63 @@ public class FollowOrderController {
         return followOrderDetailService.getFollowOrderPageVo();
     }
 
+    /*
+     *   品种展示
+     */
     @RequestMapping("/getListVariety.Action")
     @ResponseBody
     public String getListVariety(){
         return JSON.toJSONString(varietyService.getVarietyList());
+    }
+
+    /*
+    * 修改跟单
+    * */
+    @RequestMapping("/updateFollowOrder.Action")
+    @ResponseBody
+    public JSONResult updateFollowOrder(Long id,String followOrderName,Long accountId,String varietyCode,Integer maxProfit,Double maxProfitNumber,
+                                        Integer maxLoss,Double maxLossNumber,Integer accountLoss,Double accountLossNumber,Integer orderPoint,
+                                        Integer clientPoint,Double clientPointNumber,Integer followManner,Integer netPositionDirection,
+                                        Integer netPositionChange,Integer netPositionFollowNumber,
+                                        String followOrderClients){
+        try {
+            FollowOrder followOrder = followOrderService.getFollowOrder(id);
+            if(followOrder !=null){
+                List<FollowOrderClient> followOrderClients1 = JSON.parseArray(followOrderClients, FollowOrderClient.class);
+                followOrder.setFollowOrderName(followOrderName);
+                Account account = new Account();
+                account.setId(accountId);
+                followOrder.setAccount(account);
+                Variety variety = new Variety();
+                variety.setVarietyCode(varietyCode);
+                followOrder.setVariety(variety);
+                followOrder.setMaxProfit(maxProfit);
+                followOrder.setMaxProfitNumber(maxProfitNumber);
+                followOrder.setMaxLoss(maxLoss);
+                followOrder.setMaxLossNumber(maxLossNumber);
+                followOrder.setAccountLoss(accountLoss);
+                followOrder.setAccountLossNumber(accountLossNumber);
+                followOrder.setOrderPoint(orderPoint);
+                followOrder.setClientPoint(clientPoint);
+                followOrder.setClientPointNumber(clientPointNumber);
+                followOrder.setFollowManner(followManner);
+                if(followOrder.getFollowManner().equals(FollowOrderEnum.FollowStatus.FOLLOWMANNER_NET_POSITION.getIndex())){
+                    followOrder.setNetPositionDirection(netPositionDirection);
+                    followOrder.setNetPositionChange(netPositionChange);
+                    followOrder.setNetPositionFollowNumber(netPositionFollowNumber);
+                }
+                followOrderService.updateFollowOrder(followOrder);
+                for (FollowOrderClient followOrderClient : followOrderClients1) {
+
+                    followOrderClientService.update(followOrderClient);
+                }
+            }
+
+        }catch (Exception e){
+            e.printStackTrace();
+            return new JSONResult(false,"修改跟单失败");
+        }
+        return new JSONResult("修改成功");
     }
 
 }

@@ -156,8 +156,8 @@
     from follow_order_detail
     where follow_order_id = #{followOrderId} and close_time is not  null
   </select>
-  <select id="getCommissionTotalAndHandNumTotal" resultMap="testMap">
-    select sum(poundage) as poundageTotal,sum(hand_number) as handNumberTotal
+  <select id="getCommissionTotal" resultType="java.lang.Double">
+    select sum(poundage) as poundageTotal
     from follow_order_detail
     where follow_order_id = #{followOrderId}
 
@@ -185,6 +185,11 @@
     select count(id)
     from follow_order_detail
     where remain_hand_number is  null and  close_time  is not null and profit_loss > 0
+  </select>
+  <select id="getOpenHandNumber" resultType="java.lang.Double">
+    select sum(hand_number)
+     from follow_order_detail
+     where follow_order_id = #{followOrderId} and close_time is null
   </select>
 
   <sql id="base_List">
