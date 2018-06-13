@@ -10,15 +10,25 @@ public class OrderUserDetailsVo {
     private String lastOrderTime;//最近下单时间
     private String agencyName;//代理人
     private Integer doOrderDays;//做单天数
+    private Long countNumber;
     private Double winRate;//胜率
     private Double serviceChargeTotal;//手续费
     private Double inMoney;//入金
     private Double outMoney;//出金
+    private Double remainMoney;//账户余额
     private String createTime;//创建时间
     private Double position_gain_and_loss;//持仓盈亏
     private Double offset_gain_and_loss;//平仓盈亏
     private List<OrderUser>holdList;//持仓记录
     private List<OrderUser>profitList; //平仓记录
+
+    public Long getCountNumber() {
+        return countNumber;
+    }
+
+    public void setCountNumber(Long countNumber) {
+        this.countNumber = countNumber;
+    }
 
     public Double getPosition_gain_and_loss() {
         return position_gain_and_loss;
@@ -130,5 +140,13 @@ public class OrderUserDetailsVo {
 
     public void setProfitList(List<OrderUser> profitList) {
         this.profitList = profitList;
+    }
+
+    public Double getRemainMoney() {
+        return remainMoney;
+    }
+
+    public void setRemainMoney(Double remainMoney) {
+        this.remainMoney = remainMoney;
     }
 }

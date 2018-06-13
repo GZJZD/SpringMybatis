@@ -126,7 +126,7 @@ public class OrderUserServiceImpl implements OrderUserService {
 
     /**
      *
-     * @param dataSource
+     * @param dataSource tcp 数据包
      * @return
      */
     public String saveClose(DataSource dataSource){
@@ -149,7 +149,13 @@ public class OrderUserServiceImpl implements OrderUserService {
 
 
 
-    //通过开仓单号 查询交易信息
+
+
+    /**
+     * //通过开仓单号 查询交易信息
+     * @param ticket 开仓单号
+     * @return
+     */
     public OrderUser findByTicket(String  ticket){
         OrderUser orderUser = new OrderUser();
         if(ticket != null && !StringUtils.isEmpty(ticket)){
@@ -158,7 +164,11 @@ public class OrderUserServiceImpl implements OrderUserService {
         return orderUser;
     }
 
-
+    /**
+     * 平仓
+     * @param orderUser 平仓数据对象
+     * @return
+     */
     public String update(OrderUser orderUser){
          String message =null;
         if(orderUser != null){
@@ -228,7 +238,12 @@ public class OrderUserServiceImpl implements OrderUserService {
     }
 
     /**
-     * 根据用户id & 时间 & 商品
+     * 条件查询
+     * @param list  用户id集合
+     * @param startTime 开始时间
+     * @param endTime 结束时间
+     * @param productCode 产品代码
+     * @return
      */
     @Override
     public List<OrderUser> findByUserIdList(List<String>list ,String startTime,String endTime,String productCode) {
@@ -241,20 +256,20 @@ public class OrderUserServiceImpl implements OrderUserService {
     }
 
     /**
-     * 查询用户明细 & 统计各项指标
-     * @param userCode   用户id
-     * @param productCode  产品id
+     * 用户明细
+     * @param userCode   用户代码
+     * @param productCode  产品代码
      * @return
      */
     @Override
-    public List<OrderUserVo> getUserDetails(String userCode, String productCode) {
-
+    public OrderUserDetailsVo getUserDetails(String userCode, String productCode) {
+        OrderUserDetailsVo detailsVo = new OrderUserDetailsVo();
         if(userCode != null && !StringUtils.isEmpty(userCode) && productCode != null && !StringUtils.isEmpty(productCode) ){
                     int index = 0;
                     int endIndex =10;
                     List<OrderUser> orderUserList = orderUserDao.getUserDetails(userCode,productCode);
                     LinkedHashSet<String> set = new LinkedHashSet<String>(orderUserList.size());
-                    OrderUserDetailsVo detailsVo = new OrderUserDetailsVo();
+
                     List<OrderUser> handList = new ArrayList<>();
                     List<OrderUser> profitList = new ArrayList<>();
                     double remainMoney = 0.00;//余额
@@ -263,7 +278,7 @@ public class OrderUserServiceImpl implements OrderUserService {
                     long countNumber = orderUserList.size(); //做单数
         for(OrderUser orderUser : orderUserList){
                 totalHandNumber = DoubleUtil.add(totalHandNumber,orderUser.getHandNumber());//累计持仓数
-                if(orderUser.getCloseTime() != null && !StringUtils.isEmpty(orderUser.getCloseTime()) && orderUser.getProfit() != null){
+                if(orderUser.getCloseTime() != null && !StringUtils.isEmpty(orderUser.getCloseTime())){
                     profit = DoubleUtil.add(profit,orderUser.getProfit()) ; //平仓盈亏
                     profitList.add(orderUser); //构造平仓List
                 }
@@ -279,6 +294,8 @@ public class OrderUserServiceImpl implements OrderUserService {
             }
             //构造vo类
             detailsVo.setDoOrderDays(set.size()); //做单天数
+            detailsVo.setCountNumber(countNumber);//做单数
+            detailsVo.setRemainMoney(remainMoney);//余额
             detailsVo.setHoldList(handList);//持仓数据
             detailsVo.setProfitList(profitList);//平仓数据
             detailsVo.setPosition_gain_and_loss(profit);//平仓盈亏
@@ -287,9 +304,10 @@ public class OrderUserServiceImpl implements OrderUserService {
             detailsVo.setLoginTime("2017-08-21 18:50:12");//注册时间
             detailsVo.setAgencyName("马云");//代理人
 
+
         }
 
-        return null;
+        return detailsVo;
     }
 
 

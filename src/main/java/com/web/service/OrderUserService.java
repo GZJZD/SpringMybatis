@@ -2,6 +2,7 @@ package com.web.service;
 
 import com.web.pojo.DataSource;
 import com.web.pojo.OrderUser;
+import com.web.pojo.vo.OrderUserDetailsVo;
 import com.web.pojo.vo.OrderUserVo;
 
 import javax.persistence.criteria.Order;
@@ -14,5 +15,5 @@ public interface OrderUserService {
     String update(OrderUser orderUser);
     List<OrderUserVo> countOrderUser(OrderUserVo orderUserVo);
     List<OrderUser>findByUserIdList(List<String>list ,String startTime,String endTime,String productCode);
-    List<OrderUserVo> getUserDetails(String userCode,String productCode);
+    OrderUserDetailsVo getUserDetails(String userCode, String productCode);
 }

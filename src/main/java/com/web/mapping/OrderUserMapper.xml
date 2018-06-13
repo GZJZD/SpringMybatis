@@ -102,15 +102,15 @@
         <if test="userCode != null and userCode != '' "> user_code = #{userCode}</if>
     </select>
 
-    <select id="getUserDetails" parameterType="java.lang.String">
+    <select id="getUserDetails" parameterType="java.lang.String"  resultMap="BaseResultMap">
       SELECT
         <include refid="Base_Column_List" />
         FROM
         tb_order_user
         WHERE
-        <if test="productCode != null and productCode != '' "> product_code = #{productCode}</if>
+        <if test="productCode != null and productCode != '' ">product_code = #{productCode}</if>
 
-        <if test="userCode != null and userCode != '' "> user_code = #{userCode}</if>
+        <if test="userCode != null and userCode != '' "> and user_code = #{userCode}</if>
     </select>
 
 
