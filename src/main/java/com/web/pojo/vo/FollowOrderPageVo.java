@@ -26,6 +26,8 @@ public class FollowOrderPageVo {
 
 
 
+
+
     /***************************************     查询条件     ******************************************/
     private Long varietyId;//品种id
     private Long accountId; //账号ID
@@ -33,6 +35,8 @@ public class FollowOrderPageVo {
     private String endTime; //结束时间
     private Integer status; //跟单状态
     /***************************************     查询条件end     ******************************************/
+
+
 
     public Double getHistoryHandNumber() {
         return historyHandNumber;

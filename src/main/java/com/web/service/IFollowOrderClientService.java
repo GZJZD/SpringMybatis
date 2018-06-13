@@ -21,6 +21,7 @@ public interface IFollowOrderClientService {
     void deleteByFollowOrderId(Long followOrderId);
 
     void save(FollowOrderClient record);
+    void update(FollowOrderClient record);
 
 
 }

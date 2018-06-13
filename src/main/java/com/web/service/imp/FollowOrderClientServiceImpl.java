@@ -34,5 +34,8 @@ public class FollowOrderClientServiceImpl implements IFollowOrderClientService {
         followOrderClientDao.insert(record);
     }
 
-
+    @Override
+    public void update(FollowOrderClient record) {
+        followOrderClientDao.updateByPrimaryKey(record);
+    }
 }

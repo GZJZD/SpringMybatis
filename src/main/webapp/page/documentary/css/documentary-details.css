@@ -7,10 +7,30 @@ text-align: center;
 	font-size: 30px;
 	color: #7f90a4;
 }
-
 .font-tow {
 	color: #5b9bd1;
 }
+
+.font-three {
+	font-size: 15px;
+	color: #7f90a4;
+}
 .navigation-div{
 	background-color:#fff ;
+}
+.content .search {
+	padding: 15px 0;
+}
+.content {
+	margin-top: 20px;
+}
+.clientSearch{
+	float: left;
+	width: 20%;
+	margin-top: 10px;
+	margin-bottom: 10px;
+}
+.search-bar{
+	height: 35px;
+	width: 120px;
 }

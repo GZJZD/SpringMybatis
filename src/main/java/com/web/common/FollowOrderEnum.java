@@ -40,7 +40,10 @@ public  class FollowOrderEnum {
         FOLLOWMANNER_NET_POSITION("净头寸",1),
 
         //客户:手数类型
-        CLIENT_HAND_NUMBER_TYPE("固定手数",0)
+        CLIENT_HAND_NUMBER_TYPE("固定手数",0),
+
+        //是否跟单
+        NOT_FOLLOW_ORDER_BY_CLIENT("未跟单",0)
 
         ;
 

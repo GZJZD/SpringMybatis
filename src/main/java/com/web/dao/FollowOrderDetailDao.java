@@ -35,7 +35,15 @@ public interface FollowOrderDetailDao {
 
     Double getOffsetGainAndLossByFollowOrderId (Long followOrderId);
 
-    FollowOrderVo getCommissionTotalAndHandNumTotal(Long followOrderId);
+    /*
+    * 找到对应跟单的手续费总和
+    * */
+    Double getCommissionTotal(Long followOrderId);
+
+    /*
+    * 统计对应跟单的开仓手数
+    * */
+    Double getOpenHandNumber(Long followOrderId);
 
     /*
     * WEB页面中：历史跟单手数，历史收益，总平仓单数

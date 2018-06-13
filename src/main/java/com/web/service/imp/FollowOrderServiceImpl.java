@@ -123,17 +123,21 @@ public class FollowOrderServiceImpl implements IFollowOrderService {
         followOrderPageVo = new FollowOrderPageVo();
         if (followOrders.size() != 0) {
             for (FollowOrder followOrder : followOrders) {
-                FollowOrderVo followOrderVo = followOrderDetailService.getCommissionTotalAndHandNumTotal(followOrder.getId());
-                if(followOrderVo == null){
-                    followOrderVo = new FollowOrderVo();
-                    followOrderVo.setHandNumberTotal(0.0);
-                }else{
-                    BigDecimal commission = new BigDecimal(followOrderVo.getPoundageTotal());
-                    BigDecimal handNum = new BigDecimal(followOrderVo.getHandNumberTotal());
+                FollowOrderVo followOrderVo = new FollowOrderVo();
+                //设置总手续费
+                followOrderVo.setPoundageTotal(followOrderDetailService.getCommissionTotal(followOrder.getId())==null?
+                        0.0:followOrderDetailService.getCommissionTotal(followOrder.getId()));
 
-                    followOrderVo.setPoundageTotal(commission.setScale(2,   BigDecimal.ROUND_HALF_UP).doubleValue());
-                    followOrderVo.setHandNumberTotal(handNum.setScale(2,   BigDecimal.ROUND_HALF_UP).doubleValue());
-                }
+                //设置手数
+                followOrderVo.setHandNumberTotal(followOrderDetailService.getOpenHandNumber(followOrder.getId())==null?
+                            0.0:followOrderDetailService.getOpenHandNumber(followOrder.getId()));
+
+                BigDecimal commission = new BigDecimal(followOrderVo.getPoundageTotal());
+                BigDecimal handNum = new BigDecimal(followOrderVo.getHandNumberTotal());
+
+                followOrderVo.setPoundageTotal(commission.setScale(2,   BigDecimal.ROUND_HALF_UP).doubleValue());
+                followOrderVo.setHandNumberTotal(handNum.setScale(2,   BigDecimal.ROUND_HALF_UP).doubleValue());
+
                 //todo demo过后删除
                 followOrder.setAccount(FollowOrderGenerateUtil.getAccount());
                 followOrderVo.setFollowOrder(followOrder);
@@ -151,7 +155,7 @@ public class FollowOrderServiceImpl implements IFollowOrderService {
                 followOrderVo.setClientProfit(0.0);
                 //盈亏率
                 followOrderVo.setProfitAndLossRate(DoubleUtil.div(followOrderVo.getOffsetGainAndLoss()==null? 0.0 :followOrderVo.getOffsetGainAndLoss(),
-                        followOrderVo.getAllTotal() == null ?1.0 :followOrderVo.getPoundageTotal(), 2));
+                        followOrderVo.getHandNumberTotal() == 0.0 ?1.0 :followOrderVo.getHandNumberTotal(), 2));
                 //跟单成功
                 followOrderVo.setSuccessTotal(followOrderTradeRecordService.getFollowOrderSuccessTotalAmount(followOrder.getId()));
                 //跟单总数
@@ -202,15 +206,13 @@ public class FollowOrderServiceImpl implements IFollowOrderService {
     * 实现净头寸交易
     * */
     public void netPositionOrder(FollowOrder followOrder, DataSource data) {
+        //获取累加的净头寸
+        Double headNum = getNowNetPositionSum(data, followOrder);
         //判断策略的状态是否在交易中,不在交易就进行判断
         if (followOrder.getNetPositionStatus().equals(FollowOrderEnum.FollowStatus.NET_POSITION_TRADING_PAUSE.getIndex())) {
-
-
             //获取原有的持仓数
             Double oldHoldNum = followOrder.getNetPositionHoldNumber();
             log.info("原本的净头寸的值："+followOrder.getNetPositionSum());
-            //获取累加的净头寸
-            Double headNum = getNowNetPositionSum(data, followOrder);
             //现在的持仓数
             log.info("现在的净头寸的值："+headNum);
             //应持仓多少手
@@ -372,9 +374,24 @@ public class FollowOrderServiceImpl implements IFollowOrderService {
         order.setFollowOrderStatus(FollowOrderEnum.FollowStatus.FOLLOW_ORDER_STOP.getIndex());
         //todo demo后删除
         order.setAccount(FollowOrderGenerateUtil.getAccount());
+        //跟单方式
         if(order.getFollowManner().equals(FollowOrderEnum.FollowStatus.FOLLOWMANNER_NET_POSITION.getIndex())){
+            //跟净头寸，设置不处于交易中的状态
             order.setNetPositionStatus(FollowOrderEnum.FollowStatus.NET_POSITION_TRADING_PAUSE.getIndex());
         }
+        //最大盈利
+        if(order.getMaxProfit().equals(FollowOrderEnum.FollowStatus.SET_MAXPROFIT.getIndex())){
+            order.setMaxProfitNumber(followOrder.getMaxProfitNumber());
+        }
+        //最大止损
+        if(order.getMaxLoss().equals(FollowOrderEnum.FollowStatus.SET_MAXLOSS.getIndex())){
+            order.setMaxLossNumber(followOrder.getMaxLossNumber());
+        }
+        //账户止损
+        if(order.getAccountLoss().equals(FollowOrderEnum.FollowStatus.SET_ACCOUNTLOSS.getIndex())){
+            order.setAccountLossNumber(followOrder.getAccountLossNumber());
+        }
+        //客户点位
         order.setOrderPoint(followOrder.getOrderPoint());
         if(order.getOrderPoint().equals(FollowOrderEnum.FollowStatus.LIMIT_PRICE.getIndex())){
             order.setClientPoint(followOrder.getClientPoint());
@@ -394,7 +411,6 @@ public class FollowOrderServiceImpl implements IFollowOrderService {
                 followOrderClient.setHandNumberType(orderClient.getHandNumberType());
                 followOrderClient.setFollowHandNumber(orderClient.getFollowHandNumber());
                 followOrderClientService.save(followOrderClient);
-
             }
         }
         checkLogin(order);
@@ -505,14 +521,10 @@ public class FollowOrderServiceImpl implements IFollowOrderService {
             orderTrade.setVolumeTotalOriginal(handNumber);
             orderTraderService.orderOpen(orderTrade);
             log.info("发送一条交易信息：" + orderTrade.toString());
-
         }
-
-
     }
 
     /*
-     *
      *   平所有未平的跟单
      * @author may
      * @date 2018/6/5 19:08

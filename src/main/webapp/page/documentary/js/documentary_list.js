@@ -4,9 +4,8 @@
     var tableOrderId = $("#followOrderTable");
     var tableHistoryOrderId = $("#historyFollowOrderTable");
     var method = "get";
-    //var url_  ="demo.json";
-   // var url_ = "/getListFollowOrder.Action";
-    var url_ = "/sm/followOrder/getListFollowOrder.Action?varietyId="+varietyNum+"&accountId="+accountNum;
+
+    var url_orderPage = url_+"/followOrder/getListFollowOrder.Action?varietyId="+varietyNum+"&accountId="+accountNum;
     var unique_Id = "detailId";
     var sortOrder = "asc";
     var columns = [{
@@ -93,23 +92,21 @@
             valign: 'middle',
             formatter: function (value, row, index) {
                 var followOrderId = row.followOrder.id;
-                var successTotal = row.successTotal;
-                var orderNum= row.handNumberTotal;
-                var offsetGainAndLoss = row.offsetGainAndLoss;
-                var poundageTotal = row.poundageTotal;
+
+                var obj=JSON.stringify(row);
+
                 if (value == "1") {
                     return "<a onclick='follow_order_stop(this," + followOrderId + ")' href='javascript:;' title='暂停'> <i class='layui-icon'>&#xe651;</i> </a>" +
-                        "<a onclick='follow_order_stop(this," + followOrderId + ")' href='javascript:;' title='停止'> <i class='layui-icon'>&#x1006;</i> </a>" +
-                        "<a title=\"查看\" onclick=\"follow_details("+successTotal+","+orderNum+","+offsetGainAndLoss+","+poundageTotal+"," + followOrderId + ",'/跟单明细','/" +
-                        "sm/page/documentary/documentary-details.html',1400,750)\" href=\"javascript:;\"><i class=\"layui-icon\"> &#xe615;</i></a>" +
-                        "<a title=\"编辑\" onclick=\"common_show()('编辑','member-edit.html',600,400)\" href=\"javascript:;\">\n" +
+                        "<a onclick='follow_order_stop(this,"+ + followOrderId + ")' href='javascript:;' title='停止'> <i class='layui-icon'>&#x1006;</i> </a>" +
+                        "<a title=\"查看\" onclick='openDeatil("+obj+")' href=\"javascript:;\"><i class=\"layui-icon\"> &#xe615;</i></a>" +
+                        "<a title=\"编辑\" onclick='updateOrderShow("+obj+")' href=\"javascript:;\">\n" +
                         "<i class=\"layui-icon\">&#xe642;</i>" +
                         "</a>";
                 } else {
                     return "<a onclick='follow_order_stop(this," + followOrderId + ")' href='javascript:;' title='启用'> <i class='layui-icon'>&#xe652;</i> </a>" +
                         "<a onclick='follow_order_stop(this," + followOrderId + ")' href='javascript:;' title='停止'> <i class='layui-icon'>&#x1006;</i> </a>" +
-                        "<a title=\"查看\" onclick=\"follow_details("+successTotal+","+orderNum+","+offsetGainAndLoss+","+poundageTotal+"," + followOrderId + ",'跟单明细','/sm/page/documentary/documentary-details.html')\" href=\"javascript:;\"><i class=\"layui-icon\"> &#xe615;</i></a>" +
-                        "<a title=\"编辑\" onclick=\"common_show()('编辑','member-edit.html',600,400)\" href=\"javascript:;\">\n" +
+                        "<a title=\"查看\" onclick='openDeatil("+obj+")'  href=\"javascript:;\"><i class=\"layui-icon\"> &#xe615;</i></a>" +
+                        "<a title=\"编辑\" onclick='updateOrderShow("+obj+")' href=\"javascript:;\">\n" +
                         "<i class=\"layui-icon\">&#xe642;</i>" +
                         "</a>";
                 }
@@ -124,7 +121,7 @@
            * 发送请求获取跟单页面的统计数据
        * */
         $.ajax({
-            url:"/sm/followOrder/getFollowOrderPageVo.Action",
+            url:url_+"/followOrder/getFollowOrderPageVo.Action",
             type:'GET', //GET
             async:true,    //或false,是否异步
             data:{
@@ -153,18 +150,25 @@
             complete:function(){
 
             }
-        });
-
+        })
+        /*
+        * 品种查找
+        * */
         findByVariety();
-        showByTableId(tableOrderId, method, url_, unique_Id, sortOrder, columns);
-
-
+        /*
+        *表格加载
+        * */
+        showByTableId(tableOrderId, method, url_orderPage, unique_Id, sortOrder, columns);
+        /*
+        * 跟单历史点击事件
+        * */
         $("#historyOrder").click(function () {
             $(tableHistoryOrderId).bootstrapTable('destroy');
-            var url_history = "/sm/followOrder/getListFollowOrder.Action?varietyId="+varietyNum+"&accountId="+accountNum+"&status=0";
-
+            var url_history = url_+"/followOrder/getListFollowOrder.Action?varietyId="+varietyNum+"&accountId="+accountNum+"&status=0";
             showByTableId(tableHistoryOrderId, method, url_history, unique_Id, sortOrder, columns);
         })
+
+
     });
     //根据窗口调整表格高度
     $(window).resize(function () {
@@ -217,17 +221,22 @@ function orderByParameter(num) {
         (($('#history-end-time').val()) == 'undefined')?(endTime=''):(endTime=($("#history-end-time").val()));
     }
 
-    var url = "/sm/followOrder/getListFollowOrder.Action?varietyId="+varietyNum+"&accountId="+accountNum+"&startTime="+startTime+"&endTime="+endTime;
+    var url = url_+"/followOrder/getListFollowOrder.Action?varietyId="+varietyNum+"&accountId="+accountNum+"&startTime="+startTime+"&endTime="+endTime;
     $(tableOrderId).bootstrapTable('destroy');
     showByTableId(tableOrderId, method, url, unique_Id, sortOrder, columns);
 }
-
+/*
+* 打开明细
+* */
+function openDeatil(obj) {
+    follow_details(obj,'跟单明细', url_+"/page/documentary/documentary-details.html",1400,750);
+}
 /*
 * 品种筛选
 * */
 function findByVariety() {
     $.ajax({
-        url:"/sm/followOrder/getListVariety.Action",
+        url:url_+"/followOrder/getListVariety.Action",
         type:'GET', //GET
         async:true,    //或false,是否异步
         data:{
@@ -262,7 +271,7 @@ function findByVariety() {
 * */
 function update_status(id,obj,newTitle,oldTitle,status,i) {
     $.ajax({
-        url:"/sm/followOrder/updateFollowOrderStatus.Action?id="+id+"&status="+status,
+        url:url_+"/followOrder/updateFollowOrderStatus.Action?id="+id+"&status="+status,
         type:'POST', //GET
         async:true,    //或false,是否异步
         data:{
@@ -297,6 +306,46 @@ function update_status(id,obj,newTitle,oldTitle,status,i) {
         }
     })
 }
+
+    //修改跟单
+    function updateOrderShow(obj){
+            var title = "跟单配置";
+            var url = url_+"/page/documentary/documentary-edit.html";
+            var w=1000;
+            var h=600;
+            if(title == null || title == '') {
+                title = false;
+            };
+            if(url == null || url == '') {
+                url = "404.html";
+            };
+            if(w == null || w == '') {
+                w = ($(window).width() * 0.9);
+            };
+            if(h == null || h == '') {
+                h = ($(window).height() - 50);
+            };
+            layer.open({
+                type: 2,
+                area: [w + 'px', h + 'px'],
+                fix: false, //不固定
+                maxmin: true,
+                shadeClose: true,
+                shade: 0.4,
+                title: title,
+                content: url,
+                success: function (layero, index) {
+                    //找到子页面
+                    var iframeWin = window['layui-layer-iframe' + index]; //得到iframe页的窗口对象，执行iframe页的方法：iframeWin.method();
+                    //调用子页面的方法
+                    iframeWin.setFollowOrderParameter(obj.followOrder);
+
+                }
+            });
+
+
+    }
+
 /*弹出层*/
 /*
     参数解释：
@@ -306,7 +355,8 @@ function update_status(id,obj,newTitle,oldTitle,status,i) {
     w       弹出层宽度（缺省调默认值）
     h       弹出层高度（缺省调默认值）
 */
-function follow_details(successTotal,orderNum,offsetGainAndLoss,poundageTotal,id, title, url, w, h) {
+    function follow_details(obj,title, url, w, h) {
+
 
     if (title == null || title == '') {
         title = false;
@@ -334,12 +384,23 @@ function follow_details(successTotal,orderNum,offsetGainAndLoss,poundageTotal,id
         title: title,
         content: url,
         success: function (layero, index) {
+            var followOrderId = obj.followOrder.id;
+            var successTotal = obj.successTotal;
+            var orderNum= obj.handNumberTotal;
+            var offsetGainAndLoss = obj.offsetGainAndLoss;
+            var poundageTotal = obj.poundageTotal;
+            var manager= obj.followOrder.followManner;
             //找到子页面
             var iframeWin = window['layui-layer-iframe' + index]; //得到iframe页的窗口对象，执行iframe页的方法：iframeWin.method();
             //调用子页面的方法
+            iframeWin.detailShow(followOrderId,successTotal+"/"+orderNum,offsetGainAndLoss,poundageTotal);
+            iframeWin.orderParameterShow(obj.followOrder);
+            if(manager){
+                iframeWin.clientTableShow(followOrderId,false);
+            }else{
+                iframeWin.clientTableShow(followOrderId,true);
 
-            iframeWin.child(id,successTotal+"/"+orderNum,offsetGainAndLoss,poundageTotal);
-
+            }
         },
         btn: ['关闭']
     });
