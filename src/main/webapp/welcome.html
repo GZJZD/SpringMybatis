@@ -264,13 +264,12 @@
 
 			//操作栏的格式化
 			function actionFormatter(value, row, index) {
-				var id = row.userCode;
+				var userCode = row.userCode;
 				var result = "";
 				var editUrl ="page/clientUser/client-detail.html";
 				var edit_w = 1900;
 				var edit_h = 800;
-				var details = "查看明細";
-				result += "<a href='javascript:;' class='btn btn-xs green' onclick=\"openDetails('" + id + "', view='客户明细','"+editUrl+"','"+edit_w+"','"+edit_h+"')\" title='查看'><span class='glyphicon glyphicon-search'></span></a>";
+				result += "<a href='javascript:;' class='btn btn-xs green' onclick=\"openDetails('" + userCode + "', view='客户明细','"+editUrl+"','"+edit_w+"','"+edit_h+"')\" title='查看'><span class='glyphicon glyphicon-search'></span></a>";
 				return result;
 			}
 
@@ -359,24 +358,8 @@
 
 			}
 
-// //			//批量删除
-// 			function BtchDeleteBook() {
-// 				var opts = tableId.bootstrapTable('getSelections');
-// 				if(opts == "") {
-// 					layer.msg('请选择跟单客户');
-// 				} else {
-// 					var idArray = [];
-// 					for(var i = 0; i < opts.length; i++) {
-// 						idArray.push(opts[i].BookId);
-// 					}
-// 					if(confirm("确定要删除吗：" + idArray + "吗？")) {
-// 						alert("执行删除操作");
-// 					}
-// 				}
-// 			}
 
-
-		function openDetails(id,title,url,w,h){
+		function openDetails(userCode,title,url,w,h){
 
             if(title == null || title == '') {
                 title = false;
@@ -390,7 +373,7 @@
             if(h == null || h == '') {
                 h = ($(window).height() - 50);
             };
-            top.layer.open({
+           layer.open({
                 type: 2,
                 area: [w + 'px', h + 'px'],
                 fix: false, //不固定
@@ -399,7 +382,13 @@
                 shade: 0.4,
                 title: title,
                 content: url,
-                btn: ['关闭']
+                btn: ['关闭'],
+                success: function (layero, index) {
+                    //找到子页面
+                    var iframeWin = window['layui-layer-iframe' + index]; //得到iframe页的窗口对象，执行iframe页的方法：iframeWin.method();
+                    //调用子页面的方法
+                    iframeWin.showDetails(userCode);
+                }
             });
 		}
 
