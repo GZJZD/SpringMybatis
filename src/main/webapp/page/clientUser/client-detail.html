@@ -17,6 +17,8 @@
   <link rel="stylesheet" href="../../css/font.css">
   <link rel="stylesheet" href="../../css/common.css">
   <script type="text/javascript" src="../../lib/jquery/jquery-3.2.1.min.js"></script>
+    <link rel="stylesheet" href="../../lib/bootstrap/css/bootstrap-table.min.css" />
+    <script src="../../lib/bootstrap/js/bootstrap-table.js"></script>
   <style type="text/css">
     .dian {
       width: 10px;
@@ -68,19 +70,19 @@
           </div>
           <div class="layui-row ma_t_3">
               <div class="layui-col-sm3">
-                  <div class="grid-demo grid-demo-bg1 font-one">15245</div>
-                  <div class="grid-demo grid-demo-bg1 font-tow">余额</div>
+                  <div class="grid-demo grid-demo-bg1 font-one" id="remainMoney-id">15245</div>
+                  <div class="grid-demo grid-demo-bg1 font-tow" >余额</div>
               </div>
               <div class="layui-col-sm3">
-                  <div class="grid-demo font-one">44442</div>
+                  <div class="grid-demo font-one"id="countNumber-id">44442</div>
                   <div class="grid-demo font-tow">做单数</div>
               </div>
               <div class="layui-col-sm3">
-                  <div class="grid-demo grid-demo-bg1 font-one">-144</div>
+                  <div class="grid-demo grid-demo-bg1 font-one" id="position_gain_and_loss-id">-14444</div>
                   <div class="grid-demo grid-demo-bg1 font-tow">平仓盈亏</div>
               </div>
               <div class="layui-col-sm3">
-                  <div class="grid-demo font-one">1212</div>
+                  <div class="grid-demo font-one" id="offset_gain_and_loss-id">1212</div>
                   <div class="grid-demo font-tow">持仓盈亏</div>
               </div>
           </div>
@@ -90,11 +92,11 @@
                   <div class="ub-f1 ma_r_2">
                     <div class="ub ub-pj ub-ac ma_b_05">
                       <div class="">注册时间：</div>
-                      <div class="">2016.10.12</div>
+                      <div class=""id="createTime-id">2016.10.12</div>
                     </div>
                     <div class="ub ub-pj ub-ac">
                       <div class="">注册平台：</div>
-                      <div class="">操盘宝</div>
+                      <div class="" id="platformName-id">操盘宝</div>
                     </div>
                   </div>
                   <div class="ub-f1">
@@ -104,7 +106,7 @@
                       </div>
                       <div class="ub ub-pj ub-ac">
                           <div class="">代理人：</div>
-                          <div class="">经理B</div>
+                          <div class="" id="agencyName-id">经理B</div>
                       </div>
                   </div>
                 </div>
@@ -115,7 +117,7 @@
               <div class="ub-f1 ma_r_2">
                   <div class="ub ub-pj ub-ac  ma_b_05">
                       <div class="">做单天数</div>
-                      <div class="">18</div>
+                      <div class="" id="doOrderDays-id">-</div>
                   </div>
                   <div class="ub ub-pj ub-ac  ma_b_05">
                       <div class="">胜率 （盈利单数/亏损单数）</div>
@@ -127,7 +129,7 @@
                   </div>
                   <div class="ub ub-pj ub-ac">
                       <div class="">入金</div>
-                      <div class="">49201</div>
+                      <div class="" id="inMoney-id">49201</div>
                   </div>
               </div>
               <div class="ub-f1">
@@ -210,19 +212,22 @@
           </div>
         </div>
       </div>
-      <div class="ma_t_3">
+          <div class="ma_t_3">
         <div class="ub ub-ac">
-          <a class="super-a" href="#">
-            <div class="pa_a_1 bor_b_ee5050">持仓记录</div>
-          </a>
-          <a href="#" class="super-a">
-            <div class="pa_a_1 bor_b_ee5050">平仓记录</div>
-          </a>
+            <a class="super-a" href="#" id="holdList">
+                <div class="pa_a_1 bor_b_ee5050" >持仓记录</div>
+            </a>
+            <a href="#" class="super-a" id="profitList">
+                <div class="pa_a_1 bor_b_ee5050" >平仓记录</div>
+            </a>
         </div>
-      </div>
+              <table id="holdOrderList"></table>
+              <table id="profitOrderList" style="display: none"></table>
+    </div>
     </div>
   </div>
 </div>
+<script src="../../js/commonParameter.js"></script>
 <script src="js/client-detail.js"></script>
 <script type="text/javascript" src="../../lib/bootstrap/js/bootstrap-dropdown.min.js"></script>
 </body>

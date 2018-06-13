@@ -165,9 +165,7 @@ function goOn(status){
             var json_ = {"userCode":userCode,"userName":userName,"profit":profit,"profit_loss_than":profit_loss_than,"followDirection":followDirection,"handNumberType":handNumberType,"followHandNumber":followHandNumber};
             fayuan_data.push(json_);
         });
-
-
-
+        setDetalsTitle();//设置明细动态数据
 
         var newjsonObj = JSON.stringify(fayuan_data);
         var data_ = $.parseJSON(newjsonObj);
@@ -184,10 +182,18 @@ function goOn(status){
     }
 
 }
-function setDetalsTitle() {
-        $('.orderName').text($("#followOrderName").val())//策略名称
 
-    ($("#orderPoint").val()==1?'市价':'');
+/**
+ * 设置详情页明细显示
+ */
+function setDetalsTitle() {
+   $('.followOrderName').text($("#followOrderName").val())//策略名称
+   $('.orderPoint').text($('input[name="orderPoint"]:checked').val() == 1 ? '市价':'限价:比客户点位   '+($('.clientPoint-class option:selected').val() == 1 ? '好':'差')+''+$('#clientPointNumber-id').val());
+   $('.maxProfit').text($('input[name="maxProfit"]:checked').val() == 1 ? '市价':'点/手   '+$('input[name="maxProfit"]:checked').val());//单笔最大止盈
+   $('.maxLoss').text( $('input[name="maxLoss"]:checked').val() == 1 ? '不设':'点/手   '+ $('input[name="maxLoss"]:checked').val());//单笔最大止损
+   $('.accountLoss').text($('input[name="accountLoss"]:checked').val() == 1 ? '不设':'美金   '+$("#accountLoss-id").val());//账户止损
+   $('.userCode').text($('#GD-id option:selected').val());//跟单账号
+   $('.followManner').text($('input[name="followManner"]:checked').val()== 1 ? '跟每一单':'跟进头寸');//跟单方式
 
 }
 //每个返回按钮事件
@@ -282,7 +288,7 @@ function setStatus(status){
     //单笔最大止盈
     if(status == 'maxProfit'){
         var val = $('input[name="maxProfit"]:checked').val();
-        (val==1? $("#maxProfit-id").hide() : $("#maxProfit-id").show() );
+        (val==1 ? $("#maxProfit-id").hide() : $("#maxProfit-id").show() );
     }
     //单笔最大止损
     if(status == 'maxLoss'){
@@ -308,10 +314,13 @@ function setStatus(status){
  *   跟单创建提交
  */
 function commit(){
-    var leght = $("#datails-table tbody").find('tr').length;
     var followOrderName = $("#followOrderName").val();//策略名称
-    var id  = $("#GD-id option:selected").val();//跟单人id
     var varietyCode =  parent.$("#product-val-id option:selected").val(); //商品
+    var id  = $("#GD-id option:selected").val();//跟单人id
+    var leght = $("#datails-table tbody").find('tr').length;
+
+
+
     var maxProfit = $("#maxProfit").val(); //最大止盈
     var maxProfitNumber = $("#maxProfit-id").val(); //止盈点数
     var maxLoss = $("#maxLoss").val();//止损
@@ -321,7 +330,7 @@ function commit(){
     var orderPoint = $("#orderPoint").val();//下单点位
     var clientPoint = $(".clientPoint-class option:selected").val(); //比客户点位
     var clientPointNumber = $('#clientPointNumber-id').val(); //点位
-   var followManner = $("#followManner").val(); //跟单正反向
+    var followManner = $("#followManner").val(); //跟单方式
     var netPositionDirection='1';
     var netPositionChange=1; //变化基数
     var netPositionFollowNumber = 1;//手数
@@ -345,7 +354,7 @@ function commit(){
     });
     var str = JSON.stringify(fayuan_data);
     $.ajax({
-        url:"/sm/followOrder/createFollowOrder.Action",
+        url:"/followOrder/createFollowOrder.Action",
         type:'POST', //GET
         async:true,    //或false,是否异步
         data:{
@@ -382,11 +391,4 @@ function commit(){
 
         }
     })
-}
-/**
- * 参数设置 区块js动态操作
- * */
-
-function disPaly(){
-
 }
