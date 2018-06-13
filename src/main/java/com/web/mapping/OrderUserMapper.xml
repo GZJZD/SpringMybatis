@@ -58,7 +58,16 @@
                 close_time = #{closeTime},
             </if>
             <if test="handNumber != null">
-                hand_number = #{handNumber}
+                hand_number = #{handNumber},
+            </if>
+            <if test="closePrice != null">
+                close_price = #{closePrice},
+            </if>
+            <if test="profit != null">
+                profit = #{profit},
+            </if>
+            <if test="longShort != null">
+                long_short = #{longShort},
             </if>
         </set>
         where ticket = #{ticket}
