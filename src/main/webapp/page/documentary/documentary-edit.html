@@ -133,7 +133,7 @@
                             </div>
                         </div>
 
-                        <div class="layui-inline if-ok order-bili-class"  >
+                        <div class="layui-inline if-ok bili-class"  >
                             <div class="layui-input-inline">
                                 <select class="form-control clientPoint-class" name="" >
                                     <option value="1">好</option>
@@ -141,7 +141,7 @@
                                 </select>
                             </div>
                         </div>
-                        <div class="layui-inline input-number order-bili-class" >
+                        <div class="layui-inline input-number bili-class" >
                             <div class="layui-input-block">
                              <input type="number" name="phone"  id="clientPointNumber-id" autocomplete="off" class="layui-input">
                             </div>
@@ -155,7 +155,7 @@
                                 <input type="radio" name="maxProfit" onclick="setStatus('maxProfit')" name="setPT" value="1" title="市价" checked="">市价</input>
                                 <!--<input type="radio" name="profitAndLoss" onclick="setStatus('profitAndLoss')" value="1" title="不设" hecked="" >不设</input>-->
                                 <input type="radio" name="maxProfit" onclick="setStatus('maxProfit')"  value="0" title="点/手">点/手</input>
-                                <input  type="number" id="order-maxProfit-id"  autocomplete="off" class="layui-input set-input"></input>
+                                <input  type="number" id="maxProfit-id"  autocomplete="off" class="layui-input set-input"></input>
                             </div>
                         </div>
                     </div>
@@ -166,7 +166,7 @@
                                 <input class="disPaly" type="text" id="maxLoss" value="1"/>
                                 <input type="radio" name="maxLoss" onclick="setStatus('maxLoss')" value="1" title="不设" checked="">不设</input>
                                 <input type="radio" name="maxLoss" onclick="setStatus('maxLoss')" value="0" title="点/手">点/手</input>
-                                <input type="number" id="order-maxLoss-id"  autocomplete="off" class="layui-input set-input"></input>
+                                <input type="number" id="maxLoss-id"  autocomplete="off" class="layui-input set-input"></input>
                             </div>
                         </div>
                     </div>
@@ -177,7 +177,7 @@
                                 <input class="disPaly" type="text" id="accountLoss" value="1"/>
                                 <input type="radio" name="accountLoss" onclick="setStatus('accountLoss')" value="1" title="不设" checked="">不设</input>
                                 <input type="radio" name="accountLoss" onclick="setStatus('accountLoss')" value="0" title="美金">美金</input>
-                                <input type="number" name="phone" id="order-accountLoss-id"  autocomplete="off" class="layui-input set-input"></input>
+                                <input type="number" name="phone" id="accountLoss-id"  autocomplete="off" class="layui-input set-input"></input>
                             </div>
                         </div>
                     </div>
@@ -187,9 +187,9 @@
                         <div class="layui-input-inline">
                             <select id="GD-id" name="modules" lay-verify="required" lay-search="">
 
-                                <option value="1">layer</option>
-                                <option value="2">form</option>
-                                <option value="3">layim</option>
+                                <option value=0 >layer</option>
+                                <option value=1>form</option>
+                                <option value=3>layim</option>
                                 <option value="4">element</option>
                                 <option value="5">laytpl</option>
                                 <option value="6">upload</option>
@@ -215,8 +215,8 @@
                         <label class="layui-form-label">跟单方式:</label>
                         <div class="layui-input-block">
                             <input class="disPaly" type="text" id="followManner" value="1"/>
-                            <input type="radio" name="followManner" onclick="setStatus('followManner')" value="1" title="跟每一单" checked="">跟每一单</input>
-                            <input type="radio" name="followManner" onclick="setStatus('followManner')" value="2" title="跟净头寸">跟净头寸</input>
+                            <input type="radio" name="followManner" onclick="setStatus('followManner')" value="0" title="跟每一单" checked="">跟每一单</input>
+                            <input type="radio" name="followManner" onclick="setStatus('followManner')" value="1" title="跟净头寸">跟净头寸</input>
                         </div>
                      </div>
 
@@ -248,7 +248,7 @@
     <div class="detalis-div">
         <div>
             <fieldset class="layui-elem-field layui-field-title " style="margin-top: 20px;">
-            <legend>参数设置</legend>
+                <legend>参数设置</legend>
             </fieldset>
             <div>
 
@@ -256,22 +256,44 @@
 
                     <div class="layui-form-item">
                         <div class="layui-inline">
-                            <label  class="layui-form-label">策略名称</label>
+                            <label  class="layui-form-label">策略名称:</label>
+
+                        </div>
+                        <div class="layui-inline">
+                            <label  class="layui-form-label followOrderName">策略名称</label>
 
                         </div>
                     </div>
 
                     <div class="layui-form-item">
                         <div class="layui-inline">
-                            <label class="layui-form-label">下单点位</label>
+                            <label class="layui-form-label">下单点位:</label>
 
                         </div>
+                        <div class="layui-inline">
+                            <label class="layui-form-label orderPoint" >下单点位</label>
 
+                        </div>
                     </div>
 
                     <div class="layui-form-item">
                         <div class="layui-inline">
-                            <label class="layui-form-label">单笔最大止盈</label>
+                            <label class="layui-form-label">单笔最大止盈:</label>
+
+                        </div>
+                        <div class="layui-inline">
+                            <label class="layui-form-label maxProfit" >单笔最大止盈</label>
+
+                        </div>
+
+                    </div>
+                    <div class="layui-form-item">
+                        <div class="layui-inline">
+                            <label class="layui-form-label">单笔最大止损:</label>
+
+                        </div>
+                        <div class="layui-inline">
+                            <label class="layui-form-label maxLoss">单笔最大止损</label>
 
                         </div>
 
@@ -279,24 +301,34 @@
                     </div>
                     <div class="layui-form-item">
                         <div class="layui-inline">
-                            <label class="layui-form-label">单笔最大止损</label>
+                            <label class="layui-form-label">账户止损:</label>
 
                         </div>
+                        <div class="layui-inline">
+                            <label class="layui-form-label accountLoss">账户止损</label>
 
-
+                        </div>
                     </div>
                     <div class="layui-form-item">
                         <div class="layui-inline">
-                            <label class="layui-form-label">账户止损</label>
+                            <label class="layui-form-label">跟单账号:</label>
+
+                        </div>
+                        <div class="layui-inline">
+                            <label class="layui-form-label userCode">跟单账号</label>
 
                         </div>
                     </div>
+                    <div class="layui-form-item">
+                        <div class="layui-inline">
+                            <label class="layui-form-label">跟单方式:</label>
 
-                    <div class="layui-inline">
-                        <label class="layui-form-label">跟单账号</label>
+                        </div>
+                        <div class="layui-inline">
+                            <label class="layui-form-label followManner">跟单方式</label>
 
+                        </div>
                     </div>
-
                 </div>
             </div>
 

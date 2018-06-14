@@ -90,6 +90,22 @@ public class FollowOrderServiceImpl implements IFollowOrderService {
     }
     @Override
     public void updateFollowOrder(FollowOrder followOrder) {
+        Variety varietyByCode = varietyService.getVarietyByCode(followOrder.getVariety().getVarietyCode());
+        followOrder.setVariety(varietyByCode);
+        if(!followOrder.getMaxProfit().equals(FollowOrderEnum.FollowStatus.SET_MAXPROFIT.getIndex())){
+            followOrder.setMaxProfitNumber(null);
+        }
+        if(!followOrder.getMaxLoss().equals(FollowOrderEnum.FollowStatus.SET_MAXLOSS.getIndex())){
+            followOrder.setMaxLossNumber(null);
+        }
+        if(!followOrder.getAccountLoss().equals(FollowOrderEnum.FollowStatus.SET_ACCOUNTLOSS.getIndex())){
+            followOrder.setAccountLossNumber(null);
+        }
+        if(!followOrder.getOrderPoint().equals(FollowOrderEnum.FollowStatus.LIMIT_PRICE.getIndex())){
+            followOrder.setClientPoint(null);
+            followOrder.setClientPointNumber(null);
+        }
+        followOrder.setUpdateDate(DateUtil.getStringDate());
         followOrderDao.updateByPrimaryKey(followOrder);
     }
     @Override
@@ -402,17 +418,9 @@ public class FollowOrderServiceImpl implements IFollowOrderService {
             }
         }
         save(order);
-        if(followOrderClients.size() != 0){
-            for (FollowOrderClient orderClient : followOrderClients) {
-                FollowOrderClient followOrderClient = new FollowOrderClient();
-                followOrderClient.setFollowOrderId(order.getId());
-                followOrderClient.setUserCode(orderClient.getUserCode());
-                followOrderClient.setFollowDirection(orderClient.getFollowDirection());
-                followOrderClient.setHandNumberType(orderClient.getHandNumberType());
-                followOrderClient.setFollowHandNumber(orderClient.getFollowHandNumber());
-                followOrderClientService.save(followOrderClient);
-            }
-        }
+        //保存客户与跟单关联
+        followOrderClientService.saveListFollowOrderClient(followOrderClients,order);
+
         checkLogin(order);
     }
 

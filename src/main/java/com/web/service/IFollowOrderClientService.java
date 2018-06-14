@@ -1,7 +1,9 @@
 package com.web.service;
 
+import com.web.pojo.FollowOrder;
 import com.web.pojo.FollowOrderClient;
 import com.web.pojo.FollowOrderDetail;
+import com.web.pojo.vo.FollowOrderClientParamVo;
 
 import java.util.List;
 
@@ -17,11 +19,13 @@ public interface IFollowOrderClientService {
      *@Date: 10:39 2018/5/21
      */
     List<FollowOrderClient> getListByUserCode(String userCode);
+    List<FollowOrderClient> getListByFollowOrderId(Long followOrderId);
 
     void deleteByFollowOrderId(Long followOrderId);
 
-    void save(FollowOrderClient record);
+    void saveListFollowOrderClient(List<FollowOrderClient> FollowOrderClients, FollowOrder followOrder);
     void update(FollowOrderClient record);
 
 
+    List<FollowOrderClientParamVo> getListFollowOrderClientParamVo(Long followOrderId);
 }
