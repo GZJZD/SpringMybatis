@@ -34,6 +34,10 @@ public  class FollowOrderGenerateUtil {
         //  Tactics.setStatus(FollowOrderEnum.FollowStatus.Tactics_STOP.getIndex());
         //设计策略的跟单参数,反向跟单,净头寸每变化10手跟1手
         followOrder.setFollowManner(FollowOrderEnum.FollowStatus.FOLLOWMANNER_NET_POSITION.getIndex());
+        followOrder.setMaxLoss(1);
+        followOrder.setMaxProfit(1);
+        followOrder.setAccountLoss(1);
+        followOrder.setOrderPoint(1);
         followOrder.setNetPositionDirection(FollowOrderEnum.FollowStatus.DIRECTION_REVERSE.getIndex());
         followOrder.setNetPositionChange(10);
         followOrder.setNetPositionFollowNumber(1);
@@ -44,6 +48,7 @@ public  class FollowOrderGenerateUtil {
         followOrder.setFollowOrderStatus(FollowOrderEnum.FollowStatus.FOLLOW_ORDER_STOP.getIndex());
         followOrderService.save(followOrder);
         followOrderService.checkLogin(followOrder);
+
         return followOrder;
     }
 
