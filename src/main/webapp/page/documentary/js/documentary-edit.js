@@ -1,10 +1,12 @@
-$(function(){
-    $(".order-bili-class").hide();
-    $("#order-maxProfit-id").hide();
-    $("#order-accountLoss-id").hide();
-    $("#order-maxLoss-id").hide();
-    setParameter();
-});
+
+var followOrderId;//跟单ID
+function hideRadio(id){
+    $(".bili-class").hide();
+    $("#maxProfit-id").hide();
+    $("#accountLoss-id").hide();
+    $("#maxLoss-id").hide();
+    setParameter(id);
+}
 
 function showTableBase(tableId,data_){
     var columns = [
@@ -64,54 +66,41 @@ function returnFollowDirection(value, row, index){
 /*
 * 设置跟单参数
 * */
-function setFollowOrderParameter(obj) {
-    $("#followOrderName").val(obj.followOrderName);
-   /* $("input[type=radio][name=orderPoint]").each(function () {
-        if($(this).val()==obj.orderPoint){
-            $(this).attr("checked", "checked");
+function setFollowOrderParameter(followOrder) {
+    followOrderId = followOrder.id;
+    $("#followOrderName").val(followOrder.followOrderName);
+    hideRadio(followOrder.id);
+    setRadio('orderPoint',followOrder.orderPoint,followOrder.clientPointNumber,followOrder.clientPoint);
+    setRadio('maxProfit',followOrder.maxProfit,followOrder.maxProfitNumber);
+    setRadio('maxLoss',followOrder.maxLoss,followOrder.maxLossNumber);
+    setRadio('accountLoss',followOrder.accountLoss,followOrder.accountLossNumber);
+    setRadio('followManner',followOrder.followManner);
+    $("#GD-id option").each(function () {
+        if($(this).val() == followOrder.account.id){
+            $(this).attr("selected", true);
         }
-    })*/
-    setRadio('orderPoint',obj.orderPoint);
-    setRadio('maxProfit',obj.maxProfit);
-    setRadio('maxLoss',obj.maxLoss);
-    setRadio('accountLoss',obj.accountLoss);
-    setRadio('followManner',obj.followManner);
-}
-
-function setRadio(radioName,parameter) {
-
-   /* $("input[type=radio][name='"+radioName+"']").each(function () {
-
-            if($(this).val() == parameter){
-                $(this).attr("checked", "checked");
-                if($(this).val() == 0){
-                    setStatus1(radioName)
-                }
-            }
-
-    })*/
-    $("input[type=radio]").each(function () {
-            if($(this).attr('name') == radioName){
-                if($(this).val() == parameter){
-                    $(this).prop("checked", true);
-                    if($(this).val() == 0){
-                        setStatus(radioName)
-                    }
-                }
-            }
 
     })
+
+}
+
+function setRadio(radioName,parameter,number,value) {
+
+    $("input[type=radio][name='"+radioName+"']").each(function () {
+            if($(this).val() == parameter){
+                $(this).attr("checked", "checked");
+                    setStatus(radioName,number,value)
+            }
+    })
+
 }
 //table数据赋值
-function  setParameter() {
+function  setParameter(id) {
     $("#mytable").bootstrapTable('destroy');
-    var opts = parent.$("#table").bootstrapTable('getSelections');
-
-    var newjsonObj = JSON.stringify(opts)
-    var data_ = $.parseJSON(newjsonObj);
-    var tableId =$("#mytable");
-
-    var columns = [
+    var tableId = $("#mytable");
+    var url_client=url_+"/followOrderClient/getListFollowOrderClientParamVo.Action?followOrderId="+id;
+    var columns;
+    columns = [
 
         {
             field: 'userCode',
@@ -132,26 +121,31 @@ function  setParameter() {
             title: '盈亏效率'
         },
         {
-            field:'followDirection',
-            title:'跟单类型',
+            field: 'followDirection',
+            title: '跟单类型',
             align: 'center',
             valign: 'middle',
-            formatter: setType
-
+            formatter: function (value, row, index) {
+                return setType(value);
+            }
         },
         {
-            field:'handNumberType',
-            title:'手数类型',
+            field: 'handNumberType',
+            title: '手数类型',
             align: 'center',
             valign: 'middle',
-            formatter:setHandType
+            formatter:function (value, row, index) {
+                return setHandType(value, row, index);
+            }
         }
-        ,{
-            field:'handNumber',
-            title:'手数',
+        , {
+            field: 'handNumber',
+            title: '手数',
             align: 'center',
             valign: 'middle',
-            formatter:handNumber
+            formatter: function (value,row,index) {
+               return handNumber(value);
+            }
         }
         ,
         {
@@ -164,7 +158,7 @@ function  setParameter() {
     ];
 
     $(tableId).bootstrapTable({
-        data :data_,
+       url:url_client,
         columns:columns
     });
 }
@@ -217,6 +211,7 @@ function goOn(status){
         showTableBase(tableId,data_);
         //设置参数
 
+        setDetalsTitle();
         $(".detalis-div").show();
 
     }
@@ -281,21 +276,32 @@ function member_del(id, obj) {
 //设置跟单类型下拉框
 function setType(value,row,index){
     var result='';
-    result +='<select class="form-control followDirection"  ><option value="1">正向</option><option value="0">反向</option></select>';
-
+    result +='<select class="form-control followDirection"  ><option value="1"';
+    if(value){
+        result += 'selected >正向</option><option value="0">反向</option></select>'
+    }else{
+        result += '>正向</option><option value="0" selected>反向</option></select>'
+    }
     return result;
 }
+
+
 
 function setHandType(value,row,index){
     var result='';
-    result +='<select class="form-control handNumberType"   ><option value="1">按比例</option><option value="0">按固定手术</option></select>';
+    result +='<select class="form-control handNumberType"  ><option value="1"';
 
+    if(value){
+        result += 'selected >按比例</option><option value="0">按固定手数</option></select>'
+    }else{
+        result += '>按比例</option><option value="0" selected>按固定手数</option></select>'
+    }
     return result;
 }
-function handNumber(){
+function handNumber(value){
     var result='';
-    result +='1:<input style="width: 50px;"  class ="followHandNumber" ></input>';
-
+    result +='1:<input style="width: 50px;"  class ="followHandNumber"';
+    result +='value='+value+'></input>';
     return result;
 }
 
@@ -303,38 +309,65 @@ function handNumber(){
  * 设置勾选状态
  * id_
  */
-function setStatus(status){
+function setStatus(status,number,value){
     //下单点位
     if(status == 'orderPoint'){
         var val = $('input[name="orderPoint"]:checked').val();
 
-        (val==1 ? $(".order-bili-class").hide() : $(".order-bili-class").show() );
-
-
+        //(val==1 ? $(".bili-class").hide() : $(".bili-class").show() );
+        if(val ==1){
+            $(".bili-class").hide()
+        }else{
+            $(".bili-class").show();
+            $(".clientPoint-class option").each(function () {
+                if($(this).val()==value){
+                    $(this).attr("selected",true);
+                }
+            })
+            $("#clientPointNumber-id").val(number)
+        }
     }
     //单笔最大止盈
     if(status == 'maxProfit'){
         var val = $('input[name="maxProfit"]:checked').val();
-        (val==1? $("#order-maxProfit-id").hide() : $("#order-maxProfit-id").show() );
+        (val==1? $("#maxProfit-id").hide() : $("#maxProfit-id").show()&& $("#maxProfit-id").val(number) );
     }
     //单笔最大止损
     if(status == 'maxLoss'){
         var val = $('input[name="maxLoss"]:checked').val();
-        $('#maxLoss').val(val);
-        (val==1? $("#order-maxLoss-id").hide() : $("#order-maxLoss-id").show() );
+
+        (val==1? $("#maxLoss-id").hide() : $("#maxLoss-id").show()&& $("#maxLoss-id").val(number) );
     }
     //账户止损
     if(status == 'accountLoss'){
         var val = $('input[name="accountLoss"]:checked').val();
-        $('#accountLoss').val(val);
-        (val==1? $("#order-accountLoss-id").hide() : $("#order-accountLoss-id").show() );
+
+        (val==1? $("#accountLoss-id").hide() : $("#accountLoss-id").show()&& $("#accountLoss-id").val(number) );
 
     }
     //跟每单或净头寸
     if(status == 'followManner'){
-        var val = $('input[name="followManner"]:checked').val();
-        $('#followManner').val(val);
+        $('input[name="followManner"]').each(function () {
+            if($(this).val() == number){
+                $(this).attr("checked",true)
+            }
+        });
+
     }
+}
+
+/**
+ * 设置详情页明细显示
+ */
+function setDetalsTitle() {
+    $('.followOrderName').text($("#followOrderName").val())//策略名称
+    $('.orderPoint').text($('input[name="orderPoint"]:checked').val() == 1 ? '市价':'限价:比客户点位   '+($('.clientPoint-class option:selected').val() == 1 ? '好':'差')+''+$('#clientPointNumber-id').val());
+    $('.maxProfit').text($('input[name="maxProfit"]:checked').val() == 1 ? '市价':'点/手   '+$('input[name="maxProfit"]:checked').val());//单笔最大止盈
+    $('.maxLoss').text( $('input[name="maxLoss"]:checked').val() == 1 ? '不设':'点/手   '+ $('input[name="maxLoss"]:checked').val());//单笔最大止损
+    $('.accountLoss').text($('input[name="accountLoss"]:checked').val() == 1 ? '不设':'美金   '+$("#accountLoss-id").val());//账户止损
+    $('.userCode').text($('#GD-id option:selected').val());//跟单账号
+    $('.followManner').text($('input[name="followManner"]:checked').val()== 1 ? '跟每一单':'跟进头寸');//跟单方式
+
 }
 
 /**
@@ -345,11 +378,11 @@ function commit(){
     var followOrderName = $("#followOrderName").val();//策略名称
     var id  = $("#GD-id option:selected").val();//跟单人id
     var varietyCode =  parent.$("#product-val-id option:selected").val(); //商品
-    var maxProfit = $("#maxProfit").val(); //最大止盈
+    var maxProfit = $('input[name="maxProfit"]:checked').val(); //最大止盈
     var maxProfitNumber = $("#maxProfit-id").val(); //止盈点数
-    var maxLoss = $("#maxLoss").val();//止损
+    var maxLoss = $('input[name="maxLoss"]:checked').val();//止损
     var maxLossNumber = $("#maxLoss-id").val();//止损点数
-    var accountLoss = $("#accountLoss").val(); //账户止损
+    var accountLoss = $('input[name="accountLoss"]:checked').val(); //账户止损
     var accountLossNumber = $("#accountLoss-id").val();//账户止损金额
     var orderPoint = $("#orderPoint").val();//下单点位
     var clientPoint = $(".clientPoint-class option:selected").val(); //比客户点位
@@ -378,10 +411,11 @@ function commit(){
     });
     var str = JSON.stringify(fayuan_data);
     $.ajax({
-        url:"/sm/followOrder/createFollowOrder.Action",
+        url:"/sm/followOrder/updateFollowOrder.Action",
         type:'POST', //GET
         async:true,    //或false,是否异步
         data:{
+            id:followOrderId,//跟单id
             followOrderClients:str, // 用户数组字符串
             followOrderName:followOrderName, //策略名称
             accountId:id,//跟单人id
