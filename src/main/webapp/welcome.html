@@ -26,10 +26,10 @@
 
 	<body>
 		<div class="container-fluid">
-			<div class="att-address">
-				<span class="bg-red note color-w">NOTE:</span> 文档尚未产出：
-				<a href="">文档地址</a>
-			</div>
+			<!--<div class="att-address">-->
+				<!--<span class="bg-red note color-w">NOTE:</span> 文档尚未产出：-->
+				<!--<a href="">文档地址</a>-->
+			<!--</div>-->
 			<fieldset class="layui-elem-field layui-field-title">
 				<legend>客户数据</legend>
 			</fieldset>
@@ -248,6 +248,7 @@
 			function SearchData() {
 				$(tableId).bootstrapTable('refresh', {
 					pageNumber: 1
+
 				});
 			}
 			//tableHeight函数
@@ -257,6 +258,7 @@
 			}
 			//查询按钮事件
 			$('#search_btn').click(function() {
+
 				$(tableId).bootstrapTable('refresh', {
 					url: 'Jsion/demo.json'
 				});
@@ -267,7 +269,7 @@
 				var userCode = row.userCode;
 				var result = "";
 				var editUrl ="page/clientUser/client-detail.html";
-				var edit_w = 1900;
+				var edit_w = 1500;
 				var edit_h = 800;
 				result += "<a href='javascript:;' class='btn btn-xs green' onclick=\"openDetails('" + userCode + "', view='客户明细','"+editUrl+"','"+edit_w+"','"+edit_h+"')\" title='查看'><span class='glyphicon glyphicon-search'></span></a>";
 				return result;
@@ -345,7 +347,7 @@
 
                     },
                     success:function(data,textStatus,jqXHR){
-                        console.log(data);
+                        parent.layer.msg(data.msg);
                     },
                     error:function(xhr,textStatus){
 
@@ -378,7 +380,7 @@
                 area: [w + 'px', h + 'px'],
                 fix: false, //不固定
                 maxmin: true,
-                shadeClose: true,
+                shadeClose: false,
                 shade: 0.4,
                 title: title,
                 content: url,

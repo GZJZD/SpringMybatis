@@ -63,7 +63,6 @@ function returnFollowDirection(value, row, index){
 function  setParameter() {
     $("#mytable").bootstrapTable('destroy');
     var opts = parent.$("#table").bootstrapTable('getSelections');
-
     var newjsonObj = JSON.stringify(opts)
     var data_ = $.parseJSON(newjsonObj);
     var tableId =$("#mytable");
@@ -128,7 +127,6 @@ function  setParameter() {
 
 function goOn(status){
     if(status == 1){
-
         layui.use('element', function(){
             var element = layui.element;
             element.progress('demo', '66%');
@@ -137,7 +135,6 @@ function goOn(status){
         $(".one-div").css('background-color','#f0eff0');
         $('.first-div').css('display','none');
         ($("#followManner").val()==1? $('.table-div').show():$('.jtc').show());
-       ;
     }
     if(status == 2){
         layui.use('element', function(){
@@ -167,7 +164,6 @@ function goOn(status){
             fayuan_data.push(json_);
         });
         setDetalsTitle();//设置明细动态数据
-
         var newjsonObj = JSON.stringify(fayuan_data);
         var data_ = $.parseJSON(newjsonObj);
         var tableId =$("#datails-table");
@@ -355,7 +351,7 @@ function commit(){
     });
     var str = JSON.stringify(fayuan_data);
     $.ajax({
-        url:"/followOrder/createFollowOrder.Action",
+        url:url_+"/followOrder/createFollowOrder.Action",
         type:'POST', //GET
         async:true,    //或false,是否异步
         data:{
@@ -383,7 +379,13 @@ function commit(){
 
         },
         success:function(data,textStatus,jqXHR){
+            if(data.success){
+                parent.layer.closeAll();
 
+            }else{
+                layer.msg(data.msg);
+            }
+            parent.layer.msg(data.msg);
         },
         error:function(xhr,textStatus){
 

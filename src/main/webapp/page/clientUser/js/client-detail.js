@@ -20,9 +20,7 @@ $(function(){
  function  showDetails(userCode){
 
    var productCode =  parent.$("#product-val-id option:selected").val(); //商品
-     console.log(userCode);
-    console.log(productCode);
-     $.ajax({
+       $.ajax({
          url:url_ +'/orderUser/getOrderUser.Action?',
          type:'POST',
          async:true,
@@ -36,7 +34,6 @@ $(function(){
 
          },
          success:function(data,textStatus,jqXHR){
-             console.log(data);
              $('#inMoney-id').text(data.inMoney);//入金
              $('#createTime-id').text(data.createTime);//注册时间
              $('#agencyName-id').text(data.agencyName);//代理人
@@ -49,16 +46,10 @@ $(function(){
              $('#platformName-id').text(data.platformName);//注册平台
              setHoldOrderTableData(data.holdList,"#holdOrderList");
              setprofitOrderTableData(data.profitList,"#profitOrderList");
-
-
-
-
          },
          error:function(xhr,textStatus){
-
          },
          complete:function(){
-
          }
      })
  }
