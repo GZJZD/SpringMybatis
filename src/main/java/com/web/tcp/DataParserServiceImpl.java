@@ -77,6 +77,7 @@ public class DataParserServiceImpl implements DataParserService,Runnable{
         }catch (Exception e) {
             //数据的构造失败，毁灭当前信息
             e.printStackTrace();
+            log.error(e.getMessage());
             log.error("数据的构造失败，毁灭当前信息");
         }
         return dataSource;
