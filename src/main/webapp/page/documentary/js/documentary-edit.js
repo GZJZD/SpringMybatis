@@ -165,6 +165,7 @@ function  setParameter(id) {
 
 function goOn(status){
     if(status == 1){
+
         layui.use('element', function(){
             var element = layui.element;
             element.progress('demo', '66%');
@@ -172,7 +173,8 @@ function goOn(status){
         $(".two-div").css('background-color','#44b7af');
         $(".one-div").css('background-color','#f0eff0');
         $('.first-div').css('display','none');
-        $('.table-div').show();
+        ($('input[name="followManner"]:checked').val() == 1 ? $('.jtc').show(): $('.table-div').show());
+
     }
     if(status == 2){
         layui.use('element', function(){
@@ -184,6 +186,7 @@ function goOn(status){
         $(".two-div").css('background-color','#f0eff0');
         $(".table-div").hide();
         $(".title-fiel").hide();
+        $('.jtc').hide();
         var leght = $("#datails-table tbody").find('tr').length;
         //设置展示数据
         var fayuan_data = new Array();
@@ -200,6 +203,7 @@ function goOn(status){
             var json_ = {"userCode":userCode,"userName":userName,"profit":profit,"profit_loss_than":profit_loss_than,"followDirection":followDirection,"handNumberType":handNumberType,"followHandNumber":followHandNumber};
             fayuan_data.push(json_);
         });
+        setDetalsTitle();//设置明细动态数据
 
         var newjsonObj = JSON.stringify(fayuan_data);
         var data_ = $.parseJSON(newjsonObj);
@@ -211,12 +215,12 @@ function goOn(status){
         showTableBase(tableId,data_);
         //设置参数
 
-        setDetalsTitle();
         $(".detalis-div").show();
 
     }
 
 }
+
 //每个返回按钮事件
 function returnBlack(status){
     if(status ==1 ){
@@ -362,11 +366,11 @@ function setStatus(status,number,value){
 function setDetalsTitle() {
     $('.followOrderName').text($("#followOrderName").val())//策略名称
     $('.orderPoint').text($('input[name="orderPoint"]:checked').val() == 1 ? '市价':'限价:比客户点位   '+($('.clientPoint-class option:selected').val() == 1 ? '好':'差')+''+$('#clientPointNumber-id').val());
-    $('.maxProfit').text($('input[name="maxProfit"]:checked').val() == 1 ? '市价':'点/手   '+$('input[name="maxProfit"]:checked').val());//单笔最大止盈
+    $('.maxProfit').text($('input[name="maxProfit"]:checked').val() == 1 ? '不设':'点/手   '+$('input[name="maxProfit"]:checked').val());//单笔最大止盈
     $('.maxLoss').text( $('input[name="maxLoss"]:checked').val() == 1 ? '不设':'点/手   '+ $('input[name="maxLoss"]:checked').val());//单笔最大止损
     $('.accountLoss').text($('input[name="accountLoss"]:checked').val() == 1 ? '不设':'美金   '+$("#accountLoss-id").val());//账户止损
-    $('.userCode').text($('#GD-id option:selected').val());//跟单账号
-    $('.followManner').text($('input[name="followManner"]:checked').val()== 1 ? '跟每一单':'跟进头寸');//跟单方式
+    $('.userCode').text($('#GD-id option:selected').text());//跟单账号
+    $('.followManner').text($('input[name="followManner"]:checked').val()== 0 ? '跟每一单':'跟进头寸');//跟单方式
 
 }
 
