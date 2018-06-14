@@ -79,8 +79,12 @@ function setFollowOrderParameter(followOrder) {
         if($(this).val() == followOrder.account.id){
             $(this).attr("selected", true);
         }
-
-    })
+    });
+    if(followOrder.followManner){
+        setRadio('netPositionDirection',followOrder.netPositionDirection);
+        $("#netPositionChange-id").val(followOrder.netPositionChange);
+        $("#netPositionFollowNumber-id").val(followOrder.netPositionFollowNumber);
+    }
 
 }
 
