@@ -194,7 +194,6 @@ function follow_order_stop(obj, id) {
             })
         }else{
             layer.confirm('确认要停止吗？确定后系统将不会继续跟进客户的做单数据，并同时平仓所有未平的跟单', function (index) {
-
                 update_status(id,obj,"停止","停止",0,'&#x1006;');
             })
         }
@@ -289,7 +288,13 @@ function update_status(id,obj,newTitle,oldTitle,status,i) {
                 $(obj).find('i').html(i);
                 $(obj).parents("tr").find(".td-status").find('span').addClass('layui-btn-disabled').html('已'+oldTitle);
                 layer.msg("状态修改成功", {icon: 6, time: 1000},function () {
-                    location.reload()
+                    $(tableOrderId).bootstrapTable('refresh', {
+                        silent:true//静默跟新
+                    });
+                    $(tableHistoryOrderId).bootstrapTable('refresh', {
+                        silent:true//静默跟新
+                    });
+
                 });
             }else {
                 //layer.msg(data.msg, {icon: 6, time: 1000});

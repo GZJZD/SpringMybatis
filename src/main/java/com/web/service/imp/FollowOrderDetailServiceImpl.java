@@ -147,15 +147,18 @@ public class FollowOrderDetailServiceImpl implements IFollowOrderDetailService {
             followOrderPageVo.setHoldPositionHandNumber(0.0);
             followOrderPageVo.setHoldPositionProfit(0.0);
         }
+
         followOrderPageVo.setClosePositionWinSum(followOrderDetailDao.getFollowOrderPageVoIsCloseProfitNum());//盈利单数
         followOrderPageVo.setWinRate(DoubleUtil.div(Double.valueOf(followOrderPageVo.getClosePositionWinSum()),
-                Double.valueOf(followOrderPageVo.getClosePositionTotalNumber()),2));//胜率
+                Double.valueOf(followOrderPageVo.getClosePositionTotalNumber()==0.0?1.0:followOrderPageVo.getClosePositionTotalNumber()),
+                2));//胜率
 
         followOrderPageVo.setWinRate(DoubleUtil.mul(followOrderPageVo.getWinRate(),100.0));//胜率 * 100
         //总手数=历史手数+持仓手数
-        Double handNumberTotal = DoubleUtil.add(followOrderPageVo.getHistoryHandNumber(),followOrderPageVo.getHoldPositionHandNumber());
-        followOrderPageVo.setProfitAndLossRate(DoubleUtil.div(followOrderPageVo.getHistoryProfit(),
-                handNumberTotal,2));//盈亏效率
+        Double handNumberTotal = DoubleUtil.add(followOrderPageVo.getHistoryHandNumber()==null?0.0:followOrderPageVo.getHistoryHandNumber(),
+                followOrderPageVo.getHoldPositionHandNumber()==null?0.0:followOrderPageVo.getHoldPositionHandNumber());
+        followOrderPageVo.setProfitAndLossRate(DoubleUtil.div(followOrderPageVo.getHistoryProfit()==null?0.0:followOrderPageVo.getHistoryProfit(),
+                handNumberTotal==0.0?1.0:handNumberTotal,2));//盈亏效率
 
         return followOrderPageVo;
     }

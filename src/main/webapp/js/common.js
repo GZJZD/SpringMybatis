@@ -514,7 +514,8 @@ function showByTableId(table_Id, method, url, unique_Id, sortOrder, columns) {
 	$(table_Id).bootstrapTable({
 		method: method,
 		contentType: "application/x-www-form-urlencoded", //必须要有！！！！
-		striped: false, //是否显示行间隔色
+        async:true,//异步加载
+        striped: false, //是否显示行间隔色
 		url: url,
 		clickToSelect: true,
 		uniqueId: unique_Id, //每一行的唯一标识，一般为主键列
