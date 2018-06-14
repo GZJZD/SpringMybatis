@@ -28,4 +28,5 @@ public interface FollowOrderClientDao {
      */
     List<FollowOrderClient> selectByUserCode(String userCode);
 
+    List<FollowOrderClient> getListByFollowOrderId(Long followOrderId);
 }

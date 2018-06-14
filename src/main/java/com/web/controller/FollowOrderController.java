@@ -12,7 +12,6 @@ import com.web.pojo.vo.NetPositionDetailVo;
 import com.web.service.IFollowOrderClientService;
 import com.web.service.IFollowOrderDetailService;
 import com.web.service.IFollowOrderService;
-import com.web.service.IVarietyService;
 import com.web.util.JSONResult;
 import com.web.util.common.DateUtil;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,8 +33,7 @@ public class FollowOrderController {
     private IFollowOrderService followOrderService;
     @Autowired
     private IFollowOrderDetailService followOrderDetailService;
-    @Autowired
-    private IVarietyService varietyService;
+
     @Autowired
     private IFollowOrderClientService followOrderClientService;
 
@@ -201,14 +199,7 @@ public class FollowOrderController {
         return followOrderDetailService.getFollowOrderPageVo();
     }
 
-    /*
-     *   品种展示
-     */
-    @RequestMapping("/getListVariety.Action")
-    @ResponseBody
-    public String getListVariety(){
-        return JSON.toJSONString(varietyService.getVarietyList());
-    }
+
 
     /*
     * 修改跟单
@@ -247,9 +238,11 @@ public class FollowOrderController {
                     followOrder.setNetPositionFollowNumber(netPositionFollowNumber);
                 }
                 followOrderService.updateFollowOrder(followOrder);
-                for (FollowOrderClient followOrderClient : followOrderClients1) {
-
-                    followOrderClientService.update(followOrderClient);
+                //删除
+                followOrderClientService.deleteByFollowOrderId(id);
+                if(!followOrder.getFollowManner().equals(FollowOrderEnum.FollowStatus.FOLLOWMANNER_NET_POSITION.getIndex())){
+                    //保存关联
+                    followOrderClientService.saveListFollowOrderClient(followOrderClients1,followOrder);
                 }
             }
 
@@ -259,5 +252,6 @@ public class FollowOrderController {
         }
         return new JSONResult("修改成功");
     }
+
 
 }

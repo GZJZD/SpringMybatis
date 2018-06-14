@@ -81,9 +81,15 @@
     from follow_order_client
     where user_code =#{userCode}
   </select>
+    <select id="getListByFollowOrderId" resultMap="BaseResultMap">
+      select
+      <include refid="base_List"/>
+      from follow_order_client
+      where follow_order_id =#{followOrderId}
+    </select>
 
 
-  <sql id="base_List">
+    <sql id="base_List">
     id,
     follow_order_id,
     user_code,

@@ -76,33 +76,7 @@
       <if test="followManner != null">
         follow_manner = #{followManner},
       </if>
-      <if test="maxProfit != null">
-        max_profit = #{maxProfit},
-      </if>
-      <if test="maxProfitNumber != null">
-        max_profit_number = #{maxProfitNumber},
-      </if>
-      <if test="maxLoss != null">
-        max_loss = #{maxLoss},
-      </if>
-      <if test="maxLossNumber != null">
-        max_loss_number = #{maxLossNumber},
-      </if>
-      <if test="accountLoss != null">
-        account_loss = #{accountLoss},
-      </if>
-      <if test="accountLossNumber != null">
-        account_loss_number = #{accountLossNumber},
-      </if>
-      <if test="orderPoint != null">
-        order_point = #{orderPoint},
-      </if>
-      <if test="clientPoint != null">
-        client_point = #{clientPoint},
-      </if>
-      <if test=" clientPointNumber != null">
-        client_point_number = #{clientPointNumber},
-       </if>
+
       <if test="netPositionDirection != null">
         net_position_direction = #{netPositionDirection},
       </if>
@@ -139,6 +113,15 @@
       <if test="createUser != null ">
         create_user = #{createUser},
       </if>
+      max_profit = #{maxProfit},
+      max_profit_number = #{maxProfitNumber},
+      max_loss = #{maxLoss},
+      max_loss_number = #{maxLossNumber},
+      account_loss = #{accountLoss},
+      account_loss_number = #{accountLossNumber},
+      order_point = #{orderPoint},
+      client_point = #{clientPoint},
+      client_point_number = #{clientPointNumber},
       version = #{version} + 1
     </set>
     where id = #{id} and version = #{version}

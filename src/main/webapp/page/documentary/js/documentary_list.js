@@ -236,7 +236,7 @@ function openDeatil(obj) {
 * */
 function findByVariety() {
     $.ajax({
-        url:url_+"/followOrder/getListVariety.Action",
+        url:url_+"/variety/getListVariety.Action",
         type:'GET', //GET
         async:true,    //或false,是否异步
         data:{
