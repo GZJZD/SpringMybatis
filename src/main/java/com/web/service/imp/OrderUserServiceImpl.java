@@ -9,8 +9,11 @@ import com.web.pojo.vo.OrderUserVo;
 import com.web.service.OrderUserService;
 import com.web.util.common.DateUtil;
 import com.web.util.common.DoubleUtil;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
 
 import java.util.ArrayList;
@@ -18,11 +21,12 @@ import java.util.LinkedHashSet;
 import java.util.List;
 
 @Service("orderUserService")
+@Transactional
 public class OrderUserServiceImpl implements OrderUserService {
     @Autowired(required = false)
     private OrderUserDao orderUserDao;
 
-
+    private static Logger log = LogManager.getLogger(OrderUserServiceImpl.class.getName());
 
     @Override
     public List<OrderUser> findAll() {
@@ -54,13 +58,17 @@ public class OrderUserServiceImpl implements OrderUserService {
     public String updateOrAdd(DataSource dataSource){
             String message = null;
             OrderUser orderUser = findByTicket(dataSource.getTicket());
-            Integer longShor = orderUser.getLongShort(); //历史多空
-            Double openPrice = orderUser.getOpenPrice();// 历史开仓价格
+        Integer longShor ; //历史多空
+        Double openPrice =0.0;// 历史开仓价格
             Double difference;
         if(orderUser == null){
             message = saveClose(dataSource);
             return message;
+        }else{
+          longShor = orderUser.getLongShort(); //历史多空
+          openPrice = orderUser.getOpenPrice();// 历史开仓价格
         }
+        //全平
         if(dataSource.getTicket().equals(dataSource.getNewTicket())){
 
                 orderUser.setCloseTime(dataSource.getCreateTime()); //平仓时间
