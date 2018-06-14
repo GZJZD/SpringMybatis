@@ -17,12 +17,10 @@ function showTableBase(tableId,data_){
             field: 'userName',
             title: '客户姓名'
         },
-
         {
             field: 'profit',
             title: '平仓盈亏'
         },
-
         {
             field: 'profit_loss_than',
             title: '盈亏效率'
@@ -130,6 +128,7 @@ function  setParameter() {
 
 function goOn(status){
     if(status == 1){
+
         layui.use('element', function(){
             var element = layui.element;
             element.progress('demo', '66%');
@@ -137,7 +136,8 @@ function goOn(status){
         $(".two-div").css('background-color','#44b7af');
         $(".one-div").css('background-color','#f0eff0');
         $('.first-div').css('display','none');
-        $('.table-div').show();
+        ($("#followManner").val()==1? $('.table-div').show():$('.jtc').show());
+       ;
     }
     if(status == 2){
         layui.use('element', function(){
@@ -149,6 +149,7 @@ function goOn(status){
         $(".two-div").css('background-color','#f0eff0');
         $(".table-div").hide();
         $(".title-fiel").hide();
+        $('.jtc').hide();
         var leght = $("#datails-table tbody").find('tr').length;
         //设置展示数据
         var fayuan_data = new Array();
@@ -208,6 +209,7 @@ function returnBlack(status){
         $(".two-div").css('background-color','#f0eff0');
         $('.table-div').hide();
         $('.first-div').show();
+        $('.jtc').hide();
     }
     if(status == 2){
         layui.use('element', function(){
@@ -218,10 +220,9 @@ function returnBlack(status){
         $(".one-div").css('background-color','#f0eff0');
         $(".two-div").css('background-color','#44b7af');
         $(".three-div").css('background-color','#f0eff0')
-        $('.table-div').show();
         $('.first-div').hide();
         $('.detalis-div').hide();
-
+        ($("#followManner").val()==1? $('.table-div').show():$('.jtc').show());
 
     }
 }
@@ -331,9 +332,9 @@ function commit(){
     var clientPoint = $(".clientPoint-class option:selected").val(); //比客户点位
     var clientPointNumber = $('#clientPointNumber-id').val(); //点位
     var followManner = $("#followManner").val(); //跟单方式
-    var netPositionDirection='1';
-    var netPositionChange=1; //变化基数
-    var netPositionFollowNumber = 1;//手数
+    var netPositionDirection=$('input[name="netPositionDirection"]:checked').val(); //正向反向
+    var netPositionChange=$('#netPositionChange-id').val(); //净头寸变化
+    var netPositionFollowNumber = $('#netPositionFollowNumber-id').val();//跟单、手数
     if(followOrderName == ''|| followOrderName == 'undefined'){
         return layer.msg('策略名称不能为空');
     }

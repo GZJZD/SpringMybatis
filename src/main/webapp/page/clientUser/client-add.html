@@ -78,10 +78,15 @@
     .disPaly{
         display: none;
     }
+
+    .set-div-top{
+        position: absolute;
+        left: 500px;
+        top: 4px;
+        }
 </style>
 <body>
     <div class="title-div um-vp pr">
-
         <div class="h100" id="page_0">
             <div class="ub ub-ac ub-pc">
                 <div class="ub-f1 ub ub-pc ub-ac">
@@ -216,7 +221,7 @@
                         <div class="layui-input-block">
                             <input class="disPaly" type="text" id="followManner" value="1"/>
                             <input type="radio" name="followManner" onclick="setStatus('followManner')" value="1" title="跟每一单" checked="">跟每一单</input>
-                            <input type="radio" name="followManner" onclick="setStatus('followManner')" value="2" title="跟净头寸">跟净头寸</input>
+                            <input type="radio" name="followManner" onclick="setStatus('followManner')" value="0" title="跟净头寸">跟净头寸</input>
                         </div>
                      </div>
 
@@ -244,6 +249,46 @@
         <!--表单end -->
     </div>
 
+    <!--跟进头寸-->
+    <div class="jtc" style="display: none">
+        <div class="">
+            <div>
+                <div class="layui-form-item">
+                    <label class="layui-form-label">跟单方式:</label>
+                    <div class="layui-input-block">
+                        <input type="radio" name="netPositionDirection"  value="1" title="正向" checked="">正向</input>
+                        <input type="radio" name="netPositionDirection"  value="0" title="反向">反向</input>
+                    </div>
+                </div>
+                <div class="layui-form-item">
+
+                    <div class="layui-inline">
+                        <label class="layui-form-label">下单手数:</label>
+                        <label class="layui-form-label">净头寸每变化/手</label>
+                        <div class="layui-input-block set-input">
+                            <input type="number" name="phone"   id="netPositionChange-id" autocomplete="off" class="layui-input">
+                        </div>
+
+                    </div>
+                    <div class="layui-inline set-div-top" >
+                        <label class="layui-form-label">跟单/手</label>
+                        <div class="layui-input-block">
+                            <input type="number" name="phone"  id="netPositionFollowNumber-id"  autocomplete="off" class="layui-input">
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <div class="layui-input-block">
+                    <button type="submit" class="layui-btn layui-btn-primary" onclick="returnBlack(1)">返回</button>
+                    <button type="submit" class="layui-btn" lay-submit="" lay-filter="demo1" onclick="goOn(2)">继续<i class="layui-icon layui-icon-face-smile"></i>   </button>
+                </div>
+            </div>
+        </div>
+
+    </div>
+    <!--跟进end-->
     <!--详情区域-->
     <div class="detalis-div">
         <div>
