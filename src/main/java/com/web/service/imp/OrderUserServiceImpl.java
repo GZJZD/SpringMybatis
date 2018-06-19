@@ -72,7 +72,7 @@ public class OrderUserServiceImpl implements OrderUserService {
         if(dataSource.getTicket().equals(dataSource.getNewTicket())){
 
                 orderUser.setCloseTime(dataSource.getCreateTime()); //平仓时间
-    //            orderUser.setHandNumber(dataSource.getHandNumber());
+    //          orderUser.setHandNumber(dataSource.getHandNumber());
                 orderUser.setProfit(dataSource.getProfit()); //平仓盈亏
                 orderUser.setClosePrice(dataSource.getPrice()); //平仓价格
                 orderUser.setLongShort(dataSource.getCmd());//开多  ，平 空
@@ -110,8 +110,7 @@ public class OrderUserServiceImpl implements OrderUserService {
     /**
      * 新增
      * @param dataSource tcp 数据包
-     *
-     * @return
+     * @return String  状态
      */
     public String save(DataSource dataSource){
             OrderUser orderUser = new OrderUser();
@@ -129,6 +128,7 @@ public class OrderUserServiceImpl implements OrderUserService {
             orderUser.setOpenPrice(dataSource.getPrice());//开仓价
             orderUser.setCreateDate(DateUtil.getStringDate());//创建时间
             orderUserDao.addOrderUser(orderUser);
+            log.info("新增orderUser数据成功");
             return  "添加成功";
     }
 
@@ -152,6 +152,7 @@ public class OrderUserServiceImpl implements OrderUserService {
         orderUser.setClosePrice(dataSource.getPrice());//平仓价
         orderUser.setCreateDate(DateUtil.getStringDate());//创建时间
         orderUserDao.addOrderUser(orderUser);
+        log.info("平仓成功 新开仓单号为："+orderUser.getTicket());
         return  "添加成功";
     }
 
@@ -319,11 +320,5 @@ public class OrderUserServiceImpl implements OrderUserService {
     }
 
 
-    /**
-     * 持仓记录 & 平仓记录
-     */
-    public void getHandAndProfit(){
-
-    }
 
 }
