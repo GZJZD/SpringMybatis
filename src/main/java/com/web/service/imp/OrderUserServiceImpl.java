@@ -52,14 +52,15 @@ public class OrderUserServiceImpl implements OrderUserService {
 
 
             }
+                    log.info(message);
                     return message;
     }
 
     public String updateOrAdd(DataSource dataSource){
             String message = null;
             OrderUser orderUser = findByTicket(dataSource.getTicket());
-        Integer longShor ; //历史多空
-        Double openPrice =0.0;// 历史开仓价格
+            Integer longShor ; //历史多空
+            Double openPrice =0.0;// 历史开仓价格
             Double difference;
         if(orderUser == null){
             message = saveClose(dataSource);
