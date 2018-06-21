@@ -35,10 +35,12 @@ public class FollowOrderTradeRecord implements Serializable {
     private String ticket;
     //新开仓单号
     private String newTicket;
+    //客户的交易时间
+    private String clientTradeTime;
     //手续费
     private Double poundage;
-    //下单时净头寸的值
-    private Double netPositionSum;
+    //客户净头寸id
+    private Long clientNetPositionId;
     //修改时间
     private String updateDate;
     //创建时间
@@ -153,12 +155,12 @@ public class FollowOrderTradeRecord implements Serializable {
         this.poundage = poundage;
     }
 
-    public Double getNetPositionSum() {
-        return netPositionSum;
+    public Long getClientNetPositionId() {
+        return clientNetPositionId;
     }
 
-    public void setNetPositionSum(Double netPositionSum) {
-        this.netPositionSum = netPositionSum;
+    public void setClientNetPositionId(Long clientNetPositionId) {
+        this.clientNetPositionId = clientNetPositionId;
     }
 
     public String getUpdateDate() {
@@ -183,5 +185,13 @@ public class FollowOrderTradeRecord implements Serializable {
 
     public void setVersion(Integer version) {
         this.version = version;
+    }
+
+    public String getClientTradeTime() {
+        return clientTradeTime;
+    }
+
+    public void setClientTradeTime(String clientTradeTime) {
+        this.clientTradeTime = clientTradeTime;
     }
 }

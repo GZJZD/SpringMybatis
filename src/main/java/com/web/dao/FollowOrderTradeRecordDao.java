@@ -1,8 +1,8 @@
 package com.web.dao;
 
 
-
 import com.web.pojo.FollowOrderTradeRecord;
+import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
 
@@ -12,13 +12,10 @@ public interface FollowOrderTradeRecordDao {
     int insert(FollowOrderTradeRecord record);
 
     FollowOrderTradeRecord selectByPrimaryKey(Long id);
-
+    List<FollowOrderTradeRecord> getListOrderTradeByTicketAndTime(@Param("ticket") String ticket, @Param("time") String time);
     List<FollowOrderTradeRecord> selectAll();
 
     int updateByPrimaryKey(FollowOrderTradeRecord record);
-
-    FollowOrderTradeRecord getTradeRecordBySignalNumber(String signalNumber);
-
 
     int getFollowOrderTotalAmount(Long followOrderId);
 

@@ -20,7 +20,7 @@ public interface IFollowOrderClientService {
      */
     List<FollowOrderClient> getListByUserCode(String userCode);
     List<FollowOrderClient> getListByFollowOrderId(Long followOrderId);
-
+    List<String> getListUserCodeByFollowOrderId(Long followOrderId);
     void deleteByFollowOrderId(Long followOrderId);
 
     void saveListFollowOrderClient(List<FollowOrderClient> FollowOrderClients, FollowOrder followOrder);

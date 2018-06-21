@@ -13,6 +13,7 @@ import com.web.service.*;
 import com.web.util.FollowOrderGenerateUtil;
 import com.web.util.common.DateUtil;
 import com.web.util.common.DoubleUtil;
+import com.web.util.json.WebJsion;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -54,6 +55,8 @@ public class FollowOrderServiceImpl implements IFollowOrderService {
     private IOrderTraderService orderTraderService;
     @Autowired
     private IVarietyService varietyService;//品种
+    @Autowired
+    private IClientNetPositionService clientNetPositionService;//客户净头寸关联
 
 
     @Override
@@ -160,9 +163,8 @@ public class FollowOrderServiceImpl implements IFollowOrderService {
                 //设置持仓盈亏
                 followOrderVo.setPositionGainAndLoss(0.0);
                 //设置平仓盈亏
-                followOrderVo.setOffsetGainAndLoss(followOrderDetailService.
-                        getOffsetGainAndLossByFollowOrderId(followOrder.getId()) == null? 0.0 :followOrderDetailService.
-                        getOffsetGainAndLossByFollowOrderId(followOrder.getId()));
+                FollowOrderVo offset = followOrderDetailService.getOffsetGainAndLossAndHandNumberByFollowOrderId(followOrder.getId());
+                followOrderVo.setOffsetGainAndLoss(offset == null? 0.0 :offset.getOffsetGainAndLoss());
                 //设置累计盈亏
                 followOrderVo.setGainAndLossTotal(DoubleUtil.add(followOrderVo.getPositionGainAndLoss(),
                         followOrderVo.getOffsetGainAndLoss()) == null ? 0.0 :DoubleUtil.add(followOrderVo.getPositionGainAndLoss(),
@@ -171,7 +173,7 @@ public class FollowOrderServiceImpl implements IFollowOrderService {
                 followOrderVo.setClientProfit(0.0);
                 //盈亏率
                 followOrderVo.setProfitAndLossRate(DoubleUtil.div(followOrderVo.getOffsetGainAndLoss()==null? 0.0 :followOrderVo.getOffsetGainAndLoss(),
-                        followOrderVo.getHandNumberTotal() == 0.0 ?1.0 :followOrderVo.getHandNumberTotal(), 2));
+                        offset == null ?1.0 :offset.getOffsetHandNumber(), 2));
                 //跟单成功
                 followOrderVo.setSuccessTotal(followOrderTradeRecordService.getFollowOrderSuccessTotalAmount(followOrder.getId()));
                 //跟单总数
@@ -224,11 +226,29 @@ public class FollowOrderServiceImpl implements IFollowOrderService {
     public void netPositionOrder(FollowOrder followOrder, DataSource data) {
         //获取累加的净头寸
         Double headNum = getNowNetPositionSum(data, followOrder);
+        //创建客户与净头寸的关联
+        ClientNetPosition clientNetPosition = new ClientNetPosition();
+        //创建时间
+        clientNetPosition.setCreateTime(DateUtil.getStringDate());
+        //跟单ID
+        clientNetPosition.setFollowOrderId(followOrder.getId());
+        //设置净头寸
+        clientNetPosition.setNetPositionSum(headNum);
+        //设置Ticket
+        clientNetPosition.setTicket(data.getTicket());
+        if(data.getOpenClose().equals(FollowOrderEnum.FollowStatus.CLOSE.getIndex())){
+            //设置平仓时间
+            clientNetPosition.setCloseTime(data.getCreateTime());
+        }else{
+            //设置开仓时间
+            clientNetPosition.setOpenTime(data.getCreateTime());
+        }
+        clientNetPositionService.save(clientNetPosition);
         //判断策略的状态是否在交易中,不在交易就进行判断
         if (followOrder.getNetPositionStatus().equals(FollowOrderEnum.FollowStatus.NET_POSITION_TRADING_PAUSE.getIndex())) {
             //获取原有的持仓数
             Double oldHoldNum = followOrder.getNetPositionHoldNumber();
-            log.info("原本的净头寸的值："+followOrder.getNetPositionSum());
+
             //现在的持仓数
             log.info("现在的净头寸的值："+headNum);
             //应持仓多少手
@@ -257,7 +277,7 @@ public class FollowOrderServiceImpl implements IFollowOrderService {
 
                         //设置交易对象下单手数,发送交易请求,做多单
                         sendMsgByTrade(followOrder, FollowOrderEnum.FollowStatus.BUY.getIndex(), FollowOrderEnum.FollowStatus.CLOSE.getIndex(),
-                                interim, data.getNewTicket(),data.getTicket(),data.getVarietyCode());
+                                interim, data.getNewTicket(),data.getTicket(),data.getVarietyCode(),clientNetPosition.getId());
                     } else if (newHoldNum < oldHoldNum && oldHoldNum <= zero) {
                         //设置正在交易中的状态,普通交易状态
                         followOrder.setNetPositionStatus(FollowOrderEnum.FollowStatus.NET_POSITION_TRADING_START.getIndex());
@@ -265,7 +285,7 @@ public class FollowOrderServiceImpl implements IFollowOrderService {
                         //当newHoldNum为负数的时候小于原本的持仓，那就是开仓,发送交易请求,做空单
 
                         sendMsgByTrade(followOrder, FollowOrderEnum.FollowStatus.SELL.getIndex(), FollowOrderEnum.FollowStatus.OPEN.getIndex(),
-                                interim, data.getNewTicket(),data.getTicket(),data.getVarietyCode());
+                                interim, data.getNewTicket(),data.getTicket(),data.getVarietyCode(),clientNetPosition.getId());
 
                     } else if (oldHoldNum > zero) {
 
@@ -275,13 +295,13 @@ public class FollowOrderServiceImpl implements IFollowOrderService {
                             followOrder.setNetPositionStatus(FollowOrderEnum.FollowStatus.NET_POSITION_TRADING_OPENCLOSE.getIndex());
                             //先做开仓,做空单
                             sendMsgByTrade(followOrder, FollowOrderEnum.FollowStatus.SELL.getIndex(), FollowOrderEnum.FollowStatus.OPEN.getIndex(),
-                                    (double) Math.abs(newHoldNum), data.getNewTicket(),data.getTicket(),data.getVarietyCode());
+                                    (double) Math.abs(newHoldNum), data.getNewTicket(),data.getTicket(),data.getVarietyCode(),clientNetPosition.getId());
                         }else{
                             followOrder.setNetPositionStatus(FollowOrderEnum.FollowStatus.NET_POSITION_TRADING_START.getIndex());
                         }
                         //再来做一单，平仓做空单
                         sendMsgByTrade(followOrder, FollowOrderEnum.FollowStatus.SELL.getIndex(), FollowOrderEnum.FollowStatus.CLOSE.getIndex(),
-                                (double) Math.abs(oldHoldNum), data.getNewTicket(),data.getTicket(),data.getVarietyCode());
+                                (double) Math.abs(oldHoldNum), data.getNewTicket(),data.getTicket(),data.getVarietyCode(),clientNetPosition.getId());
                     }
                 } else if (newHoldNum >= zero) {
                     //大于0:就做多单
@@ -291,7 +311,7 @@ public class FollowOrderServiceImpl implements IFollowOrderService {
                         followOrder.setNetPositionStatus(FollowOrderEnum.FollowStatus.NET_POSITION_TRADING_START.getIndex());
 
                         sendMsgByTrade(followOrder, FollowOrderEnum.FollowStatus.SELL.getIndex(), FollowOrderEnum.FollowStatus.CLOSE.getIndex(),
-                                interim, data.getNewTicket(),data.getTicket(),data.getVarietyCode());//发送下单请求,做空单，平仓
+                                interim, data.getNewTicket(),data.getTicket(),data.getVarietyCode(),clientNetPosition.getId());//发送下单请求,做空单，平仓
 
                     } else if (oldHoldNum >= zero && newHoldNum > oldHoldNum) {
                         //设置正在交易中的状态,普通交易状态
@@ -300,7 +320,7 @@ public class FollowOrderServiceImpl implements IFollowOrderService {
                         //3.当持仓数 >=zero,newHoldNum > 持仓数，开仓
                         //当newHoldNum为正数的时候大于原本的持仓，那就是开仓
                         sendMsgByTrade(followOrder, FollowOrderEnum.FollowStatus.BUY.getIndex(), FollowOrderEnum.FollowStatus.OPEN.getIndex(),//发送交易请求
-                                interim, data.getNewTicket(),data.getTicket(),data.getVarietyCode());
+                                interim, data.getNewTicket(),data.getTicket(),data.getVarietyCode(),clientNetPosition.getId());
                     } else if (oldHoldNum < zero) {
                         //当持仓数 < zero ,平持仓数，开newHoldNum
                         //先做开仓,设置跟单明细的多空状态为空单,先做负的，设置手数
@@ -308,14 +328,14 @@ public class FollowOrderServiceImpl implements IFollowOrderService {
                             //设置正在交易中的状态,发送两条交易状态
                             followOrder.setNetPositionStatus(FollowOrderEnum.FollowStatus.NET_POSITION_TRADING_OPENCLOSE.getIndex());
                             sendMsgByTrade(followOrder, FollowOrderEnum.FollowStatus.BUY.getIndex(), FollowOrderEnum.FollowStatus.OPEN.getIndex(),
-                                    (double) Math.abs(newHoldNum), data.getNewTicket(),data.getTicket(),data.getVarietyCode());
+                                    (double) Math.abs(newHoldNum), data.getNewTicket(),data.getTicket(),data.getVarietyCode(),clientNetPosition.getId());
                         } else{
                             //设置成普通交易状态
                             followOrder.setNetPositionStatus(FollowOrderEnum.FollowStatus.NET_POSITION_TRADING_START.getIndex());
                         }
                         //再来做一单，平仓
                         sendMsgByTrade(followOrder, FollowOrderEnum.FollowStatus.BUY.getIndex(), FollowOrderEnum.FollowStatus.CLOSE.getIndex(),
-                                (double) Math.abs(oldHoldNum), data.getNewTicket(),data.getTicket(),data.getVarietyCode());
+                                (double) Math.abs(oldHoldNum), data.getNewTicket(),data.getTicket(),data.getVarietyCode(),clientNetPosition.getId());
                     }
                 }
             }
@@ -339,13 +359,17 @@ public class FollowOrderServiceImpl implements IFollowOrderService {
     private synchronized Double getNowNetPositionSum(DataSource data, FollowOrder followOrder) {
         //获取现有的净头寸
         Double netPositionSum = followOrder.getNetPositionSum();
+        log.info("原本的净头寸的值："+followOrder.getNetPositionSum());
         if (data.getCmd().equals(FollowOrderEnum.FollowStatus.BUY.getIndex())) {
             //多，增加净头寸
             netPositionSum = DoubleUtil.add(netPositionSum, data.getHandNumber());
+            //净头寸值
         } else {
             //空，减少净头寸
             netPositionSum = DoubleUtil.sub(netPositionSum, data.getHandNumber());
+            //净头寸值
         }
+
         followOrder.setNetPositionSum(netPositionSum);
         updateFollowOrder(followOrder);
         return netPositionSum;
@@ -366,7 +390,7 @@ public class FollowOrderServiceImpl implements IFollowOrderService {
             login.setUserId(followOrder.getAccount().getUsername());
             login.setPassword(followOrder.getAccount().getPassword());
             Account account = followOrder.getAccount();
-            log.info("发送一条登陆信息："+JSON.toJSONString(login));
+            log.info("发送一条登陆信息："+WebJsion.toJson(login));
             //发送MQ去登录
             orderTraderService.userLogin(login);
 
@@ -476,7 +500,7 @@ public class FollowOrderServiceImpl implements IFollowOrderService {
      * @Date: 11:38 2zero18/5/1zero
      */
     public void sendMsgByTrade(FollowOrder followOrder, Integer orderDirection, Integer openClose,
-                                Double handNumber,String newTicket,String ticket,String varietyCode) {
+                                Double handNumber,String newTicket,String ticket,String varietyCode,Long clientNetPositionId) {
 
         FollowOrderTradeRecord followOrderTradeRecord = new FollowOrderTradeRecord();
         //设置新开仓单号
@@ -496,7 +520,7 @@ public class FollowOrderServiceImpl implements IFollowOrderService {
         //设置手数
         followOrderTradeRecord.setHandNumber(handNumber);
         //设置净头寸的值
-        followOrderTradeRecord.setNetPositionSum(followOrder.getNetPositionSum());
+        followOrderTradeRecord.setClientNetPositionId(clientNetPositionId);
         //添加创建时间
         followOrderTradeRecord.setCreateDate(DateUtil.getStringDate());
         //新增操作
@@ -520,7 +544,7 @@ public class FollowOrderServiceImpl implements IFollowOrderService {
             orderTrade.setOrderVolume(handNumber);
             //发送平仓交易请求
             orderTraderService.orderClose(orderTrade);
-            log.info("发送一条交易信息：" + JSON.toJSONString(orderTrade));
+            log.info("发送一条交易信息：" + WebJsion.toJson(orderTrade));
 
 
         } else {
@@ -550,7 +574,7 @@ public class FollowOrderServiceImpl implements IFollowOrderService {
                     FollowOrderEnum.FollowStatus.SELL.getIndex() :FollowOrderEnum.FollowStatus.BUY.getIndex();
             sendMsgByTrade(followOrder,direction,FollowOrderEnum.FollowStatus.CLOSE.getIndex(),
                     orderDetail.getRemainHandNumber(),orderDetail.getTicket(),
-                    orderDetail.getTicket(),followOrder.getVariety().getVarietyCode());
+                    orderDetail.getTicket(),followOrder.getVariety().getVarietyCode(),null);
         }
     }
 
@@ -575,7 +599,7 @@ public class FollowOrderServiceImpl implements IFollowOrderService {
         //发送交易信息
         sendMsgByTrade(followOrder,direction,FollowOrderEnum.FollowStatus.CLOSE.getIndex(),
                 orderDetail.getRemainHandNumber(),orderDetail.getTicket(),
-                orderDetail.getTicket(),followOrder.getVariety().getVarietyCode());
+                orderDetail.getTicket(),followOrder.getVariety().getVarietyCode(),null);
     }
 
 

@@ -27,19 +27,19 @@ public class TcpConfig {
         public static void init(){
 
 
-            orders77= new NetworkManger("192.168.3.114",12001,"orders77");
-            //orders75= new NetworkManger("116.62.195.204",12000,"orders75");
-            //orders76= new NetworkManger("116.62.195.204",12001,"orders76");
-            //fixedThreadPool.execute( orders76);
-            //fixedThreadPool.execute( orders75);
-            fixedThreadPool.execute( orders77);
+//            orders77= new NetworkManger("192.168.3.114",12001,"orders77");
+//            fixedThreadPool.execute( orders77);
+            orders75= new NetworkManger("116.62.195.204",12000,"orders75");
+            orders76= new NetworkManger("116.62.195.204",12001,"orders76");
+            fixedThreadPool.execute( orders76);
+            fixedThreadPool.execute( orders75);
 
         }
         @PreDestroy
         public static void destroy(){
-            orders77.disconnection();
-            //orders76.disconnection();
-            //orders75.disconnection();
+//            orders77.disconnection();
+            orders76.disconnection();
+            orders75.disconnection();
 
         }
 

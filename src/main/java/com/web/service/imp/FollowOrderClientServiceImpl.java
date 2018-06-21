@@ -44,6 +44,11 @@ public class FollowOrderClientServiceImpl implements IFollowOrderClientService {
     }
 
     @Override
+    public List<String> getListUserCodeByFollowOrderId(Long followOrderId) {
+        return followOrderClientDao.getListUserCodeByFollowOrderId(followOrderId);
+    }
+
+    @Override
     public void saveListFollowOrderClient(List<FollowOrderClient> followOrderClients, FollowOrder followOrder) {
         if(followOrderClients.size() != 0){
             for (FollowOrderClient orderClient : followOrderClients) {

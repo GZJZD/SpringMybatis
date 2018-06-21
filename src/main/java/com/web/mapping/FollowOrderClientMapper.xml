@@ -87,9 +87,15 @@
       from follow_order_client
       where follow_order_id =#{followOrderId}
     </select>
+  <select id="getListUserCodeByFollowOrderId" resultType="java.lang.String">
+    select
+    user_code
+    from follow_order_client
+    where follow_order_id =#{followOrderId}
+  </select>
 
 
-    <sql id="base_List">
+  <sql id="base_List">
     id,
     follow_order_id,
     user_code,

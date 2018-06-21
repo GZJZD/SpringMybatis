@@ -29,6 +29,11 @@ public class NetPositionDetailVo {
     private Double remainHandNumber;
     //明细id
     private Long detailId;
+    //客户名字
+    private String userName;
+    //是否跟单
+    private Integer followOrderClientStatus;
+
 
     @Override
     public String toString() {
@@ -132,5 +137,21 @@ public class NetPositionDetailVo {
 
     public void setProfit(Double profit) {
         this.profit = profit;
+    }
+
+    public String getUserName() {
+        return userName;
+    }
+
+    public void setUserName(String userName) {
+        this.userName = userName;
+    }
+
+    public Integer getFollowOrderClientStatus() {
+        return followOrderClientStatus;
+    }
+
+    public void setFollowOrderClientStatus(Integer followOrderClientStatus) {
+        this.followOrderClientStatus = followOrderClientStatus;
     }
 }

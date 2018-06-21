@@ -20,6 +20,7 @@ public class FollowOrderVo {
     //平仓盈亏
     private Double offsetGainAndLoss;
 
+    private Double offsetHandNumber;//平仓手数
     //累计盈亏:平仓盈亏+持仓盈亏
     private Double gainAndLossTotal;
 
@@ -119,6 +120,14 @@ public class FollowOrderVo {
 
     public void setHandNumberTotal(Double handNumberTotal) {
         this.handNumberTotal = handNumberTotal;
+    }
+
+    public Double getOffsetHandNumber() {
+        return offsetHandNumber;
+    }
+
+    public void setOffsetHandNumber(Double offsetHandNumber) {
+        this.offsetHandNumber = offsetHandNumber;
     }
 
     @Override

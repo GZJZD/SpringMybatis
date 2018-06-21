@@ -29,4 +29,10 @@ public interface FollowOrderClientDao {
     List<FollowOrderClient> selectByUserCode(String userCode);
 
     List<FollowOrderClient> getListByFollowOrderId(Long followOrderId);
+
+    /*
+    *
+    * 通过跟单id,查找对应的客户名称
+    * */
+    List<String> getListUserCodeByFollowOrderId(Long followOrderId);
 }

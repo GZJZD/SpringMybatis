@@ -1,7 +1,10 @@
 package com.web.service;
 
 import com.web.pojo.FollowOrderTradeRecord;
+import com.web.pojo.vo.NetPositionDetailVo;
 import com.web.pojo.vo.OrderMsgResult;
+
+import java.util.List;
 
 /**
  * Created by may on 2018/5/20.
@@ -42,5 +45,22 @@ public interface IFollowOrderTradeRecordService {
      * @return
      */
     int getFollowOrderSuccessTotalAmount(Long followOrderId);
+
+    /*
+     * 找到对应的跟单记录
+     * @date 2018/6/19 14:48
+     * @param  ticket：客户ticket
+     *  @param  time：客户的交易时间
+     * @return
+     */
+    List<FollowOrderTradeRecord> getListOrderTradeByTicketAndTime(String ticket,String time);
+
+    /*
+     * 获取对应跟单的客户数据
+     * @param
+     * @return
+     */
+    List<NetPositionDetailVo> getListClientNetPosition(Long followOrderId, Integer status, String clientName, Integer openOrCloseStatus);
+
 
 }
