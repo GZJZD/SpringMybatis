@@ -2,7 +2,7 @@ package com.web.service.imp;
 
 import com.web.dao.FollowOrderDetailDao;
 import com.web.pojo.*;
-import com.web.pojo.vo.FollowOrderClientDetailVo;
+
 import com.web.pojo.vo.FollowOrderPageVo;
 import com.web.pojo.vo.FollowOrderVo;
 import com.web.pojo.vo.NetPositionDetailVo;
@@ -169,22 +169,5 @@ public class FollowOrderDetailServiceImpl implements IFollowOrderDetailService {
         return followOrderDetailDao.getNOCloseDetailListByFollowOrderId(followOrderId);
     }
 
-    /*
-    * 获取客户数据
-    * */
-    public List<FollowOrderClientDetailVo> getListFollowOrderClientDetail(Long followOrderId,String userCode,
-                                                                          Integer openOrClose,Integer followOrderClientStatus){
-        //用户编号
-        List<String> userCodeList = new ArrayList<>();
-        List<String> userCodes = followOrderClientService.getListUserCodeByFollowOrderId(followOrderId);
 
-        //条件查询
-        if("".equals(userCode)){
-            //查全部客户
-        }
-        
-
-        return null;
-
-    }
 }
