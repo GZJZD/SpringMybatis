@@ -52,60 +52,6 @@
 					</ul>
 					<div class="layui-tab-content" style="height: 100px;">
 						<div class="layui-tab-item ">
-							<table class="layui-table">
-								<thead>
-									<tr>
-										<th>
-											<div class="layui-unselect header layui-form-checkbox" lay-skin="primary"><i class="layui-icon">&#xe605;</i></div>
-										</th>
-										
-										<th>用户名</th>
-										<th>品种</th>
-										<th>跟单类型</th>
-										<th>手数类型</th>
-										<th>跟单手数</th>
-										<th>跟单成功率</th>
-										<th>客户盈亏</th>
-										<th>平仓盈亏</th>
-										<th>持仓盈亏</th>
-										<th>手续费</th>
-										<th>操作</th>
-									</tr>
-								</thead>
-								<tbody>
-									<tr>
-										<td>
-											<div class="layui-unselect layui-form-checkbox" lay-skin="primary" data-id='2'><i class="layui-icon">&#xe605;</i></div>
-										</td>
-										<td>1</td>
-										<td>小明</td>
-										<td>男</td>
-										<td>13000000000</td>
-										<td>admin@mail.com</td>
-										<td>北京市 海淀区</td>
-										<td>admin@mail.com</td>
-										<td>北京市 海淀区</td>
-										<td>2017-01-01 11:11:42</td>
-										<td class="td-status">
-											<span class="layui-btn layui-btn-normal layui-btn-mini">已启用</span></td>
-										<td class="td-manage">
-											<a onclick="member_stop(this,'10001')" href="javascript:;" title="启用">
-												<i class="layui-icon">&#xe601;</i>
-											</a>
-											<a title="编辑" onclick="x_admin_show('编辑','client-edit.html',600,400)" href="javascript:;">
-												<i class="layui-icon">&#xe642;</i>
-											</a>
-											<a onclick="x_admin_show('修改密码','client-password.html',600,400)" title="修改密码" href="javascript:;">
-												<i class="layui-icon">&#xe631;</i>
-											</a>
-											<a title="删除" onclick="member_del(this,'要删除的id')" href="javascript:;">
-												<i class="layui-icon">&#xe640;</i>
-											</a>
-										</td>
-									</tr>
-									
-								</tbody>
-							</table>
 						</div>
 						<div class="layui-tab-item layui-show">
 
@@ -131,7 +77,7 @@
 								</div>
 							</div>
 							<div class=" clientSearch">
-								<button type="button " class="btn btn-primary">筛选</button>
+								<button type="button " onclick="findByDetail()" class="btn btn-primary">筛选</button>
 							</div>
 
 							<table id="detailTable" class="table-bordered table-striped">
@@ -146,7 +92,13 @@
 									<div class="layui-input-inline">
 										<select id="clientName" class="form-control search-bar">
 											<option value="-1" selected>全部</option>
-											<option value="1072972" >1072972</option>
+											<option value="1087802" >1087802</option>
+											<option value="1102999" >1102999</option>
+											<option value="1112839" >1112839</option>
+											<option value="1120360" >1120360</option>
+											<option value="1123218" >1123218</option>
+											<option value="1127191" >1127191</option>
+											<option value="1127060" >1127060</option>
 										</select>
 									</div>
 								</div>
@@ -163,7 +115,7 @@
 									</div>
 								</div>
 							</div>
-							<div class=" clientSearch">
+							<div class="clientSearch">
 								<label class="layui-form-label">是否跟单仓</label>
 								<div class="layui-inline if-ok bili-class"  >
 									<div class="layui-input-inline">
@@ -177,15 +129,15 @@
 							</div>
 
 							<div class=" clientSearch">
-								<button type="button " class="btn btn-primary">筛选</button>
+								<button type="button " onclick="findByClient()" class="btn btn-primary">筛选</button>
 							</div>
 
 							<div class="table-case">
 								<div class="tab">
 									<table id="clientTable" class="table-bordered table-striped">
 									</table>
-								</div>
 
+								</div>
 							</div>
 						</div>
 						<div class="layui-tab-item">

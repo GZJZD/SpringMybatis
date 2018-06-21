@@ -4,6 +4,74 @@ var url_detail;
 var followOrderId;
 var unique_Id = "detailId";
 var sortOrder = "asc";
+var clientStatus = $("#clientFollowOrder option:selected").val();
+var clientName = $("#clientName option:selected").val();
+var clientColumns = [
+    {
+        title: '序号',
+
+        formatter: function (value, row, index) {
+            //获取每页显示的数量
+            var pageSize = $('#clientTable').bootstrapTable('getOptions').pageSize;
+            //获取当前是第几页
+            var pageNumber = $('#clientTable').bootstrapTable('getOptions').pageNumber;
+            //返回序号，注意index是从0开始的，所以要加上1
+            return pageSize * (pageNumber - 1) + index + 1;
+        }
+    }, {
+        field: 'netPositionSum',
+        title: '净头寸'
+    }, {
+        field: 'userName',
+        title: '客户编号'
+    }, {
+        field: 'varietyName',
+        title: '品种'
+    }, {
+        field: 'openCloseType',
+        title: '类型',
+        formatter: function (value, row, index) {
+            if (value=="平仓") {
+                return "平仓";
+            } else  {
+                return "开仓";
+            }
+        }
+
+    }, {
+        field: 'tradeDirection',
+        title: '方向'
+    }, {
+        field: 'handNumber',
+        title: '手数'
+    }, {
+        field: 'marketPrice',
+        title: '点位'
+    }, {
+        field: 'tradeTime',
+        title: '下单时间',
+        sortable : true
+
+    }, {
+        field: 'poundage',
+        title: '手续费'
+    }, {
+        field: 'profit',
+        title: '客户盈亏'
+    }, {
+        field: 'followOrderClientStatus',
+        title: '是否跟单',
+        align: 'center',
+        valign: 'middle',
+        formatter: function (value, row, index) {
+            if (value == "1") {
+                return "<span style='color: #26a69a'>已跟单</span>";
+            } else if(value == "0") {
+                return "<span style='color: #c49f47'>跟单失败</span>";
+            }
+        }
+    }
+];
 var columns = [{
     title: '全选',
     field: 'select',
@@ -44,7 +112,9 @@ var columns = [{
         title: '点位'
     }, {
         field: 'tradeTime',
-        title: '下单时间'
+        title: '下单时间',
+        sortable : true
+
     }, {
         field: 'poundage',
         title: '手续费'
@@ -105,81 +175,19 @@ function detailShow(id, orderNum, offsetGainAndLoss, poundageTotal) {
     url_detail = url_ + "/followOrder/getListDetails.Action?followOrderId=" + id;
     followOrderId = id;
     showByTableId(tableId, method, url_detail, unique_Id, sortOrder, columns);
+
+
 }
 
 /*
 * 展示客户数据列表
 * */
-function clientTableShow(followOrderId,followManner) {
+
+function clientTableShow(id) {
     var tableClientId = $("#clientTable");
-    var url_client = url_ + "/followOrder/getListDetails.Action?followOrderId=" + followOrderId;
-    var clientColumns = [
-        {
-            title: '序号',
+    followOrderId = id;
+    var url_client = url_ + "/followOrder/getListClientNetPosition.Action?followOrderId="+id+"&status="+clientStatus+"&clientName="+clientName;
 
-            formatter: function (value, row, index) {
-                //获取每页显示的数量
-                var pageSize = $('#detailTable').bootstrapTable('getOptions').pageSize;
-                //获取当前是第几页
-                var pageNumber = $('#detailTable').bootstrapTable('getOptions').pageNumber;
-                //返回序号，注意index是从0开始的，所以要加上1
-                return pageSize * (pageNumber - 1) + index + 1;
-            }
-        },{
-        field: 'netPositionSum',
-        title: '跟单编号'
-/*
-        visible:followManner
-*/
-
-    }, {
-        field: 'netPositionSum',
-        title: '客户名'
-    }, {
-        field: 'varietyName',
-        title: '品种'
-    }, {
-        field: 'openCloseType',
-        title: '类型'
-    }, {
-        field: 'handNumber',
-        title: '手数'
-    }, {
-        field: 'tradeDirection',
-        title: '开仓价'
-    }, {
-        field: 'marketPrice',
-        title: '开仓时间'
-    }, {
-        field: 'tradeTime',
-        title: '平仓价'
-    }, {
-        field: 'poundage',
-        title: '平仓时间'
-    }, {
-        field: 'profit',
-        title: '手续费'
-    }, {
-        field: 'profit',
-        title: '客户盈亏'
-    }, {
-            field: 'remainHandNumber',
-            title: '是否跟单',
-/*
-            visible:followManner,
-*/
-            align: 'center',
-            valign: 'middle',
-            formatter: function (value, row, index) {
-                var detailId = row.detailId;
-                if (value == "0.0") {
-                    return "-";
-                } else {
-                    return "<a href='javascript:;' class='btn btn-xs green' onclick='manually_close_position(" + detailId + ")' >  <span style='color: #4cae4c'>手动平仓</span></a>"
-                }
-            }
-        }
-    ];
     showByTableId(tableClientId, method, url_client, unique_Id, sortOrder, clientColumns);
 }
 
@@ -240,3 +248,81 @@ function actionFormatter(value, row, index) {
 
     return result;
 }
+
+/*
+*
+* 客户查询条件
+* */
+function findByClient() {
+    var clientTable = $("#clientTable");
+    var status = $("#clientFollowOrder option:selected").val();
+    var clientName = $("#clientName option:selected").val();
+    var openOrCloseStatus= $("#clientOpenOrClose option:selected").val();
+    $.ajax({
+        url:url_+"/followOrder/getListClientNetPosition.Action",
+        type:'GET', //GET
+        async:true,    //或false,是否异步
+        data:{
+            followOrderId:followOrderId,
+            status:status,
+            clientName:clientName,
+            openOrCloseStatus:openOrCloseStatus
+        },
+        timeout:5000,    //超时时间
+        dataType:'json',    //返回的数据格式：json/xml/html/script/jsonp/text
+        beforeSend:function(xhr){
+
+        },
+        success:function (data) {
+            // $(clientTable).bootstrapTable('destroy');
+            $(clientTable).bootstrapTable('load',data);
+
+        },
+        error:function(xhr,textStatus){
+
+        },
+        complete:function(){
+
+        }
+    })
+}
+/*
+* 跟单查询条件
+* */
+function findByDetail() {
+
+    var status = $("#detailOpenOrClose option:selected").val();
+    var startTime = $("#test1").val();
+    var endTime = $("#test2").val();
+
+    $.ajax({
+        url:url_+"/followOrder/getListDetails.Action",
+        type:'post', //GET
+        async:true,    //或false,是否异步
+        data:{
+            followOrderId:followOrderId,
+            status:status,
+            startTime:startTime,
+            endTime:endTime
+
+        },
+        timeout:5000,    //超时时间
+        dataType:'json',    //返回的数据格式：json/xml/html/script/jsonp/text
+        beforeSend:function(xhr){
+
+        },
+        success:function (data) {
+            $(tableId).bootstrapTable('load',data);
+
+        },
+        error:function(xhr,textStatus){
+
+        },
+        complete:function(){
+
+        }
+    })
+}
+
+
+

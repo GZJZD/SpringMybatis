@@ -399,14 +399,14 @@ function update_status(id,obj,newTitle,oldTitle,status,i) {
             var iframeWin = window['layui-layer-iframe' + index]; //得到iframe页的窗口对象，执行iframe页的方法：iframeWin.method();
             //调用子页面的方法
             iframeWin.detailShow(followOrderId,successTotal+"/"+orderNum,offsetGainAndLoss,poundageTotal);
+            iframeWin.clientTableShow(followOrderId);
             iframeWin.orderParameterShow(obj.followOrder);
-            if(manager){
-                iframeWin.clientTableShow(followOrderId,false);
-            }else{
-                iframeWin.clientTableShow(followOrderId,true);
 
-            }
         },
         btn: ['关闭']
     });
 }
+    function tableHeight() {
+        //可以根据自己页面情况进行调整
+        return $(window).height() - 280;
+    }
