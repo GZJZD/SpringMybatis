@@ -1,23 +1,18 @@
 package com.web.service.imp;
 
 import com.web.dao.FollowOrderDetailDao;
-import com.web.pojo.FollowOrderDetail;
-import com.web.pojo.FollowOrderTradeRecord;
-import com.web.pojo.Variety;
+import com.web.pojo.*;
+import com.web.pojo.vo.FollowOrderClientDetailVo;
 import com.web.pojo.vo.FollowOrderPageVo;
 import com.web.pojo.vo.FollowOrderVo;
 import com.web.pojo.vo.NetPositionDetailVo;
-import com.web.service.IFollowOrderDetailService;
-import com.web.service.IFollowOrderTradeRecordService;
-import com.web.service.IVarietyService;
+import com.web.service.*;
+import com.web.util.common.DateUtil;
 import com.web.util.common.DoubleUtil;
-import com.web.util.query.QueryObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -33,6 +28,12 @@ public class FollowOrderDetailServiceImpl implements IFollowOrderDetailService {
     private IFollowOrderTradeRecordService followOrderTradeRecordService;
     @Autowired
     private IVarietyService varietyService;
+    @Autowired
+    private IFollowOrderClientService followOrderClientService;
+    @Autowired
+    private IClientNetPositionService clientNetPositionService;
+    @Autowired
+    private IFollowOrderService followOrderService;
 
     @Override
     public void save(FollowOrderDetail followOrderDetail) {
@@ -53,24 +54,29 @@ public class FollowOrderDetailServiceImpl implements IFollowOrderDetailService {
     }
 
     @Override
-    public List<NetPositionDetailVo> getDetailListByFollowOrderId(Long followOrderId){
+    public List<NetPositionDetailVo> getDetailListByFollowOrderId(Long followOrderId, String endTime, String startTime, Integer status){
         List<NetPositionDetailVo> netPositionDetailVos = new ArrayList<>();
-        List<FollowOrderDetail> OrderDetailList = followOrderDetailDao.getDetailListByFollowOrderId(followOrderId);
+        if(endTime != null && !"".equals(endTime)){
+             endTime = DateUtil.dateToStrLong(DateUtil.getEndDate(DateUtil.strToDate(endTime)));
+        }
+        List<FollowOrderDetail> OrderDetailList = followOrderDetailDao.getDetailListByFollowOrderId(followOrderId,endTime,startTime,status);
+        FollowOrder followOrder = followOrderService.getFollowOrder(followOrderId);
         if(OrderDetailList != null) {
             for (FollowOrderDetail followOrderDetail : OrderDetailList) {
                 FollowOrderTradeRecord tradeRecord = followOrderTradeRecordService.getTradeRecord(followOrderDetail.
                         getFollowOrderTradeRecordId());
+                ClientNetPosition clientNetPosition = clientNetPositionService.getClientNetPosition(tradeRecord.getClientNetPositionId());
 
                 NetPositionDetailVo netPositionDetailVo = new NetPositionDetailVo();
                 //设置净头寸
-                netPositionDetailVo.setNetPositionSum(tradeRecord.getNetPositionSum());
+                netPositionDetailVo.setNetPositionSum(clientNetPosition==null?followOrder.getNetPositionSum():clientNetPosition.getNetPositionSum());
                 //设置品种
                 Variety variety = varietyService.getVariety(tradeRecord.getVarietyId());
                 netPositionDetailVo.setVarietyName(variety.getVarietyName());
                 //设置开平
                 netPositionDetailVo.setOpenCloseType(tradeRecord.getOpenCloseType());
                 //设置手数
-                if(followOrderDetail.getHandNumber() != followOrderDetail.getOriginalHandNumber() &&
+                if(!followOrderDetail.getHandNumber().equals(followOrderDetail.getOriginalHandNumber())  &&
                         followOrderDetail.getOriginalHandNumber() != null){
                     netPositionDetailVo.setHandNumber(followOrderDetail.getHandNumber()+
                             "("+followOrderDetail.getOriginalHandNumber()+")");
@@ -83,11 +89,8 @@ public class FollowOrderDetailServiceImpl implements IFollowOrderDetailService {
                 //设置市场价
                 netPositionDetailVo.setMarketPrice(tradeRecord.getMarketPrice());
                 //设置交易时间
-                String tradeTime = tradeRecord.getTradeTime();
-                if(!"".equals(tradeTime)) {
-                    netPositionDetailVo.setTradeTime(tradeTime.substring(0, 4) + "-" + tradeTime.substring(4, 6) + "-" + tradeTime.substring(6, 8) + "  "
-                            + tradeTime.substring(8, 10) + ":" + tradeTime.substring(10, 12) + ":" + tradeTime.substring(12, 14));
-                }
+                netPositionDetailVo.setTradeTime(DateUtil.strToStr(tradeRecord.getTradeTime()));
+
                 //设置手续费
                 netPositionDetailVo.setPoundage(tradeRecord.getPoundage());
                 //设置剩下的手数
@@ -110,9 +113,9 @@ public class FollowOrderDetailServiceImpl implements IFollowOrderDetailService {
     }
 
     @Override
-    public Double getOffsetGainAndLossByFollowOrderId(Long followOrderId) {
+    public FollowOrderVo getOffsetGainAndLossAndHandNumberByFollowOrderId(Long followOrderId) {
 
-        return followOrderDetailDao.getOffsetGainAndLossByFollowOrderId(followOrderId);
+        return followOrderDetailDao.getOffsetGainAndLossAndHandNumberByFollowOrderId(followOrderId);
     }
 
     @Override
@@ -154,11 +157,9 @@ public class FollowOrderDetailServiceImpl implements IFollowOrderDetailService {
                 2));//胜率
 
         followOrderPageVo.setWinRate(DoubleUtil.mul(followOrderPageVo.getWinRate(),100.0));//胜率 * 100
-        //总手数=历史手数+持仓手数
-        Double handNumberTotal = DoubleUtil.add(followOrderPageVo.getHistoryHandNumber()==null?0.0:followOrderPageVo.getHistoryHandNumber(),
-                followOrderPageVo.getHoldPositionHandNumber()==null?0.0:followOrderPageVo.getHoldPositionHandNumber());
+
         followOrderPageVo.setProfitAndLossRate(DoubleUtil.div(followOrderPageVo.getHistoryProfit()==null?0.0:followOrderPageVo.getHistoryProfit(),
-                handNumberTotal==0.0?1.0:handNumberTotal,2));//盈亏效率
+                followOrderPageVo.getHistoryHandNumber()==0.0?1.0:followOrderPageVo.getHistoryHandNumber(),2));//盈亏效率
 
         return followOrderPageVo;
     }
@@ -166,5 +167,24 @@ public class FollowOrderDetailServiceImpl implements IFollowOrderDetailService {
     @Override
     public List<FollowOrderDetail> getNOCloseDetailListByFollowOrderId(Long followOrderId) {
         return followOrderDetailDao.getNOCloseDetailListByFollowOrderId(followOrderId);
+    }
+
+    /*
+    * 获取客户数据
+    * */
+    public List<FollowOrderClientDetailVo> getListFollowOrderClientDetail(Long followOrderId,String userCode,
+                                                                          Integer openOrClose,Integer followOrderClientStatus){
+        //用户编号
+        List<String> userCodeList = new ArrayList<>();
+        List<String> userCodes = followOrderClientService.getListUserCodeByFollowOrderId(followOrderId);
+
+        //条件查询
+        if("".equals(userCode)){
+            //查全部客户
+        }
+        
+
+        return null;
+
     }
 }

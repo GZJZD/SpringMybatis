@@ -15,7 +15,7 @@
         <result column="ticket" property="ticket"/>
         <result column="new_ticket" property="newTicket"/>
         <result column="poundage" property="poundage"/>
-        <result column="net_position_sum" property="netPositionSum"/>
+        <result column="client_net_position_id" property="clientNetPositionId"/>
         <result column="update_date" property="updateDate"  />
         <result column="create_date" property="createDate"/>
         <result column="version" property="version"/>
@@ -30,13 +30,13 @@
       open_close_type, market_price,
       account_id, follow_order_id,
       ticket, new_ticket,
-      poundage,net_position_sum,update_date,create_date,version)
+      poundage,client_net_position_id,update_date,create_date,version)
     values ( #{varietyId}, #{varietyCode},
       #{handNumber}, #{tradeTime}, #{tradeDirection}, 
       #{openCloseType}, #{marketPrice},
       #{accountId}, #{followOrderId},
       #{ticket}, #{newTicket},
-      #{poundage},#{netPositionSum},#{updateDate},#{createDate},#{version})
+      #{poundage},#{clientNetPositionId},#{updateDate},#{createDate},#{version})
   </insert>
     <update id="updateByPrimaryKey" parameterType="com.web.pojo.FollowOrderTradeRecord">
         update follow_order_trade_record
@@ -77,11 +77,12 @@
             <if test="newTicket != null">
                 new_ticket = #{newTicket},
             </if>
+
             <if test="poundage != null">
                 poundage = #{poundage},
             </if>
-            <if test="netPositionSum != null">
-                net_position_sum = #{netPositionSum},
+            <if test="clientNetPositionId != null">
+                client_net_position_id = #{clientNetPositionId},
             </if>
 
             <if test="updateDate != null ">
@@ -109,12 +110,7 @@
     <include refid="base_List"/>
     from follow_order_trade_record
   </select>
-    <select id="getTradeRecordBySignalNumber" resultMap="BaseResultMap">
-        select
-        <include refid="base_List"/>
-        from follow_order_trade_record
-        where signal_number = #{signalNumber}
-    </select>
+
     <select id="getFollowOrderTotalAmount" resultType="java.lang.Integer">
         select count(id) from follow_order_trade_record
         where follow_order_id =#{followOrderId}
@@ -122,6 +118,12 @@
     <select id="getFollowOrderSuccessTotalAmount" resultType="java.lang.Integer">
          select count(id) from follow_order_trade_record
           where hand_number != 0 and trade_time is not null and follow_order_id = #{followOrderId}
+    </select>
+    <select id="getListOrderTradeByTicketAndTime" resultMap="BaseResultMap">
+        select
+        <include refid="base_List"/>
+        from follow_order_trade_record
+        where ticket =#{ticket} and client_trade_time=#{time}
     </select>
 
     <sql id="base_List">
@@ -137,7 +139,7 @@
     follow_order_id,
     ticket,
     new_ticket,
-    net_position_sum,
+    client_net_position_id,
     update_date,
     create_date,
     poundage,

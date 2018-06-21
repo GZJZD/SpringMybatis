@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.web.dao.ClientNetPositionDao" >
+  <resultMap id="BaseResultMap" type="com.web.pojo.ClientNetPosition" >
+    <id column="id" property="id" />
+    <result column="follow_order_id" property="followOrderId" />
+    <result column="net_position_sum" property="netPositionSum" />
+    <result column="ticket" property="ticket" />
+    <result column="open_time" property="openTime" />
+    <result column="close_time" property="closeTime" />
+    <result column="create_time" property="createTime" />
+    <result column="status" property="status" />
+  </resultMap>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long" >
+    delete from client_net_position
+    where id = #{id}
+  </delete>
+  <insert id="insert" parameterType="com.web.pojo.ClientNetPosition" useGeneratedKeys="true" keyProperty="id" >
+    insert into client_net_position (follow_order_id, net_position_sum, ticket, open_time, close_time, 
+      create_time, status)
+    values (#{followOrderId}, #{netPositionSum}, #{ticket}, #{openTime}, #{closeTime},
+      #{createTime}, #{status})
+  </insert>
+  <update id="update" parameterType="com.web.pojo.ClientNetPosition" >
+    update client_net_position
+    <set>
+      <if test="followOrderId != null">
+        follow_order_id = #{followOrderId},
+      </if>
+      <if test="ticket != null">
+        ticket = #{ticket},
+      </if>
+      <if test="openTime != null">
+        open_time = #{openTime},
+      </if>
+      <if test="closeTime != null">
+        close_time = #{closeTime},
+      </if>
+      <if test="createTime != null">
+        create_time = #{createTime},
+      </if>
+      <if test="status != null">
+        status = #{status},
+      </if>
+    </set>
+    where id = #{id}
+  </update>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
+    select <include refid="Base_Column_List"/>
+    from client_net_position
+    where id = #{id}
+  </select>
+  <select id="selectAll" resultMap="BaseResultMap" >
+    select <include refid="Base_Column_List"/>
+    from client_net_position
+  </select>
+  <select id="selectByTicketAndTime" resultMap="BaseResultMap">
+    select <include refid="Base_Column_List"/>
+    from client_net_position
+    <where>
+      ticket = #{ticket} and follow_order_id = #{followOrderId}
+      <if test="closeTime != null and closeTime != ''">
+        and close_time = #{closeTime}
+      </if>
+      <if test="openTime != null and openTime != ''">
+        and open_time = #{openTime}
+      </if>
+
+    </where>
+
+  </select>
+
+  <sql id="Base_Column_List">
+    id, follow_order_id, net_position_sum, ticket, open_time, close_time, create_time,
+    status
+  </sql>
+</mapper>

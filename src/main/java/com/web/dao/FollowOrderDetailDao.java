@@ -17,7 +17,7 @@ public interface FollowOrderDetailDao {
 
     int updateByPrimaryKey(FollowOrderDetail record);
 
-    List<FollowOrderDetail> getDetailListByFollowOrderId(Long followOrderId);
+    List<FollowOrderDetail> getDetailListByFollowOrderId(@Param("followOrderId") Long followOrderId, @Param("endTime") String endTime, @Param("startTime") String startTime, @Param("status") Integer status);
 
     /*
      *
@@ -33,7 +33,7 @@ public interface FollowOrderDetailDao {
 
     FollowOrderDetail getFollowOrderDetailByTicket(String ticket);
 
-    Double getOffsetGainAndLossByFollowOrderId (Long followOrderId);
+    FollowOrderVo getOffsetGainAndLossAndHandNumberByFollowOrderId (Long followOrderId);
 
     /*
     * 找到对应跟单的手续费总和

@@ -5,7 +5,6 @@ import com.web.pojo.OrderUser;
 import com.web.pojo.vo.OrderUserDetailsVo;
 import com.web.pojo.vo.OrderUserVo;
 
-import javax.persistence.criteria.Order;
 import java.util.List;
 
 public interface OrderUserService {
@@ -14,6 +13,6 @@ public interface OrderUserService {
     OrderUser findByTicket(String ticket);
     String update(OrderUser orderUser);
     List<OrderUserVo> countOrderUser(OrderUserVo orderUserVo);
-    List<OrderUser>findByUserIdList(List<String>list ,String startTime,String endTime,String productCode);
+    List<OrderUser>findByUserIdList(List<String> list, String startTime, String endTime, String productCode, Integer openOrCloseStatus);
     OrderUserDetailsVo getUserDetails(String userCode, String productCode);
 }

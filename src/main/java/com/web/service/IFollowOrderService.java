@@ -45,7 +45,7 @@ public interface IFollowOrderService {
     void closeAllOrderByFollowOrderId(Long followOrderId);
 
     void sendMsgByTrade(FollowOrder followOrder, Integer orderDirection, Integer openClose,
-                               Double handNumber,String newTicket,String ticket,String varietyCode);
+                               Double handNumber,String newTicket,String ticket,String varietyCode,Long clientNetPositionId);
 
     void manuallyClosePosition(Long detailId);
 

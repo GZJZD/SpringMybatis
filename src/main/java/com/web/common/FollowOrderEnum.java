@@ -5,8 +5,8 @@ public  class FollowOrderEnum {
         //跟单
         BUY("多",0),
         SELL("空",1),
-        OPEN("开",0),
-        CLOSE("平",1),
+        OPEN("开仓",0),
+        CLOSE("平仓",1),
         NET_POSITION_TRADING_START("净头寸交易中",0),
         NET_POSITION_TRADING_PAUSE("净头寸交易暂停",1),
         //发出两条交易信息
@@ -43,7 +43,9 @@ public  class FollowOrderEnum {
         CLIENT_HAND_NUMBER_TYPE("固定手数",0),
 
         //是否跟单
-        NOT_FOLLOW_ORDER_BY_CLIENT("未跟单",0)
+        NOT_FOLLOW_ORDER_BY_CLIENT("跟单失败",0),
+        //是否跟单
+        FOLLOW_ORDER_BY_CLIENT("已跟单",1)
 
         ;
 

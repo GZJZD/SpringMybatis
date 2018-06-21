@@ -4,7 +4,6 @@ import com.web.pojo.FollowOrderDetail;
 import com.web.pojo.vo.FollowOrderPageVo;
 import com.web.pojo.vo.FollowOrderVo;
 import com.web.pojo.vo.NetPositionDetailVo;
-import com.web.util.query.QueryObject;
 
 import java.util.List;
 
@@ -32,8 +31,11 @@ public interface IFollowOrderDetailService {
      *@Author: May
      *@Date: 11:22 2018/5/23
      * @param followOrderId
+     * @param endTime
+     * @param startTime
+     * @param status
      */
-    List<NetPositionDetailVo> getDetailListByFollowOrderId(Long followOrderId);
+    List<NetPositionDetailVo> getDetailListByFollowOrderId(Long followOrderId, String endTime, String startTime, Integer status);
 
     /**净头寸平仓
      * 找到对应的开多 or  开空 明细，并且剩下手数不为0的明细记录
@@ -51,7 +53,7 @@ public interface IFollowOrderDetailService {
      * @param
      * @return
      */
-    Double getOffsetGainAndLossByFollowOrderId (Long followOrderId);
+    FollowOrderVo getOffsetGainAndLossAndHandNumberByFollowOrderId (Long followOrderId);
 
     /*
      *

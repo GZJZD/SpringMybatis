@@ -4,8 +4,8 @@ package com.web.pojo.vo;
 
 public class FollowOrderPageVo {
     /***************************************     跟单头所用字段      ******************************************/
-    private Double historyHandNumber; //历史跟单手数
-    private Double historyProfit; //历史收益
+    private Double historyHandNumber=0.0; //历史跟单手数
+    private Double historyProfit=0.0; //历史收益
 
     private Double holdPositionHandNumber; //持仓手数
     private Double holdPositionProfit; //持仓收益

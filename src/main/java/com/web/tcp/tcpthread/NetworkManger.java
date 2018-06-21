@@ -43,11 +43,11 @@ public class NetworkManger extends Thread {
             // 与服务端建立连接
             try {
                 ConnectToServerByTcp();
+                //接收数据
+                receiveData();
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
-            //接收数据
-            receiveData();
         }
     }
 

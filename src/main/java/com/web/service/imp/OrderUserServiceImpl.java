@@ -253,14 +253,15 @@ public class OrderUserServiceImpl implements OrderUserService {
      * @param startTime 开始时间
      * @param endTime 结束时间
      * @param productCode 产品代码
+     * @param openOrCloseStatus
      * @return
      */
     @Override
-    public List<OrderUser> findByUserIdList(List<String>list ,String startTime,String endTime,String productCode) {
+    public List<OrderUser> findByUserIdList(List<String> list, String startTime, String endTime, String productCode, Integer openOrCloseStatus) {
 
         List<OrderUser> orderUserList = new ArrayList<>();
         if(list.size() >0 && startTime != null && !StringUtils.isEmpty(startTime) && productCode != null && !StringUtils.isEmpty(productCode)){
-            orderUserList = orderUserDao.findByUserIdList(list,startTime,endTime,productCode);
+            orderUserList = orderUserDao.findByUserIdList(list,startTime,endTime,productCode,openOrCloseStatus);
         }
         return orderUserList;
     }

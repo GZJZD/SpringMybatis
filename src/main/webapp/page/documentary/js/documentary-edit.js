@@ -79,8 +79,12 @@ function setFollowOrderParameter(followOrder) {
         if($(this).val() == followOrder.account.id){
             $(this).attr("selected", true);
         }
-
-    })
+    });
+    if(followOrder.followManner){
+        setRadio('netPositionDirection',followOrder.netPositionDirection);
+        $("#netPositionChange-id").val(followOrder.netPositionChange);
+        $("#netPositionFollowNumber-id").val(followOrder.netPositionFollowNumber);
+    }
 
 }
 
@@ -233,6 +237,7 @@ function returnBlack(status){
         $(".two-div").css('background-color','#f0eff0');
         $('.table-div').hide();
         $('.first-div').show();
+        $('.jtc').hide();
     }
     if(status == 2){
         layui.use('element', function(){
@@ -243,10 +248,9 @@ function returnBlack(status){
         $(".one-div").css('background-color','#f0eff0');
         $(".two-div").css('background-color','#44b7af');
         $(".three-div").css('background-color','#f0eff0')
-        $('.table-div').show();
         $('.first-div').hide();
         $('.detalis-div').hide();
-
+        ($('input[name="followManner"]:checked').val() == 1 ? $('.jtc').show(): $('.table-div').show());
 
     }
 }

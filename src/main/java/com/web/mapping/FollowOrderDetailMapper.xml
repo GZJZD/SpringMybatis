@@ -27,6 +27,8 @@
   <resultMap id="testMap" type="com.web.pojo.vo.FollowOrderVo">
     <result column="poundageTotal" property="poundageTotal"/>
     <result column="handNumberTotal" property="handNumberTotal"/>
+    <result column="offsetGainAndLoss" property="offsetGainAndLoss"/>
+    <result column="offsetHandNumber" property="offsetHandNumber"/>
   </resultMap>
 
   <resultMap id="orderPageMap" type="com.web.pojo.vo.FollowOrderPageVo">
@@ -134,7 +136,22 @@
       select
       <include refid="base_List"/>
       from follow_order_detail
-      where follow_order_id = #{followOrderId} order by id desc
+      <where>
+        follow_order_id = #{followOrderId}
+        <if test="startTime != '' and startTime != null">
+          and create_date <![CDATA[ >= ]]> #{startTime}
+        </if>
+        <if test="endTime != '' and endTime != null">
+          and create_date <![CDATA[ <= ]]> #{endTime}
+        </if>
+        <if test="status == 1">
+          and close_time is not null
+        </if>
+        <if test="status == 0">
+          and close_time is  null
+        </if>
+        order by id desc
+      </where>
 
     </select>
   <select id="getDetailListByOrderIdAndDirection" resultMap="BaseResultMap">
@@ -151,8 +168,8 @@
     from follow_order_detail
     where ticket = #{ticket}
   </select>
-  <select id="getOffsetGainAndLossByFollowOrderId" resultType="java.lang.Double">
-    select sum(profit_loss)
+  <select id="getOffsetGainAndLossAndHandNumberByFollowOrderId" resultMap="testMap">
+    select sum(profit_loss) offsetGainAndLoss,sum(hand_number) offsetHandNumber
     from follow_order_detail
     where follow_order_id = #{followOrderId} and close_time is not  null
   </select>

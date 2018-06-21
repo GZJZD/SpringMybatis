@@ -9,6 +9,7 @@ import com.web.tcp.service.DataParserService;
 import com.web.util.ApplicationContextHolder;
 
 import com.web.util.common.DateUtil;
+import com.web.util.json.WebJsion;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -70,7 +71,7 @@ public class DataParserServiceImpl implements DataParserService,Runnable{
             dataSource.setProfit(Double.parseDouble(splitArr[index++]));//平仓盈亏
             dataSource.setPlatformName(this.platformName);
             dataSource.setAgencyName("JZT");
-            log.info("接收到一条来自TCP的数据："+ JSON.toJSONString(dataSource));
+            log.info("接收到一条来自TCP的数据："+WebJsion.toJson(dataSource));
             createFile(dealMsg);
             orderUserService.addOrderUser(dataSource);
 

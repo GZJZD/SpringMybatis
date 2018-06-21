@@ -86,9 +86,10 @@
             </if>
         </foreach>
         <if test="productCode != null and productCode != '' "> and product_code = #{productCode} </if>
-        <if test="startTime != null and startTime != '' "> and create_date = #{startTime} </if>
+        <if test="startTime != null and startTime != '' "> and create_date <![CDATA[ > ]]> #{startTime} </if>
         <if test="endTime != null and endTime != '' "> and create_date <![CDATA[ <= ]]> #{endTime} </if>
-
+        <if test="status == 1">and close_time is not null </if>
+        <if test="status == 0">and close_time is  null </if>
     </select>
 
     <select id="countOrderUser" parameterType="com.web.pojo.vo.OrderUserVo" resultMap="BaseResultMap">
@@ -121,8 +122,9 @@
 
         <if test="userCode != null and userCode != '' "> and user_code = #{userCode}</if>
     </select>
-
-
+    <select id="listUserCode" resultType="java.lang.String">
+        select user_code from tb_order_user where product_code='XAUUSD.e'  GROUP BY user_code
+    </select>
 
 
 </mapper>
