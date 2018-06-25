@@ -18,7 +18,7 @@ public interface IFollowOrderClientService {
      *@param
      *@Date: 10:39 2018/5/21
      */
-    List<FollowOrderClient> getListByUserCode(String userCode);
+    List<Long> getListByUserCode(String userCode);
     List<FollowOrderClient> getListByFollowOrderId(Long followOrderId);
     List<String> getListUserCodeByFollowOrderId(Long followOrderId);
     void deleteByFollowOrderId(Long followOrderId);
@@ -28,4 +28,6 @@ public interface IFollowOrderClientService {
 
 
     List<FollowOrderClientParamVo> getListFollowOrderClientParamVo(Long followOrderId);
+
+    FollowOrderClient findClientByIdAndName(Long id, String login);
 }

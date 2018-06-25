@@ -264,8 +264,18 @@ public class FollowOrderController {
     * */
     @RequestMapping("/getListClientNetPosition.Action")
     @ResponseBody
-    public List<NetPositionDetailVo> getListClientNetPosition(Long followOrderId,Integer status,String clientName,Integer openOrCloseStatus){
-        return followOrderTradeRecordService.getListClientNetPosition(followOrderId,status,clientName,openOrCloseStatus);
+    public List<?> getListClientNetPosition(Long followOrderId,Integer status,String clientName,Integer openOrCloseStatus){
+        FollowOrder followOrder = followOrderService.getFollowOrder(followOrderId);
+        if (followOrder!=null){
+            if(followOrder.getFollowManner().equals(FollowOrderEnum.FollowStatus.FOLLOWMANNER_NET_POSITION.getIndex())){
+
+                return followOrderTradeRecordService.getListClientNetPosition(followOrderId,status,clientName,openOrCloseStatus);
+            }else{
+                //todo 跟每一单
+                return null;
+            }
+        }
+        return null;
     }
 
 

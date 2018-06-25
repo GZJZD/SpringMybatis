@@ -1,7 +1,6 @@
 package com.web.service.imp;
 
 
-import com.alibaba.fastjson.JSON;
 import com.web.common.FollowOrderEnum;
 import com.web.dao.FollowOrderDao;
 import com.web.pojo.*;
@@ -68,17 +67,21 @@ public class FollowOrderServiceImpl implements IFollowOrderService {
     /**
      * 通过客户的名字找到对应的跟单集合
      *@Author: May
-     *@param clientName
      *@Date: 14:30 2018/5/22
+     * @param clientName
+     * @param varietyCode
      */
-    @Override
-    public List<FollowOrder> getListFollowOrderByClientName(String clientName) {
+    private List<FollowOrder> getListFollowOrderByClientName(String clientName, String varietyCode) {
 
-        //通过客户的名字找到对应的客户id
-        //followOrderClientService.getListByClientId()
-        // 再通过客户的id找到中间表的跟单id，list<ids>
-        //然后逐个找到对应的跟单,并且状态为启动
-        // 对比数据源的品种是否为同一个
+        //通过客户的名字找到对应的客户id,
+        List<Long> followOrderIds = followOrderClientService.getListByUserCode(clientName);
+        List<FollowOrder> followOrderList;
+        if(followOrderIds.size()!=0){
+            //然后逐个找到符合的跟单,并且状态为启动
+             followOrderList= followOrderDao.findFollowOrderStart(followOrderIds,varietyCode);
+             return followOrderList;
+        }
+
         return null;
     }
 
@@ -91,6 +94,10 @@ public class FollowOrderServiceImpl implements IFollowOrderService {
     public FollowOrder getFollowOrder(Long id) {
         return followOrderDao.selectByPrimaryKey(id);
     }
+    /*
+    *
+    * 修改跟单
+    * */
     @Override
     public void updateFollowOrder(FollowOrder followOrder) {
         Variety varietyByCode = varietyService.getVarietyByCode(followOrder.getVariety().getVarietyCode());
@@ -195,27 +202,19 @@ public class FollowOrderServiceImpl implements IFollowOrderService {
     @Override
     public synchronized void madeAnOrder(DataSource data) {
         //1.先获取符合的跟单
-        // List<FollowOrder> listFollowOrder = getListFollowOrderByClientName(data.login);
-        // for (FollowOrder followOrder : listFollowOrder) {
-        FollowOrder followOrder;
-        //todo demo过后删除
-        List<FollowOrder> followOrders = selectListFollowOrder(null);
-        if (followOrders.size() == 0) {
-            FollowOrderGenerateUtil followOrderGenerateUtil = new FollowOrderGenerateUtil();
-            followOrder = followOrderGenerateUtil.getFollowOrder();
-        } else {
-            followOrder = followOrders.get(0);
-        }
-        followOrder.setAccount(FollowOrderGenerateUtil.getAccount());
-        //todo 因为死策略是跟所有客户,所以需要判断是否符合策略的品种
-        if (followOrder.getFollowOrderStatus().equals(FollowOrderEnum.FollowStatus.FOLLOW_ORDER_START.getIndex())) {
-            if (data.getVarietyCode().equals(followOrder.getVariety().getVarietyCode())) {
+        List<FollowOrder> listFollowOrder = getListFollowOrderByClientName(data.getLogin(),data.getVarietyCode());
+        if(listFollowOrder != null){
+
+            for (FollowOrder followOrder : listFollowOrder) {
+                followOrder.setAccount(FollowOrderGenerateUtil.getAccount());
                 if (followOrder.getFollowManner().equals(FollowOrderEnum.FollowStatus.FOLLOWMANNER_NET_POSITION.getIndex())) {
                     //跟净头寸
                     netPositionOrder(followOrder, data);
-                } else {
-                    //todo 跟客户
+                } else{
+                    //客户
+                    followUserOrder(followOrder,data);
                 }
+
             }
         }
     }
@@ -349,8 +348,36 @@ public class FollowOrderServiceImpl implements IFollowOrderService {
     /*
     * 实现跟客户的交易
     * */
-    public void followUserOrder() {
+    public void followUserOrder(FollowOrder followOrder, DataSource data) {
         //跟客户的策略判断
+        FollowOrderClient followOrderClient = followOrderClientService.findClientByIdAndName(followOrder.getId(), data.getLogin());
+        //判断手数类型：按比例=比例数*客户的手数
+        Double handNumber = followOrderClient.getHandNumberType().equals(FollowOrderEnum.FollowStatus.CLIENT_HAND_NUMBER_TYPE.getIndex())?
+                followOrderClient.getFollowHandNumber():DoubleUtil.mul(Double.valueOf(followOrderClient.getFollowHandNumber()),data.getHandNumber());
+        //交易方向
+        Integer direction ;
+        //反向跟单
+        if(followOrderClient.getFollowDirection().equals(FollowOrderEnum.FollowStatus.DIRECTION_REVERSE.getIndex())){
+            direction = data.getCmd().equals(FollowOrderEnum.FollowStatus.BUY.getIndex())?
+                    FollowOrderEnum.FollowStatus.SELL.getIndex():FollowOrderEnum.FollowStatus.BUY.getIndex();
+        }else {
+            direction = data.getCmd();
+        }
+        //平仓，找ticket,如果没有不跟，如果有就跟
+        if(data.getOpenClose().equals(FollowOrderEnum.FollowStatus.CLOSE.getIndex())){
+            FollowOrderDetail detail = followOrderDetailService.getFollowOrderDetailByTicket(data.getTicket(), followOrder.getId());
+            if (detail!=null){
+                sendMsgByTrade(followOrder,direction.equals(FollowOrderEnum.FollowStatus.BUY.getIndex())?
+                        FollowOrderEnum.FollowStatus.SELL.getIndex():FollowOrderEnum.FollowStatus.BUY.getIndex(),
+                        FollowOrderEnum.FollowStatus.CLOSE.getIndex(),handNumber,data.getNewTicket(),data.getTicket(),
+                        data.getVarietyCode(),null);
+            }
+        }else {
+            //开仓跟
+            sendMsgByTrade(followOrder,direction,
+                    FollowOrderEnum.FollowStatus.OPEN.getIndex(),handNumber,data.getNewTicket(),data.getTicket(),
+                    data.getVarietyCode(),null);
+        }
     }
 
     /*

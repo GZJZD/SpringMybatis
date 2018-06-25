@@ -7,33 +7,35 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import java.lang.reflect.Field;
+import java.util.HashMap;
+import java.lang.reflect.Field;
 import java.util.List;
+import java.util.Map;
 
 public class WebJsion {
     private static Logger log = LogManager.getLogger(WebJsion.class.getName());
 
 
+
+
     public static JSONObject tojson(Object... objects) {
         JSONObject jsonObject = new JSONObject();
-        for (Object o :objects){
-            Field[] fields =  o.getClass().getDeclaredFields();
-            for (Field field : fields){
-                field.setAccessible(true);
+        for (Object obj : objects) {
+            /* 得到类中的所有属性集合 */
+            Field[] fs = obj.getClass().getDeclaredFields();
+            for (Field f : fs) {
+                f.setAccessible(true); // 设置些属性是可以访问的
                 try {
-                    Object val = field.get(o);
-                    if(val != null){
-                        jsonObject.put(field.getName(),val);
+                    Object val = f.get(obj);
+                    // 得到此属性的值
+                    if(val!=null){
+                        jsonObject.put(f.getName(),val);
                     }
-
-                }catch (Exception e){
+                } catch (IllegalAccessException e) {
                     e.printStackTrace();
                 }
             }
-            jsonObject.put(o.getClass().getName(),o);
-
         }
-
-
         return jsonObject;
     }
 

@@ -25,8 +25,6 @@ public interface IFollowOrderService {
     void updateFollowOrderStatus(Long followOrderId,Integer status);
 
 
-    List<FollowOrder> getListFollowOrderByClientName(String clientName);
-
     FollowOrder getFollowOrder(Long id);
 
     List<FollowOrderVo> getListFollowOrderVo(FollowOrderPageVo followOrderPageVo);
@@ -44,8 +42,7 @@ public interface IFollowOrderService {
 
     void closeAllOrderByFollowOrderId(Long followOrderId);
 
-    void sendMsgByTrade(FollowOrder followOrder, Integer orderDirection, Integer openClose,
-                               Double handNumber,String newTicket,String ticket,String varietyCode,Long clientNetPositionId);
+
 
     void manuallyClosePosition(Long detailId);
 

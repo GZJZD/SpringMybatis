@@ -22,4 +22,7 @@ public interface FollowOrderDao {
     int queryForCount(QueryObject qo);
 
     void updateFollowOrderStatus(@Param("followOrderId") Long followOrderId, @Param("status") Integer status, @Param("startTime") String startTime);
+
+
+    List<FollowOrder> findFollowOrderStart(@Param("followOrderIds") List<Long> followOrderIds, @Param("varietyCode") String varietyCode);
 }

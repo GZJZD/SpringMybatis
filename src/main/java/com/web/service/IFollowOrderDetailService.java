@@ -1,9 +1,11 @@
 package com.web.service;
 
 import com.web.pojo.FollowOrderDetail;
+import com.web.pojo.FollowOrderTradeRecord;
 import com.web.pojo.vo.FollowOrderPageVo;
 import com.web.pojo.vo.FollowOrderVo;
 import com.web.pojo.vo.NetPositionDetailVo;
+import com.web.pojo.vo.OrderMsgResult;
 
 import java.util.List;
 
@@ -23,7 +25,7 @@ public interface IFollowOrderDetailService {
     * @param   
     * @return   
     */  
-    FollowOrderDetail getFollowOrderDetailByTicket(String ticket);
+    FollowOrderDetail getFollowOrderDetailByTicket(String ticket, Long followOrderId);
 
     FollowOrderDetail getFollowOrderDetail(Long id);
     /**
@@ -82,4 +84,6 @@ public interface IFollowOrderDetailService {
 
 
     FollowOrderPageVo getFollowOrderPageVo();
+
+    void createDetail(FollowOrderTradeRecord followOrderTradeRecord, OrderMsgResult orderMsgResult);
 }
