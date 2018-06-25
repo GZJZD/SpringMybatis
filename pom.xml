@@ -148,6 +148,12 @@
       <classifier>jdk15</classifier>
     </dependency>
 
+    <dependency>
+      <groupId>org.json</groupId>
+      <artifactId>json</artifactId>
+      <version>20170516</version>
+    </dependency>
+
     <!-- 添加日志相关jar包 -->
     <!--  <dependency>
           <groupId>log4j</groupId>
