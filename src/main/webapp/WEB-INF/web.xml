@@ -62,7 +62,7 @@
 
   <!--首页页面-->
   <welcome-file-list>
-    <welcome-file>/index.html</welcome-file>
+    <welcome-file>/login.html</welcome-file>
   </welcome-file-list>
 
   <!-- session配置 -->

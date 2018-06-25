@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="UTF-8">
+		<meta name="renderer" content="webkit">
+		<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+		<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+		<title>登录</title>
+
+
+		<link rel="stylesheet" href="lib/layui/css/layui.css">
+		<style>
+			.window {
+				width: 400px;
+				position: absolute;
+				margin-left: -200px;
+				margin-top: -80px;
+				top: 50%;
+				left: 50%;
+				display: block;
+				z-index: 2000;
+				background: #fff;
+				padding: 20 0;
+			}
+			
+			body {
+				background-color: #364150;
+			}
+			
+			.commit-bnt {
+				width: 90%;
+			}
+			
+			.title {
+				position: absolute;
+				left: 871px;
+				top: 300px;
+			}
+			
+			.code {
+				position: absolute;
+				left: 207px;
+				top: 0px;
+			}
+		</style>
+
+	</head>
+
+	<body>
+
+		<p class="title" style="font-size: 20px; text-align: center;color:#f1f1f1">金政通智能跟单平台</p>
+
+		<div class="window">
+
+			<div class="layui-form-item" style="margin-right: 100px;margin-top: 20px;">
+
+				<div class="layui-input-block">
+
+					<p style="font-size: 30px; text-align: center;color:#4db3a5">登录</p>
+
+				</div>
+
+			</div>
+
+			<form class="layui-form" action="">
+				<div class="layui-form-item" style="margin-right: 100px;margin-top: 20px;">
+
+					<div class="layui-input-block">
+				
+						<input style="border: 0px;background-color: #dde3ec;"name="phoneNumber" class="layui-input phoneNumber" type="tel" autocomplete="off" lay-verify="phone"     placeholder="请输入您的的手机" >
+ 						
+					</div>
+
+				</div>
+
+				<div class="layui-form-item" style="margin-right: 100px;margin-top: 20px;">
+
+					<div class="layui-input-block">
+
+						<input style="border: 0px;background-color: #dde3ec;"name="code" class="layui-input" type="tel" autocomplete="off" lay-verify="number"     placeholder="请输入验证码" >
+						<!--<button type="button" class="layui-btn code code-but"  style="background-color: #67809F;">验证码</button>-->
+						<input type="button" class="layui-btn code code-but code code-but" id="btn"  style="background-color: #67809F;" value="验证码" />
+					</div>
+
+				</div>
+								
+				<div class="layui-form-item">
+					<div style="text-align: center;">
+						<button type="button" class="layui-btn commit-bnt" lay-filter="demo1" lay-submit="">登&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;录</button>
+					</div>
+				</div>
+		</form>
+
+		</div>
+		<script src="lib/layui/layui.js"></script>
+		<script src="lib/layui/layui.all.js"></script>
+		<script type="text/javascript" src="lib/jquery/jquery-3.2.1.min.js"></script>
+		<script src="js/commonParameter.js"></script>
+
+		<script>
+			$(function(){
+                getCode();
+			});
+			layui.use(['form', 'layedit', 'laydate'], function() {
+				var form = layui.form,
+					layer = layui.layer,
+					layedit = layui.layedit,
+					laydate = layui.laydate;
+
+				//自定义验证规则  
+				form.verify({
+					phone: [/^1[3|4|5|7|8]\d{9}$/, '请输入正确手机号码，只能是11位数字！'],
+					
+				});
+
+				//创建一个编辑器  
+				layedit.build('LAY_demo_editor');
+
+				//监听提交
+				form.on('submit(demo1)', function(data) {
+                    // JSON.stringify(data.field)
+                    // layer.alert(JSON.stringify(data.field), {
+                    //     	title: '最终的提交信息'
+                    //     })
+                    // return false;
+                    $.ajax({
+                        url:url_+"/Login/login.Action",
+                        type:'POST', //GET
+                        async:true,    //或false,是否异步
+                        data:data.field,
+                        // timeout:5000,    //超时时间
+                        dataType:'json',    //返回的数据格式：json/xml/html/script/jsonp/text
+                        beforeSend:function(xhr){
+
+                        },
+                        success:function(data,textStatus,jqXHR){
+
+                            console.log(data);
+						if(data=='true'){
+                            $(location).attr('href', 'index.html');
+                        }else {
+                            layer.msg(data);
+                            return false;
+						}
+
+
+                        },
+                        error:function(xhr,textStatus){
+
+                        },
+                        complete:function(){
+
+                        }
+                    });
+					// layer.alert(JSON.stringify(data.field), {
+					// 	title: '最终的提交信息'
+					// })
+					// return false;
+				});
+			});
+
+			function getCode(){
+
+                $('.code-but').click(function(){
+                    if (!$('.phoneNumber').val().match(/^1[3|4|5|7|8]\d{9}$/)) {
+						layer.msg("请输入正确手机号");
+						return false;
+                    }
+                    var phoneNumber =  $('.phoneNumber').val();
+                    $.ajax({
+                        url:url_+"/Login/getCode.Action",
+                        type:'POST', //GET
+                        async:true,    //或false,是否异步
+                        data:{
+                            phoneNumber : phoneNumber
+                        },
+                        // timeout:5000,    //超时时间
+                        dataType:'json',    //返回的数据格式：json/xml/html/script/jsonp/text
+                        beforeSend:function(xhr){
+
+                        },
+                        success:function(data,textStatus,jqXHR){
+
+                          var source =   JSON.parse(data)
+                            console.log(source);
+							checkCode(source.code);
+
+
+                        },
+                        error:function(xhr,textStatus){
+
+                        },
+                        complete:function(){
+
+                        }
+                    })
+                    time(this);
+				});
+			}
+
+			function checkCode(code){
+			   if(code == '' || code ==null) {
+                   return layer.msg("验证码发送失败，请重新操作！")
+               }else {
+                   return layer.msg("验证码发送成功！")
+
+			   }
+			}
+
+
+
+            var wait=60;
+            function time(o) {
+                if (wait == 0) {
+                    o.removeAttribute("disabled");
+                    o.value="获取";
+                    wait = 60;
+                } else {
+                    o.setAttribute("disabled", true);
+                    o.value="(" + wait + "s)";
+                    wait--;
+                    setTimeout(function() {
+                        time(o)
+                    },1000)
+                }
+            }
+		</script>
+	</body>
+
+</html>
