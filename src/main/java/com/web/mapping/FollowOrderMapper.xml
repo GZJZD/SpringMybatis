@@ -164,8 +164,21 @@
       join variety v on v.id = f.variety_id
       <include refid="base_where"/>
     </select>
+    <select id="findFollowOrderStart" resultMap="BaseResultMap">
+      select
+      <include refid="base_List"/>
+      from follow_order f
+      join variety v on v.id = f.variety_id
+      where f.id in
+      <foreach collection="followOrderIds" index="index" item="item" open="(" separator="," close=")">
+        <if test="followOrderIds.size>0">
+          #{item}
+        </if>
+      </foreach>
+      and f.follow_order_status = 1 and v.variety_code = #{varietyCode}
+    </select>
 
-  <sql id="base_where">
+    <sql id="base_where">
     <where>
       <if test="varietyId != null and varietyId != -1">
        and f.variety_id = #{varietyId}

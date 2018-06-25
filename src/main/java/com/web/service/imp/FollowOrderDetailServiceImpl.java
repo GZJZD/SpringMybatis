@@ -1,11 +1,13 @@
 package com.web.service.imp;
 
+import com.web.common.FollowOrderEnum;
 import com.web.dao.FollowOrderDetailDao;
 import com.web.pojo.*;
 
 import com.web.pojo.vo.FollowOrderPageVo;
 import com.web.pojo.vo.FollowOrderVo;
 import com.web.pojo.vo.NetPositionDetailVo;
+import com.web.pojo.vo.OrderMsgResult;
 import com.web.service.*;
 import com.web.util.common.DateUtil;
 import com.web.util.common.DoubleUtil;
@@ -41,8 +43,8 @@ public class FollowOrderDetailServiceImpl implements IFollowOrderDetailService {
     }
 
     @Override
-    public FollowOrderDetail getFollowOrderDetailByTicket(String ticket) {
-        return followOrderDetailDao.getFollowOrderDetailByTicket(ticket);
+    public FollowOrderDetail getFollowOrderDetailByTicket(String ticket, Long followOrderId) {
+        return followOrderDetailDao.getFollowOrderDetailByTicket(ticket,followOrderId);
     }
 
     @Override
@@ -169,5 +171,162 @@ public class FollowOrderDetailServiceImpl implements IFollowOrderDetailService {
         return followOrderDetailDao.getNOCloseDetailListByFollowOrderId(followOrderId);
     }
 
+
+    /*
+     * 客户平仓
+     * */
+    private void createClientCloseDetail(FollowOrderTradeRecord followOrderTradeRecord, OrderMsgResult orderMsgResult) {
+        //客户平仓,
+        FollowOrderDetail detail = getFollowOrderDetailByTicket(followOrderTradeRecord.getTicket(), followOrderTradeRecord.getFollowOrderId());
+        if (detail != null) {
+            if (!followOrderTradeRecord.getTicket().equals(followOrderTradeRecord.getNewTicket())) {
+                //开仓单号和开仓单号一致就不需要新建开仓
+                //新建开仓单号
+                FollowOrderDetail detailNew = new FollowOrderDetail();
+                detailNew.setHandNumber(DoubleUtil.sub(detail.getHandNumber(), followOrderTradeRecord.getHandNumber()));
+                detailNew.setOriginalHandNumber(detailNew.getHandNumber());
+                detailNew.setTicket(followOrderTradeRecord.getNewTicket());
+                detailNew.setPoundage(detail.getPoundage());
+                detailNew.setCreateDate(DateUtil.getStringDate());
+                detailNew.setOpenPrice(detail.getOpenPrice());
+                detailNew.setOpenTime(detail.getOpenTime());
+                detailNew.setFollowOrderId(detail.getFollowOrderId());
+                detailNew.setTradeDirection(detail.getTradeDirection());
+                detailNew.setVarietyName(detail.getVarietyName());
+                detailNew.setFollowOrderTradeRecordId(detail.getFollowOrderTradeRecordId());
+                save(detailNew);
+                detail.setHandNumber(followOrderTradeRecord.getHandNumber());
+                detail.setOriginalHandNumber(followOrderTradeRecord.getHandNumber());
+            }
+            //设置平仓时间
+            detail.setCloseTime(orderMsgResult.getTradeDate() + orderMsgResult.getTradeTime());
+            //设置平仓价格
+            detail.setClosePrice(orderMsgResult.getTradePrice());
+            //设置平仓盈亏
+            detail.setProfitLoss(DoubleUtil.sub(DoubleUtil.mul(detail.getHandNumber(),
+                    detail.getClosePrice()), DoubleUtil.mul(detail.getHandNumber(), detail.getOpenPrice())));
+            //手续费
+            detail.setPoundage(DoubleUtil.add(detail.getPoundage(), orderMsgResult.getTradeCommission()));
+            updateDetail(detail);
+        }
+    }
+
+    /*
+     *
+     * 净头寸平仓
+     * */
+    private void createNetPositionCloseDetail(FollowOrderDetail orderDetail, FollowOrderTradeRecord followOrderTradeRecord, OrderMsgResult orderMsgResult) {
+        //平仓，找到对应的开多 or  开空 明细，并且剩下手数不为0的集合
+        List<FollowOrderDetail> followOrderDetails;
+        if (followOrderTradeRecord.getTradeDirection().equals(FollowOrderEnum.FollowStatus.BUY.getIndex())) {
+            //找到最早开仓的多单明细
+            followOrderDetails = getDetailListByOrderIdAndDirection(followOrderTradeRecord.
+                    getFollowOrderId(), FollowOrderEnum.FollowStatus.SELL.getIndex());
+        } else {
+            //找到最早的的空单明细
+            followOrderDetails = getDetailListByOrderIdAndDirection(followOrderTradeRecord.
+                    getFollowOrderId(), FollowOrderEnum.FollowStatus.BUY.getIndex());
+        }
+        //获取交易的手数
+        Double tradeHandNumber;
+        if (orderMsgResult.getTradeVolume() != null) {
+            tradeHandNumber = orderMsgResult.getTradeVolume();
+        } else {
+            tradeHandNumber = followOrderTradeRecord.getHandNumber();
+        }
+        Double profitLoss = 0.0;
+        for (FollowOrderDetail followOrderDetail : followOrderDetails) {
+            Double tradePrice;
+            Double detailPrice;
+            if (tradeHandNumber != 0) {
+                //获取明细剩下的手数进行平仓
+                Double detailHandNumber = followOrderDetail.getRemainHandNumber();
+                if (detailHandNumber > tradeHandNumber) {
+                    tradePrice = DoubleUtil.mul(tradeHandNumber, followOrderTradeRecord.getMarketPrice());
+                    detailPrice = DoubleUtil.mul(tradeHandNumber, followOrderDetail.getOpenPrice());
+                    followOrderDetail.setRemainHandNumber(DoubleUtil.sub(detailHandNumber, tradeHandNumber));
+                } else {
+                    followOrderDetail.setRemainHandNumber(0.0);
+                    tradePrice = DoubleUtil.mul(detailHandNumber, followOrderTradeRecord.getMarketPrice());
+                    detailPrice = DoubleUtil.mul(detailHandNumber, followOrderDetail.getOpenPrice());
+                    tradeHandNumber = DoubleUtil.sub(tradeHandNumber, detailHandNumber);
+                }
+                profitLoss = DoubleUtil.add(profitLoss, DoubleUtil.sub(tradePrice,
+                        detailPrice));
+                updateDetail(followOrderDetail);
+            }
+        }
+        //设置平仓时间
+        orderDetail.setCloseTime(orderMsgResult.getTradeDate() + orderMsgResult.getTradeTime());
+        //设置平仓价格
+        orderDetail.setClosePrice(orderMsgResult.getTradePrice());
+
+        //设置平仓盈亏
+        orderDetail.setProfitLoss(profitLoss);
+    }
+    /*
+    *
+    * 开仓明细
+    * */
+    private void createOpenDetail(FollowOrderDetail orderDetail, FollowOrderTradeRecord followOrderTradeRecord, OrderMsgResult orderMsgResult) {
+        //设置手数
+        if (orderMsgResult.getTradeVolume() != null) {
+
+            orderDetail.setHandNumber(orderMsgResult.getTradeVolume());
+        } else {
+            orderDetail.setHandNumber(followOrderTradeRecord.getHandNumber());
+
+        }
+        //设置原来手数
+        orderDetail.setOriginalHandNumber(followOrderTradeRecord.getHandNumber());
+        //设置交易方向
+        orderDetail.setTradeDirection(followOrderTradeRecord.getTradeDirection());
+        //设置品种的名称
+        orderDetail.setVarietyName(followOrderTradeRecord.getVarietyCode());
+        //设置手续费
+        orderDetail.setPoundage(orderMsgResult.getTradeCommission());
+        //设置开仓单号
+        orderDetail.setTicket(followOrderTradeRecord.getTicket());
+        //设置 创建是时间
+        orderDetail.setCreateDate(DateUtil.getStringDate());
+        //设置跟单id
+        orderDetail.setFollowOrderId(followOrderTradeRecord.getFollowOrderId());
+        //设置交易id
+        orderDetail.setFollowOrderTradeRecordId(followOrderTradeRecord.getId());
+        save(orderDetail);
+    }
+
+    /**
+     * 创建明细
+     *
+     * @param
+     * @Author: May
+     * @Date: 12:21 2018/5/23
+     */
+    public void createDetail(FollowOrderTradeRecord followOrderTradeRecord, OrderMsgResult orderMsgResult) {
+        FollowOrderDetail orderDetail = new FollowOrderDetail();
+        //判断跟单方向
+        if (followOrderTradeRecord != null) {
+            if (followOrderTradeRecord.getOpenCloseType().equals(FollowOrderEnum.FollowStatus.CLOSE.getIndex())) {
+                if (followOrderTradeRecord.getClientNetPositionId() == null) {
+                    //客户平仓
+                    createClientCloseDetail(followOrderTradeRecord, orderMsgResult);
+                } else {
+                    //净头寸
+                    createNetPositionCloseDetail(orderDetail, followOrderTradeRecord, orderMsgResult);
+                    createOpenDetail(orderDetail, followOrderTradeRecord, orderMsgResult);
+                }
+            }else{
+                //客户开仓
+                //设置开仓时间
+                orderDetail.setOpenTime(orderMsgResult.getTradeTime());
+                //设置开仓价格
+                orderDetail.setOpenPrice(orderMsgResult.getTradePrice());
+                createOpenDetail(orderDetail, followOrderTradeRecord, orderMsgResult);
+                //todo 通过开仓单号找到客户的盈亏
+
+            }
+        }
+    }
 
 }

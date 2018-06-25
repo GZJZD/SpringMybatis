@@ -75,12 +75,7 @@
     <include refid="base_List"/>
     from follow_order_client
   </select>
-  <select id="selectByUserCode" resultMap="BaseResultMap">
-    select
-    <include refid="base_List"/>
-    from follow_order_client
-    where user_code =#{userCode}
-  </select>
+
     <select id="getListByFollowOrderId" resultMap="BaseResultMap">
       select
       <include refid="base_List"/>
@@ -92,6 +87,18 @@
     user_code
     from follow_order_client
     where follow_order_id =#{followOrderId}
+  </select>
+    <select id="findListFollowOrderIDsByUserCode" resultType="java.lang.Long">
+      select
+      follow_order_id
+      from follow_order_client
+      where user_code =#{userCode}
+    </select>
+  <select id="findClientByIdAndName" resultMap="BaseResultMap">
+      select
+      <include refid="base_List"/>
+      from follow_order_client
+      where user_code =#{userCode} and follow_order_id =#{followOrderId}
   </select>
 
 

@@ -31,7 +31,7 @@ public interface FollowOrderDetailDao {
 
     List<FollowOrderDetail> getDetailListByOrderIdAndDirection(@Param("followOrderId") Long followOrderId, @Param("direction") Integer direction);
 
-    FollowOrderDetail getFollowOrderDetailByTicket(String ticket);
+    FollowOrderDetail getFollowOrderDetailByTicket(@Param("ticket") String ticket, @Param("followOrderId") Long followOrderId);
 
     FollowOrderVo getOffsetGainAndLossAndHandNumberByFollowOrderId (Long followOrderId);
 

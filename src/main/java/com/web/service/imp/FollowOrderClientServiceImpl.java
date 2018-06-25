@@ -29,8 +29,8 @@ public class FollowOrderClientServiceImpl implements IFollowOrderClientService {
     private IFollowOrderService followOrderService;
 
     @Override
-    public List<FollowOrderClient> getListByUserCode(String userCode) {
-        return followOrderClientDao.selectByUserCode(userCode);
+    public List<Long> getListByUserCode(String userCode) {
+        return followOrderClientDao.findListFollowOrderIDsByUserCode(userCode);
     }
 
     @Override
@@ -92,5 +92,15 @@ public class FollowOrderClientServiceImpl implements IFollowOrderClientService {
             followOrderClientParamVoList.add(followOrderClientParamVo);
         }
         return followOrderClientParamVoList;
+    }
+
+    /*
+    *
+    * 找到对应跟单id的客户跟单数据
+    * @param userCode:客户编号
+    * */
+    @Override
+    public FollowOrderClient findClientByIdAndName(Long followOrderId, String userCode) {
+        return followOrderClientDao.findClientByIdAndName(followOrderId,userCode);
     }
 }

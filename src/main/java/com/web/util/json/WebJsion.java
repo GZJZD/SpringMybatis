@@ -3,20 +3,35 @@ package com.web.util.json;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 
+import java.lang.reflect.Field;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class WebJsion {
 
 
 
-//    public static JSONObject tojson(Object... objects) {
-//        JSONObject jsonObject = new JSONObject();
-//        for (Object o : objects) {
-//            jsonObject.put();
-//        }
-//
-//        return jsonObject;
-//    }
+    public static JSONObject tojson(Object... objects) {
+        JSONObject jsonObject = new JSONObject();
+        for (Object obj : objects) {
+            /* 得到类中的所有属性集合 */
+            Field[] fs = obj.getClass().getDeclaredFields();
+            for (Field f : fs) {
+                f.setAccessible(true); // 设置些属性是可以访问的
+                try {
+                    Object val = f.get(obj);
+                    // 得到此属性的值
+                    if(val!=null){
+                        jsonObject.put(f.getName(),val);
+                    }
+                } catch (IllegalAccessException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+        return jsonObject;
+    }
 
 
 

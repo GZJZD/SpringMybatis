@@ -166,7 +166,7 @@
     select
     <include refid="base_List"/>
     from follow_order_detail
-    where ticket = #{ticket}
+    where ticket = #{ticket} and follow_order_id = #{followOrderId}
   </select>
   <select id="getOffsetGainAndLossAndHandNumberByFollowOrderId" resultMap="testMap">
     select sum(profit_loss) offsetGainAndLoss,sum(hand_number) offsetHandNumber
