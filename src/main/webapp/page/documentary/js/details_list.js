@@ -198,30 +198,29 @@ function clientTableShow(id) {
 function orderParameterShow(followOrder) {
     $("#accountName").html(followOrder.account.platform.name + "-" + followOrder.account.username);
     $("#varietyName").html(followOrder.variety.varietyName);
-    var num = 0;//1:不设置，0代表设置
-    if (followOrder.maxProfit == num) {
-        $("#maxProfitNumber").html(followOrder.maxProfitNumber + "点");
-    } else {
-        $("#maxProfitNumber").html("不设");
-    }
-    if (followOrder.maxLoss == num) {
-        $("#maxLossNumber").html(followOrder.maxLossNumber + "点");
-    } else {
-        $("#maxLossNumber").html("不设");
-    }
-    if (followOrder.accountLoss == num) {
-        $("#accountLossNumber").html(followOrder.accountLossNumber + "美金");
-    } else {
-        $("#accountLossNumber").html("不设");
-    }
+    var num = 0;//1:不设置/净头寸/正向，0代表设置/客户/反向
+
+    followOrder.maxProfit == num?$("#maxProfitNumber").html(followOrder.maxProfitNumber + "点"): $("#maxProfitNumber").html("不设");
+    followOrder.maxLoss == num?$("#maxLossNumber").html(followOrder.maxLossNumber + "点"): $("#maxLossNumber").html("不设");
+    followOrder.accountLoss == num?$("#accountLossNumber").html(followOrder.accountLossNumber + "点"): $("#accountLossNumber").html("不设");
+
+
     if (followOrder.orderPoint == num) {
-        if (followOrder.clientPoint == num) {
-            $("#orderPointNumber").html("-" + followOrder.clientPointNumber + "点");
-        } else {
+
+        followOrder.clientPoint == num?$("#orderPointNumber").html("-" + followOrder.clientPointNumber + "点"):
             $("#orderPointNumber").html("+" + followOrder.clientPointNumber + "点");
-        }
     } else {
         $("#orderPointNumber").html("市价");
+    }
+    if(followOrder.followManner==num){
+        $(".chooseNetPosition").hide();
+        $(".clientAllTotal").show();
+    }else{
+        $(".clientAllTotal").hide();
+
+        $(".chooseNetPosition").show();
+        followOrder.netPositionDirection==num? $("#netPositionDirection").html("反向"): $("#netPositionDirection").html("正向");
+        $("#netPositionFollowNumber").html("净头寸每变化"+followOrder.netPositionChange+"手，跟单"+followOrder.netPositionFollowNumber+"手");
     }
 
 }
@@ -287,7 +286,7 @@ function findByClient() {
     })
 }
 /*
-* 跟单查询条件
+* 跟单明细查询条件
 * */
 function findByDetail() {
 
