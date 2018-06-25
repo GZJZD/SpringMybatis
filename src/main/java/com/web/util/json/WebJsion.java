@@ -2,11 +2,14 @@ package com.web.util.json;
 
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
+import com.web.tcp.DataParserServiceImpl;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.util.List;
 
 public class WebJsion {
-
+    private static Logger log = LogManager.getLogger(WebJsion.class.getName());
 
 
 //    public static JSONObject tojson(Object... objects) {
@@ -36,7 +39,7 @@ public class WebJsion {
             }
         } catch (Exception e) {
 
-            // log.info("数据转换出错:"+ e.getMessage());
+             log.info("数据转换出错:"+ e.getMessage());
         }
         return null;
     }
@@ -55,7 +58,7 @@ public class WebJsion {
                 return res;
             }
         } catch (Exception e) {
-            // log.info("数据转换出错:"+ e.getMessage());
+             log.info("数据转换出错:"+ e.getMessage());
         }
         return null;
     }
@@ -70,7 +73,7 @@ public class WebJsion {
         try {
             return JSONObject.toJSONString(t);
         } catch (Exception e) {
-            // log.info("数据转换出错:"+ e.getMessage());
+             log.info("数据转换出错:"+ e.getMessage());
 
         }
         return "";
