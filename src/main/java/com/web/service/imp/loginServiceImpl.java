@@ -37,33 +37,28 @@ public class loginServiceImpl implements LoginService {
     public String checkLogin(Login login,String code) {
         long outTime = 28800000; //8小时
         String message = null;
-        if(login ==null){
+        if(login == null){
             return  message="用户不存在，请与管理员联系";
         }
         if(null != login.getCode() && login.getCode().equals(code)){
             SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-            if(login.getVerifyTime()!= null && !StringUtils.isEmpty(login.getVerifyTime())){
+            if(login.getVerifyTime() != null && !StringUtils.isEmpty(login.getVerifyTime())){
                 try {
                     Date begin_Time = sdf.parse(login.getVerifyTime());
                     Date end_Time = sdf.parse(DateUtil.getStringDate());
-                    long days=(end_Time.getTime()-begin_Time.getTime());//今天时间 减去最后验证时间
-                    System.out.println(DateUtil.getStringDate());
-                    System.out.println(end_Time.getTime()+"beginTime:"+begin_Time);
-                    System.out.println(days);
-                    if(days<outTime){
+                    long days = (end_Time.getTime()-begin_Time.getTime());//当前时间 减去最后验证时间
+                    if(days < outTime){
                         message="true";
                     }else {
                       message="超出有效时间，请重新验证";
                     }
                 } catch (ParseException e) {
-                    e.printStackTrace();
                     log.info("日期转换错误");
-
+                    e.printStackTrace();
                 }
             }else {
                 message="验证日期为空，请联系管理人员";
             }
-
         }else{
             message="验证码错误，请输入有效验证码！";
         }
