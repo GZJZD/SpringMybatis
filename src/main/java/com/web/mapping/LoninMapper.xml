@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.web.dao.LoginDao">
+
+    <resultMap id="BaseResultMap" type="com.web.pojo.Login" >
+        <id column="id" property="id" jdbcType="BIGINT" />
+        <result column="login_name" property="loginName" jdbcType="VARCHAR" />
+        <result column="phone_number" property="phoneNumber" jdbcType="VARCHAR" />
+        <result column="verify_time" property="verifyTime" jdbcType="VARCHAR" />
+        <result column="code" property="code" jdbcType="VARCHAR" />
+        <result column="create_date" property="createDate" jdbcType="VARCHAR" />
+        <result column="update_date" property="updateDate" jdbcType="VARCHAR" />
+        <result column="create_by" property="createBy" jdbcType="VARCHAR" />
+    </resultMap>
+
+    <sql id="Base_Column_List" >
+       id , login_name , phone_number, verify_time, code, create_date, update_date, create_by
+    </sql>
+
+
+
+    <select id="findByPhoneNumber"  parameterType="java.lang.String" resultMap="BaseResultMap">
+        SELECT
+        <include refid="Base_Column_List" />
+        FROM tb_login
+        WHERE phone_number = #{phoneNumber}
+    </select>
+
+
+    <update id="updateCode" parameterType="com.web.pojo.Login">
+        update tb_login
+        <set>
+            <if test="verifyTime != null">
+                verify_time = #{verifyTime},
+            </if>
+            <if test="code != null">
+                code = #{code},
+            </if>
+            <if test="updateDate != null">
+                update_date = #{updateDate},
+            </if>
+
+        </set>
+        WHERE phone_number = #{phoneNumber}
+    </update>
+
+</mapper>

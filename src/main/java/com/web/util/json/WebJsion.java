@@ -6,20 +6,36 @@ import com.web.tcp.DataParserServiceImpl;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import java.lang.reflect.Field;
 import java.util.List;
 
 public class WebJsion {
     private static Logger log = LogManager.getLogger(WebJsion.class.getName());
 
 
-//    public static JSONObject tojson(Object... objects) {
-//        JSONObject jsonObject = new JSONObject();
-//        for (Object o : objects) {
-//            jsonObject.put();
-//        }
-//
-//        return jsonObject;
-//    }
+    public static JSONObject tojson(Object... objects) {
+        JSONObject jsonObject = new JSONObject();
+        for (Object o :objects){
+            Field[] fields =  o.getClass().getDeclaredFields();
+            for (Field field : fields){
+                field.setAccessible(true);
+                try {
+                    Object val = field.get(o);
+                    if(val != null){
+                        jsonObject.put(field.getName(),val);
+                    }
+
+                }catch (Exception e){
+                    e.printStackTrace();
+                }
+            }
+            jsonObject.put(o.getClass().getName(),o);
+
+        }
+
+
+        return jsonObject;
+    }
 
 
 
