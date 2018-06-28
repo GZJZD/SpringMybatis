@@ -12,6 +12,8 @@ public class Login {
     private String createDate;//用户创建时间
     private String updateDate;//用户修改时间
     private String createBy;//创建人
+    private String token; // phoneNumber + 验证时间 + UUid  + Base64 = token
+    private String UUid; //登录成功的独立id
 
 
     public Login() {
@@ -19,7 +21,7 @@ public class Login {
     }
 
 
-    public Login(Long id, String loginName, String phoneNumber, String verifyTime, String code, String createDate, String updateDate, String createBy) {
+    public Login(Long id, String loginName, String phoneNumber, String verifyTime, String code, String createDate, String updateDate, String createBy, String token, String UUid) {
         this.id = id;
         this.loginName = loginName;
         this.phoneNumber = phoneNumber;
@@ -28,6 +30,25 @@ public class Login {
         this.createDate = createDate;
         this.updateDate = updateDate;
         this.createBy = createBy;
+        this.token = token;
+        this.UUid = UUid;
+    }
+
+
+    public String getToken() {
+        return token;
+    }
+
+    public void setToken(String token) {
+        this.token = token;
+    }
+
+    public String getUUid() {
+        return UUid;
+    }
+
+    public void setUUid(String UUid) {
+        this.UUid = UUid;
     }
 
     @Override

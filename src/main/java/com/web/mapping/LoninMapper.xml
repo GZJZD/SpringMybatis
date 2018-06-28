@@ -11,10 +11,12 @@
         <result column="create_date" property="createDate" jdbcType="VARCHAR" />
         <result column="update_date" property="updateDate" jdbcType="VARCHAR" />
         <result column="create_by" property="createBy" jdbcType="VARCHAR" />
+        <result column="token" property="token" jdbcType="VARCHAR" />
+        <result column="uuid" property="UUid" jdbcType="VARCHAR" />
     </resultMap>
 
     <sql id="Base_Column_List" >
-       id , login_name , phone_number, verify_time, code, create_date, update_date, create_by
+       id , login_name , phone_number, verify_time, code, create_date, update_date, create_by, token, uuid
     </sql>
 
 
@@ -38,6 +40,12 @@
             </if>
             <if test="updateDate != null">
                 update_date = #{updateDate},
+            </if>
+            <if test="token != null">
+                token = #{token},
+            </if>
+            <if test="UUid != null">
+                uuid = #{UUid},
             </if>
 
         </set>

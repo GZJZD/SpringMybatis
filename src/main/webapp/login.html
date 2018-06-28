@@ -111,7 +111,6 @@
 				//自定义验证规则  
 				form.verify({
 					phone: [/^1[3|4|5|7|8]\d{9}$/, '请输入正确手机号码，只能是11位数字！'],
-					
 				});
 
 				//创建一个编辑器  
@@ -119,11 +118,7 @@
 
 				//监听提交
 				form.on('submit(demo1)', function(data) {
-                    // JSON.stringify(data.field)
-                    // layer.alert(JSON.stringify(data.field), {
-                    //     	title: '最终的提交信息'
-                    //     })
-                    // return false;
+
                     $.ajax({
                         url:url_+"/Login/login.Action",
                         type:'POST', //GET
@@ -136,34 +131,24 @@
                         },
                         success:function(data,textStatus,jqXHR){
 
-                            console.log(data);
 						if(data=='true'){
                             $(location).attr('href', 'index.html');
                         }else {
                             layer.msg(data);
                             return false;
 						}
-
-
                         },
                         error:function(xhr,textStatus){
-
                         },
                         complete:function(){
-
                         }
                     });
-					// layer.alert(JSON.stringify(data.field), {
-					// 	title: '最终的提交信息'
-					// })
-					// return false;
 				});
 			});
 
 			function getCode(){
-
                 $('.code-but').click(function(){
-                    if (!$('.phoneNumber').val().match(/^1[3|4|5|7|8]\d{9}$/)) {
+                    if (!$('.phoneNumber').val().match(/^1[3|4|5|7|8|9]\d{9}$/)) {
 						layer.msg("请输入正确手机号");
 						return false;
                     }
@@ -181,33 +166,17 @@
 
                         },
                         success:function(data,textStatus,jqXHR){
-
-                          var source =   JSON.parse(data)
-                            console.log(source);
-							checkCode(source.code);
-
-
+                            console.log(data);
+                          layer.msg(data);
                         },
                         error:function(xhr,textStatus){
-
                         },
                         complete:function(){
-
                         }
                     })
                     time(this);
 				});
 			}
-
-			function checkCode(code){
-			   if(code == '' || code ==null) {
-                   return layer.msg("验证码发送失败，请重新操作！")
-               }else {
-                   return layer.msg("验证码发送成功！")
-
-			   }
-			}
-
 
 
             var wait=60;
