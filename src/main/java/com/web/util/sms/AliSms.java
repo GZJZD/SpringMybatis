@@ -17,7 +17,8 @@ public class AliSms {
     static final String accessKeySecret = "CUWfabMEhNn9jcct7OuPoJP5maxYsp";
 
     public static SendSmsResponse SendSms(String phone_number,int code) throws ClientException {
-//可自助调整超时时间
+        String msg  = null;
+        //可自助调整超时时间
         System.setProperty("sun.net.client.defaultConnectTimeout", "10000");
         System.setProperty("sun.net.client.defaultReadTimeout", "10000");
 
@@ -45,7 +46,11 @@ public class AliSms {
 
         //hint 此处可能会抛出异常，注意catch
         SendSmsResponse sendSmsResponse = acsClient.getAcsResponse(request);
-
+        if(sendSmsResponse.getCode() != null && sendSmsResponse.getCode().equals("OK")) {
+            msg="短信发送成功，请注意查收";
+        }else {
+            msg="用户发送失败，请重新操作";
+        }
         return sendSmsResponse;
     }
 }
