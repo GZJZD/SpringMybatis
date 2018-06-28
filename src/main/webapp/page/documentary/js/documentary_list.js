@@ -395,11 +395,12 @@ function update_status(id,obj,newTitle,oldTitle,status,i) {
             var offsetGainAndLoss = obj.offsetGainAndLoss;
             var poundageTotal = obj.poundageTotal;
             var manager= obj.followOrder.followManner;
+            var name = obj.followOrder.followOrderName;
             //找到子页面
             var iframeWin = window['layui-layer-iframe' + index]; //得到iframe页的窗口对象，执行iframe页的方法：iframeWin.method();
             //调用子页面的方法
-            iframeWin.detailShow(followOrderId,successTotal+"/"+orderNum,offsetGainAndLoss,poundageTotal);
-            iframeWin.clientTableShow(followOrderId);
+            iframeWin.detailShow(name,manager,followOrderId,successTotal+"/"+orderNum,offsetGainAndLoss,poundageTotal);
+            iframeWin.clientTableShow(followOrderId,manager,name);
             iframeWin.orderParameterShow(obj.followOrder);
 
         },

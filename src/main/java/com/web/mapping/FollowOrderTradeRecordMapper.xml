@@ -16,6 +16,7 @@
         <result column="new_ticket" property="newTicket"/>
         <result column="poundage" property="poundage"/>
         <result column="client_net_position_id" property="clientNetPositionId"/>
+        <result column="client_name" property="clientName"/>
         <result column="update_date" property="updateDate"  />
         <result column="create_date" property="createDate"/>
         <result column="version" property="version"/>
@@ -30,13 +31,13 @@
       open_close_type, market_price,
       account_id, follow_order_id,
       ticket, new_ticket,
-      poundage,client_net_position_id,update_date,create_date,version)
+      poundage,client_net_position_id,client_name,update_date,create_date,version)
     values ( #{varietyId}, #{varietyCode},
       #{handNumber}, #{tradeTime}, #{tradeDirection}, 
       #{openCloseType}, #{marketPrice},
       #{accountId}, #{followOrderId},
       #{ticket}, #{newTicket},
-      #{poundage},#{clientNetPositionId},#{updateDate},#{createDate},#{version})
+      #{poundage},#{clientNetPositionId},#{clientName},#{updateDate},#{createDate},#{version})
   </insert>
     <update id="updateByPrimaryKey" parameterType="com.web.pojo.FollowOrderTradeRecord">
         update follow_order_trade_record
@@ -83,6 +84,9 @@
             </if>
             <if test="clientNetPositionId != null">
                 client_net_position_id = #{clientNetPositionId},
+            </if>
+            <if test="clientName != null">
+                client_name = #{clientName},
             </if>
 
             <if test="updateDate != null ">
@@ -140,6 +144,7 @@
     ticket,
     new_ticket,
     client_net_position_id,
+    client_name,
     update_date,
     create_date,
     poundage,

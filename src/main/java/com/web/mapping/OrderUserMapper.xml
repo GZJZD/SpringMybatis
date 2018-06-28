@@ -122,9 +122,7 @@
 
         <if test="userCode != null and userCode != '' "> and user_code = #{userCode}</if>
     </select>
-    <select id="listUserCode" resultType="java.lang.String">
-        select user_code from tb_order_user where product_code='XAUUSD.e'  GROUP BY user_code
-    </select>
+
 
 
 </mapper>

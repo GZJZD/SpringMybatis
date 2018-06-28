@@ -1,0 +1,99 @@
+
+module Center
+{
+// 用户登录接口参数
+struct userLoginRequest
+{
+	1 require string typeId;
+	2 require int    requestId;
+	3 require string brokerId;
+	4 require string userId;
+	5 require string password;
+	6 optional string userProductInfo;
+	7 optional int    forcedreset = 0;
+};
+
+struct userLoginResponse
+{
+	1 require string typeId;
+	2 require int    requestId;
+	3 require int    errcode;
+	4 require string errmsg;
+};
+
+// 用户注销接口参数 
+struct userLogoutRequest
+{
+	1 require string typeId;
+	2 require int    requestId;
+	3 require string brokerId;
+	4 require string userId;
+};
+
+struct userLogoutResponse
+{
+	1 require string typeId;
+	2 require int    requestId;
+	3 require int    errcode;
+	4 require string errmsg;
+};
+
+// 开仓交易接口参数
+struct orderOpenRequest
+{
+	1 require string typeId;
+	2 require int    requestId;
+	3 require string brokerId;
+	4 require string userId;
+	5 require string instrumentId;
+	6 require int    orderDirection;
+	7 require int    volumeTotalOriginal;
+	8 optional int   orderTimeout = 5000;
+};
+
+struct orderOpenResponse
+{
+	1 require string typeId;
+	2 require int    requestId;
+	3 require int    errcode;
+	4 require string errmsg;
+	5 require int    tradeVolume;
+	6 require double tradePrice;
+	7 require double tradeCommission;
+	8 require string tradeDate;
+	9 require string tradeTime;
+};
+
+// 平仓交易接口参数
+struct orderCloseRequest
+{
+	1 require string typeId;
+	2 require int    requestId;
+	3 require string brokerId;
+	4 require string userId;
+	5 require string instrumentId;
+	6 require int    orderDirection;
+	7 require int    orderVolume;
+};
+
+struct orderCloseResponse
+{
+	1 require string typeId;
+	2 require int    requestId;
+	3 require int    errcode;
+	4 require string errmsg;
+	5 require double tradePrice;
+	6 require double tradeCommission;
+	7 require string tradeDate;
+	8 require string tradeTime;
+};
+
+interface TraderServant
+{
+    int userLogin(userLoginRequest req, out userLoginResponse rsp);
+    int userLogout(userLogoutRequest req, out userLogoutResponse rsp);
+    int orderOpen(orderOpenRequest req, out orderOpenResponse rsp);
+    int orderClose(orderCloseRequest req, out orderCloseResponse rsp);
+};
+
+}; 

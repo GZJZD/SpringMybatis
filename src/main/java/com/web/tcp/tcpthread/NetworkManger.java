@@ -16,8 +16,8 @@ import java.util.regex.Pattern;
 public class NetworkManger extends Thread {
     //由香港提供的数据是固定以HEAD;开头的
     private Pattern compile = Pattern.compile("HEAD;");
-    //一条完整的交易数据的分号数量是11个
-    private final int MAX_SEMICOLONS = 11;
+    //一条完整的交易数据的分号数量是14个
+    private final int MAX_SEMICOLONS = 14;
     //平台套接字对象
 
     private  Socket socket = null;
@@ -75,7 +75,7 @@ public class NetworkManger extends Thread {
                 }
                 sBuilder.append(ch);
 
-                if (semicolons == 11) {
+                if (semicolons == 14) {
                     matcher = compile.matcher(sBuilder);
                     if (matcher.find()) {
                         int start = matcher.start();
