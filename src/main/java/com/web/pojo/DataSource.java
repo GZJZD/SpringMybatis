@@ -1,6 +1,6 @@
 package com.web.pojo;
 
-import java.util.Date;
+
 /**
         * Socket交易数据实体
         * @author riseSun
@@ -25,7 +25,6 @@ public class DataSource {
     //价位
     private Double price;
     //时间
-    //private Date createTime;
     private String createTime;
     //多空(0=多,1=空)
     private Integer cmd;
@@ -37,6 +36,8 @@ public class DataSource {
     private String platformName;
     //代理人
     private String agencyName;
+    //手续费
+    private Double commission;
 
 
     //set,get...
@@ -126,6 +127,14 @@ public class DataSource {
 
     public void setAgencyName(String agencyName) {
         this.agencyName = agencyName;
+    }
+
+    public Double getCommission() {
+        return commission;
+    }
+
+    public void setCommission(Double commission) {
+        this.commission = commission;
     }
 
     @Override

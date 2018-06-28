@@ -13,6 +13,9 @@
 		<script src="http://netdna.bootstrapcdn.com/bootstrap/3.0.0/js/bootstrap.min.js"></script>
 		<script type="text/javascript" src="../../lib/layui/layui.js" charset="utf-8"></script>
 		<script src="../../lib/bootstrap/js/bootstrap-table-zh-CN.min.js"></script>
+		<script type="text/javascript" src="../../lib/bootstrap/js/tableExport.min.js"></script>
+		<script type="text/javascript" src="../../lib/bootstrap/js/bootstrap-table-export.js"></script>
+
 
 	</head>
 
@@ -78,6 +81,8 @@
 							</div>
 							<div class=" clientSearch">
 								<button type="button " onclick="findByDetail()" class="btn btn-primary">筛选</button>
+								<button type="button " id="detailExport" class="btn btn-primary">导出</button>
+
 							</div>
 
 							<table id="detailTable" class="table-bordered table-striped">
@@ -92,13 +97,7 @@
 									<div class="layui-input-inline">
 										<select id="clientName" class="form-control search-bar">
 											<option value="-1" selected>全部</option>
-											<option value="1087802" >1087802</option>
-											<option value="1102999" >1102999</option>
-											<option value="1112839" >1112839</option>
-											<option value="1120360" >1120360</option>
-											<option value="1123218" >1123218</option>
-											<option value="1127191" >1127191</option>
-											<option value="1127060" >1127060</option>
+
 										</select>
 									</div>
 								</div>
@@ -128,8 +127,10 @@
 								</div>
 							</div>
 
-							<div class=" clientSearch">
+							<div class="clientSearch">
 								<button type="button " onclick="findByClient()" class="btn btn-primary">筛选</button>
+								<button type="button " id="clientExport" class="btn btn-primary">导出</button>
+
 							</div>
 
 							<div class="table-case">

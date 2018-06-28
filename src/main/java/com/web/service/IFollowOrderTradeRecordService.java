@@ -5,6 +5,7 @@ import com.web.pojo.vo.NetPositionDetailVo;
 import com.web.pojo.vo.OrderMsgResult;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created by may on 2018/5/20.
@@ -63,4 +64,7 @@ public interface IFollowOrderTradeRecordService {
     List<NetPositionDetailVo> getListClientNetPosition(Long followOrderId, Integer status, String clientName, Integer openOrCloseStatus);
 
 
+    List<Map<String, Object>> getListClient(Long followOrderId, Integer status, String clientName, Integer openOrCloseStatus);
+
+    List<?> getListClientFollowOrderTrade(String endTime, String startTime, Long followOrderId);
 }
