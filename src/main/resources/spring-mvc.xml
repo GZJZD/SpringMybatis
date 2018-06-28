@@ -31,6 +31,19 @@
             </list>
         </property>
     </bean>
+    <!-- 拦截器 -->
+    <mvc:interceptors>
+        <!--<mvc:interceptor>-->
+            <!--&lt;!&ndash; 对登录操作进行拦截 &ndash;&gt;-->
+            <!--<mvc:mapping path="/**"/>-->
+            <!--<bean class="com.web.interceptor.LoginInterceptor" />-->
+        <!--</mvc:interceptor>-->
+        <mvc:interceptor>
+            <!-- 对/user/**的请求进行拦截 -->
+            <mvc:mapping path="/**"/>
+            <bean class="com.web.interceptor.CookieInterceptor" />
+        </mvc:interceptor>
+    </mvc:interceptors>
 
 
     <!-- 定义跳转的文件的前后缀 ，视图模式配置 -->
