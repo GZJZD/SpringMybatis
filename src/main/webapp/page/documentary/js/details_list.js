@@ -1,4 +1,5 @@
 var tableId = $("#detailTable");
+var tableClientId = $("#clientTable");
 var method = "post";
 var url_detail;
 var followOrderId;
@@ -6,92 +7,20 @@ var unique_Id = "detailId";
 var sortOrder = "asc";
 var clientStatus = $("#clientFollowOrder option:selected").val();
 var clientName = $("#clientName option:selected").val();
-var clientColumns = [
-    {
+
+var columns = [
+   {
         title: '序号',
 
         formatter: function (value, row, index) {
             //获取每页显示的数量
-            var pageSize = $('#clientTable').bootstrapTable('getOptions').pageSize;
+            var pageSize = $('#detailTable').bootstrapTable('getOptions').pageSize;
             //获取当前是第几页
-            var pageNumber = $('#clientTable').bootstrapTable('getOptions').pageNumber;
+            var pageNumber = $('#detailTable').bootstrapTable('getOptions').pageNumber;
             //返回序号，注意index是从0开始的，所以要加上1
             return pageSize * (pageNumber - 1) + index + 1;
         }
-    }, {
-        field: 'netPositionSum',
-        title: '净头寸'
-    }, {
-        field: 'userName',
-        title: '客户编号'
-    }, {
-        field: 'varietyName',
-        title: '品种'
-    }, {
-        field: 'openCloseType',
-        title: '类型',
-        formatter: function (value, row, index) {
-            if (value=="平仓") {
-                return "平仓";
-            } else  {
-                return "开仓";
-            }
-        }
-
-    }, {
-        field: 'tradeDirection',
-        title: '方向'
-    }, {
-        field: 'handNumber',
-        title: '手数'
-    }, {
-        field: 'marketPrice',
-        title: '点位'
-    }, {
-        field: 'tradeTime',
-        title: '下单时间',
-        sortable : true
-
-    }, {
-        field: 'poundage',
-        title: '手续费'
-    }, {
-        field: 'profit',
-        title: '客户盈亏'
-    }, {
-        field: 'followOrderClientStatus',
-        title: '是否跟单',
-        align: 'center',
-        valign: 'middle',
-        formatter: function (value, row, index) {
-            if (value == "1") {
-                return "<span style='color: #26a69a'>已跟单</span>";
-            } else if(value == "0") {
-                return "<span style='color: #c49f47'>跟单失败</span>";
-            }
-        }
     }
-];
-var columns = [{
-    title: '全选',
-    field: 'select',
-    //复选框
-    checkbox: true,
-
-    align: 'center',
-    valign: 'middle'
-}, {
-    title: '序号',
-
-    formatter: function (value, row, index) {
-        //获取每页显示的数量
-        var pageSize = $('#detailTable').bootstrapTable('getOptions').pageSize;
-        //获取当前是第几页
-        var pageNumber = $('#detailTable').bootstrapTable('getOptions').pageNumber;
-        //返回序号，注意index是从0开始的，所以要加上1
-        return pageSize * (pageNumber - 1) + index + 1;
-    }
-}
     , {
         field: 'netPositionSum',
         title: '净头寸'
@@ -106,14 +35,21 @@ var columns = [{
         title: '手数'
     }, {
         field: 'tradeDirection',
-        title: '方向'
+        title: '方向',
+        formatter: function (value, row, index) {
+            if (value == "1") {
+                return "空";
+            } else {
+                return "多";
+            }
+        }
     }, {
         field: 'marketPrice',
         title: '点位'
     }, {
         field: 'tradeTime',
         title: '下单时间',
-        sortable : true
+        sortable: true
 
     }, {
         field: 'poundage',
@@ -167,14 +103,88 @@ function manually_close_position(id) {
 /*
 * 展示跟单明细列表
 * */
-function detailShow(id, orderNum, offsetGainAndLoss, poundageTotal) {
+function detailShow(name,manager, id, orderNum, offsetGainAndLoss, poundageTotal) {
     $("#orderNum").html(orderNum);
     $("#offsetGainAndLoss").html(offsetGainAndLoss);
     $("#positionGainAndLoss").html(0);
     $("#poundageTotal").html(poundageTotal);
     url_detail = url_ + "/followOrder/getListDetails.Action?followOrderId=" + id;
     followOrderId = id;
-    showByTableId(tableId, method, url_detail, unique_Id, sortOrder, columns);
+    if (manager == "1") {
+        showByTableId(tableId, method, url_detail, unique_Id, sortOrder, columns);
+
+    } else {
+        var clientDetailColumns = [
+            {
+                field: 'id',
+                title: '跟单编号'
+            }
+            , {
+                field: 'clientName',
+                title: '客户名'
+            }, {
+                field: 'varietyName',
+                title: '品种'
+            }, {
+                field: 'tradeDirection',
+                title: '方向',
+                formatter: function (value, row, index) {
+                    if (value == "1") {
+                        return "空";
+                    } else {
+                        return "多";
+                    }
+                }
+            }, {
+                field: 'handNumber',
+                title: '手数'
+            }, {
+                field: 'openPrice',
+                title: '开仓价'
+            }, {
+                field: 'openTime',
+                title: '开仓时间',
+                sortable: true
+
+            }, {
+                field: 'closePrice',
+                title: '平仓价'
+            }, {
+                field: 'closeTime',
+                title: '平仓时间',
+                sortable: true
+            }, {
+                field: 'poundage',
+                title: '手续费'
+            }, {
+                field: 'profitLoss',
+                title: '盈亏'
+            }, {
+                field: 'clientProfit',
+                title: '客户盈亏'
+            },
+            {
+                field: 'closeTime',
+                title: '操作',
+
+                align: 'center',
+                valign: 'middle',
+                formatter: function (value, row, index) {
+                    var detailId = row.id;
+                    if (value != null) {
+                        return "-";
+                    } else {
+                        return "<a href='javascript:;' class='btn btn-xs green' onclick='manually_close_position(" + detailId + ")' >  <span style='color: #4cae4c'>手动平仓</span></a>"
+                    }
+                }
+            }
+        ];
+
+        showByTableId(tableId, method, url_detail, unique_Id, sortOrder, clientDetailColumns);
+        $("#detailExport").click(function () {
+            tableExportFile(tableId,name+"的跟单明细");
+        })
+    }
 
 
 }
@@ -183,12 +193,157 @@ function detailShow(id, orderNum, offsetGainAndLoss, poundageTotal) {
 * 展示客户数据列表
 * */
 
-function clientTableShow(id) {
-    var tableClientId = $("#clientTable");
-    followOrderId = id;
-    var url_client = url_ + "/followOrder/getListClientNetPosition.Action?followOrderId="+id+"&status="+clientStatus+"&clientName="+clientName;
+function clientTableShow(id, manager,name) {
 
-    showByTableId(tableClientId, method, url_client, unique_Id, sortOrder, clientColumns);
+    followOrderId = id;
+    var url_client = url_ + "/followOrder/getListClientNetPosition.Action?followOrderId=" + id + "&status=" + clientStatus + "&clientName=" + clientName;
+    var clientNetPositionColumns = [
+        {
+            title: '序号',
+
+            formatter: function (value, row, index) {
+                //获取每页显示的数量
+                var pageSize = $('#clientTable').bootstrapTable('getOptions').pageSize;
+                //获取当前是第几页
+                var pageNumber = $('#clientTable').bootstrapTable('getOptions').pageNumber;
+                //返回序号，注意index是从0开始的，所以要加上1
+                return pageSize * (pageNumber - 1) + index + 1;
+            }
+        }, {
+            field: 'netPositionSum',
+            title: '净头寸'
+        }, {
+            field: 'userName',
+            title: '客户编号'
+        }, {
+            field: 'varietyName',
+            title: '品种'
+        }, {
+            field: 'openCloseType',
+            title: '类型',
+            formatter: function (value, row, index) {
+                if (value == "平仓") {
+                    return "平仓";
+                } else {
+                    return "开仓";
+                }
+            }
+
+        }, {
+            field: 'tradeDirection',
+            title: '方向',
+            formatter: function (value, row, index) {
+                if (value == "1") {
+                    return "空";
+                } else {
+                    return "多";
+                }
+            }
+        }, {
+            field: 'handNumber',
+            title: '手数'
+        }, {
+            field: 'marketPrice',
+            title: '点位'
+        }, {
+            field: 'tradeTime',
+            title: '下单时间',
+            sortable: true
+
+        }, {
+            field: 'poundage',
+            title: '手续费'
+        }, {
+            field: 'profit',
+            title: '客户盈亏'
+        }, {
+            field: 'followOrderClientStatus',
+            title: '是否跟单',
+            align: 'center',
+            valign: 'middle',
+            formatter: function (value, row, index) {
+                if (value == "1") {
+                    return "<span style='color: #26a69a'>已跟单</span>";
+                } else if (value == "0") {
+                    return "<span style='color: #c49f47'>跟单失败</span>";
+                }
+            }
+        }
+    ];
+    var clientColumns = [
+        {
+            field: 'detailId',
+            title: '跟单编号'
+
+        }, {
+            field: 'orderUser.userCode',
+            title: '客户编号'
+        }, {
+            field: 'orderUser.productCode',
+            title: '品种'
+        }, {
+            field: 'orderUser.longShort',
+            title: '方向',
+            formatter: function (value, row, index) {
+                if (value == "1") {
+                    return "空";
+                } else {
+                    return "多";
+                }
+            }
+        }, {
+            field: 'orderUser.handNumber',
+            title: '手数'
+        }, {
+            field: 'orderUser.openPrice',
+            title: '开仓价'
+        }, {
+            field: 'orderUser.openTime',
+            title: '开仓时间',
+            sortable: true
+
+        }, {
+            field: 'orderUser.closePrice',
+            title: '平仓价'
+        }, {
+            field: 'orderUser.closeTime',
+            title: '平仓时间',
+            sortable: true
+
+        }, {
+            field: 'orderUser.poundage',
+            title: '手续费',
+            formatter: function (value, row, index) {
+                return 1;
+            }
+        }, {
+            field: 'orderUser.profit',
+            title: '客户盈亏'
+        }, {
+            field: 'status',
+            title: '是否跟单',
+            align: 'center',
+            valign: 'middle',
+            formatter: function (value, row, index) {
+                if (value == "1") {
+                    return "<span style='color: #26a69a'>已跟单</span>";
+                } else if (value == "0") {
+                    return "<span style='color: #c49f47'>未跟单</span>";
+                }
+            }
+        }
+    ];
+    if (manager == "1") {
+        showByTableId(tableClientId, method, url_client, unique_Id, sortOrder, clientNetPositionColumns);
+    } else {
+        showByTableId(tableClientId, method, url_client, unique_Id, sortOrder, clientColumns);
+
+    }
+    //下拉列表客户名字获取
+    findByClientName(id);
+    $("#clientExport").click(function () {
+        tableExportFile(tableClientId,name+'的客户做单明细');
+    })
 }
 
 
@@ -200,27 +355,27 @@ function orderParameterShow(followOrder) {
     $("#varietyName").html(followOrder.variety.varietyName);
     var num = 0;//1:不设置/净头寸/正向，0代表设置/客户/反向
 
-    followOrder.maxProfit == num?$("#maxProfitNumber").html(followOrder.maxProfitNumber + "点"): $("#maxProfitNumber").html("不设");
-    followOrder.maxLoss == num?$("#maxLossNumber").html(followOrder.maxLossNumber + "点"): $("#maxLossNumber").html("不设");
-    followOrder.accountLoss == num?$("#accountLossNumber").html(followOrder.accountLossNumber + "点"): $("#accountLossNumber").html("不设");
+    followOrder.maxProfit == num ? $("#maxProfitNumber").html(followOrder.maxProfitNumber + "点") : $("#maxProfitNumber").html("不设");
+    followOrder.maxLoss == num ? $("#maxLossNumber").html(followOrder.maxLossNumber + "点") : $("#maxLossNumber").html("不设");
+    followOrder.accountLoss == num ? $("#accountLossNumber").html(followOrder.accountLossNumber + "点") : $("#accountLossNumber").html("不设");
 
 
     if (followOrder.orderPoint == num) {
 
-        followOrder.clientPoint == num?$("#orderPointNumber").html("-" + followOrder.clientPointNumber + "点"):
+        followOrder.clientPoint == num ? $("#orderPointNumber").html("-" + followOrder.clientPointNumber + "点") :
             $("#orderPointNumber").html("+" + followOrder.clientPointNumber + "点");
     } else {
         $("#orderPointNumber").html("市价");
     }
-    if(followOrder.followManner==num){
+    if (followOrder.followManner == num) {
         $(".chooseNetPosition").hide();
         $(".clientAllTotal").show();
-    }else{
+    } else {
         $(".clientAllTotal").hide();
 
         $(".chooseNetPosition").show();
-        followOrder.netPositionDirection==num? $("#netPositionDirection").html("反向"): $("#netPositionDirection").html("正向");
-        $("#netPositionFollowNumber").html("净头寸每变化"+followOrder.netPositionChange+"手，跟单"+followOrder.netPositionFollowNumber+"手");
+        followOrder.netPositionDirection == num ? $("#netPositionDirection").html("反向") : $("#netPositionDirection").html("正向");
+        $("#netPositionFollowNumber").html("净头寸每变化" + followOrder.netPositionChange + "手，跟单" + followOrder.netPositionFollowNumber + "手");
     }
 
 }
@@ -247,7 +402,16 @@ function actionFormatter(value, row, index) {
 
     return result;
 }
-
+/*
+* 表格导出
+* */
+function tableExportFile(tableId,fileName) {
+    $(tableId).tableExport({
+        type:'excel',
+        escape:'false',
+        fileName: fileName
+    });
+}
 /*
 *
 * 客户查询条件
@@ -256,35 +420,36 @@ function findByClient() {
     var clientTable = $("#clientTable");
     var status = $("#clientFollowOrder option:selected").val();
     var clientName = $("#clientName option:selected").val();
-    var openOrCloseStatus= $("#clientOpenOrClose option:selected").val();
+    var openOrCloseStatus = $("#clientOpenOrClose option:selected").val();
     $.ajax({
-        url:url_+"/followOrder/getListClientNetPosition.Action",
-        type:'GET', //GET
-        async:true,    //或false,是否异步
-        data:{
-            followOrderId:followOrderId,
-            status:status,
-            clientName:clientName,
-            openOrCloseStatus:openOrCloseStatus
+        url: url_ + "/followOrder/getListClientNetPosition.Action",
+        type: 'GET', //GET
+        async: true,    //或false,是否异步
+        data: {
+            followOrderId: followOrderId,
+            status: status,
+            clientName: clientName,
+            openOrCloseStatus: openOrCloseStatus
         },
-        timeout:5000,    //超时时间
-        dataType:'json',    //返回的数据格式：json/xml/html/script/jsonp/text
-        beforeSend:function(xhr){
+        timeout: 5000,    //超时时间
+        dataType: 'json',    //返回的数据格式：json/xml/html/script/jsonp/text
+        beforeSend: function (xhr) {
 
         },
-        success:function (data) {
+        success: function (data) {
             // $(clientTable).bootstrapTable('destroy');
-            $(clientTable).bootstrapTable('load',data);
+            $(clientTable).bootstrapTable('load', data);
 
         },
-        error:function(xhr,textStatus){
+        error: function (xhr, textStatus) {
 
         },
-        complete:function(){
+        complete: function () {
 
         }
     })
 }
+
 /*
 * 跟单明细查询条件
 * */
@@ -295,14 +460,42 @@ function findByDetail() {
     var endTime = $("#test2").val();
 
     $.ajax({
-        url:url_+"/followOrder/getListDetails.Action",
-        type:'post', //GET
+        url: url_ + "/followOrder/getListDetails.Action",
+        type: 'post', //GET
+        async: true,    //或false,是否异步
+        data: {
+            followOrderId: followOrderId,
+            status: status,
+            startTime: startTime,
+            endTime: endTime
+
+        },
+        timeout: 5000,    //超时时间
+        dataType: 'json',    //返回的数据格式：json/xml/html/script/jsonp/text
+        beforeSend: function (xhr) {
+
+        },
+        success: function (data) {
+            $(tableId).bootstrapTable('load', data);
+
+        },
+        error: function (xhr, textStatus) {
+
+        },
+        complete: function () {
+
+        }
+    })
+}
+/*
+* 品种筛选
+* */
+function findByClientName(followOrderId) {
+    $.ajax({
+        url:url_+"/followOrderClient/findListUserCode.Action?followOrderId="+followOrderId,
+        type:'GET', //GET
         async:true,    //或false,是否异步
         data:{
-            followOrderId:followOrderId,
-            status:status,
-            startTime:startTime,
-            endTime:endTime
 
         },
         timeout:5000,    //超时时间
@@ -311,8 +504,11 @@ function findByDetail() {
 
         },
         success:function (data) {
-            $(tableId).bootstrapTable('load',data);
-
+            var content = "";
+            $.each(data,function (index,ele) {
+                content += "<option value="+ele+">"+ele+"</option>"
+            });
+            $("#clientName").append(content);
         },
         error:function(xhr,textStatus){
 
@@ -322,6 +518,5 @@ function findByDetail() {
         }
     })
 }
-
 
 
