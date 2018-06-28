@@ -37,7 +37,7 @@ public interface IFollowOrderDetailService {
      * @param startTime
      * @param status
      */
-    List<NetPositionDetailVo> getDetailListByFollowOrderId(Long followOrderId, String endTime, String startTime, Integer status);
+    List<?> getDetailListByFollowOrderId(Long followOrderId, String endTime, String startTime, Integer status);
 
     /**净头寸平仓
      * 找到对应的开多 or  开空 明细，并且剩下手数不为0的明细记录
@@ -86,4 +86,7 @@ public interface IFollowOrderDetailService {
     FollowOrderPageVo getFollowOrderPageVo();
 
     void createDetail(FollowOrderTradeRecord followOrderTradeRecord, OrderMsgResult orderMsgResult);
+
+    List<FollowOrderVo> findOpenByClientName(Long followOrderId);
+    List<FollowOrderVo> findCloseByClientName(Long followOrderId);
 }

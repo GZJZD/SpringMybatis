@@ -59,10 +59,10 @@ public class FollowOrder extends BaseUtil{
     private Integer netPositionFollowNumber;
 
     //净头寸的值
-    private Double netPositionSum;
+    private Double netPositionSum=0.0;
 
     //持仓值 todo:修改数据库的类型为double
-    private Double netPositionHoldNumber;
+    private Double netPositionHoldNumber=0.0;
 
     //判断是否正在交易
     private Integer netPositionStatus;

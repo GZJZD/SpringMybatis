@@ -35,8 +35,8 @@ public class FollowOrderTradeRecord implements Serializable {
     private String ticket;
     //新开仓单号
     private String newTicket;
-    //客户的交易时间
-    private String clientTradeTime;
+    //客户姓名
+    private String clientName;
     //手续费
     private Double poundage;
     //客户净头寸id
@@ -187,11 +187,11 @@ public class FollowOrderTradeRecord implements Serializable {
         this.version = version;
     }
 
-    public String getClientTradeTime() {
-        return clientTradeTime;
+    public String getClientName() {
+        return clientName;
     }
 
-    public void setClientTradeTime(String clientTradeTime) {
-        this.clientTradeTime = clientTradeTime;
+    public void setClientName(String clientName) {
+        this.clientName = clientName;
     }
 }
