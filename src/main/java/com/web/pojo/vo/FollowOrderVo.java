@@ -15,10 +15,10 @@ public class FollowOrderVo {
     private FollowOrder followOrder;
 
     //持仓盈亏
-    private Double positionGainAndLoss;
+    private Double positionGainAndLoss=0.0;
 
     //平仓盈亏
-    private Double offsetGainAndLoss;
+    private Double offsetGainAndLoss=0.0;
 
     private Double offsetHandNumber;//平仓手数
     //累计盈亏:平仓盈亏+持仓盈亏
@@ -28,7 +28,7 @@ public class FollowOrderVo {
     private Double poundageTotal=0.0;
 
     //客户盈亏
-    private Double clientProfit;
+    private Double clientProfit=0.0;
 
     //盈亏率:总平仓盈亏除以手数
     private Double profitAndLossRate;
@@ -40,6 +40,12 @@ public class FollowOrderVo {
     //手数
     private Double handNumberTotal;
 
+    /**********************************************     跟单明细中跟单数据字段     *************************************************************************/
+    private String clientName;
+
+    /**********************************************     跟单数据END     *************************************************************************/
+
+
 
 
     public FollowOrder getFollowOrder() {
@@ -48,6 +54,14 @@ public class FollowOrderVo {
 
     public void setFollowOrder(FollowOrder followOrder) {
         this.followOrder = followOrder;
+    }
+
+    public String getClientName() {
+        return clientName;
+    }
+
+    public void setClientName(String clientName) {
+        this.clientName = clientName;
     }
 
     public Double getPositionGainAndLoss() {

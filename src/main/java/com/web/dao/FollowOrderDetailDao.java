@@ -58,4 +58,7 @@ public interface FollowOrderDetailDao {
     * WEB页面中：持仓手数，持仓收益
     * */
     FollowOrderPageVo getFollowOrderPageVoIsOpen();
+
+    List<FollowOrderVo> findOpenByClientName (Long followOrderId);
+    List<FollowOrderVo> findCloseByClientName (Long followOrderId);
 }

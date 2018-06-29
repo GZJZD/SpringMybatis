@@ -134,7 +134,8 @@ function goOn(status){
         $(".two-div").css('background-color','#44b7af');
         $(".one-div").css('background-color','#f0eff0');
         $('.first-div').css('display','none');
-        ($("#followManner").val()==1? $('.table-div').show():$('.jtc').show());
+        ($('input[name="followManner"]:checked').val() == 0? $('.table-div').show():$('.jtc').show());
+
     }
     if(status == 2){
         layui.use('element', function(){
@@ -173,7 +174,6 @@ function goOn(status){
         }
         showTableBase(tableId,data_);
         //设置参数
-
         $(".detalis-div").show();
 
     }
@@ -190,7 +190,7 @@ function setDetalsTitle() {
    $('.maxLoss').text( $('input[name="maxLoss"]:checked').val() == 1 ? '不设':'点/手   '+ $('input[name="maxLoss"]:checked').val());//单笔最大止损
    $('.accountLoss').text($('input[name="accountLoss"]:checked').val() == 1 ? '不设':'美金   '+$("#accountLoss-id").val());//账户止损
    $('.userCode').text($('#GD-id option:selected').val());//跟单账号
-   $('.followManner').text($('input[name="followManner"]:checked').val()== 1 ? '跟每一单':'跟进头寸');//跟单方式
+   $('.followManner').text($('input[name="followManner"]:checked').val()== 1 ? '跟净头寸':'跟每一单');//跟单方式
 
 }
 //每个返回按钮事件
@@ -215,10 +215,10 @@ function returnBlack(status){
 
         $(".one-div").css('background-color','#f0eff0');
         $(".two-div").css('background-color','#44b7af');
-        $(".three-div").css('background-color','#f0eff0')
+        $(".three-div").css('background-color','#f0eff0');
         $('.first-div').hide();
         $('.detalis-div').hide();
-        ($("#followManner").val()==1? $('.table-div').show():$('.jtc').show());
+        ($('input[name="followManner"]:checked').val() == 0? $('.table-div').show():$('.jtc').show());
 
     }
 }

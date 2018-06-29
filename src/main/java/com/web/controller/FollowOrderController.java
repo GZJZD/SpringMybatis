@@ -8,7 +8,6 @@ import com.web.pojo.FollowOrderClient;
 import com.web.pojo.Variety;
 import com.web.pojo.vo.FollowOrderPageVo;
 import com.web.pojo.vo.FollowOrderVo;
-import com.web.pojo.vo.NetPositionDetailVo;
 import com.web.service.IFollowOrderClientService;
 import com.web.service.IFollowOrderDetailService;
 import com.web.service.IFollowOrderService;
@@ -49,21 +48,8 @@ public class FollowOrderController {
      */
     @RequestMapping(value = "/getListDetails.Action")
     @ResponseBody
-    public  List<?> getListDetails( Long followOrderId,String endTime ,String startTime,Integer status ){
-        FollowOrder followOrder = followOrderService.getFollowOrder(followOrderId);
-        if(followOrder!=null){
-            if(followOrder.getFollowManner().equals(FollowOrderEnum.FollowStatus.FOLLOWMANNER_NET_POSITION.getIndex())){
-               //净头寸
-
-                List<NetPositionDetailVo> netPositionDetailVos = followOrderDetailService.
-                        getDetailListByFollowOrderId(followOrderId,endTime,startTime,status);
-                return netPositionDetailVos;
-            }else{
-                //客户
-                return null;
-            }
-        }
-        return null;
+    public List<?> getListDetails(Long followOrderId, String endTime, String startTime, Integer status) {
+        return followOrderDetailService.getDetailListByFollowOrderId(followOrderId, endTime, startTime, status);
     }
 
     /*
@@ -77,16 +63,16 @@ public class FollowOrderController {
      */
     @RequestMapping("/getListFollowOrder.Action")
     @ResponseBody
-    public List<FollowOrderVo> getListFollowOrder(Long varietyId,Long accountId,String endTime ,String startTime,Integer status ){
+    public List<FollowOrderVo> getListFollowOrder(Long varietyId, Long accountId, String endTime, String startTime, Integer status) {
         FollowOrderPageVo followOrderPageVo = new FollowOrderPageVo();
         followOrderPageVo.setVarietyId(varietyId);
         followOrderPageVo.setStatus(status);
         followOrderPageVo.setAccountId(accountId);
-        if(endTime != null && !"".equals(endTime)){
+        if (endTime != null && !"".equals(endTime)) {
             String date = DateUtil.dateToStrLong(DateUtil.getEndDate(DateUtil.strToDate(endTime)));
             followOrderPageVo.setEndTime(date);
         }
-        if(startTime != null && !"".equals(startTime)){
+        if (startTime != null && !"".equals(startTime)) {
             followOrderPageVo.setStartTime(startTime);
         }
         List<FollowOrderVo> listFollowOrderVo = followOrderService.getListFollowOrderVo(followOrderPageVo);
@@ -117,13 +103,13 @@ public class FollowOrderController {
      */
     @RequestMapping(value = "/createFollowOrder.Action")
     @ResponseBody
-    public JSONResult createFollowOrder(String followOrderName,Long accountId,String varietyCode,Integer maxProfit,Double maxProfitNumber,
-                                        Integer maxLoss,Double maxLossNumber,Integer accountLoss,Double accountLossNumber,Integer orderPoint,
-                                        Integer clientPoint,Double clientPointNumber,Integer followManner,Integer netPositionDirection,
-                                        Integer netPositionChange,Integer netPositionFollowNumber,
-                                       String followOrderClients){
+    public JSONResult createFollowOrder(String followOrderName, Long accountId, String varietyCode, Integer maxProfit, Double maxProfitNumber,
+                                        Integer maxLoss, Double maxLossNumber, Integer accountLoss, Double accountLossNumber, Integer orderPoint,
+                                        Integer clientPoint, Double clientPointNumber, Integer followManner, Integer netPositionDirection,
+                                        Integer netPositionChange, Integer netPositionFollowNumber,
+                                        String followOrderClients) {
         try {
-            List<FollowOrderClient> followOrderClients1 = WebJsion.parseArray(followOrderClients,FollowOrderClient.class);
+            List<FollowOrderClient> followOrderClients1 = WebJsion.parseArray(followOrderClients, FollowOrderClient.class);
             FollowOrder followOrder = new FollowOrder();
             followOrder.setFollowOrderName(followOrderName);
             Account account = new Account();
@@ -142,21 +128,22 @@ public class FollowOrderController {
             followOrder.setClientPoint(clientPoint);
             followOrder.setClientPointNumber(clientPointNumber);
             followOrder.setFollowManner(followManner);
-            if(followOrder.getFollowManner().equals(FollowOrderEnum.FollowStatus.FOLLOWMANNER_NET_POSITION.getIndex())){
+            if (followOrder.getFollowManner().equals(FollowOrderEnum.FollowStatus.FOLLOWMANNER_NET_POSITION.getIndex())) {
                 followOrder.setNetPositionDirection(netPositionDirection);
                 followOrder.setNetPositionChange(netPositionChange);
                 followOrder.setNetPositionFollowNumber(netPositionFollowNumber);
             }
 
-           followOrderService.createFollowOrder(followOrder,followOrderClients1);
+            followOrderService.createFollowOrder(followOrder, followOrderClients1);
 
 
-        }catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
-            return new JSONResult(false,"创建跟单失败");
+            return new JSONResult(false, "创建跟单失败");
         }
         return new JSONResult("创建跟单成功");
     }
+
     /*
      *  跟单状态修改
      * @param   id  跟单id
@@ -165,18 +152,19 @@ public class FollowOrderController {
      */
     @RequestMapping(value = "/updateFollowOrderStatus.Action")
     @ResponseBody
-    public JSONResult updateFollowOrderStatus(Long id,Integer status){
+    public JSONResult updateFollowOrderStatus(Long id, Integer status) {
         try {
-            followOrderService.updateFollowOrderStatus(id,status);
-            if(status.equals(FollowOrderEnum.FollowStatus.FOLLOW_ORDER_STOP.getIndex())){
+            followOrderService.updateFollowOrderStatus(id, status);
+            if (status.equals(FollowOrderEnum.FollowStatus.FOLLOW_ORDER_STOP.getIndex())) {
                 followOrderService.closeAllOrderByFollowOrderId(id);
             }
-        }catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
-            return new JSONResult(false,"操作失败");
+            return new JSONResult(false, "操作失败");
         }
         return new JSONResult("操作成功");
     }
+
     /*
      *
      *   手动平仓
@@ -185,41 +173,40 @@ public class FollowOrderController {
      */
     @RequestMapping("/manuallyClosePosition.Action")
     @ResponseBody
-    public JSONResult manuallyClosePosition(Long detailId){
+    public JSONResult manuallyClosePosition(Long detailId) {
         try {
             followOrderService.manuallyClosePosition(detailId);
-        }catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
-            return new JSONResult(false,"手动平仓失败");
+            return new JSONResult(false, "手动平仓失败");
         }
         return new JSONResult("手动平仓成功");
     }
 
     /*
-    * 跟单列表头展示
-    * */
+     * 跟单列表头展示
+     * */
     @RequestMapping("/getFollowOrderPageVo.Action")
     @ResponseBody
-    public FollowOrderPageVo getFollowOrderPageVo(){
+    public FollowOrderPageVo getFollowOrderPageVo() {
         return followOrderDetailService.getFollowOrderPageVo();
     }
 
 
-
     /*
-    * 修改跟单
-    * */
+     * 修改跟单
+     * */
     @RequestMapping("/updateFollowOrder.Action")
     @ResponseBody
-    public JSONResult updateFollowOrder(Long id,String followOrderName,Long accountId,String varietyCode,Integer maxProfit,Double maxProfitNumber,
-                                        Integer maxLoss,Double maxLossNumber,Integer accountLoss,Double accountLossNumber,Integer orderPoint,
-                                        Integer clientPoint,Double clientPointNumber,Integer followManner,Integer netPositionDirection,
-                                        Integer netPositionChange,Integer netPositionFollowNumber,
-                                        String followOrderClients){
+    public JSONResult updateFollowOrder(Long id, String followOrderName, Long accountId, String varietyCode, Integer maxProfit, Double maxProfitNumber,
+                                        Integer maxLoss, Double maxLossNumber, Integer accountLoss, Double accountLossNumber, Integer orderPoint,
+                                        Integer clientPoint, Double clientPointNumber, Integer followManner, Integer netPositionDirection,
+                                        Integer netPositionChange, Integer netPositionFollowNumber,
+                                        String followOrderClients) {
         try {
             FollowOrder followOrder = followOrderService.getFollowOrder(id);
-            if(followOrder !=null){
-                List<FollowOrderClient> followOrderClients1 = WebJsion.parseArray(followOrderClients,FollowOrderClient.class);
+            if (followOrder != null) {
+                List<FollowOrderClient> followOrderClients1 = WebJsion.parseArray(followOrderClients, FollowOrderClient.class);
                 followOrder.setFollowOrderName(followOrderName);
                 Account account = new Account();
                 account.setId(accountId);
@@ -237,7 +224,7 @@ public class FollowOrderController {
                 followOrder.setClientPoint(clientPoint);
                 followOrder.setClientPointNumber(clientPointNumber);
                 followOrder.setFollowManner(followManner);
-                if(followOrder.getFollowManner().equals(FollowOrderEnum.FollowStatus.FOLLOWMANNER_NET_POSITION.getIndex())){
+                if (followOrder.getFollowManner().equals(FollowOrderEnum.FollowStatus.FOLLOWMANNER_NET_POSITION.getIndex())) {
                     followOrder.setNetPositionDirection(netPositionDirection);
                     followOrder.setNetPositionChange(netPositionChange);
                     followOrder.setNetPositionFollowNumber(netPositionFollowNumber);
@@ -245,38 +232,45 @@ public class FollowOrderController {
                 followOrderService.updateFollowOrder(followOrder);
                 //删除
                 followOrderClientService.deleteByFollowOrderId(id);
-                if(!followOrder.getFollowManner().equals(FollowOrderEnum.FollowStatus.FOLLOWMANNER_NET_POSITION.getIndex())){
+                if (!followOrder.getFollowManner().equals(FollowOrderEnum.FollowStatus.FOLLOWMANNER_NET_POSITION.getIndex())) {
                     //保存关联
-                    followOrderClientService.saveListFollowOrderClient(followOrderClients1,followOrder);
+                    followOrderClientService.saveListFollowOrderClient(followOrderClients1, followOrder);
                 }
             }
 
-        }catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
-            return new JSONResult(false,"修改跟单失败");
+            return new JSONResult(false, "修改跟单失败");
         }
         return new JSONResult("修改成功");
     }
 
     /*
-    *
-    * 客户数据展示
-    * */
+     *
+     * 客户数据展示
+     * */
     @RequestMapping("/getListClientNetPosition.Action")
     @ResponseBody
-    public List<?> getListClientNetPosition(Long followOrderId,Integer status,String clientName,Integer openOrCloseStatus){
+    public List<?> getListClientNetPosition(Long followOrderId, Integer status, String clientName, Integer openOrCloseStatus) {
         FollowOrder followOrder = followOrderService.getFollowOrder(followOrderId);
-        if (followOrder!=null){
-            if(followOrder.getFollowManner().equals(FollowOrderEnum.FollowStatus.FOLLOWMANNER_NET_POSITION.getIndex())){
+        if (followOrder != null) {
+            if (followOrder.getFollowManner().equals(FollowOrderEnum.FollowStatus.FOLLOWMANNER_NET_POSITION.getIndex())) {
 
-                return followOrderTradeRecordService.getListClientNetPosition(followOrderId,status,clientName,openOrCloseStatus);
-            }else{
-                //todo 跟每一单
-                return null;
+                return followOrderTradeRecordService.getListClientNetPosition(followOrderId, status, clientName, openOrCloseStatus);
+            } else {
+
+                return followOrderTradeRecordService.getListClient(followOrderId, status, clientName, openOrCloseStatus);
             }
         }
         return null;
     }
 
+    /*
+    *
+    * 跟单明细中跟单数据展示
+    * */
+    public List<?> getListClientFollowOrderTrade(String endTime, String startTime,Long followOrderId){
+        return followOrderTradeRecordService.getListClientFollowOrderTrade(endTime,startTime,followOrderId);
+    }
 
 }

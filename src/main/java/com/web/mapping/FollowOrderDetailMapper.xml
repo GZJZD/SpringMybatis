@@ -24,11 +24,14 @@
     <result column="follow_order_id" property="followOrderId"  />
     <result column="version" property="version"  />
   </resultMap>
-  <resultMap id="testMap" type="com.web.pojo.vo.FollowOrderVo">
-    <result column="poundageTotal" property="poundageTotal"/>
+  <resultMap id="followOrderVoMap" type="com.web.pojo.vo.FollowOrderVo">
     <result column="handNumberTotal" property="handNumberTotal"/>
-    <result column="offsetGainAndLoss" property="offsetGainAndLoss"/>
     <result column="offsetHandNumber" property="offsetHandNumber"/>
+    <result column="offsetGainAndLoss" property="offsetGainAndLoss"/>
+    <result column="positionGainAndLoss" property="positionGainAndLoss"/>
+    <result column="poundageTotal" property="poundageTotal"/>
+    <result column="clientProfit" property="clientProfit"/>
+    <result column="clientName" property="clientName"/>
   </resultMap>
 
   <resultMap id="orderPageMap" type="com.web.pojo.vo.FollowOrderPageVo">
@@ -168,7 +171,7 @@
     from follow_order_detail
     where ticket = #{ticket} and follow_order_id = #{followOrderId}
   </select>
-  <select id="getOffsetGainAndLossAndHandNumberByFollowOrderId" resultMap="testMap">
+  <select id="getOffsetGainAndLossAndHandNumberByFollowOrderId" resultMap="followOrderVoMap">
     select sum(profit_loss) offsetGainAndLoss,sum(hand_number) offsetHandNumber
     from follow_order_detail
     where follow_order_id = #{followOrderId} and close_time is not  null
@@ -207,6 +210,16 @@
     select sum(hand_number)
      from follow_order_detail
      where follow_order_id = #{followOrderId} and close_time is null
+  </select>
+  <select id="findOpenByClientName" resultMap="followOrderVoMap">
+    select sum(profit_loss) positionGainAndLoss,sum(poundage) poundageTotal,client_name clientName
+     from follow_order_detail
+     where follow_order_id = #{followOrderId} and close_time is  null group by client_name
+  </select>
+  <select id="findCloseByClientName" resultMap="followOrderVoMap">
+    select sum(profit_loss) offsetGainAndLoss,sum(poundage) poundageTotal,sum(client_profit) clientProfit,client_name clientName
+     from follow_order_detail
+     where follow_order_id = #{followOrderId} and close_time is not null group by client_name
   </select>
 
   <sql id="base_List">
