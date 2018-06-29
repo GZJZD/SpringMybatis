@@ -11,5 +11,5 @@ public interface LoginService {
     void updateCode(Login login);
     String checkLogin(Login login,String code,boolean rememberme, HttpServletResponse response, HttpServletRequest request);
     String sendSms(String phoneNumber,Login login);
-    Login checkCookie(Login login ,boolean rememberme , HttpServletResponse  response);
+    boolean checkCookie(String token);
 }

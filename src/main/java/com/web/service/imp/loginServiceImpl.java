@@ -22,6 +22,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -68,7 +69,8 @@ public class loginServiceImpl implements LoginService {
                         HttpSession session = request.getSession();
                         session.setAttribute("employee", login.getToken());//将登录信息设置到会话
                         Cookie cookie = new Cookie("token", login.getToken());//将登录信息加入cookie中
-                        cookie.setMaxAge(CookieConstantTable.COOKIE_MAX_AGE); //设置cookie最大失效时间<br>　
+//                        cookie.setMaxAge(CookieConstantTable.COOKIE_MAX_AGE); //设置cookie最大失效时间<br>　
+                        cookie.setMaxAge(10); //设置cookie最大失效时间<br>　
                         cookie.setPath(request.getContextPath() + "/");
                         response.addCookie(cookie);//将cookie返回加入
                         message="true";
@@ -115,16 +117,47 @@ public class loginServiceImpl implements LoginService {
     }
 
     @Override
-    public Login checkCookie(Login login, boolean rememberme, HttpServletResponse response) {
-        if(login != null && rememberme == true){
-            String cookieValue = login.getToken();//token值
-            // 保存cookie
-            CookieUtils.addCookie(response, CookieConstantTable.RememberMe, cookieValue, null);
+    public boolean checkCookie(String token) {
+        boolean cookie_status=true;
+        try {
+            String string = EncryptionUtil.base64Decode(token);
+            String[] strList = string.split("_");
+            String phoneNumber = strList[0];
+            String verifyTime = strList[1];
+            Login login = loginDao.findByPhoneNumber(phoneNumber);
+            cookie_status =  checkOutTime(login,verifyTime,cookie_status);
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
         }
 
-
-        return login;
+        return cookie_status;
     }
 
+    public boolean checkOutTime(Login login,String verifyTime,boolean cookie_status){
+        long outTime = CookieConstantTable.outTime;
+        Date begin_Time = null;
+
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+        if (login != null) {
+            try {
+                begin_Time = sdf.parse(verifyTime);
+                Date end_Time = sdf.parse(DateUtil.getStringDate());
+                long days = (end_Time.getTime() - begin_Time.getTime());//当前时间 减去最后验证时间
+                if (days > outTime) {
+                    //有效期已经超时，需要重新登录
+                    cookie_status = false;
+                } else {
+                    cookie_status = true;
+                }
+            } catch (ParseException e) {
+                e.printStackTrace();
+                log.info("登录日期转换出错！");
+            }
+
+        }else {
+            cookie_status = false;
+        }
+        return cookie_status;
+    }
 
 }

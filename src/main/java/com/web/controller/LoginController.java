@@ -8,6 +8,7 @@ import com.web.service.LoginService;
 import com.web.util.common.DateUtil;
 import com.web.util.cookie.CookieConstantTable;
 import com.web.util.cookie.CookieUtils;
+import com.web.util.encryption.EncryptionUtil;
 import com.web.util.json.WebJsion;
 import com.web.util.sms.AliSms;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,10 +17,12 @@ import org.springframework.stereotype.Controller;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.io.UnsupportedEncodingException;
 
 /**
  * 登录
@@ -53,7 +56,22 @@ public class LoginController {
             return msg;
     }
 
+//    @RequestMapping(value = "/goto.Action")
+//    @ResponseBody
+//    public ModelAndView  goto(String gotoPage){
+//        ModelAndView mAndView = new ModelAndView("redirect:/login.html");
+//        return mAndView;
+//    }
 
+
+    @RequestMapping(value = "/goto.Action")
+    public String gotoPage(String gotoPage){
+
+        //forward
+//        return "redirect:/login.thml";
+//        return new ModelAndView("redirect:/login.html");
+            return  "redirect:/login.html";
+    }
     /**
      * 登录校验
      * @param phoneNumber 手机号码
@@ -90,6 +108,18 @@ public class LoginController {
         Login l = loginService.findByPhoneNumber(login.getPhoneNumber());
         request.getSession().removeAttribute("login");
         CookieUtils.delCookie(request, response, CookieConstantTable.RememberMe);
+    }
+
+
+
+    @RequestMapping(value = "checkCookie")
+    @ResponseBody
+    public boolean checkCookie(String token){
+        boolean token_status = true;
+        if(null != token && !StringUtils.isEmpty(token)){
+            token_status =  loginService.checkCookie(token);
+        }
+        return  token_status;
     }
 
 }
