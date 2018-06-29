@@ -55,6 +55,22 @@
 					</ul>
 					<div class="layui-tab-content" style="height: 100px;">
 						<div class="layui-tab-item ">
+							<div class="clientSearch" >
+								<label class="layui-form-label">按起止时间：</label>
+								<div class="layui-inline if-ok bili-class">
+									<div class="layui-input-inline">
+										<input type="text" class="layui-input" id="tradeTimeStart" placeholder="起始日期">
+										<input type="text" class="layui-input" id="tradeTimeEnd" placeholder="终止日期">
+									</div>
+								</div>
+							</div>
+							<div class=" clientSearch">
+								<button type="button " onclick="findByOrderUserClient()" class="btn btn-primary">筛选</button>
+								<button type="button " id="orderClientExport" class="btn btn-primary">导出</button>
+							</div>
+							<table id="orderClientTable" class="table-bordered table-striped">
+
+							</table>
 						</div>
 						<div class="layui-tab-item layui-show">
 
@@ -82,7 +98,6 @@
 							<div class=" clientSearch">
 								<button type="button " onclick="findByDetail()" class="btn btn-primary">筛选</button>
 								<button type="button " id="detailExport" class="btn btn-primary">导出</button>
-
 							</div>
 
 							<table id="detailTable" class="table-bordered table-striped">
