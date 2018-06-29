@@ -235,6 +235,19 @@
      </if>
       group by client_name
   </select>
+  <select id="getFollowOrderDetailByUserCode" resultMap="BaseResultMap">
+    select
+    <include refid="base_List"/>
+    from follow_order_detail
+    where follow_order_id = #{followOrderId} and client_name = #{clientName}
+    <if test="endTime != '' and endTime != null">
+      and create_date <![CDATA[ <= ]]> #{endTime}
+    </if>
+    <if test="startTime != '' and startTime != null">
+      and create_date <![CDATA[ >= ]]> #{startTime}
+    </if>
+
+  </select>
 
   <sql id="base_List">
     id,

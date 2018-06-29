@@ -37,7 +37,7 @@ public class FollowOrderDetailServiceImpl implements IFollowOrderDetailService {
     @Autowired
     private IFollowOrderService followOrderService;
     @Autowired
-    private OrderUserService orderUserServicel;
+    private OrderUserService orderUserService;
 
     @Override
     public void save(FollowOrderDetail followOrderDetail) {
@@ -208,7 +208,7 @@ public class FollowOrderDetailServiceImpl implements IFollowOrderDetailService {
     private void createClientCloseDetail(FollowOrderTradeRecord followOrderTradeRecord, OrderMsgResult orderMsgResult) {
         //客户平仓,
         FollowOrderDetail detail = getFollowOrderDetailByTicket(followOrderTradeRecord.getTicket(), followOrderTradeRecord.getFollowOrderId());
-        OrderUser user = orderUserServicel.findByTicket(followOrderTradeRecord.getTicket());
+        OrderUser user = orderUserService.findByTicket(followOrderTradeRecord.getTicket());
         FollowOrderClient followOrderClient = followOrderClientService.findClientByIdAndName(followOrderTradeRecord.getFollowOrderId(), user.getUserCode());
         if (detail != null) {
             if (!followOrderTradeRecord.getTicket().equals(followOrderTradeRecord.getNewTicket())&&
@@ -245,7 +245,7 @@ public class FollowOrderDetailServiceImpl implements IFollowOrderDetailService {
             //交易方向
             detail.setTradeDirection(followOrderTradeRecord.getTradeDirection());
             //设置客户盈亏
-            OrderUser orderUser = orderUserServicel.findByTicket(detail.getTicket());
+            OrderUser orderUser = orderUserService.findByTicket(detail.getTicket());
             detail.setClientProfit(orderUser.getProfit());
             updateDetail(detail);
         }
@@ -342,7 +342,7 @@ public class FollowOrderDetailServiceImpl implements IFollowOrderDetailService {
         //设置交易id
         orderDetail.setFollowOrderTradeRecordId(followOrderTradeRecord.getId());
         //客户编号
-        OrderUser orderUser = orderUserServicel.findByTicket(orderDetail.getTicket());
+        OrderUser orderUser = orderUserService.findByTicket(orderDetail.getTicket());
         orderDetail.setClientName(orderUser.getUserCode());
         //客户的盈亏
         orderDetail.setClientProfit(orderUser.getProfit());
@@ -394,5 +394,10 @@ public class FollowOrderDetailServiceImpl implements IFollowOrderDetailService {
     @Override
     public List<FollowOrderVo> findCloseByClientName(Long followOrderId, String endTime, String startTime) {
         return followOrderDetailDao.findCloseByClientName(followOrderId,endTime,startTime);
+    }
+
+    @Override
+    public List<FollowOrderDetail> getFollowOrderDetailByUserCode(Long followOrderId, String endTime, String startTime, String clientName) {
+        return followOrderDetailDao.getFollowOrderDetailByUserCode(followOrderId,endTime,startTime,clientName);
     }
 }

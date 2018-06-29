@@ -88,4 +88,6 @@ public interface IFollowOrderDetailService {
 
     List<FollowOrderVo> findOpenByClientName(Long followOrderId, String endTime, String startTime);
     List<FollowOrderVo> findCloseByClientName(Long followOrderId, String endTime, String startTime);
+
+    List<FollowOrderDetail> getFollowOrderDetailByUserCode(Long followOrderId, String endTime, String startTime, String clientName);
 }

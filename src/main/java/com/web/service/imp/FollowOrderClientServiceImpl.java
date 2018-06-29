@@ -3,7 +3,6 @@ package com.web.service.imp;
 import com.web.dao.FollowOrderClientDao;
 import com.web.pojo.FollowOrder;
 import com.web.pojo.FollowOrderClient;
-import com.web.pojo.FollowOrderDetail;
 import com.web.pojo.vo.FollowOrderClientParamVo;
 import com.web.pojo.vo.OrderUserDetailsVo;
 import com.web.service.IFollowOrderClientService;

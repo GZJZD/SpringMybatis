@@ -332,36 +332,17 @@ public class FollowOrderTradeRecordService implements IFollowOrderTradeRecordSer
             }
         }
         for (FollowOrderVo followOrderVo : tradeTotalCount) {
-
-        }
-
-        for (FollowOrderVo followOrderVo : tradeTotalCount) {
-            if(userClose.size()!=0){
-                for(FollowOrderVo orderVo:userClose){
-                    if(orderVo.getClientName().equals(followOrderVo.getClientName())){
-                        followOrderVo.setOffsetGainAndLoss(orderVo.getOffsetGainAndLoss());
-                        followOrderVo.setClientProfit(orderVo.getClientProfit());
-                        followOrderVo.setPoundageTotal(orderVo.getPoundageTotal());
-                    }
+            List<FollowOrderDetail> detail = followOrderDetailService.getFollowOrderDetailByUserCode(followOrderId,
+                    endTime, startTime, followOrderVo.getClientName());
+            for (FollowOrderDetail followOrderDetail : detail) {
+                followOrderVo.setClientProfit(DoubleUtil.add(followOrderVo.getClientProfit(),followOrderDetail.getClientProfit()));
+                followOrderVo.setPoundageTotal(DoubleUtil.add(followOrderVo.getPoundageTotal(),followOrderDetail.getPoundage()));
+                if (followOrderDetail.getCloseTime() == null) {
+                    followOrderVo.setPositionGainAndLoss(DoubleUtil.add(followOrderVo.getPositionGainAndLoss(), followOrderDetail.getProfitLoss()));
+                } else {
+                    followOrderVo.setOffsetGainAndLoss(DoubleUtil.add(followOrderVo.getOffsetGainAndLoss(), followOrderDetail.getProfitLoss()));
                 }
             }
-        }
-        for (FollowOrderVo followOrderVo : tradeTotalCount) {
-            if (userOpen.size() != 0) {
-                for (FollowOrderVo orderVo : userOpen) {
-                    if(orderVo.getClientName().equals(followOrderVo.getClientName())){
-                        //持仓盈亏
-                        followOrderVo.setPositionGainAndLoss(followOrderVo.getPositionGainAndLoss());
-                        //手续费总和
-                        followOrderVo.setPoundageTotal(DoubleUtil.add(followOrderVo.getPoundageTotal(), orderVo.getPoundageTotal()));
-                        //手续费总和,保留一位小数
-                        followOrderVo.setPoundageTotal(DoubleUtil.div(followOrderVo.getPoundageTotal(),1.0,2));
-
-                    }
-                }
-            }
-        }
-        for (FollowOrderVo followOrderVo : tradeTotalCount) {
             Map<String,Object> orderUserMap = new HashMap<>();
             orderUserMap.put("clientName",followOrderVo.getClientName());
             orderUserMap.put("varietyCode",followOrder.getVariety().getVarietyCode());
@@ -380,6 +361,36 @@ public class FollowOrderTradeRecordService implements IFollowOrderTradeRecordSer
             }
             orderUserTrade.add(orderUserMap);
         }
+
+//        for (FollowOrderVo followOrderVo : tradeTotalCount) {
+//            if(userClose.size()!=0){
+//                for(FollowOrderVo orderVo:userClose){
+//                    if(orderVo.getClientName().equals(followOrderVo.getClientName())){
+//                        followOrderVo.setOffsetGainAndLoss(orderVo.getOffsetGainAndLoss());
+//                        followOrderVo.setClientProfit(orderVo.getClientProfit());
+//                        followOrderVo.setPoundageTotal(orderVo.getPoundageTotal());
+//                    }
+//                }
+//            }
+//        }
+//        for (FollowOrderVo followOrderVo : tradeTotalCount) {
+//            if (userOpen.size() != 0) {
+//                for (FollowOrderVo orderVo : userOpen) {
+//                    if(orderVo.getClientName().equals(followOrderVo.getClientName())){
+//                        //持仓盈亏
+//                        followOrderVo.setPositionGainAndLoss(followOrderVo.getPositionGainAndLoss());
+//                        //手续费总和
+//                        followOrderVo.setPoundageTotal(DoubleUtil.add(followOrderVo.getPoundageTotal(), orderVo.getPoundageTotal()));
+//                        //手续费总和,保留一位小数
+//                        followOrderVo.setPoundageTotal(DoubleUtil.div(followOrderVo.getPoundageTotal(),1.0,2));
+//
+//                    }
+//                }
+//            }
+//        }
+//        for (FollowOrderVo followOrderVo : tradeTotalCount) {
+//
+//        }
         return orderUserTrade;
     }
 }

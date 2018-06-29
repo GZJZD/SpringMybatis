@@ -50,8 +50,7 @@ public class FollowOrderServiceImpl implements IFollowOrderService {
     //交易记录
     @Autowired
     private IFollowOrderTradeRecordService followOrderTradeRecordService;
-    @Autowired
-    private IFollowOrderService followOrderService;
+
     @Autowired
     private IFollowOrderDetailService followOrderDetailService;//明细
     //发送MQ
@@ -61,7 +60,7 @@ public class FollowOrderServiceImpl implements IFollowOrderService {
     private IVarietyService varietyService;//品种
     @Autowired
     private IClientNetPositionService clientNetPositionService;//客户净头寸关联
-    
+
 
 	@Override
     public void save(FollowOrder followOrder) {
