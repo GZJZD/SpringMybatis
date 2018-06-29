@@ -41,6 +41,10 @@
         <mvc:interceptor>
             <!-- 对/user/**的请求进行拦截 -->
             <mvc:mapping path="/**"/>
+            <!--<mvc:exclude-mapping path="/Login/**"/>-->
+            <mvc:exclude-mapping path="/Login/getCode.Action"/>
+            <mvc:exclude-mapping path="/Login/login.Action"/>
+            <mvc:exclude-mapping path="/Login/goto.Action"/>
             <bean class="com.web.interceptor.CookieInterceptor" />
         </mvc:interceptor>
     </mvc:interceptors>
