@@ -382,20 +382,9 @@ public class FollowOrderDetailServiceImpl implements IFollowOrderDetailService {
     }
 
     /*
-    * 跟单明细中跟单数据的持仓盈亏、持仓手续费
+    *
+    * 查客户的所有明细详情
     * */
-    @Override
-    public List<FollowOrderVo> findOpenByClientName(Long followOrderId, String endTime, String startTime) {
-        return followOrderDetailDao.findOpenByClientName(followOrderId,endTime,startTime);
-    }
-    /*
-    * 跟单明细中跟单数据的客户盈亏、平仓盈亏、平仓手续费
-    * */
-    @Override
-    public List<FollowOrderVo> findCloseByClientName(Long followOrderId, String endTime, String startTime) {
-        return followOrderDetailDao.findCloseByClientName(followOrderId,endTime,startTime);
-    }
-
     @Override
     public List<FollowOrderDetail> getFollowOrderDetailByUserCode(Long followOrderId, String endTime, String startTime, String clientName) {
         return followOrderDetailDao.getFollowOrderDetailByUserCode(followOrderId,endTime,startTime,clientName);

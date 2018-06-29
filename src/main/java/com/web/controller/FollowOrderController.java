@@ -273,14 +273,6 @@ public class FollowOrderController {
     public List<?> getListClientFollowOrderTrade(String endTime, String startTime,Long followOrderId){
         return followOrderTradeRecordService.getListClientFollowOrderTrade(endTime,startTime,followOrderId);
     }
-    /*
-    *
-    * 跟单明细中跟单数据展示
-    * */
-    @RequestMapping("/main.Action")
-    public String main(){
-        return "/index.html";
-    }
 
 
 }
