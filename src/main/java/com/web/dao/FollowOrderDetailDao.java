@@ -59,6 +59,6 @@ public interface FollowOrderDetailDao {
     * */
     FollowOrderPageVo getFollowOrderPageVoIsOpen();
 
-    List<FollowOrderVo> findOpenByClientName (Long followOrderId);
-    List<FollowOrderVo> findCloseByClientName (Long followOrderId);
+    List<FollowOrderVo> findOpenByClientName (@Param("followOrderId") Long followOrderId, @Param("endTime") String endTime, @Param("startTime") String startTime);
+    List<FollowOrderVo> findCloseByClientName(@Param("followOrderId") Long followOrderId, @Param("endTime") String endTime, @Param("startTime") String startTime);
 }

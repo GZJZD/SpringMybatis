@@ -1,7 +1,6 @@
 package com.web.service.imp;
 
 import com.web.dao.FollowOrderTradeRecordDao;
-import com.web.dao.OrderUserDao;
 import com.web.pojo.*;
 
 import com.web.pojo.vo.FollowOrderVo;
@@ -134,16 +133,21 @@ public class FollowOrderTradeRecordService implements IFollowOrderTradeRecordSer
         }
 
     }
-
-
+    /*
+    *   跟单总交易数
+    *  @param userCode:是否已userCode为一组进行查询：true为是
+    * */
     @Override
-    public int getFollowOrderTotalAmount(Long followOrderId) {
-        return followOrderTradeRecordDao.getFollowOrderTotalAmount(followOrderId);
+    public List<FollowOrderVo> getFollowOrderTradeTotalCount(Long followOrderId, boolean userCode, String endTime, String startTime) {
+        return followOrderTradeRecordDao.getFollowOrderTradeTotalCount(followOrderId,userCode,endTime,startTime);
     }
-
+    /*
+     *   跟单总交易成功数
+     *  @param userCode:是否已userCode为一组进行查询：true为是
+     * */
     @Override
-    public int getFollowOrderSuccessTotalAmount(Long followOrderId) {
-        return followOrderTradeRecordDao.getFollowOrderSuccessTotalAmount(followOrderId);
+    public List<FollowOrderVo> getFollowOrderSuccessTradeTotal(Long followOrderId, boolean userCode, String endTime, String startTime) {
+        return followOrderTradeRecordDao.getFollowOrderSuccessTradeTotal(followOrderId,userCode,endTime,startTime);
     }
 
     @Override
@@ -299,15 +303,83 @@ public class FollowOrderTradeRecordService implements IFollowOrderTradeRecordSer
         }
     }
 
+
     /*
     *
     * 跟单明细中跟单数据映射
     * */
     @Override
-    public List<?> getListClientFollowOrderTrade(String endTime, String startTime, Long followOrderId) {
-        List<Map<String, Object>> clientOrderTrade = new ArrayList<>();
-        List<FollowOrderVo> clientClose =followOrderDetailService.findOpenByClientName(followOrderId);
-        List<FollowOrderVo> clientOpen =followOrderDetailService.findCloseByClientName(followOrderId);
-        return null;
+    public  List<Map<String,Object>>  getListClientFollowOrderTrade(String endTime, String startTime, Long followOrderId) {
+        if (endTime!=null&&!endTime.isEmpty()){
+            endTime = DateUtil.dateToStrLong(DateUtil.getEndDate(DateUtil.strToDate(endTime)));
+        }
+        List<Map<String,Object>> orderUserTrade = new ArrayList<>();
+        //以userCode为一组，查找持仓盈亏、持仓手续费
+        List<FollowOrderVo> userClose =followOrderDetailService.findCloseByClientName(followOrderId,endTime,startTime);
+        //以userCode为一组，查找客户盈亏、平仓盈亏、平仓手续费
+        List<FollowOrderVo> userOpen =followOrderDetailService.findOpenByClientName(followOrderId,endTime,startTime);
+        //以userCode为一组，查找交易成功数、
+        List<FollowOrderVo> successTradeTotal = getFollowOrderSuccessTradeTotal(followOrderId, true,endTime,startTime);
+        //以userCode为一组，查找交易总数、
+        List<FollowOrderVo> tradeTotalCount = getFollowOrderTradeTotalCount(followOrderId, true,endTime,startTime);
+        FollowOrder followOrder = followOrderService.getFollowOrder(followOrderId);
+        for (FollowOrderVo followOrderVo : tradeTotalCount) {
+            for (FollowOrderVo orderVo : successTradeTotal) {
+                if(orderVo.getClientName().equals(followOrderVo.getClientName())){
+                    //用户名一致，
+                    followOrderVo.setSuccessTotal(orderVo.getSuccessTotal());//成功数
+                }
+            }
+        }
+        for (FollowOrderVo followOrderVo : tradeTotalCount) {
+
+        }
+
+        for (FollowOrderVo followOrderVo : tradeTotalCount) {
+            if(userClose.size()!=0){
+                for(FollowOrderVo orderVo:userClose){
+                    if(orderVo.getClientName().equals(followOrderVo.getClientName())){
+                        followOrderVo.setOffsetGainAndLoss(orderVo.getOffsetGainAndLoss());
+                        followOrderVo.setClientProfit(orderVo.getClientProfit());
+                        followOrderVo.setPoundageTotal(orderVo.getPoundageTotal());
+                    }
+                }
+            }
+        }
+        for (FollowOrderVo followOrderVo : tradeTotalCount) {
+            if (userOpen.size() != 0) {
+                for (FollowOrderVo orderVo : userOpen) {
+                    if(orderVo.getClientName().equals(followOrderVo.getClientName())){
+                        //持仓盈亏
+                        followOrderVo.setPositionGainAndLoss(followOrderVo.getPositionGainAndLoss());
+                        //手续费总和
+                        followOrderVo.setPoundageTotal(DoubleUtil.add(followOrderVo.getPoundageTotal(), orderVo.getPoundageTotal()));
+                        //手续费总和,保留一位小数
+                        followOrderVo.setPoundageTotal(DoubleUtil.div(followOrderVo.getPoundageTotal(),1.0,2));
+
+                    }
+                }
+            }
+        }
+        for (FollowOrderVo followOrderVo : tradeTotalCount) {
+            Map<String,Object> orderUserMap = new HashMap<>();
+            orderUserMap.put("clientName",followOrderVo.getClientName());
+            orderUserMap.put("varietyCode",followOrder.getVariety().getVarietyCode());
+            orderUserMap.put("winRate",followOrderVo.getSuccessTotal()+"/"+followOrderVo.getAllTotal());
+            orderUserMap.put("clientProfit",followOrderVo.getClientProfit());
+            orderUserMap.put("poundageTotal",followOrderVo.getPoundageTotal());
+            orderUserMap.put("positionGainAndLoss",followOrderVo.getPositionGainAndLoss());
+            orderUserMap.put("offsetGainAndLoss",followOrderVo.getOffsetGainAndLoss());
+            FollowOrderClient client = followOrderClientService.findClientByIdAndName(followOrderId, followOrderVo.getClientName());
+            orderUserMap.put("followDirection",client.getFollowDirection());
+            orderUserMap.put("handNumberType",client.getHandNumberType());
+            if(client.getHandNumberType().equals(FollowOrderEnum.FollowStatus.CLIENT_HAND_NUMBER_TYPE.getIndex())){
+                orderUserMap.put("followHandNumber",client.getFollowHandNumber());
+            }else{
+                orderUserMap.put("followHandNumber","1:"+client.getFollowHandNumber());
+            }
+            orderUserTrade.add(orderUserMap);
+        }
+        return orderUserTrade;
     }
 }

@@ -1,6 +1,7 @@
 package com.web.service;
 
 import com.web.pojo.FollowOrderTradeRecord;
+import com.web.pojo.vo.FollowOrderVo;
 import com.web.pojo.vo.NetPositionDetailVo;
 import com.web.pojo.vo.OrderMsgResult;
 
@@ -36,7 +37,7 @@ public interface IFollowOrderTradeRecordService {
      * @param   followOrderId
      * @return
      */
-    int getFollowOrderTotalAmount(Long followOrderId);
+    List<FollowOrderVo> getFollowOrderTradeTotalCount(Long followOrderId, boolean userCode, String endTime, String startTime);
     /*
      *
      *   找到对应跟单的成功交易数量
@@ -45,7 +46,8 @@ public interface IFollowOrderTradeRecordService {
      * @param
      * @return
      */
-    int getFollowOrderSuccessTotalAmount(Long followOrderId);
+    List<FollowOrderVo> getFollowOrderSuccessTradeTotal(Long followOrderId, boolean userCode, String endTime, String startTime);
+
 
     /*
      * 找到对应的跟单记录
@@ -66,5 +68,5 @@ public interface IFollowOrderTradeRecordService {
 
     List<Map<String, Object>> getListClient(Long followOrderId, Integer status, String clientName, Integer openOrCloseStatus);
 
-    List<?> getListClientFollowOrderTrade(String endTime, String startTime, Long followOrderId);
+    List<Map<String,Object>>  getListClientFollowOrderTrade(String endTime, String startTime, Long followOrderId);
 }

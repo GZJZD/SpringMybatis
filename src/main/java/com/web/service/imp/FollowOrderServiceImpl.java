@@ -181,10 +181,10 @@ public class FollowOrderServiceImpl implements IFollowOrderService {
                 //盈亏率
                 followOrderVo.setProfitAndLossRate(DoubleUtil.div(followOrderVo.getOffsetGainAndLoss()==null? 0.0 :followOrderVo.getOffsetGainAndLoss(),
                         offset == null ?1.0 :offset.getOffsetHandNumber(), 2));
-                //跟单成功
-                followOrderVo.setSuccessTotal(followOrderTradeRecordService.getFollowOrderSuccessTotalAmount(followOrder.getId()));
-                //跟单总数
-                followOrderVo.setAllTotal(followOrderTradeRecordService.getFollowOrderTotalAmount(followOrder.getId()));
+                //跟单成功:false:算总跟单的成功交易数,
+                followOrderVo.setSuccessTotal(followOrderTradeRecordService.getFollowOrderSuccessTradeTotal(followOrder.getId(),false, null, null).get(0).getSuccessTotal());
+                //跟单总数：false:算总跟单的交易数
+                followOrderVo.setAllTotal(followOrderTradeRecordService.getFollowOrderTradeTotalCount(followOrder.getId(),false, null, null).get(0).getAllTotal());
 
                 followOrderVos.add(followOrderVo);
 
