@@ -96,11 +96,13 @@
 		<script src="lib/layui/layui.js"></script>
 		<script src="lib/layui/layui.all.js"></script>
 		<script type="text/javascript" src="lib/jquery/jquery-3.2.1.min.js"></script>
+		<script src="//cdn.bootcss.com/jquery-cookie/1.4.1/jquery.cookie.min.js"></script>
 		<script src="js/commonParameter.js"></script>
 
 		<script>
 			$(function(){
                 getCode();
+                checkCookie();
 			});
 			layui.use(['form', 'layedit', 'laydate'], function() {
 				var form = layui.form,
@@ -131,7 +133,7 @@
                         },
                         success:function(data,textStatus,jqXHR){
 
-						if(data=='true'){
+						if(data == 'true'){
                             $(location).attr('href', 'index.html');
                         }else {
                             layer.msg(data);
@@ -166,7 +168,7 @@
 
                         },
                         success:function(data,textStatus,jqXHR){
-                            console.log(data);
+
                           layer.msg(data);
                         },
                         error:function(xhr,textStatus){
@@ -193,6 +195,16 @@
                         time(o)
                     },1000)
                 }
+            }
+
+            function checkCookie(){
+                var token = $.cookie('token');
+                console.log(token);
+				if( token != undefined && token != ''){
+                    $(location).attr('href', 'index.html');
+					return;
+				}
+
             }
 		</script>
 	</body>
