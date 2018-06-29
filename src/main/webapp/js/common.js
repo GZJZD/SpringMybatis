@@ -1,4 +1,4 @@
-var url_="http://localhost:8080/sm";
+// var url_="http://localhost:8080/sm";
 $(function() {
 	dateShow();
 
