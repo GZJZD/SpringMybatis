@@ -1,6 +1,10 @@
 package com.web.service.imp;
 
 
+import com.qq.tars.client.Communicator;
+import com.qq.tars.client.CommunicatorConfig;
+import com.qq.tars.client.CommunicatorFactory;
+import com.qq.tars.common.support.Holder;
 import com.web.common.FollowOrderEnum;
 import com.web.dao.FollowOrderDao;
 import com.web.pojo.*;
@@ -8,6 +12,14 @@ import com.web.pojo.vo.FollowOrderPageVo;
 import com.web.pojo.vo.FollowOrderVo;
 import com.web.pojo.vo.OrderTrade;
 import com.web.pojo.vo.UserLogin;
+import com.web.servant.center.TraderServantPrx;
+import com.web.servant.center.TraderServantPrxCallback;
+import com.web.servant.center.orderCloseResponse;
+import com.web.servant.center.orderOpenResponse;
+import com.web.servant.center.userLoginRequest;
+import com.web.servant.center.userLoginResponse;
+import com.web.servant.center.userLogoutResponse;
+import com.web.servant.proxy.OrderTraderPrx;
 import com.web.service.*;
 import com.web.util.FollowOrderGenerateUtil;
 import com.web.util.common.DateUtil;
@@ -46,7 +58,8 @@ public class FollowOrderServiceImpl implements IFollowOrderService {
     //交易记录
     @Autowired
     private IFollowOrderTradeRecordService followOrderTradeRecordService;
-
+    @Autowired
+    private IFollowOrderService followOrderService;
     @Autowired
     private IFollowOrderDetailService followOrderDetailService;//明细
     //发送MQ
@@ -56,9 +69,9 @@ public class FollowOrderServiceImpl implements IFollowOrderService {
     private IVarietyService varietyService;//品种
     @Autowired
     private IClientNetPositionService clientNetPositionService;//客户净头寸关联
+    
 
-
-    @Override
+	@Override
     public void save(FollowOrder followOrder) {
         followOrderDao.insert(followOrder);
     }
@@ -418,8 +431,46 @@ public class FollowOrderServiceImpl implements IFollowOrderService {
             log.info("发送一条登陆信息："+WebJsion.toJson(login));
             //发送MQ去登录
             orderTraderService.userLogin(login);
-
-
+            /**
+            //tars框架代替MQ
+            CommunicatorConfig cfg = new CommunicatorConfig();
+            Communicator communicator = CommunicatorFactory.getInstance().getCommunicator(cfg);
+            TraderServantPrx proxy = communicator.stringToProxy(TraderServantPrx.class, "TestApp.HelloServer.HelloTrade@tcp -h 192.168.3.189 -p 50506 -t 60000");
+            userLoginRequest req = new userLoginRequest();
+            req.setTypeId("userLogin");
+            req.setRequestId(followOrder.getId().intValue());
+            req.setBrokerId(account.getPlatform().getName());
+            req.setUserId(account.getUsername());
+            req.setPassword(account.getPassword());
+            log.info("发送一条登陆信息："+WebJsion.toJson(req));
+            try {
+            	proxy.async_userLogin(new TraderServantPrxCallback() {
+    				@Override
+    				public void callback_expired() {
+    				}
+    				@Override
+    				public void callback_exception(Throwable ex) {
+    				}
+    				@Override
+    				public void callback_userLogout(int ret, userLogoutResponse rsp) {
+    				}
+    				@Override
+    				public void callback_userLogin(int ret, userLoginResponse rsp) {
+    					//设计启动
+                        followOrderService.updateFollowOrderStatus(Long.valueOf(rsp.getRequestId()),
+                                FollowOrderEnum.FollowStatus.FOLLOW_ORDER_START.getIndex());
+    				}
+    				@Override
+    				public void callback_orderOpen(int ret, orderOpenResponse rsp) {
+    				}
+    				@Override
+    				public void callback_orderClose(int ret, orderCloseResponse rsp) {
+    				}
+    			}, req);
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+			*/
         }
     }
     /*
