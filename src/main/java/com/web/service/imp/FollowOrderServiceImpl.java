@@ -252,8 +252,6 @@ public class FollowOrderServiceImpl implements IFollowOrderService {
             //获取原有的持仓数
             Double oldHoldNum = followOrder.getNetPositionHoldNumber();
 
-            //现在的持仓数
-            log.info("现在的净头寸的值："+headNum);
             //应持仓多少手
             int newHoldNum = (int) (headNum / followOrder.getNetPositionChange());
             //判断策略的正反方向跟单
@@ -398,7 +396,7 @@ public class FollowOrderServiceImpl implements IFollowOrderService {
             netPositionSum = DoubleUtil.sub(netPositionSum, data.getHandNumber());
             //净头寸值
         }
-
+        log.info("现在的净头寸的值："+netPositionSum);
         followOrder.setNetPositionSum(netPositionSum);
         updateFollowOrder(followOrder);
         return netPositionSum;

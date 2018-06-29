@@ -211,30 +211,8 @@
      from follow_order_detail
      where follow_order_id = #{followOrderId} and close_time is null
   </select>
-  <select id="findOpenByClientName" resultMap="followOrderVoMap">
-    select sum(profit_loss)as positionGainAndLoss,sum(poundage)as poundageTotal,client_name clientName
-     from follow_order_detail
-     where follow_order_id = #{followOrderId} and close_time is  null and (remain_hand_number != 0 or remain_hand_number is null)
-    <if test="endTime != '' and endTime != null">
-      and create_date <![CDATA[ <= ]]> #{endTime}
-    </if>
-    <if test="startTime != '' and startTime != null">
-      and create_date <![CDATA[ >= ]]> #{startTime}
-    </if>
-     group by client_name
-  </select>
-  <select id="findCloseByClientName" resultMap="followOrderVoMap">
-    select sum(profit_loss) as offsetGainAndLoss,sum(poundage) as poundageTotal,sum(client_profit) as clientProfit,client_name as clientName
-     from follow_order_detail
-     where follow_order_id = #{followOrderId} and close_time is not null
-     <if test="endTime != '' and endTime != null">
-        and create_date <![CDATA[ <= ]]> #{endTime}
-     </if>
-      <if test="startTime != '' and startTime != null">
-        and create_date <![CDATA[ >= ]]> #{startTime}
-     </if>
-      group by client_name
-  </select>
+
+
   <select id="getFollowOrderDetailByUserCode" resultMap="BaseResultMap">
     select
     <include refid="base_List"/>
