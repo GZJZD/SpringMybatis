@@ -8,6 +8,7 @@ import com.web.pojo.vo.OrderUserDetailsVo;
 import com.web.service.IFollowOrderClientService;
 import com.web.service.IFollowOrderService;
 import com.web.service.OrderUserService;
+import com.web.util.common.DateUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -57,6 +58,7 @@ public class FollowOrderClientServiceImpl implements IFollowOrderClientService {
                 followOrderClient.setFollowDirection(orderClient.getFollowDirection());
                 followOrderClient.setHandNumberType(orderClient.getHandNumberType());
                 followOrderClient.setFollowHandNumber(orderClient.getFollowHandNumber());
+                followOrderClient.setCreateDate(DateUtil.getStringDate());
                 followOrderClientDao.insert(followOrderClient);
             }
         }

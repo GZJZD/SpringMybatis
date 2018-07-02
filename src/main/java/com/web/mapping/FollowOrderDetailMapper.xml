@@ -191,7 +191,7 @@
        (close_time is null and remain_hand_number is null)
     </select>
     <select id="getFollowOrderPageVoIsClose" resultMap="orderPageMap">
-      select sum(hand_number) history_hand_number, sum(profit_loss) history_profit_loss,count(id) close_position_total_number
+      select sum(hand_number) history_hand_number, sum(profit_loss) history_profit_loss,sum(client_profit) clientProfit,count(id) close_position_total_number
       from follow_order_detail
       where remain_hand_number is  null and  close_time is not null
     </select>
