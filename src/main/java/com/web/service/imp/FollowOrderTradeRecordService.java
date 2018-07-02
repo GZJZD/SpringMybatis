@@ -172,31 +172,32 @@ public class FollowOrderTradeRecordService implements IFollowOrderTradeRecordSer
         FollowOrder followOrder = followOrderService.getFollowOrder(followOrderId);
         List<OrderUser> userList = orderUserService.findByUserIdList(userCode, followOrder.getStartTime(), null, followOrder.getVariety().getVarietyCode(), openOrCloseStatus);
         for (OrderUser orderUser : userList) {
-            Map<String, Object> orderUserMap = new HashMap<>();
+            if(orderUser.getOpenTime()!=null){
+                Map<String, Object> orderUserMap = new HashMap<>();
+                //格式化时间
+                if (orderUser.getOpenTime() != null) {
+                    orderUser.setOpenTime(DateUtil.strToStr(orderUser.getOpenTime()));
+                }
+                if (orderUser.getCloseTime() != null) {
+                    orderUser.setCloseTime(DateUtil.strToStr(orderUser.getCloseTime()));
+                }
+                orderUserMap.put("orderUser", orderUser);
+                //查找对应的明细
+                FollowOrderDetail detail = followOrderDetailService.getFollowOrderDetailByTicket(orderUser.getTicket(), followOrderId);
+                //查找对应的交易记录，如果没有就是跟每单的固定手数，客户拆手数进行交易
+                if (detail != null) {
+                    orderUserMap.put("detailId", detail.getId());
+                    orderUserMap.put("status", FollowOrderEnum.FollowStatus.FOLLOW_ORDER_BY_CLIENT.getIndex());
 
-            //格式化时间
-            if (orderUser.getOpenTime() != null) {
-                orderUser.setOpenTime(DateUtil.strToStr(orderUser.getOpenTime()));
-            }
-            if (orderUser.getCloseTime() != null) {
-                orderUser.setCloseTime(DateUtil.strToStr(orderUser.getCloseTime()));
-            }
-            orderUserMap.put("orderUser", orderUser);
-            //查找对应的明细
-            FollowOrderDetail detail = followOrderDetailService.getFollowOrderDetailByTicket(orderUser.getTicket(), followOrderId);
-            //查找对应的交易记录，如果没有就是跟每单的固定手数，客户拆手数进行交易
-            if (detail != null) {
-                orderUserMap.put("detailId", detail.getId());
-                orderUserMap.put("status", FollowOrderEnum.FollowStatus.FOLLOW_ORDER_BY_CLIENT.getIndex());
-
-            } else {
-                orderUserMap.put("status", FollowOrderEnum.FollowStatus.NOT_FOLLOW_ORDER_BY_CLIENT.getIndex());
-            }
-            //条件查询
-            if (status.equals(orderUserMap.get("status"))) {
-                orderUserList.add(orderUserMap);
-            } else if (status.equals(-1)) {
-                orderUserList.add(orderUserMap);
+                } else {
+                    orderUserMap.put("status", FollowOrderEnum.FollowStatus.NOT_FOLLOW_ORDER_BY_CLIENT.getIndex());
+                }
+                //条件查询
+                if (status.equals(orderUserMap.get("status"))) {
+                    orderUserList.add(orderUserMap);
+                } else if (status.equals(-1)) {
+                    orderUserList.add(orderUserMap);
+                }
             }
         }
         return orderUserList;

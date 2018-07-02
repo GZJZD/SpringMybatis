@@ -210,7 +210,7 @@ public class FollowOrderDetailServiceImpl implements IFollowOrderDetailService {
         FollowOrderDetail detail = getFollowOrderDetailByTicket(followOrderTradeRecord.getTicket(), followOrderTradeRecord.getFollowOrderId());
         OrderUser user = orderUserService.findByTicket(followOrderTradeRecord.getTicket());
         FollowOrderClient followOrderClient = followOrderClientService.findClientByIdAndName(followOrderTradeRecord.getFollowOrderId(), user.getUserCode());
-        if (detail != null) {
+        if (detail != null && detail.getCloseTime()!=null) {
             if (!followOrderTradeRecord.getTicket().equals(followOrderTradeRecord.getNewTicket())&&
                     !followOrderClient.getHandNumberType().equals(FollowOrderEnum.FollowStatus.CLIENT_HAND_NUMBER_TYPE.getIndex())) {
                 //开仓单号和新开仓单号不一致 和不是固定手数
