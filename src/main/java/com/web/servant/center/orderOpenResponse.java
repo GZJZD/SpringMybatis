@@ -22,7 +22,7 @@ public class orderOpenResponse {
 	@TarsStructProperty(order = 4, isRequire = true)
 	public String errmsg = "";
 	@TarsStructProperty(order = 5, isRequire = true)
-	public int tradeVolume = 0;
+	public double tradeVolume = 0D;
 	@TarsStructProperty(order = 6, isRequire = true)
 	public double tradePrice = 0D;
 	@TarsStructProperty(order = 7, isRequire = true)
@@ -64,11 +64,11 @@ public class orderOpenResponse {
 		this.errmsg = errmsg;
 	}
 
-	public int getTradeVolume() {
+	public double getTradeVolume() {
 		return tradeVolume;
 	}
 
-	public void setTradeVolume(int tradeVolume) {
+	public void setTradeVolume(double tradeVolume) {
 		this.tradeVolume = tradeVolume;
 	}
 
@@ -107,7 +107,7 @@ public class orderOpenResponse {
 	public orderOpenResponse() {
 	}
 
-	public orderOpenResponse(String typeId, int requestId, int errcode, String errmsg, int tradeVolume, double tradePrice, double tradeCommission, String tradeDate, String tradeTime) {
+	public orderOpenResponse(String typeId, int requestId, int errcode, String errmsg, double tradeVolume, double tradePrice, double tradeCommission, String tradeDate, String tradeTime) {
 		this.typeId = typeId;
 		this.requestId = requestId;
 		this.errcode = errcode;
