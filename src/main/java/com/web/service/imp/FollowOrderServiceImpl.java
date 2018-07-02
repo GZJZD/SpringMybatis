@@ -8,15 +8,15 @@ import com.qq.tars.common.support.Holder;
 import com.web.common.FollowOrderEnum;
 import com.web.dao.FollowOrderDao;
 import com.web.pojo.*;
-import com.web.pojo.vo.FollowOrderPageVo;
-import com.web.pojo.vo.FollowOrderVo;
-import com.web.pojo.vo.OrderTrade;
-import com.web.pojo.vo.UserLogin;
+import com.web.pojo.vo.*;
+import com.web.servant.center.*;
 import com.web.service.*;
 import com.web.util.FollowOrderGenerateUtil;
 import com.web.util.common.DateUtil;
 import com.web.util.common.DoubleUtil;
 import com.web.util.json.WebJsion;
+import net.sf.json.JSONObject;
+import netscape.javascript.JSObject;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -404,20 +404,21 @@ public class FollowOrderServiceImpl implements IFollowOrderService {
      *@param
      *@Date: 12:12 2zero18/5/1zero
      */
-    public void checkLogin(FollowOrder followOrder) {
+    public void checkLogin(final FollowOrder followOrder) {
 
         if (followOrder.getFollowOrderStatus().equals(FollowOrderEnum.FollowStatus.FOLLOW_ORDER_STOP.getIndex())) {
-            UserLogin login = new UserLogin();
+            Account account = followOrder.getAccount();
+          /*  UserLogin login = new UserLogin();
             login.setTypeId("userLogin");
             login.setRequestId(followOrder.getId());
             login.setBrokerId(followOrder.getAccount().getPlatform().getName());
             login.setUserId(followOrder.getAccount().getUsername());
             login.setPassword(followOrder.getAccount().getPassword());
-            Account account = followOrder.getAccount();
+
             log.info("发送一条登陆信息："+WebJsion.toJson(login));
             //发送MQ去登录
-            orderTraderService.userLogin(login);
-            /**
+            orderTraderService.userLogin(login);*/
+
             //tars框架代替MQ
             CommunicatorConfig cfg = new CommunicatorConfig();
             Communicator communicator = CommunicatorFactory.getInstance().getCommunicator(cfg);
@@ -443,8 +444,9 @@ public class FollowOrderServiceImpl implements IFollowOrderService {
     				@Override
     				public void callback_userLogin(int ret, userLoginResponse rsp) {
     					//设计启动
-                         this.updateFollowOrderStatus(Long.valueOf(rsp.getRequestId()),
+                         updateFollowOrderStatus(Long.valueOf(rsp.getRequestId()),
                                 FollowOrderEnum.FollowStatus.FOLLOW_ORDER_START.getIndex());
+                        log.info(followOrder.getFollowOrderName()+"跟单策略启动");
     				}
     				@Override
     				public void callback_orderOpen(int ret, orderOpenResponse rsp) {
@@ -455,8 +457,8 @@ public class FollowOrderServiceImpl implements IFollowOrderService {
     			}, req);
 			} catch (Exception e) {
 				e.printStackTrace();
+				log.error(e.getMessage());
 			}
-			*/
         }
     }
     /*
@@ -593,31 +595,106 @@ public class FollowOrderServiceImpl implements IFollowOrderService {
 
         //创建交易对象
         OrderTrade orderTrade = new OrderTrade();
-        //设置交易记录的id
-        orderTrade.setRequestId(followOrderTradeRecord.getId());
-        //设置账号的交易平台
-        orderTrade.setBrokerId(followOrder.getAccount().getPlatform().getName());
-        //设置交易对象的交易账号
-        orderTrade.setUserId(followOrder.getAccount().getUsername());
-        //设置平台对应的品种合约代码 todo 实现该功能
-        orderTrade.setInstrumentId("GC1808");
-        //设置买卖方向
-        orderTrade.setOrderDirection(orderDirection);
+
+        CommunicatorConfig cfg = new CommunicatorConfig();
+        Communicator communicator = CommunicatorFactory.getInstance().getCommunicator(cfg);
+        TraderServantPrx proxy = communicator.stringToProxy(TraderServantPrx.class, "TestApp.HelloServer.HelloTrade@tcp -h 192.168.3.189 -p 50506 -t 60000");
+
         if (openClose.equals(FollowOrderEnum.FollowStatus.CLOSE.getIndex())) {
+            orderCloseRequest close = new orderCloseRequest();
+            //设置交易记录的id
+            close.setRequestId(Math.toIntExact(followOrderTradeRecord.getId()));
+            //设置账号的交易平台
+            close.setBrokerId(followOrder.getAccount().getPlatform().getName());
+            //设置交易对象的交易账号
+            close.setUserId(followOrder.getAccount().getUsername());
+            //设置平台对应的品种合约代码 todo 实现该功能
+            close.setInstrumentId("GC1808");
+            //设置买卖方向
+            close.setOrderDirection(orderDirection);
             //平仓
-            orderTrade.setTypeId("orderClose");
-            orderTrade.setOrderVolume(handNumber);
+            close.setTypeId("orderClose");
+//            close.setOrderVolume(handNumber);
             //发送平仓交易请求
-            orderTraderService.orderClose(orderTrade);
+//            orderTraderService.orderClose(orderTrade);
+
             log.info("发送一条交易信息：" + WebJsion.toJson(orderTrade));
+//
+//            try {
+//                proxy.async_orderOpen(new TraderServantPrxCallback() {
+//                    @Override
+//                    public void callback_expired() {
+//                    }
+//                    @Override
+//                    public void callback_exception(Throwable ex) {
+//                    }
+//                    @Override
+//                    public void callback_userLogout(int ret, userLogoutResponse rsp) {
+//                    }
+//                    @Override
+//                    public void callback_userLogin(int ret, userLoginResponse rsp) {
+//
+//                    }
+//                    @Override
+//                    public void callback_orderOpen(int ret, orderOpenResponse rsp) {
+//                    }
+//                    @Override
+//                    public void callback_orderClose(int ret, orderCloseResponse rsp) {
+//                    }
+//                }, orderTrade);
+//            } catch (Exception e) {
+//                e.printStackTrace();
+//                log.error(e.getMessage());
+//            }
 
 
         } else {
             //开仓
             orderTrade.setTypeId("orderOpen");
             orderTrade.setVolumeTotalOriginal(handNumber);
-            orderTraderService.orderOpen(orderTrade);
+            orderOpenRequest open = new orderOpenRequest();
+            try {
+                WebJsion.Copy(orderTrade,open);
+            } catch (Exception e) {
+                e.printStackTrace();
+                log.error("类转换错误");
+            }
             log.info("发送一条交易信息：" + orderTrade.toString());
+            try {
+                proxy.async_orderOpen(new TraderServantPrxCallback() {
+                    @Override
+                    public void callback_expired() {
+                    }
+                    @Override
+                    public void callback_exception(Throwable ex) {
+                    }
+                    @Override
+                    public void callback_userLogout(int ret, userLogoutResponse rsp) {
+                    }
+                    @Override
+                    public void callback_userLogin(int ret, userLoginResponse rsp) {
+
+                    }
+                    @Override
+                    public void callback_orderOpen(int ret, orderOpenResponse rsp) {
+                        OrderMsgResult msgResult = new OrderMsgResult();
+                        try {
+                            WebJsion.Copy(rsp,msgResult);
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                            log.error("交易结果类转换错误");
+                        }
+                        followOrderTradeRecordService.updateRecordByComeBackTradeMsg(msgResult);
+                    }
+                    @Override
+                    public void callback_orderClose(int ret, orderCloseResponse rsp) {
+                    }
+                }, open);
+            } catch (Exception e) {
+                e.printStackTrace();
+                log.error(e.getMessage());
+            }
+
         }
     }
 
