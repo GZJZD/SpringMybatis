@@ -2,10 +2,14 @@ package com.web.util.json;
 
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
+import com.web.servant.center.orderOpenRequest;
 import com.web.tcp.DataParserServiceImpl;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import java.beans.BeanInfo;
+import java.beans.Introspector;
+import java.beans.PropertyDescriptor;
 import java.lang.reflect.Field;
 import java.util.HashMap;
 import java.lang.reflect.Field;
@@ -96,4 +100,41 @@ public class WebJsion {
         }
         return "";
     }
+
+
+    /**
+     *
+     * @param source 被复制的实体类对象
+     * @param to 复制完后的实体类对象
+     * @throws Exception
+     */
+    public static void Copy(Object source, Object to) throws Exception {
+        // 获取属性
+        BeanInfo sourceBean = Introspector.getBeanInfo(source.getClass(),java.lang.Object.class);
+        PropertyDescriptor[] sourceProperty = sourceBean.getPropertyDescriptors();
+
+        BeanInfo destBean = Introspector.getBeanInfo(to.getClass(),java.lang.Object.class);
+        PropertyDescriptor[] destProperty = destBean.getPropertyDescriptors();
+
+        try {
+            for (int i = 0; i < sourceProperty.length; i++) {
+
+                for (int j = 0; j < destProperty.length; j++) {
+
+                    if (sourceProperty[i].getName().equals(destProperty[j].getName())) {
+                        // 调用source的getter方法和dest的setter方法
+                        destProperty[j].getWriteMethod().invoke(to,sourceProperty[i].getReadMethod().invoke(source));
+                        break;
+                    }
+                }
+            }
+        } catch (Exception e) {
+            throw new Exception("属性复制失败:" + e.getMessage());
+        }
+    }
+
+
+
+
+
 }

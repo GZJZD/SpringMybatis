@@ -28,6 +28,7 @@ public interface IFollowOrderTradeRecordService {
      */
     void updateRecordByComeBackTradeMsg(OrderMsgResult orderMsgResult);
 
+    void updateRecordByTradeFail(Long tradeRecordId);
 
     /*
      *
