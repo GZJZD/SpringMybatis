@@ -51,8 +51,6 @@ public class FollowOrderServiceImpl implements IFollowOrderService {
     @Autowired
     private IFollowOrderTradeRecordService followOrderTradeRecordService;
     @Autowired
-    private IFollowOrderService followOrderService;
-    @Autowired
     private IFollowOrderDetailService followOrderDetailService;//明细
     //发送MQ
     @Autowired
@@ -449,7 +447,7 @@ public class FollowOrderServiceImpl implements IFollowOrderService {
     				@Override
     				public void callback_userLogin(int ret, userLoginResponse rsp) {
     					//设计启动
-                        followOrderService.updateFollowOrderStatus(Long.valueOf(rsp.getRequestId()),
+                         this.updateFollowOrderStatus(Long.valueOf(rsp.getRequestId()),
                                 FollowOrderEnum.FollowStatus.FOLLOW_ORDER_START.getIndex());
     				}
     				@Override
