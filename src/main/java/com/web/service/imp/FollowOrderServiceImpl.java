@@ -59,7 +59,7 @@ public class FollowOrderServiceImpl implements IFollowOrderService {
     private IVarietyService varietyService;//品种
     @Autowired
     private IClientNetPositionService clientNetPositionService;//客户净头寸关联
-    
+
 
 	@Override
     public void save(FollowOrder followOrder) {
@@ -184,10 +184,10 @@ public class FollowOrderServiceImpl implements IFollowOrderService {
                 //盈亏率
                 followOrderVo.setProfitAndLossRate(DoubleUtil.div(followOrderVo.getOffsetGainAndLoss()==null? 0.0 :followOrderVo.getOffsetGainAndLoss(),
                         offset == null ?1.0 :offset.getOffsetHandNumber(), 2));
-                //跟单成功
-                followOrderVo.setSuccessTotal(followOrderTradeRecordService.getFollowOrderSuccessTotalAmount(followOrder.getId()));
-                //跟单总数
-                followOrderVo.setAllTotal(followOrderTradeRecordService.getFollowOrderTotalAmount(followOrder.getId()));
+                //跟单成功:false:算总跟单的成功交易数,
+                followOrderVo.setSuccessTotal(followOrderTradeRecordService.getFollowOrderSuccessTradeTotal(followOrder.getId(),false, null, null).get(0).getSuccessTotal());
+                //跟单总数：false:算总跟单的交易数
+                followOrderVo.setAllTotal(followOrderTradeRecordService.getFollowOrderTradeTotalCount(followOrder.getId(),false, null, null).get(0).getAllTotal());
 
                 followOrderVos.add(followOrderVo);
 
@@ -251,8 +251,6 @@ public class FollowOrderServiceImpl implements IFollowOrderService {
             //获取原有的持仓数
             Double oldHoldNum = followOrder.getNetPositionHoldNumber();
 
-            //现在的持仓数
-            log.info("现在的净头寸的值："+headNum);
             //应持仓多少手
             int newHoldNum = (int) (headNum / followOrder.getNetPositionChange());
             //判断策略的正反方向跟单
@@ -397,7 +395,7 @@ public class FollowOrderServiceImpl implements IFollowOrderService {
             netPositionSum = DoubleUtil.sub(netPositionSum, data.getHandNumber());
             //净头寸值
         }
-
+        log.info("现在的净头寸的值："+netPositionSum);
         followOrder.setNetPositionSum(netPositionSum);
         updateFollowOrder(followOrder);
         return netPositionSum;

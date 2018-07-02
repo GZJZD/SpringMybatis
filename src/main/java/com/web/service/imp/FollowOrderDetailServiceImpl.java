@@ -37,7 +37,7 @@ public class FollowOrderDetailServiceImpl implements IFollowOrderDetailService {
     @Autowired
     private IFollowOrderService followOrderService;
     @Autowired
-    private OrderUserService orderUserServicel;
+    private OrderUserService orderUserService;
 
     @Override
     public void save(FollowOrderDetail followOrderDetail) {
@@ -176,7 +176,7 @@ public class FollowOrderDetailServiceImpl implements IFollowOrderDetailService {
         FollowOrderPageVo followOrderPageVo = followOrderDetailDao.getFollowOrderPageVoIsClose();//历史跟单手数，历史收益，总平仓单数
         FollowOrderPageVo followOrderPageVoIsOpen = followOrderDetailDao.getFollowOrderPageVoIsOpen();
         if(followOrderPageVoIsOpen !=null){
-            followOrderPageVo.setHoldPositionHandNumber(followOrderPageVoIsOpen.getHoldPositionHandNumber() );//持仓手数
+            followOrderPageVo.setHoldPositionHandNumber(DoubleUtil.div(followOrderPageVoIsOpen.getHoldPositionHandNumber(),1.0,2));//持仓手数
             followOrderPageVo.setHoldPositionProfit(followOrderPageVoIsOpen.getHoldPositionProfit()==null?0.0:followOrderPageVoIsOpen.getHoldPositionProfit());//持仓收益
         }else{
             followOrderPageVo.setHoldPositionHandNumber(0.0);
@@ -208,7 +208,7 @@ public class FollowOrderDetailServiceImpl implements IFollowOrderDetailService {
     private void createClientCloseDetail(FollowOrderTradeRecord followOrderTradeRecord, OrderMsgResult orderMsgResult) {
         //客户平仓,
         FollowOrderDetail detail = getFollowOrderDetailByTicket(followOrderTradeRecord.getTicket(), followOrderTradeRecord.getFollowOrderId());
-        OrderUser user = orderUserServicel.findByTicket(followOrderTradeRecord.getTicket());
+        OrderUser user = orderUserService.findByTicket(followOrderTradeRecord.getTicket());
         FollowOrderClient followOrderClient = followOrderClientService.findClientByIdAndName(followOrderTradeRecord.getFollowOrderId(), user.getUserCode());
         if (detail != null) {
             if (!followOrderTradeRecord.getTicket().equals(followOrderTradeRecord.getNewTicket())&&
@@ -238,12 +238,14 @@ public class FollowOrderDetailServiceImpl implements IFollowOrderDetailService {
             //设置平仓盈亏
             detail.setProfitLoss(DoubleUtil.sub(DoubleUtil.mul(detail.getHandNumber(),
                     detail.getClosePrice()), DoubleUtil.mul(detail.getHandNumber(), detail.getOpenPrice())));
+            //设置平仓盈亏*100:1手等于100股
+            detail.setProfitLoss(DoubleUtil.mul(detail.getProfitLoss(),100.0));
             //手续费
             detail.setPoundage(DoubleUtil.add(detail.getPoundage(), orderMsgResult.getTradeCommission()));
             //交易方向
             detail.setTradeDirection(followOrderTradeRecord.getTradeDirection());
             //设置客户盈亏
-            OrderUser orderUser = orderUserServicel.findByTicket(detail.getTicket());
+            OrderUser orderUser = orderUserService.findByTicket(detail.getTicket());
             detail.setClientProfit(orderUser.getProfit());
             updateDetail(detail);
         }
@@ -340,7 +342,7 @@ public class FollowOrderDetailServiceImpl implements IFollowOrderDetailService {
         //设置交易id
         orderDetail.setFollowOrderTradeRecordId(followOrderTradeRecord.getId());
         //客户编号
-        OrderUser orderUser = orderUserServicel.findByTicket(orderDetail.getTicket());
+        OrderUser orderUser = orderUserService.findByTicket(orderDetail.getTicket());
         orderDetail.setClientName(orderUser.getUserCode());
         //客户的盈亏
         orderDetail.setClientProfit(orderUser.getProfit());
@@ -380,17 +382,11 @@ public class FollowOrderDetailServiceImpl implements IFollowOrderDetailService {
     }
 
     /*
-    * 跟单明细中跟单数据的持仓盈亏、持仓手续费
+    *
+    * 查客户的所有明细详情
     * */
     @Override
-    public List<FollowOrderVo> findOpenByClientName(Long followOrderId) {
-        return followOrderDetailDao.findOpenByClientName(followOrderId);
-    }
-    /*
-    * 跟单明细中跟单数据的客户盈亏、平仓盈亏、平仓手续费
-    * */
-    @Override
-    public List<FollowOrderVo> findCloseByClientName(Long followOrderId) {
-        return followOrderDetailDao.findCloseByClientName(followOrderId);
+    public List<FollowOrderDetail> getFollowOrderDetailByUserCode(Long followOrderId, String endTime, String startTime, String clientName) {
+        return followOrderDetailDao.getFollowOrderDetailByUserCode(followOrderId,endTime,startTime,clientName);
     }
 }

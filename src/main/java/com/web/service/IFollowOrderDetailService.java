@@ -4,7 +4,6 @@ import com.web.pojo.FollowOrderDetail;
 import com.web.pojo.FollowOrderTradeRecord;
 import com.web.pojo.vo.FollowOrderPageVo;
 import com.web.pojo.vo.FollowOrderVo;
-import com.web.pojo.vo.NetPositionDetailVo;
 import com.web.pojo.vo.OrderMsgResult;
 
 import java.util.List;
@@ -87,6 +86,6 @@ public interface IFollowOrderDetailService {
 
     void createDetail(FollowOrderTradeRecord followOrderTradeRecord, OrderMsgResult orderMsgResult);
 
-    List<FollowOrderVo> findOpenByClientName(Long followOrderId);
-    List<FollowOrderVo> findCloseByClientName(Long followOrderId);
+
+    List<FollowOrderDetail> getFollowOrderDetailByUserCode(Long followOrderId, String endTime, String startTime, String clientName);
 }

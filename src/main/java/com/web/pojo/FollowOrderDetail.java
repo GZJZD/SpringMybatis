@@ -35,7 +35,7 @@ public class FollowOrderDetail implements Serializable {
     //手续费
     private Double poundage;
     //盈亏
-    private Double profitLoss;
+    private Double profitLoss=0.0;
     //客户盈亏
     private Double clientProfit;
     //开仓单号

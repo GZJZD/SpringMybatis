@@ -1,6 +1,5 @@
 package com.web.controller;
 
-import com.alibaba.fastjson.JSON;
 import com.web.common.FollowOrderEnum;
 import com.web.pojo.Account;
 import com.web.pojo.FollowOrder;
@@ -269,8 +268,11 @@ public class FollowOrderController {
     *
     * 跟单明细中跟单数据展示
     * */
+    @RequestMapping("/getListClientFollowOrderTrade.Action")
+    @ResponseBody
     public List<?> getListClientFollowOrderTrade(String endTime, String startTime,Long followOrderId){
         return followOrderTradeRecordService.getListClientFollowOrderTrade(endTime,startTime,followOrderId);
     }
+
 
 }

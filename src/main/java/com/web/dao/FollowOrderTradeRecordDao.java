@@ -2,6 +2,7 @@ package com.web.dao;
 
 
 import com.web.pojo.FollowOrderTradeRecord;
+import com.web.pojo.vo.FollowOrderVo;
 import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
@@ -17,7 +18,8 @@ public interface FollowOrderTradeRecordDao {
 
     int updateByPrimaryKey(FollowOrderTradeRecord record);
 
-    int getFollowOrderTotalAmount(Long followOrderId);
+    List<FollowOrderVo> getFollowOrderTradeTotalCount(@Param("followOrderId") Long followOrderId, @Param("userCode") boolean userCode, @Param("endTime") String endTime, @Param("startTime") String startTime);
 
-    int getFollowOrderSuccessTotalAmount(Long followOrderId);
+    List<FollowOrderVo> getFollowOrderSuccessTradeTotal(@Param("followOrderId") Long followOrderId, @Param("userCode") boolean userCode, @Param("endTime") String endTime, @Param("startTime") String startTime);
+
 }

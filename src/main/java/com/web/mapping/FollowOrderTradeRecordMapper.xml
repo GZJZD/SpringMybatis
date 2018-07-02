@@ -17,9 +17,14 @@
         <result column="poundage" property="poundage"/>
         <result column="client_net_position_id" property="clientNetPositionId"/>
         <result column="client_name" property="clientName"/>
-        <result column="update_date" property="updateDate"  />
+        <result column="update_date" property="updateDate"/>
         <result column="create_date" property="createDate"/>
         <result column="version" property="version"/>
+    </resultMap>
+    <resultMap id="followOrderVoMap" type="com.web.pojo.vo.FollowOrderVo">
+        <result property="successTotal" column="successTotal"/>
+        <result property="allTotal" column="allTotal"/>
+        <result property="clientName" column="clientName"/>
     </resultMap>
     <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
     delete from follow_order_trade_record
@@ -104,24 +109,50 @@
     </update>
 
     <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long">
-    select
+        select
         <include refid="base_List"/>
-    from follow_order_trade_record
-    where id = #{id}
-  </select>
-    <select id="selectAll" resultMap="BaseResultMap">
-    select
-    <include refid="base_List"/>
-    from follow_order_trade_record
-  </select>
-
-    <select id="getFollowOrderTotalAmount" resultType="java.lang.Integer">
-        select count(id) from follow_order_trade_record
-        where follow_order_id =#{followOrderId}
+        from follow_order_trade_record
+        where id = #{id}
     </select>
-    <select id="getFollowOrderSuccessTotalAmount" resultType="java.lang.Integer">
-         select count(id) from follow_order_trade_record
-          where hand_number != 0 and trade_time is not null and follow_order_id = #{followOrderId}
+    <select id="selectAll" resultMap="BaseResultMap">
+        select
+        <include refid="base_List"/>
+        from follow_order_trade_record
+    </select>
+
+    <select id="getFollowOrderTradeTotalCount" resultMap="followOrderVoMap">
+        select count(id) allTotal
+        <if test="userCode">
+            ,client_name clientName
+        </if>
+        from follow_order_trade_record
+        where follow_order_id =#{followOrderId}
+        <if test="endTime != '' and endTime != null ">
+            and create_date <![CDATA[ <= ]]> #{endTime}
+        </if>
+        <if test="startTime != '' and startTime != null">
+            and create_date <![CDATA[ >= ]]> #{startTime}
+        </if>
+        <if test="userCode">
+            group by client_name
+        </if>
+    </select>
+    <select id="getFollowOrderSuccessTradeTotal" resultMap="followOrderVoMap">
+        select count(id) successTotal
+        <if test="userCode">
+            ,client_name clientName
+        </if>
+         from follow_order_trade_record
+        where hand_number != 0 and trade_time is not null and follow_order_id = #{followOrderId}
+        <if test="endTime != '' and endTime != null">
+            and create_date <![CDATA[ <= ]]> #{endTime}
+        </if>
+        <if test="startTime != '' and startTime != null">
+            and create_date <![CDATA[ >= ]]> #{startTime}
+        </if>
+        <if test="userCode">
+            group by client_name
+        </if>
     </select>
     <select id="getListOrderTradeByTicketAndTime" resultMap="BaseResultMap">
         select
@@ -129,6 +160,7 @@
         from follow_order_trade_record
         where ticket =#{ticket} and client_trade_time=#{time}
     </select>
+
 
     <sql id="base_List">
     id,

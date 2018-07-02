@@ -402,6 +402,7 @@ function update_status(id,obj,newTitle,oldTitle,status,i) {
             iframeWin.detailShow(name,manager,followOrderId,successTotal+"/"+orderNum,offsetGainAndLoss,poundageTotal);
             iframeWin.clientTableShow(followOrderId,manager,name);
             iframeWin.orderParameterShow(obj.followOrder);
+            iframeWin.orderClientTableShow(followOrderId,name);
 
         },
         btn: ['关闭']
