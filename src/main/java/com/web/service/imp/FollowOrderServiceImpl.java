@@ -593,15 +593,12 @@ public class FollowOrderServiceImpl implements IFollowOrderService {
         //新增操作
         followOrderTradeRecordService.save(followOrderTradeRecord);
 
-        //创建交易对象
-        OrderTrade orderTrade = new OrderTrade();
-
         CommunicatorConfig cfg = new CommunicatorConfig();
         Communicator communicator = CommunicatorFactory.getInstance().getCommunicator(cfg);
         TraderServantPrx proxy = communicator.stringToProxy(TraderServantPrx.class, "TestApp.HelloServer.HelloTrade@tcp -h 192.168.3.189 -p 50506 -t 60000");
 
         if (openClose.equals(FollowOrderEnum.FollowStatus.CLOSE.getIndex())) {
-            orderCloseRequest close = new orderCloseRequest();
+            final orderCloseRequest close = new orderCloseRequest();
             //设置交易记录的id
             close.setRequestId(Math.toIntExact(followOrderTradeRecord.getId()));
             //设置账号的交易平台
@@ -614,52 +611,75 @@ public class FollowOrderServiceImpl implements IFollowOrderService {
             close.setOrderDirection(orderDirection);
             //平仓
             close.setTypeId("orderClose");
-//            close.setOrderVolume(handNumber);
-            //发送平仓交易请求
-//            orderTraderService.orderClose(orderTrade);
+            close.setOrderVolume(handNumber);
 
-            log.info("发送一条交易信息：" + WebJsion.toJson(orderTrade));
-//
-//            try {
-//                proxy.async_orderOpen(new TraderServantPrxCallback() {
-//                    @Override
-//                    public void callback_expired() {
-//                    }
-//                    @Override
-//                    public void callback_exception(Throwable ex) {
-//                    }
-//                    @Override
-//                    public void callback_userLogout(int ret, userLogoutResponse rsp) {
-//                    }
-//                    @Override
-//                    public void callback_userLogin(int ret, userLoginResponse rsp) {
-//
-//                    }
-//                    @Override
-//                    public void callback_orderOpen(int ret, orderOpenResponse rsp) {
-//                    }
-//                    @Override
-//                    public void callback_orderClose(int ret, orderCloseResponse rsp) {
-//                    }
-//                }, orderTrade);
-//            } catch (Exception e) {
-//                e.printStackTrace();
-//                log.error(e.getMessage());
-//            }
+            log.info("发送一条平仓交易信息：" + WebJsion.toJson(close));
+
+            try {
+                proxy.async_orderClose(new TraderServantPrxCallback() {
+                    @Override
+                    public void callback_expired() {
+                    }
+                    @Override
+                    public void callback_exception(Throwable ex) {
+                    }
+                    @Override
+                    public void callback_userLogout(int ret, userLogoutResponse rsp) {
+                    }
+                    @Override
+                    public void callback_userLogin(int ret, userLoginResponse rsp) {
+
+                    }
+                    @Override
+                    public void callback_orderOpen(int ret, orderOpenResponse rsp) {
+
+                    }
+                    @Override
+                    public void callback_orderClose(int ret, orderCloseResponse rsp) {
+                        if (ret==0&&rsp.errcode==0){
+                            OrderMsgResult closeResult = new OrderMsgResult();
+                            closeResult.setRequestId(rsp.requestId);
+                            closeResult.setErmsg(rsp.errmsg);
+                            closeResult.setErrcode(rsp.errcode);
+                            closeResult.setTradePrice(rsp.tradePrice);
+                            closeResult.setTradeCommission(rsp.tradeCommission);
+                            closeResult.setTradeDate(rsp.tradeDate);
+                            closeResult.setTradeTime(rsp.tradeTime);
+                            log.info("接受一条平仓交易信息：" + WebJsion.toJson(closeResult));
+                            followOrderTradeRecordService.updateRecordByComeBackTradeMsg(closeResult);
+                        }else{
+                            followOrderTradeRecordService.updateRecordByTradeFail((long) close.requestId);
+                            if (ret == 0) {
+                                log.error(rsp.errmsg);
+                            } else {
+                                log.error("框架的错误");
+                            }
+                        }
+                    }
+                }, close);
+            } catch (Exception e) {
+                e.printStackTrace();
+                log.error("平仓交易失败"+e.getMessage());
+            }
 
 
         } else {
-            //开仓
-            orderTrade.setTypeId("orderOpen");
-            orderTrade.setVolumeTotalOriginal(handNumber);
             orderOpenRequest open = new orderOpenRequest();
-            try {
-                WebJsion.Copy(orderTrade,open);
-            } catch (Exception e) {
-                e.printStackTrace();
-                log.error("类转换错误");
-            }
-            log.info("发送一条交易信息：" + orderTrade.toString());
+            //设置交易记录的id
+            open.setRequestId(Math.toIntExact(followOrderTradeRecord.getId()));
+            //设置账号的交易平台
+            open.setBrokerId(followOrder.getAccount().getPlatform().getName());
+            //设置交易对象的交易账号
+            open.setUserId(followOrder.getAccount().getUsername());
+            //设置平台对应的品种合约代码 todo 实现该功能
+            open.setInstrumentId("GC1808");
+            //设置买卖方向
+            open.setOrderDirection(orderDirection);
+            //开仓
+            open.setTypeId("orderOpen");
+            open.setVolumeTotalOriginal(handNumber);
+
+            log.info("发送一条开仓交易信息：" +WebJsion.toJson(open));
             try {
                 proxy.async_orderOpen(new TraderServantPrxCallback() {
                     @Override
@@ -677,14 +697,18 @@ public class FollowOrderServiceImpl implements IFollowOrderService {
                     }
                     @Override
                     public void callback_orderOpen(int ret, orderOpenResponse rsp) {
-                        OrderMsgResult msgResult = new OrderMsgResult();
-                        try {
-                            WebJsion.Copy(rsp,msgResult);
-                        } catch (Exception e) {
-                            e.printStackTrace();
-                            log.error("交易结果类转换错误");
-                        }
-                        followOrderTradeRecordService.updateRecordByComeBackTradeMsg(msgResult);
+
+                        OrderMsgResult openResult = new OrderMsgResult();
+                        openResult.setRequestId(rsp.requestId);
+                        openResult.setErmsg(rsp.errmsg);
+                        openResult.setErrcode(rsp.errcode);
+                        openResult.setTradePrice(rsp.tradePrice);
+                        openResult.setTradeCommission(rsp.tradeCommission);
+                        openResult.setTradeDate(rsp.tradeDate);
+                        openResult.setTradeTime(rsp.tradeTime);
+                        openResult.setTradeVolume(rsp.tradeVolume);
+                        log.info("接收一条开仓交易信息：" + WebJsion.toJson(openResult));
+                        followOrderTradeRecordService.updateRecordByComeBackTradeMsg(openResult);
                     }
                     @Override
                     public void callback_orderClose(int ret, orderCloseResponse rsp) {
@@ -692,7 +716,7 @@ public class FollowOrderServiceImpl implements IFollowOrderService {
                 }, open);
             } catch (Exception e) {
                 e.printStackTrace();
-                log.error(e.getMessage());
+                log.error("开仓失败"+e.getMessage());
             }
 
         }

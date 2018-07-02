@@ -18,16 +18,16 @@ import javax.jms.Session;
  */
 @Service@Transactional
 public class ProducerMsgServiceImpl implements IProducerMsgService {
-    @Autowired
-    @Qualifier("jmsTemplate")
-    private JmsTemplate jmsTemplate;
+//    @Autowired
+//    @Qualifier("jmsTemplate")
+//    private JmsTemplate jmsTemplate;
     public void sendMessage(final String message) {
 
-        jmsTemplate.send(new MessageCreator() {
-            public Message createMessage(Session session) throws JMSException {
-                return session.createTextMessage(message);
-            }
-        });
+//        jmsTemplate.send(new MessageCreator() {
+//            public Message createMessage(Session session) throws JMSException {
+//                return session.createTextMessage(message);
+//            }
+//        });
     }
 
 
