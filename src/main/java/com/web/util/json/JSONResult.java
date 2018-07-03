@@ -1,4 +1,4 @@
-package com.web.util;
+package com.web.util.json;
 
 public class JSONResult {
 

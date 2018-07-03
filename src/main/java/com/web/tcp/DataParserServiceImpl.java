@@ -72,7 +72,7 @@ public class DataParserServiceImpl implements DataParserService,Runnable{
             dataSource.setCommission((Math.abs(Double.parseDouble(splitArr[index++]))));//手续费
             dataSource.setPlatformName(this.platformName);
             dataSource.setAgencyName("JZT");
-            log.info("接收到一条来自TCP的数据："+WebJsion.toJson(dataSource));
+            log.debug("接收到一条来自TCP的数据："+WebJsion.toJson(dataSource));
             createFile(dealMsg);
             orderUserService.addOrderUser(dataSource);
 

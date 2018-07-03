@@ -1,50 +1,50 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
-<mapper namespace="com.web.dao.FollowOrderDao" >
-  <resultMap id="BaseResultMap" type="com.web.pojo.FollowOrder" >
-    <id column="id" property="id"  />
-    <result column="follow_order_name" property="followOrderName"  />
-    <result column="follow_manner" property="followManner"  />
-    <result column="max_profit" property="maxProfit"  />
-    <result column="max_profit_number" property="maxProfitNumber" />
-    <result column="max_loss" property="maxLoss"  />
-    <result column="max_loss_number" property="maxLossNumber" />
-    <result column="account_loss" property="accountLoss" />
-    <result column="account_loss_number" property="accountLossNumber" />
-    <result column="order_point" property="orderPoint" />
-    <result column="client_point" property="clientPoint" />
-    <result column="client_point_number" property="clientPointNumber"  />
-    <result column="net_position_direction" property="netPositionDirection" />
-    <result column="net_position_change" property="netPositionChange"  />
-    <result column="net_position_follow_number" property="netPositionFollowNumber"  />
-    <result column="net_position_sum" property="netPositionSum"  />
-    <result column="net_position_hold_number" property="netPositionHoldNumber"  />
-    <result column="net_position_status" property="netPositionStatus"/>
-    <result column="update_date" property="updateDate"  />
-    <result column="update_by_user" property="updateByUser"/>
-    <result column="create_date" property="createDate"/>
-    <result column="create_user" property="createUser"/>
-    <result column="start_time" property="startTime"  />
-    <result column="follow_order_status" property="followOrderStatus"  />
-    <result column="version" property="version"  />
- <!--   <association columnPrefix="account_" javaType="com.web.pojo.Account" property="account">
-      <id column="id" property="id" />
-      <result column="username" property="username" />
-      <result column="password" property="password" />
-    </association>-->
-    <association property="variety" columnPrefix="v_"  javaType="com.web.pojo.Variety">
-      <id column="id" property="id"/>
-      <result property="varietyCode" column="variety_code"/>
-      <result property="varietyName" column="variety_name"/>
-    </association>
-<!--    <association property="variety" javaType="com.web.pojo.Variety" column="variety_id"
-                 select="com.web.dao.VarietyDao.selectByPrimaryKey"/>-->
-  </resultMap>
-  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long" >
+<mapper namespace="com.web.dao.FollowOrderDao">
+    <resultMap id="BaseResultMap" type="com.web.pojo.FollowOrder">
+        <id column="id" property="id"/>
+        <result column="follow_order_name" property="followOrderName"/>
+        <result column="follow_manner" property="followManner"/>
+        <result column="max_profit" property="maxProfit"/>
+        <result column="max_profit_number" property="maxProfitNumber"/>
+        <result column="max_loss" property="maxLoss"/>
+        <result column="max_loss_number" property="maxLossNumber"/>
+        <result column="account_loss" property="accountLoss"/>
+        <result column="account_loss_number" property="accountLossNumber"/>
+        <result column="order_point" property="orderPoint"/>
+        <result column="client_point" property="clientPoint"/>
+        <result column="client_point_number" property="clientPointNumber"/>
+        <result column="net_position_direction" property="netPositionDirection"/>
+        <result column="net_position_change" property="netPositionChange"/>
+        <result column="net_position_follow_number" property="netPositionFollowNumber"/>
+        <result column="net_position_sum" property="netPositionSum"/>
+        <result column="net_position_hold_number" property="netPositionHoldNumber"/>
+        <result column="net_position_status" property="netPositionStatus"/>
+        <result column="update_date" property="updateDate"/>
+        <result column="update_by_user" property="updateByUser"/>
+        <result column="create_date" property="createDate"/>
+        <result column="create_user" property="createUser"/>
+        <result column="start_time" property="startTime"/>
+        <result column="follow_order_status" property="followOrderStatus"/>
+        <result column="version" property="version"/>
+        <!--   <association columnPrefix="account_" javaType="com.web.pojo.Account" property="account">
+             <id column="id" property="id" />
+             <result column="username" property="username" />
+             <result column="password" property="password" />
+           </association>-->
+        <association property="variety" columnPrefix="v_" javaType="com.web.pojo.Variety">
+            <id column="id" property="id"/>
+            <result property="varietyCode" column="variety_code"/>
+            <result property="varietyName" column="variety_name"/>
+        </association>
+        <!--    <association property="variety" javaType="com.web.pojo.Variety" column="variety_id"
+                         select="com.web.dao.VarietyDao.selectByPrimaryKey"/>-->
+    </resultMap>
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
     delete from follow_order
     where id = #{id}
   </delete>
-  <insert id="insert" parameterType="com.web.pojo.FollowOrder" useGeneratedKeys="true" keyProperty="id" >
+    <insert id="insert" parameterType="com.web.pojo.FollowOrder" useGeneratedKeys="true" keyProperty="id">
     insert into follow_order (follow_order_name, account_id,variety_id, follow_manner,
       max_profit, max_profit_number, max_loss, 
       max_loss_number, account_loss,account_loss_number, order_point,
@@ -61,149 +61,150 @@
      #{updateDate}, #{updateByUser} ,#{createDate},#{createUser},#{version}
      )
   </insert>
-  <update id="updateByPrimaryKey" parameterType="com.web.pojo.FollowOrder" >
-    update follow_order
-    <set>
-      <if test="followOrderName != null">
-        follow_order_name = #{followOrderName},
-      </if>
-      <if test="account != null">
-        account_id = #{account.id},
-      </if>
-      <if test="variety != null">
-        variety_id = #{variety.id},
-      </if>
-      <if test="followManner != null">
-        follow_manner = #{followManner},
-      </if>
+    <update id="updateByPrimaryKey" parameterType="com.web.pojo.FollowOrder">
+        update follow_order
+        <set>
+            <if test="followOrderName != null">
+                follow_order_name = #{followOrderName},
+            </if>
+            <if test="account != null">
+                account_id = #{account.id},
+            </if>
+            <if test="variety != null">
+                variety_id = #{variety.id},
+            </if>
+            <if test="followManner != null">
+                follow_manner = #{followManner},
+            </if>
 
-      <if test="netPositionDirection != null">
-        net_position_direction = #{netPositionDirection},
-      </if>
-      <if test="netPositionChange != null">
-        net_position_change = #{netPositionChange},
-      </if>
-      <if test="netPositionFollowNumber != null">
-        net_position_follow_number = #{netPositionFollowNumber},
-      </if>
-      <if test="netPositionSum != null">
-        net_position_sum =#{netPositionSum},
-      </if>
-      <if test="netPositionHoldNumber != null">
-        net_position_hold_number = #{netPositionHoldNumber},
-      </if>
-      <if test="netPositionStatus != null">
-        net_position_status = #{netPositionStatus},
-      </if>
-      <if test="startTime !=null ">
-        start_time = #{startTime},
-      </if>
-      <if test="followOrderStatus !=null ">
-        follow_order_status = #{followOrderStatus},
-      </if>
-      <if test="updateDate != null ">
-        update_date = #{updateDate},
-      </if>
-      <if test="updateByUser != null ">
-        update_by_user = #{updateByUser},
-      </if>
-      <if test="createDate != null ">
-        create_date = #{createDate},
-      </if>
-      <if test="createUser != null ">
-        create_user = #{createUser},
-      </if>
-      max_profit = #{maxProfit},
-      max_profit_number = #{maxProfitNumber},
-      max_loss = #{maxLoss},
-      max_loss_number = #{maxLossNumber},
-      account_loss = #{accountLoss},
-      account_loss_number = #{accountLossNumber},
-      order_point = #{orderPoint},
-      client_point = #{clientPoint},
-      client_point_number = #{clientPointNumber},
-      version = #{version} + 1
-    </set>
-    where id = #{id} and version = #{version}
+            <if test="netPositionDirection != null">
+                net_position_direction = #{netPositionDirection},
+            </if>
+            <if test="netPositionChange != null">
+                net_position_change = #{netPositionChange},
+            </if>
+            <if test="netPositionFollowNumber != null">
+                net_position_follow_number = #{netPositionFollowNumber},
+            </if>
+            <if test="netPositionSum != null">
+                net_position_sum =#{netPositionSum},
+            </if>
+            <if test="netPositionHoldNumber != null">
+                net_position_hold_number = #{netPositionHoldNumber},
+            </if>
+            <if test="netPositionStatus != null">
+                net_position_status = #{netPositionStatus},
+            </if>
+            <if test="startTime !=null ">
+                start_time = #{startTime},
+            </if>
+            <if test="followOrderStatus !=null ">
+                follow_order_status = #{followOrderStatus},
+            </if>
+            <if test="updateDate != null ">
+                update_date = #{updateDate},
+            </if>
+            <if test="updateByUser != null ">
+                update_by_user = #{updateByUser},
+            </if>
+            <if test="createDate != null ">
+                create_date = #{createDate},
+            </if>
+            <if test="createUser != null ">
+                create_user = #{createUser},
+            </if>
+            max_profit = #{maxProfit},
+            max_profit_number = #{maxProfitNumber},
+            max_loss = #{maxLoss},
+            max_loss_number = #{maxLossNumber},
+            account_loss = #{accountLoss},
+            account_loss_number = #{accountLossNumber},
+            order_point = #{orderPoint},
+            client_point = #{clientPoint},
+            client_point_number = #{clientPointNumber},
+            version = #{version} + 1
+        </set>
+        where id = #{id} and version = #{version}
 
-  </update>
-  <update id="updateFollowOrderStatus">
-    update follow_order
-    <set>
-      <if test="status != null">
-        follow_order_status = #{status},
-      </if>
-      <if test="startTime != null">
-        start_time = #{startTime},
-      </if>
-    </set>
-    where id = #{followOrderId}
-  </update>
-  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
-    select
-    <include refid="base_List"/>
-    from follow_order f
-    join variety v on v.id = f.variety_id
-    where f.id = #{id}
+    </update>
+    <update id="updateFollowOrderStatus">
+        update follow_order
+        <set>
+            <if test="status != null">
+                follow_order_status = #{status},
+            </if>
+            <if test="startTime != null">
+                start_time = #{startTime},
+            </if>
 
-  </select>
-  <select id="selectAll" resultMap="BaseResultMap" >
-    select
-    <include refid="base_List"/>
-    from follow_order f
-    join variety v on v.id = f.variety_id
-    limit #{start},#{pageSize}
-  </select>
-  <select id="queryForCount" resultType="java.lang.Integer">
+        </set>
+        where id = #{followOrderId}
+    </update>
+    <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long">
+        select
+        <include refid="base_List"/>
+        from follow_order f
+        join variety v on v.id = f.variety_id
+        where f.id = #{id}
+
+    </select>
+    <select id="selectAll" resultMap="BaseResultMap">
+        select
+        <include refid="base_List"/>
+        from follow_order f
+        join variety v on v.id = f.variety_id
+        limit #{start},#{pageSize}
+    </select>
+    <select id="queryForCount" resultType="java.lang.Integer">
     select count(id) from follow_order
   </select>
     <select id="selectListFollowOrder" resultMap="BaseResultMap">
-      select
-      <include refid="base_List"/>
-      from follow_order f
-      join variety v on v.id = f.variety_id
-      <include refid="base_where"/>
+        select
+        <include refid="base_List"/>
+        from follow_order f
+        join variety v on v.id = f.variety_id
+        <include refid="base_where"/>
     </select>
     <select id="findFollowOrderStart" resultMap="BaseResultMap">
-      select
-      <include refid="base_List"/>
-      from follow_order f
-      join variety v on v.id = f.variety_id
-      where f.id in
-      <foreach collection="followOrderIds" index="index" item="item" open="(" separator="," close=")">
-        <if test="followOrderIds.size>0">
-          #{item}
-        </if>
-      </foreach>
-      and f.follow_order_status = 1 and v.variety_code = #{varietyCode}
+        select
+        <include refid="base_List"/>
+        from follow_order f
+        join variety v on v.id = f.variety_id
+        where f.id in
+        <foreach collection="followOrderIds" index="index" item="item" open="(" separator="," close=")">
+            <if test="followOrderIds.size>0">
+                #{item}
+            </if>
+        </foreach>
+        and f.follow_order_status = 1 and v.variety_code = #{varietyCode}
     </select>
 
     <sql id="base_where">
-    <where>
-      <if test="varietyId != null and varietyId != -1">
-       and f.variety_id = #{varietyId}
-      </if>
-      <if test="accountId != null and accountId != -1">
-        and f.account_id = #{accountId}
-      </if>
-      <if test="startTime != null">
-        and f.start_time >= #{startTime}
-      </if>
-      <if test="startTime != null">
-        and f.start_time &gt;= #{startTime}
-      </if>
-      <if test="endTime != null">
-        and f.start_time &lt;= #{endTime}
-      </if>
-      <if test="status != null">
-        and f.follow_order_status = #{status}
-      </if>
-      <if test="status == null">
-        and f.follow_order_status != 0
-      </if>
+        <where>
+            <if test="varietyId != null and varietyId != -1">
+                and f.variety_id = #{varietyId}
+            </if>
+            <if test="accountId != null and accountId != -1">
+                and f.account_id = #{accountId}
+            </if>
+            <if test="startTime != null">
+                and f.start_time >= #{startTime}
+            </if>
+            <if test="startTime != null">
+                and f.start_time &gt;= #{startTime}
+            </if>
+            <if test="endTime != null">
+                and f.start_time &lt;= #{endTime}
+            </if>
+            <if test="status != null">
+                and f.follow_order_status = #{status}
+            </if>
+            <if test="status == null">
+                and f.follow_order_status != 0
+            </if>
 
-    </where>
-  </sql>
+        </where>
+    </sql>
     <sql id="base_List">
     f.id,
     f.follow_order_name,

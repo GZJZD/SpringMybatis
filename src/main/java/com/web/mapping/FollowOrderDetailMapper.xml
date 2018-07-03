@@ -172,7 +172,7 @@
     where ticket = #{ticket} and follow_order_id = #{followOrderId}
   </select>
   <select id="getOffsetGainAndLossAndHandNumberByFollowOrderId" resultMap="followOrderVoMap">
-    select sum(profit_loss) offsetGainAndLoss,sum(hand_number) offsetHandNumber
+    select sum(profit_loss) offsetGainAndLoss,sum(hand_number) offsetHandNumber,sum(client_profit) clientProfit
     from follow_order_detail
     where follow_order_id = #{followOrderId} and close_time is not  null
   </select>

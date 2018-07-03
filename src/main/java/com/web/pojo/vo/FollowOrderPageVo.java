@@ -7,18 +7,18 @@ public class FollowOrderPageVo {
     private Double historyHandNumber=0.0; //历史跟单手数
     private Double historyProfit=0.0; //历史收益
 
-    private Double holdPositionHandNumber; //持仓手数
-    private Double holdPositionProfit; //持仓收益
+    private Double holdPositionHandNumber=0.0; //持仓手数
+    private Double holdPositionProfit=0.0; //持仓收益
 
     //盈亏效率:所有平仓单的平仓盈亏除以手数
     private Double profitAndLossRate=0.0;
 
     //胜率：所有平仓单中盈利单数除以总平仓单数
-    private Double winRate;
+    private Double winRate=0.0;
     //总平仓单数
-    private Integer closePositionTotalNumber;
+    private Integer closePositionTotalNumber=0;
     //盈利单数
-    private Integer closePositionWinSum;
+    private Integer closePositionWinSum=0;
 
     /**************************************     跟单头所用字段 END     ******************************************/
 

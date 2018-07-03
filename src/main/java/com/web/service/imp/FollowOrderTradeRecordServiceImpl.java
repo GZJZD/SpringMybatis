@@ -10,6 +10,8 @@ import com.web.service.*;
 import com.web.common.FollowOrderEnum;
 import com.web.util.common.DateUtil;
 import com.web.util.common.DoubleUtil;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -25,23 +27,34 @@ import java.util.Map;
  */
 @Service
 @Transactional
-public class FollowOrderTradeRecordService implements IFollowOrderTradeRecordService {
+public class FollowOrderTradeRecordServiceImpl implements IFollowOrderTradeRecordService {
     @Autowired
     private FollowOrderTradeRecordDao followOrderTradeRecordDao;
+
     @Autowired
     private IFollowOrderService followOrderService;
+
     @Autowired
     private IFollowOrderClientService followOrderClientService;
+
     @Autowired
     private OrderUserService orderUserService;
+
     @Autowired
     private IFollowOrderDetailService followOrderDetailService;
+
     @Autowired
     private IClientNetPositionService clientNetPositionService;
 
+    private static Logger log = LogManager.getLogger(FollowOrderTradeRecordServiceImpl.class.getName());
+
     @Override
     public void save(FollowOrderTradeRecord followOrderTradeRecord) {
+        log.debug("新增一条交易记录：handNumber{},followOrderId{},ticket{},"
+                +followOrderTradeRecord.getHandNumber()+"、"+followOrderTradeRecord.getFollowOrderId()+"、"
+                +followOrderTradeRecord.getTicket());
         followOrderTradeRecordDao.insert(followOrderTradeRecord);
+
     }
 
     @Override
@@ -52,6 +65,9 @@ public class FollowOrderTradeRecordService implements IFollowOrderTradeRecordSer
     @Override
     public void updateTradeRecord(FollowOrderTradeRecord followOrderTradeRecord) {
         int count = followOrderTradeRecordDao.updateByPrimaryKey(followOrderTradeRecord);
+        log.debug("新增一条交易记录：handNumber{},followOrderId{},ticket{},marketPrice{},tradeTime{},"
+                +followOrderTradeRecord.getHandNumber()+"、"+followOrderTradeRecord.getFollowOrderId()+"、"
+                +followOrderTradeRecord.getTicket()+"、"+followOrderTradeRecord.getMarketPrice()+"、"+followOrderTradeRecord.getTradeTime());
         followOrderTradeRecordDao.selectByPrimaryKey(followOrderTradeRecord.getId());
         if (count <= 0) {
             throw new RuntimeException("乐观锁出现异常:" + FollowOrderTradeRecord.class);
@@ -101,7 +117,7 @@ public class FollowOrderTradeRecordService implements IFollowOrderTradeRecordSer
                         //设置交易已经返回一条信息
                         followOrder.setNetPositionStatus(FollowOrderEnum.FollowStatus.NET_POSITION_TRADING_OPENCLOSE_ONE.getIndex());
                     }
-                    //策略转态
+                    //策略状态
                     if (!followOrder.getFollowOrderStatus().equals(FollowOrderEnum.FollowStatus.FOLLOW_ORDER_STOP.getIndex())) {
                         //净头寸
                         //设置持仓值
@@ -110,6 +126,9 @@ public class FollowOrderTradeRecordService implements IFollowOrderTradeRecordSer
                         followOrder.setNetPositionSum(0.0);
                         followOrder.setNetPositionHoldNumber(0.0);
                     }
+                    log.debug("交易信息返回，修改净头寸跟单：followOrderName{},netPositionStatus{},netPositionHoldNumber{}"+
+                            followOrder.getFollowOrderName()+"、" +
+                          followOrder.getNetPositionStatus()+"、"+followOrder.getNetPositionHoldNumber()  );
                     followOrderService.updateFollowOrder(followOrder);
 
                 }

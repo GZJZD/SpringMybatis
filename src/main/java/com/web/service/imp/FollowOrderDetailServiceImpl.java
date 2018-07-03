@@ -11,6 +11,8 @@ import com.web.pojo.vo.OrderMsgResult;
 import com.web.service.*;
 import com.web.util.common.DateUtil;
 import com.web.util.common.DoubleUtil;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -38,6 +40,8 @@ public class FollowOrderDetailServiceImpl implements IFollowOrderDetailService {
     private IFollowOrderService followOrderService;
     @Autowired
     private OrderUserService orderUserService;
+
+    private static Logger log = LogManager.getLogger(FollowOrderDetailServiceImpl.class.getName());
 
     @Override
     public void save(FollowOrderDetail followOrderDetail) {
@@ -164,6 +168,7 @@ public class FollowOrderDetailServiceImpl implements IFollowOrderDetailService {
     public void updateDetail(FollowOrderDetail followOrderDetail) {
         int count = followOrderDetailDao.updateByPrimaryKey(followOrderDetail);
         if(count<=0){
+            log.debug("");
             throw new RuntimeException("乐观锁异常：" +FollowOrderDetail.class);
         }
     }
@@ -210,7 +215,7 @@ public class FollowOrderDetailServiceImpl implements IFollowOrderDetailService {
         FollowOrderDetail detail = getFollowOrderDetailByTicket(followOrderTradeRecord.getTicket(), followOrderTradeRecord.getFollowOrderId());
         OrderUser user = orderUserService.findByTicket(followOrderTradeRecord.getTicket());
         FollowOrderClient followOrderClient = followOrderClientService.findClientByIdAndName(followOrderTradeRecord.getFollowOrderId(), user.getUserCode());
-        if (detail != null && detail.getCloseTime()!=null) {
+        if (detail != null && detail.getCloseTime()==null) {
             if (!followOrderTradeRecord.getTicket().equals(followOrderTradeRecord.getNewTicket())&&
                     !followOrderClient.getHandNumberType().equals(FollowOrderEnum.FollowStatus.CLIENT_HAND_NUMBER_TYPE.getIndex())) {
                 //开仓单号和新开仓单号不一致 和不是固定手数
@@ -222,12 +227,13 @@ public class FollowOrderDetailServiceImpl implements IFollowOrderDetailService {
                 detailNew.setPoundage(detail.getPoundage());
                 detailNew.setCreateDate(DateUtil.getStringDate());
                 detailNew.setOpenPrice(detail.getOpenPrice());
-                detailNew.setOpenTime(detail.getOpenTime());
+                detailNew.setOpenTime(followOrderTradeRecord.getTradeTime());
                 detailNew.setFollowOrderId(detail.getFollowOrderId());
                 detailNew.setTradeDirection(detail.getTradeDirection());
                 detailNew.setVarietyName(detail.getVarietyName());
                 detailNew.setFollowOrderTradeRecordId(detail.getFollowOrderTradeRecordId());
                 save(detailNew);
+
                 detail.setHandNumber(followOrderTradeRecord.getHandNumber());
                 detail.setOriginalHandNumber(followOrderTradeRecord.getHandNumber());
             }

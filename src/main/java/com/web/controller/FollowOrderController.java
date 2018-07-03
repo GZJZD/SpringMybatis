@@ -11,9 +11,12 @@ import com.web.service.IFollowOrderClientService;
 import com.web.service.IFollowOrderDetailService;
 import com.web.service.IFollowOrderService;
 import com.web.service.IFollowOrderTradeRecordService;
-import com.web.util.JSONResult;
+import com.web.service.imp.FollowOrderServiceImpl;
+import com.web.util.json.JSONResult;
 import com.web.util.common.DateUtil;
 import com.web.util.json.WebJsion;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -39,6 +42,7 @@ public class FollowOrderController {
     @Autowired
     private IFollowOrderTradeRecordService followOrderTradeRecordService;
 
+    private static Logger log = LogManager.getLogger(FollowOrderController.class.getName());
 
     /*
      * 跟单明细列表展示
@@ -138,6 +142,7 @@ public class FollowOrderController {
 
         } catch (Exception e) {
             e.printStackTrace();
+            log.error(e.getMessage());
             return new JSONResult(false, "创建跟单失败");
         }
         return new JSONResult("创建跟单成功");
@@ -159,6 +164,7 @@ public class FollowOrderController {
             }
         } catch (Exception e) {
             e.printStackTrace();
+            log.error(e.getMessage());
             return new JSONResult(false, "操作失败");
         }
         return new JSONResult("操作成功");
@@ -177,6 +183,7 @@ public class FollowOrderController {
             followOrderService.manuallyClosePosition(detailId);
         } catch (Exception e) {
             e.printStackTrace();
+            log.error(e.getMessage());
             return new JSONResult(false, "手动平仓失败");
         }
         return new JSONResult("手动平仓成功");
@@ -204,6 +211,7 @@ public class FollowOrderController {
                                         String followOrderClients) {
         try {
             FollowOrder followOrder = followOrderService.getFollowOrder(id);
+            log.debug("跟单策略修改前："+WebJsion.toJson(followOrder));
             if (followOrder != null) {
                 List<FollowOrderClient> followOrderClients1 = WebJsion.parseArray(followOrderClients, FollowOrderClient.class);
                 followOrder.setFollowOrderName(followOrderName);
@@ -229,6 +237,7 @@ public class FollowOrderController {
                     followOrder.setNetPositionFollowNumber(netPositionFollowNumber);
                 }
                 followOrderService.updateFollowOrder(followOrder);
+                log.debug("跟单策略修改后："+WebJsion.toJson(followOrder));
                 //删除
                 followOrderClientService.deleteByFollowOrderId(id);
                 if (!followOrder.getFollowManner().equals(FollowOrderEnum.FollowStatus.FOLLOWMANNER_NET_POSITION.getIndex())) {
@@ -239,6 +248,7 @@ public class FollowOrderController {
 
         } catch (Exception e) {
             e.printStackTrace();
+            log.error(e.getMessage());
             return new JSONResult(false, "修改跟单失败");
         }
         return new JSONResult("修改成功");
