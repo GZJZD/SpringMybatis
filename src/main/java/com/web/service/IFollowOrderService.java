@@ -42,8 +42,6 @@ public interface IFollowOrderService {
 
     void closeAllOrderByFollowOrderId(Long followOrderId);
 
-
-
     void manuallyClosePosition(Long detailId);
 
 
