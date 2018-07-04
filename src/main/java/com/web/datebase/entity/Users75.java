@@ -22,7 +22,7 @@ public class Users75 {
      */
     private Double DEPOSIT;
     /**
-     * 提现
+     * 出金
      */
     private Double WITHDRAWAL;
     /**
