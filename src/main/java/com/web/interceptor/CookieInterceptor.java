@@ -77,9 +77,8 @@ public class CookieInterceptor extends HandlerInterceptorAdapter {
     public void chenckTime(String value,HttpServletResponse response,Cookie cookie){
         boolean checkStatus = false;
         long outTime = CookieConstantTable.outTime;
-        String[] strList = new String[0];
         try {
-            strList = EncryptionUtil.base64Decode(value).split("_");
+            String[] strList = EncryptionUtil.base64Decode(value).split("_");
             String phoneNumber = strList[0];
             String verifyTime = strList[1];
             Login login = loginService.findByPhoneNumber(phoneNumber);
@@ -89,7 +88,7 @@ public class CookieInterceptor extends HandlerInterceptorAdapter {
                 begin_Time = sdf.parse(login.getVerifyTime());
                 Date end_Time = sdf.parse(DateUtil.getStringDate());
                 long days = (end_Time.getTime()-begin_Time.getTime());//当前时间 减去最后验证时间
-                if(days < outTime){
+                if(days > outTime){
                    checkStatus = true;
                 }else {
                     checkStatus = false;
