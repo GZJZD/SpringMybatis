@@ -176,7 +176,8 @@
                 #{item}
             </if>
         </foreach>
-        and f.follow_order_status = 1 and v.variety_code = #{varietyCode}
+        and v.variety_code = #{varietyCode}
+        and f.follow_order_status = 1 or f.follow_order_status = 2
     </select>
 
     <sql id="base_where">
