@@ -35,7 +35,9 @@
   <listener>
     <listener-class>org.springframework.web.context.ContextLoaderListener</listener-class>
   </listener>
-
+  <listener>
+    <listener-class>org.springframework.web.context.request.RequestContextListener</listener-class>
+  </listener>
   <!-- 防止spring内存溢出监听器，比如quartz -->
   <listener>
     <listener-class>org.springframework.web.util.IntrospectorCleanupListener</listener-class>
@@ -58,7 +60,18 @@
     <!-- 此处也可以配置成 *.Action 形式 -->
     <url-pattern>*.Action</url-pattern>
   </servlet-mapping>
-
+  <filter>
+    <filter-name>characterEncodingFilter</filter-name>
+    <filter-class>org.springframework.web.filter.CharacterEncodingFilter</filter-class>
+    <init-param>
+      <param-name>encoding</param-name>
+      <param-value>UTF-8</param-value>
+    </init-param>
+  </filter>
+  <filter-mapping>
+    <filter-name>characterEncodingFilter</filter-name>
+    <url-pattern>/*</url-pattern>
+  </filter-mapping>
 
   <!--首页页面-->
   <welcome-file-list>
