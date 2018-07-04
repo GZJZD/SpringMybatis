@@ -51,7 +51,6 @@ public class loginServiceImpl implements LoginService {
     public String checkLogin(Login login,String code,boolean rememberme, HttpServletResponse response, HttpServletRequest request) {
         long outTime = CookieConstantTable.outTime; //8小时
         String message = null;
-        System.out.println("************************************:"+rememberme);
         if(login == null){
             return  message="用户不存在，请与管理员联系！";
         }
@@ -70,8 +69,11 @@ public class loginServiceImpl implements LoginService {
                         session.setAttribute("employee", login.getToken());//将登录信息设置到会话
                         Cookie cookie = new Cookie("token", login.getToken());//将登录信息加入cookie中
 //                        cookie.setMaxAge(CookieConstantTable.COOKIE_MAX_AGE); //设置cookie最大失效时间<br>　
-                        cookie.setMaxAge(10); //设置cookie最大失效时间<br>　
-                        cookie.setPath(request.getContextPath() + "/");
+                        cookie.setMaxAge(8*60*60); //设置cookie最大失效时间<br>　
+                        // 设置domain
+                        cookie.setDomain("localhost");
+                        // 设置path
+                        cookie.setPath("/");
                         response.addCookie(cookie);//将cookie返回加入
                         message="true";
                     }else {
