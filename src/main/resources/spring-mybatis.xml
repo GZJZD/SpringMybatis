@@ -3,7 +3,11 @@
        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
        xmlns:context="http://www.springframework.org/schema/context"
        xmlns:tx="http://www.springframework.org/schema/tx"
-       xsi:schemaLocation="http://www.springframework.org/schema/beans
+       xmlns:aop="http://www.springframework.org/schema/aop"
+       xsi:schemaLocation="
+                        http://www.springframework.org/schema/aop
+	                    http://www.springframework.org/schema/aop/spring-aop.xsd
+                        http://www.springframework.org/schema/beans
                         http://www.springframework.org/schema/beans/spring-beans-3.1.xsd
                         http://www.springframework.org/schema/context
                         http://www.springframework.org/schema/context/spring-context-3.1.xsd
@@ -11,6 +15,8 @@
                         http://www.springframework.org/schema/tx/spring-tx.xsd">
     <!-- 自动扫描 -->
     <context:component-scan base-package="com.web"/>
+    <!-- 启用AjpectJ自动代理 -->
+    <aop:aspectj-autoproxy/>
 
     <!-- 第一种方式：加载一个properties文件 -->
     <bean id="propertyConfigurer" class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
@@ -18,7 +24,7 @@
     </bean>
 
 
-    <!-- 配置数据源 -->
+    <!-- 本地数据源 -->
     <bean id="dataSource" class="org.apache.commons.dbcp.BasicDataSource"
           destroy-method="close">
         <property name="driverClassName" value="${driverClasss}"/>
@@ -37,9 +43,38 @@
         <property name="maxWait" value="${maxWait}"></property>
     </bean>
 
+    <!-- 香港数据库相关 -->
+    <bean id="dataSourceHongKong" class="org.apache.commons.dbcp.BasicDataSource"
+          destroy-method="close">
+        <property name="driverClassName" value="${jdbc.hongkong.driver}" />
+        <property name="url" value="${jdbc.hongkong.url}" />
+        <property name="username" value="${jdbc.hongkong.username}" />
+        <property name="password" value="${jdbc.hongkong.password}" />
+        <!-- 初始化连接大小 -->
+        <property name="initialSize" value="${jdbc.hongkong.initialSize}"></property>
+        <!-- 连接池最大数量 -->
+        <property name="maxActive" value="${jdbc.hongkong.maxActive}"></property>
+        <!-- 连接池最大空闲 -->
+        <property name="maxIdle" value="${jdbc.hongkong.maxIdle}"></property>
+        <!-- 连接池最小空闲 -->
+        <property name="minIdle" value="${jdbc.hongkong.minIdle}"></property>
+        <!-- 获取连接最大等待时间 -->
+        <property name="maxWait" value="${jdbc.hongkong.maxWait}"></property>
+    </bean>
+    <bean id="multipleDataSource" class="com.web.datebase.config.MultipleDataSource">
+
+        <property name="targetDataSources">
+            <map>
+                <entry key="dataSource" value-ref="dataSource"/>
+                <entry key="dataSourceHongKong" value-ref="dataSourceHongKong"/>
+            </map>
+        </property>
+        <!-- 设置默认的目标数据源 -->
+        <property name="defaultTargetDataSource" ref="dataSource"/>
+    </bean>
     <!-- mybatis和spring完美整合，不需要mybatis的配置映射文件 -->
     <bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
-        <property name="dataSource" ref="dataSource"/>
+        <property name="dataSource" ref="multipleDataSource"/>
         <!-- 自动扫描mapping.xml文件 -->
         <property name="mapperLocations" value="classpath:com/web/mapping/*.xml"></property>
 
@@ -54,7 +89,7 @@
 
     <!-- (事务管理)transaction manager, use JtaTransactionManager for global tx -->
     <bean id="transactionManager" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
-        <property name="dataSource" ref="dataSource"/>
+        <property name="dataSource" ref="multipleDataSource"/>
     </bean>
 
     <import resource="spring-activemq.xml"/>
