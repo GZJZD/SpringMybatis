@@ -9,7 +9,14 @@ public class Prices {
      * 商品代码
      */
     private String symbol;
+    /*
+    *
+    * 买入价
+    * */
     private Double bid;
+    /*
+    * 卖出价
+    * */
     private  Double ask;
     /**
      * 当前最高价
