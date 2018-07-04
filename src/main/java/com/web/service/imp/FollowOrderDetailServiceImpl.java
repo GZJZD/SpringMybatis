@@ -216,6 +216,7 @@ public class FollowOrderDetailServiceImpl implements IFollowOrderDetailService {
         OrderUser user = orderUserService.findByTicket(followOrderTradeRecord.getTicket());
         FollowOrderClient followOrderClient = followOrderClientService.findClientByIdAndName(followOrderTradeRecord.getFollowOrderId(), user.getUserCode());
         if (detail != null && detail.getCloseTime()==null) {
+            log.debug("跟每单客户平仓：ticket{},"+detail.getTicket());
             if (!followOrderTradeRecord.getTicket().equals(followOrderTradeRecord.getNewTicket())&&
                     !followOrderClient.getHandNumberType().equals(FollowOrderEnum.FollowStatus.CLIENT_HAND_NUMBER_TYPE.getIndex())) {
                 //开仓单号和新开仓单号不一致 和不是固定手数
@@ -233,7 +234,7 @@ public class FollowOrderDetailServiceImpl implements IFollowOrderDetailService {
                 detailNew.setVarietyName(detail.getVarietyName());
                 detailNew.setFollowOrderTradeRecordId(detail.getFollowOrderTradeRecordId());
                 save(detailNew);
-
+                log.debug("客户新开仓明细：newTicket{},handNumber{},"+detailNew.getTicket()+","+detailNew.getHandNumber());
                 detail.setHandNumber(followOrderTradeRecord.getHandNumber());
                 detail.setOriginalHandNumber(followOrderTradeRecord.getHandNumber());
             }
@@ -254,6 +255,9 @@ public class FollowOrderDetailServiceImpl implements IFollowOrderDetailService {
             OrderUser orderUser = orderUserService.findByTicket(detail.getTicket());
             detail.setClientProfit(orderUser.getProfit());
             updateDetail(detail);
+            log.debug("客户平仓明细：ticket{},handNumber{},id{},closePrice{},followOrderId{},"+detail.getTicket()+","+detail.getHandNumber()+","+detail.getId()+","+detail.getClosePrice()
+            +","+detail.getFollowOrderId());
+
         }
     }
 
@@ -311,6 +315,7 @@ public class FollowOrderDetailServiceImpl implements IFollowOrderDetailService {
         //设置客户盈亏
         //设置平仓盈亏
         orderDetail.setProfitLoss(profitLoss);
+
     }
     /*
     *
@@ -353,6 +358,8 @@ public class FollowOrderDetailServiceImpl implements IFollowOrderDetailService {
         //客户的盈亏
         orderDetail.setClientProfit(orderUser.getProfit());
         save(orderDetail);
+        log.debug("开/平仓明细：ticket{},handNumber{},id{},openPrice{},closePrice{},followOrderId{},"+orderDetail.getTicket()+","+orderDetail.getHandNumber()+","+orderDetail.getId()+","+orderDetail.getOpenPrice()
+                +","+orderDetail.getClosePrice()+","+orderDetail.getFollowOrderId());
     }
 
     /**
@@ -373,6 +380,7 @@ public class FollowOrderDetailServiceImpl implements IFollowOrderDetailService {
                 } else {
                     //净头寸
                     createNetPositionCloseDetail(orderDetail, followOrderTradeRecord, orderMsgResult);
+
                     createOpenDetail(orderDetail, followOrderTradeRecord, orderMsgResult);
                 }
             }else{
