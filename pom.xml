@@ -19,7 +19,8 @@
 
     <!-- mysql驱动版本号 -->
     <mysql-driver.version>5.1.29</mysql-driver.version>
-
+    <!--aspectj 数据源切换-->
+    <aspectj.version>1.8.10</aspectj.version>
     <!-- log4j日志包版本号 -->
     <!--
         <slf4j.version>1.7.18</slf4j.version>
@@ -268,7 +269,18 @@
       <artifactId>aliyun-java-sdk-dysmsapi</artifactId>
       <version>1.1.0</version>
     </dependency>
-    
+    <!-- https://mvnrepository.com/artifact/org.aspectj/aspectjrt -->
+    <dependency>
+      <groupId>org.aspectj</groupId>
+      <artifactId>aspectjrt</artifactId>
+      <version>${aspectj.version}</version>
+    </dependency>
+    <!-- https://mvnrepository.com/artifact/org.aspectj/aspectjweaver -->
+    <dependency>
+      <groupId>org.aspectj</groupId>
+      <artifactId>aspectjweaver</artifactId>
+      <version>${aspectj.version}</version>
+    </dependency>
     <!-- 添加tars框架依赖jar包 -->
     <dependency>
 		<groupId>com.tencent.tars</groupId>
