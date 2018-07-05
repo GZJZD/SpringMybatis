@@ -2,11 +2,10 @@ package com.web.service.imp;
 
 
 
-import com.alibaba.fastjson.JSON;
 import com.web.pojo.vo.OrderTrade;
 import com.web.pojo.vo.UserLogin;
-import com.web.service.IOrderTraderService;
-import com.web.service.IProducerMsgService;
+import com.web.service.OrderTraderService;
+import com.web.service.ProducerMsgService;
 
 
 import com.web.util.json.WebJsion;
@@ -21,10 +20,10 @@ import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @Transactional
-public class OrderTraderServiceImpl implements IOrderTraderService {
+public class OrderTraderServiceImpl implements OrderTraderService {
 
     @Autowired
-    private IProducerMsgService producerMsgService ;
+    private ProducerMsgService producerMsgService ;
 
 
 

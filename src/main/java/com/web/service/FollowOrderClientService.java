@@ -11,7 +11,7 @@ import java.util.List;
  * 跟单与客户之间的联系
  * Created by may on 2018/5/19.
  */
-public interface IFollowOrderClientService {
+public interface FollowOrderClientService {
 
     /**通过客户编号找到相关联的了跟单
      *@Author: May

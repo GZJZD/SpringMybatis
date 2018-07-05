@@ -2,7 +2,7 @@ package com.web.service.imp;
 
 import com.web.dao.ClientNetPositionDao;
 import com.web.pojo.ClientNetPosition;
-import com.web.service.IClientNetPositionService;
+import com.web.service.ClientNetPositionService;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,7 +14,7 @@ import org.springframework.transaction.annotation.Transactional;
 * */
 @Service
 @Transactional
-public class ClientNetPositionServiceImpl implements IClientNetPositionService {
+public class ClientNetPositionServiceImpl implements ClientNetPositionService {
     private static Logger log = LogManager.getLogger(FollowOrderServiceImpl.class.getName());
     @Autowired
     private ClientNetPositionDao clientNetPositionDao;

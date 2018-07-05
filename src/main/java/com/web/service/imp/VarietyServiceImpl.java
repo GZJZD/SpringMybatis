@@ -2,7 +2,7 @@ package com.web.service.imp;
 
 import com.web.dao.VarietyDao;
 import com.web.pojo.Variety;
-import com.web.service.IVarietyService;
+import com.web.service.VarietyService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -13,7 +13,7 @@ import java.util.List;
  * Created by may on 2018/5/21.
  */
 @Service@Transactional
-public class VarietyServiceImpl implements IVarietyService{
+public class VarietyServiceImpl implements VarietyService {
     @Autowired
     private VarietyDao varietyDao;
 

@@ -3,8 +3,8 @@ package com.web.listeners;
 
 import com.web.pojo.vo.LoginMsgResult;
 import com.web.pojo.vo.OrderMsgResult;
-import com.web.service.IFollowOrderService;
-import com.web.service.IFollowOrderTradeRecordService;
+import com.web.service.FollowOrderService;
+import com.web.service.FollowOrderTradeRecordService;
 import com.web.common.FollowOrderEnum;
 
 import net.sf.json.JSONObject;
@@ -26,9 +26,9 @@ import java.util.regex.Pattern;
  */
 public class ConsumerMessageListener implements MessageListener {
     @Autowired
-    private IFollowOrderService followOrderService;
+    private FollowOrderService followOrderService;
     @Autowired
-    private IFollowOrderTradeRecordService followOrderTradeRecordService;
+    private FollowOrderTradeRecordService followOrderTradeRecordService;
     private static Logger log = LogManager.getLogger(ConsumerMessageListener.class.getName());
 
     public void onMessage(Message message) {

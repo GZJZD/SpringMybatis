@@ -5,16 +5,15 @@
        <id column="id" property="id"/>
         <result column="variety_name" property="varietyName"/>
         <result column="variety_code" property="varietyCode"/>
-        <result column="trade_place_name" property="tradePlaceName"/>
     </resultMap>
     <select id="selectAll" resultMap="BaseResultMap">
-      SELECT id, variety_name,variety_code,trade_place_name from variety
+      SELECT id, variety_name,variety_code from tb_variety
     </select>
     <select id="selectByPrimaryKey" resultMap="BaseResultMap">
-        SELECT id, variety_name,variety_code,trade_place_name from variety where id =#{id}
+        SELECT id, variety_name,variety_code from tb_variety where id =#{id}
     </select>
     <select id="selectByVarietyCode" resultMap="BaseResultMap">
-         SELECT id, variety_name,variety_code,trade_place_name from variety
+         SELECT id, variety_name,variety_code from tb_variety
          where variety_code = #{varietyCode}
     </select>
 

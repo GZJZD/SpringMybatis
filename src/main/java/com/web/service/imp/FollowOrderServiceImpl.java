@@ -6,6 +6,8 @@ import com.qq.tars.client.CommunicatorConfig;
 import com.qq.tars.client.CommunicatorFactory;
 import com.web.common.FollowOrderEnum;
 import com.web.dao.FollowOrderDao;
+import com.web.datebase.OrderHongKongService;
+import com.web.datebase.entity.Prices;
 import com.web.pojo.*;
 import com.web.pojo.vo.FollowOrderPageVo;
 import com.web.pojo.vo.FollowOrderVo;
@@ -33,7 +35,7 @@ import java.util.List;
 @Service
 @Transactional
 @SuppressWarnings("All")
-public class FollowOrderServiceImpl implements IFollowOrderService {
+public class FollowOrderServiceImpl implements FollowOrderService {
 
     private static Logger log = LogManager.getLogger(FollowOrderServiceImpl.class.getName());
     //大于就是正数，小于就是负数
@@ -42,22 +44,24 @@ public class FollowOrderServiceImpl implements IFollowOrderService {
     private FollowOrderPageVo followOrderPageVo;
     //跟单客户
     @Autowired
-    private IFollowOrderClientService followOrderClientService;
+    private FollowOrderClientService followOrderClientService;
     //跟单
     @Autowired
     private FollowOrderDao followOrderDao;
     //交易记录
     @Autowired
-    private IFollowOrderTradeRecordService followOrderTradeRecordService;
+    private FollowOrderTradeRecordService followOrderTradeRecordService;
     @Autowired
-    private IFollowOrderDetailService followOrderDetailService;//明细
+    private FollowOrderDetailService followOrderDetailService;//明细
     //发送MQ
     @Autowired
-    private IOrderTraderService orderTraderService;
+    private OrderTraderService orderTraderService;
     @Autowired
-    private IVarietyService varietyService;//品种
+    private VarietyService varietyService;//品种
     @Autowired
-    private IClientNetPositionService clientNetPositionService;//客户净头寸关联
+    private ClientNetPositionService clientNetPositionService;//客户净头寸关联
+    @Autowired
+    private OrderHongKongService orderHongKongService;//香港数据库
 
 
     @Override
@@ -192,6 +196,30 @@ public class FollowOrderServiceImpl implements IFollowOrderService {
                 followOrder.setAccount(FollowOrderGenerateUtil.getAccount());
                 followOrderVo.setFollowOrder(followOrder);
                 //设置持仓盈亏
+
+//                //买入持仓手数
+//                Double buyHandNum=0.0;
+//                List<FollowOrderDetail> buyDetail =
+//                        followOrderDetailService.getDetailListByOrderIdAndDirection(followOrder.getId(),FollowOrderEnum.FollowStatus.BUY.getIndex());
+//                for (FollowOrderDetail detail : buyDetail) {
+//                    buyHandNum= DoubleUtil.add(buyHandNum,detail.getRemainHandNumber()==null?detail.getHandNumber():detail.getRemainHandNumber());
+//                }
+//                //卖出价持仓手数
+//                Double sellHandNum=0.0;
+//
+//                List<FollowOrderDetail> sellDetail =
+//                        followOrderDetailService.getDetailListByOrderIdAndDirection(followOrder.getId(),FollowOrderEnum.FollowStatus.SELL.getIndex());
+//                for (FollowOrderDetail detail : sellDetail) {
+//                    sellHandNum= DoubleUtil.add(buyHandNum,detail.getRemainHandNumber()==null?detail.getHandNumber():detail.getRemainHandNumber());
+//                }
+//                //盈亏
+//                Double gainAndLoss = 0.0;
+//                gainAndLoss = DoubleUtil.add(DoubleUtil.mul(sellHandNum))
+
+
+
+                //获取价格
+                Prices marketPrice = orderHongKongService.getMarketPrice(followOrder.getVariety().getVarietyCode());
                 followOrderVo.setPositionGainAndLoss(0.0);
                 //设置平仓盈亏,客户盈亏
                 FollowOrderVo offset = followOrderDetailService.getOffsetGainAndLossAndHandNumberByFollowOrderId(followOrder.getId());
@@ -457,7 +485,7 @@ public class FollowOrderServiceImpl implements IFollowOrderService {
             req.setTypeId("userLogin");
             req.setRequestId(followOrder.getId().intValue());
             req.setBrokerId(account.getPlatform().getName());
-            req.setUserId(account.getUsername());
+            req.setUserId(account.getAccount());
             req.setPassword(account.getPassword());
             log.info(followOrder.getFollowOrderName() + "策略发送一条登陆信息：" + WebJsion.toJson(req));
             try {
@@ -642,7 +670,7 @@ public class FollowOrderServiceImpl implements IFollowOrderService {
             //设置账号的交易平台
             close.setBrokerId(followOrder.getAccount().getPlatform().getName());
             //设置交易对象的交易账号
-            close.setUserId(followOrder.getAccount().getUsername());
+            close.setUserId(followOrder.getAccount().getAccount());
             //设置平台对应的品种合约代码 todo 实现该功能
             close.setInstrumentId("GC1808");
             //设置买卖方向
@@ -714,7 +742,7 @@ public class FollowOrderServiceImpl implements IFollowOrderService {
             //设置账号的交易平台
             open.setBrokerId(followOrder.getAccount().getPlatform().getName());
             //设置交易对象的交易账号
-            open.setUserId(followOrder.getAccount().getUsername());
+            open.setUserId(followOrder.getAccount().getAccount());
             //设置平台对应的品种合约代码 todo 实现该功能
             open.setInstrumentId("GC1808");
             //设置买卖方向

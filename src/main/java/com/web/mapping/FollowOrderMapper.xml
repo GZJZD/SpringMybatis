@@ -27,25 +27,27 @@
         <result column="start_time" property="startTime"/>
         <result column="follow_order_status" property="followOrderStatus"/>
         <result column="version" property="version"/>
-        <!--   <association columnPrefix="account_" javaType="com.web.pojo.Account" property="account">
-             <id column="id" property="id" />
-             <result column="username" property="username" />
-             <result column="password" property="password" />
-           </association>-->
+      <!--  <association property="account" columnPrefix="account_" javaType="com.web.pojo.Account" >
+            <id column="id" property="id"/>
+            <result column="account" property="account"/>
+            <result column="password" property="password"/>
+            <result column="tb_platform_id" property="platform"/>
+            <association property=""
+        </association>-->
+        <association property="account" column="tb_account_id" javaType="com.web.pojo.Account" select="com.web.dao.AccountDao.getAccountById" />
         <association property="variety" columnPrefix="v_" javaType="com.web.pojo.Variety">
             <id column="id" property="id"/>
             <result property="varietyCode" column="variety_code"/>
             <result property="varietyName" column="variety_name"/>
         </association>
-        <!--    <association property="variety" javaType="com.web.pojo.Variety" column="variety_id"
-                         select="com.web.dao.VarietyDao.selectByPrimaryKey"/>-->
+
     </resultMap>
     <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
     delete from follow_order
     where id = #{id}
   </delete>
     <insert id="insert" parameterType="com.web.pojo.FollowOrder" useGeneratedKeys="true" keyProperty="id">
-    insert into follow_order (follow_order_name, account_id,variety_id, follow_manner,
+    insert into follow_order (follow_order_name, tb_account_id,tb_variety_id, follow_manner,
       max_profit, max_profit_number, max_loss, 
       max_loss_number, account_loss,account_loss_number, order_point,
       client_point, client_point_number, net_position_direction, 
@@ -68,10 +70,10 @@
                 follow_order_name = #{followOrderName},
             </if>
             <if test="account != null">
-                account_id = #{account.id},
+                tb_account_id = #{account.id},
             </if>
             <if test="variety != null">
-                variety_id = #{variety.id},
+                tb_variety_id = #{variety.id},
             </if>
             <if test="followManner != null">
                 follow_manner = #{followManner},
@@ -144,7 +146,7 @@
         select
         <include refid="base_List"/>
         from follow_order f
-        join variety v on v.id = f.variety_id
+        join tb_variety v on v.id = f.tb_variety_id
         where f.id = #{id}
 
     </select>
@@ -152,7 +154,8 @@
         select
         <include refid="base_List"/>
         from follow_order f
-        join variety v on v.id = f.variety_id
+        join tb_variety v on v.id = f.tb_variety_id
+
         limit #{start},#{pageSize}
     </select>
     <select id="queryForCount" resultType="java.lang.Integer">
@@ -162,14 +165,16 @@
         select
         <include refid="base_List"/>
         from follow_order f
-        join variety v on v.id = f.variety_id
+        join tb_variety v on v.id = f.tb_variety_id
+
         <include refid="base_where"/>
     </select>
     <select id="findFollowOrderStart" resultMap="BaseResultMap">
         select
         <include refid="base_List"/>
         from follow_order f
-        join variety v on v.id = f.variety_id
+        join tb_variety v on v.id = f.tb_variety_id
+
         where f.id in
         <foreach collection="followOrderIds" index="index" item="item" open="(" separator="," close=")">
             <if test="followOrderIds.size>0">
@@ -183,10 +188,10 @@
     <sql id="base_where">
         <where>
             <if test="varietyId != null and varietyId != -1">
-                and f.variety_id = #{varietyId}
+                and f.tb_variety_id = #{varietyId}
             </if>
             <if test="accountId != null and accountId != -1">
-                and f.account_id = #{accountId}
+                and f.tb_account_id = #{accountId}
             </if>
             <if test="startTime != null">
                 and f.start_time >= #{startTime}
@@ -209,8 +214,8 @@
     <sql id="base_List">
     f.id,
     f.follow_order_name,
-    f.account_id,
-    f.variety_id,
+    f.tb_account_id,
+    f.tb_variety_id,
     f.follow_manner,
     f.max_profit,
     f.max_profit_number,
@@ -237,5 +242,6 @@
     v.id v_id,
     v.variety_code v_variety_code,
     v.variety_name v_variety_name
+
   </sql>
 </mapper>
