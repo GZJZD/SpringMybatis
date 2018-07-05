@@ -5,14 +5,14 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import com.web.service.IVarietyService;
+import com.web.service.VarietyService;
 import com.web.util.json.WebJsion;
 
 @Controller
 @RequestMapping("/variety")
 public class VarietyController {
     @Autowired
-    private IVarietyService varietyService;
+    private VarietyService varietyService;
     /*
      *   品种展示
      */
