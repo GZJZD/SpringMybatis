@@ -11,7 +11,7 @@ import java.util.Map;
 /**
  * Created by may on 2018/5/20.
  */
-public interface IFollowOrderTradeRecordService {
+public interface FollowOrderTradeRecordService {
 
     void save(FollowOrderTradeRecord followOrderTradeRecord);
 

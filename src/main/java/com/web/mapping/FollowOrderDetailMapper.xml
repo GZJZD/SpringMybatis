@@ -135,7 +135,8 @@
 
 
 
-    <select id="getDetailListByFollowOrderId" resultMap="BaseResultMap">
+
+  <select id="getDetailListByFollowOrderId" resultMap="BaseResultMap">
       select
       <include refid="base_List"/>
       from follow_order_detail
@@ -161,7 +162,8 @@
     select
     <include refid="base_List"/>
     from follow_order_detail
-    where follow_order_id = #{followOrderId} and trade_direction = #{direction} and remain_hand_number != 0
+    where follow_order_id = #{followOrderId} and trade_direction = #{direction} and (remain_hand_number != 0 and remain_hand_number is not null) or
+    (close_time is null and remain_hand_number is null)
     order by open_time asc
 
   </select>

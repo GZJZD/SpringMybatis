@@ -15,7 +15,7 @@ import java.util.List;
  * 跟单模块
  * Created by may on 2018/5/8.
  */
-public interface IFollowOrderService {
+public interface FollowOrderService {
 
 
     void save(FollowOrder followOrder);

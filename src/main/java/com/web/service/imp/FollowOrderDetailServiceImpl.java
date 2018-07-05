@@ -25,19 +25,19 @@ import java.util.List;
  */
 @Service
 @Transactional
-public class FollowOrderDetailServiceImpl implements IFollowOrderDetailService {
+public class FollowOrderDetailServiceImpl implements FollowOrderDetailService {
     @Autowired
     private FollowOrderDetailDao followOrderDetailDao;
     @Autowired
-    private IFollowOrderTradeRecordService followOrderTradeRecordService;
+    private FollowOrderTradeRecordService followOrderTradeRecordService;
     @Autowired
-    private IVarietyService varietyService;
+    private VarietyService varietyService;
     @Autowired
-    private IFollowOrderClientService followOrderClientService;
+    private FollowOrderClientService followOrderClientService;
     @Autowired
-    private IClientNetPositionService clientNetPositionService;
+    private ClientNetPositionService clientNetPositionService;
     @Autowired
-    private IFollowOrderService followOrderService;
+    private FollowOrderService followOrderService;
     @Autowired
     private OrderUserService orderUserService;
 

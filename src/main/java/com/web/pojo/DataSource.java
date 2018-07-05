@@ -38,6 +38,10 @@ public class DataSource {
     private String agencyName;
     //手续费
     private Double commission;
+    //止盈
+    private Double stopProfit;
+    //止损
+    private Double stopLoss;
 
 
     //set,get...
@@ -135,6 +139,22 @@ public class DataSource {
 
     public void setCommission(Double commission) {
         this.commission = commission;
+    }
+
+    public Double getStopProfit() {
+        return stopProfit;
+    }
+
+    public void setStopProfit(Double stopProfit) {
+        this.stopProfit = stopProfit;
+    }
+
+    public Double getStopLoss() {
+        return stopLoss;
+    }
+
+    public void setStopLoss(Double stopLoss) {
+        this.stopLoss = stopLoss;
     }
 
     @Override

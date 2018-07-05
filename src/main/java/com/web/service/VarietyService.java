@@ -8,7 +8,7 @@ import java.util.List;
  * 品种类
  * Created by may on 2018/5/21.
  */
-public interface IVarietyService {
+public interface VarietyService {
     Variety getVariety(Long id);
     List<Variety> getVarietyList();
     /**
