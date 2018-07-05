@@ -17,8 +17,8 @@ public class ContractInfoServiceImpl implements ContractInfoService {
     @Autowired
     private ContractInfoDao contractInfoDao;
     @Override
-    public ContractInfo getInfoByVarietyIdAndTradeName(Long varietyId, String tradeName) {
-        return contractInfoDao.getInfoByVarietyIdAndTradeName(varietyId,tradeName);
+    public ContractInfo getInfoByVarietyIdAndPlatformId(Long varietyId, Long platformId) {
+        return contractInfoDao.getInfoByVarietyIdAndPlatformId(varietyId,platformId);
     }
 
     @Override

@@ -5,41 +5,41 @@
         <id column="id" property="id"/>
         <result column="contract_code" property="contractCode"/>
         <result column="contract_name" property="contractName"/>
-        <result column="modify_time" property="updateDate"  />
-        <result column="modify_user" property="updateByUser"/>
-        <result column="create_time" property="createDate"/>
+        <result column="modify_time" property="modifyTime"  />
+        <result column="modify_user" property="modifyUser"/>
+        <result column="create_time" property="createTime"/>
         <result column="create_user" property="createUser"/>
         <association property="variety" javaType="com.web.pojo.Variety" column="tb_variety_id" 
         	select="com.web.dao.VarietyDao.selectByPrimaryKey"/>
-        <association property="variety" javaType="com.web.pojo.Variety" column="tb_variety_id" 
-        	select="com.web.dao.VarietyDao.selectByPrimaryKey"/>
+        <association property="platform" javaType="com.web.pojo.Platform" column="tb_platform_id" 
+        	select="com.web.dao.PlatformDao.getPlatformById"/>
     </resultMap>
-    <select id="getInfoByVarietyIdAndTradeName" resultMap="BaseResultMap" >
+    <select id="getInfoByVarietyIdAndPlatformId" resultMap="BaseResultMap" >
       SELECT
       id,
-      variety_id,
+      tb_variety_id,
+      tb_platform_id,
       contract_code,
-      trade_place_name,
       contract_name,
-      update_date,
-      update_by_user,
-      create_date,
+      modify_time,
+      modify_user,
+      create_time,
       create_user
-      from contract_ info
-      where variety_id =#{varietyId} and trade_place_name = #{tradeName}
+      from tb_contract_ info
+      where tb_variety_id =#{varietyId} and tb_platform_id = #{platformId}
     </select>
     <select id="getContractInfoList" resultMap="BaseResultMap">
       SELECT
       id,
-      variety_id,
+      tb_variety_id,
+      tb_platform_id,
       contract_code,
-      trade_place_name,
       contract_name,
-      update_date,
-      update_by_user,
-      create_date,
+      modify_time,
+      modify_user,
+      create_time,
       create_user
-      from contract_ info
+      from tb_contract_ info
     </select>
 
 </mapper>
