@@ -38,9 +38,14 @@
 				<span class="bg-red note color-w">NOTE:</span> 文档尚未产出：
 				<a href="">文档地址</a>
 			</div>
-			<fieldset class="layui-elem-field layui-field-title">
-				<legend>跟单数据</legend>
-			</fieldset>
+			<div class="navigation-div">
+        <div class="layui-tab layui-tab-brief" lay-filter="docDemoTabBrief">
+			<ul class="layui-tab-title">
+                <li>合约信息</li>
+                <li>品种信息</li>
+            </ul>
+            <div class="layui-tab-content" style="height: 100px;">
+                <div class="layui-tab-item layui-show">
 			<div class="content">
 
 				<div class="search">
@@ -104,12 +109,21 @@
 					</div>
 				</div>
 			</div>
+			</div>
+			<div class="layui-tab-item">
+                    <div class="content">
+                        <div class="table-case">
+                            <div class="table-title"><span class="glyphicon glyphicon-user"></span>品种信息</div>
+                            <div class="tab">
+                                <table id="historyFollowOrderTable" class="table-bordered"></table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
 		</div>
-
-		<!--<div class="main_body">
-			<div style="display: none;">1</div>
-			<div style="display: block;">2</div>
-		</div>-->
+</div>
+</div>
+</div>
 
 		<!-- 注意：如果你直接复制所有代码到本地，上述js路径需要改成你本地的 -->
 		<script type="text/javascript" src="../../js/common.js"></script>

@@ -2,7 +2,7 @@ package com.web.service;
 
 import com.web.pojo.ClientNetPosition;
 
-public interface IClientNetPositionService {
+public interface ClientNetPositionService {
     void save(ClientNetPosition record);
 
     ClientNetPosition getClientNetPosition(Long id);

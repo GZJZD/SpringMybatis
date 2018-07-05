@@ -4,16 +4,17 @@
     <resultMap id="BaseResultMap" type="com.web.pojo.ContractInfo">
         <id column="id" property="id"/>
         <result column="contract_code" property="contractCode"/>
-        <result column="trade_place_name" property="tradePlaceName"/>
         <result column="contract_name" property="contractName"/>
-        <result column="update_date" property="updateDate"  />
-        <result column="update_by_user" property="updateByUser"/>
-        <result column="create_date" property="createDate"/>
+        <result column="modify_time" property="updateDate"  />
+        <result column="modify_user" property="updateByUser"/>
+        <result column="create_time" property="createDate"/>
         <result column="create_user" property="createUser"/>
-        <association property="variety" javaType="com.web.pojo.Variety" column="variety_id"
-                     select="com.web.dao.VarietyDao.selectByPrimaryKey"/>
+        <association property="variety" javaType="com.web.pojo.Variety" column="tb_variety_id" 
+        	select="com.web.dao.VarietyDao.selectByPrimaryKey"/>
+        <association property="variety" javaType="com.web.pojo.Variety" column="tb_variety_id" 
+        	select="com.web.dao.VarietyDao.selectByPrimaryKey"/>
     </resultMap>
-    <select id="getInfoByVarietyIdAndTradeName" resultType="com.web.pojo.ContractInfo">
+    <select id="getInfoByVarietyIdAndTradeName" resultMap="BaseResultMap" >
       SELECT
       id,
       variety_id,

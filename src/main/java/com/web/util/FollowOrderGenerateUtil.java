@@ -2,7 +2,7 @@ package com.web.util;
 
 import com.web.common.FollowOrderEnum;
 import com.web.pojo.*;
-import com.web.service.IFollowOrderService;
+import com.web.service.FollowOrderService;
 import org.springframework.beans.factory.annotation.Autowired;
 
 /**
@@ -12,8 +12,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 public  class FollowOrderGenerateUtil {
     private static FollowOrder followOrder = new FollowOrder();
     @Autowired
-    private IFollowOrderService
-            followOrderService = (IFollowOrderService) ApplicationContextHolder
+    private FollowOrderService
+            followOrderService = (FollowOrderService) ApplicationContextHolder
             .getBeanByName("followOrderServiceImpl");
     /**
      * 初始化策略
@@ -53,7 +53,7 @@ public  class FollowOrderGenerateUtil {
     }
 
     public static Account getAccount() {
-        TradePlatform tradePlatform = new TradePlatform(1L, "8001");
+        Platform tradePlatform = new Platform(1L, "8001");
         Account account = new Account(1L, "text1", "text1", tradePlatform);
         return account;
     }

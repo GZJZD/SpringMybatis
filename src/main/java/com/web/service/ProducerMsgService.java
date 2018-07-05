@@ -1,7 +1,7 @@
 package com.web.service;
 
 
-public interface IProducerMsgService {
+public interface ProducerMsgService {
 
      void sendMessage(String message);
 

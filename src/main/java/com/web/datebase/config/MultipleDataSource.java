@@ -32,7 +32,7 @@ public class MultipleDataSource extends AbstractRoutingDataSource {
     @Before("aspect() && @annotation(transFormDataSource)")
     public static void setDataSourceKey(TransFormDataSource transFormDataSource) {
 
-        dataSourceKey.set(transFormDataSource.name());
+        dataSourceKey.set(transFormDataSource.name()); 
     }
     /**
      * 移除当前使用的数据源，切换到系统默认的数据源

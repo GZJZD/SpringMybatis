@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.web.dao.AccountDao">
+    <resultMap id="BaseResultMap" type="com.web.pojo.Account">
+        <id column="id" property="id"/>
+        <result column="account" property="account"/>
+        <result column="password" property="password"/>
+        <result column="create_user" property="createUser"/>
+        <result column="create_time" property="createTime"/>
+        <result column="modify_time" property="modifyTime"/>
+        <result column="modify_user" property="modifyUser"/>
+        <result column="status" property="status"/>
+        <association property="agent" columnPrefix="agent_" javaType="com.web.pojo.Agent">
+            <id column="id" property="id"/>
+            <result property="name" column=" name"/>
+        </association>
+        <association property="platform" columnPrefix="platform_" javaType="com.web.pojo.Platform">
+            <id column="id" property="id"/>
+            <result property="name" column="name"/>
+        </association>
+    </resultMap>
+    <insert id="save" parameterType="com.web.pojo.Account" useGeneratedKeys="true" keyProperty="id">
+    insert into tb_account (tb_agent_id,tb_platform_id,account,password,create_user,create_time, modify_time,modify_user,status)
+    values (#{agent.id},#{platform.id},#{account},#{password},#{createUser},#{createTime},#{modifyUser},#{modifyTime},#{status})
+    </insert>
+    <update id="updateAccount" parameterType="com.web.pojo.Account">
+        update tb_account
+        <set>
+            <if test="agent != null">
+                tb_agent_id = #{agent.id} ,
+            </if>
+            <if test="platform != null">
+                tb_platform_id = #{platform.id},
+            </if>
+            <if test="account != null">
+                account = #{account},
+            </if>
+            <if test="password != null">
+                password = #{password},
+            </if>
+            <if test="createUser != null">
+                create_user = #{createUser},
+            </if>
+            <if test="createTime != null">
+                create_time = #{createTime},
+            </if>
+            <if test="modifyTime != null">
+                modify_time = #{modifyTime},
+            </if>
+            <if test="modifyUser != null ">
+                modify_user = #{modifyUser},
+            </if>
+            <if test="status != null ">
+                status = #{status},
+            </if>
+        </set>
+        where id =#{id}
+    </update>
+    <select id="getAccountById" resultMap="BaseResultMap">
+        select
+        <include refid="base_column"/>
+        from tb_account account
+        join tb_agent agent on agent.id = account.tb_agent_id
+        join tb_platform platform on platform.id = account.tb_platform_id
+        where account.id = #{accountId}
+    </select>
+    <select id="getListAccount" resultMap="BaseResultMap">
+        select
+        <include refid="base_column"/>
+        from tb_account account
+        join tb_agent agent on agent.id = account.tb_agent_id
+        join tb_platform platform on platform.id = account.tb_platform_id
+    </select>
+
+    <sql id="base_column">
+        account.id,
+        account.tb_agent_id,
+        account.tb_platform_id,
+        account.account,
+        account.password,
+        account.create_user,
+        account.create_time,
+        account.modify_time,
+        account.modify_user,
+        account.status,
+        agent.id,
+        agent.name,
+        platform.id,
+        platform.name
+    </sql>
+</mapper>

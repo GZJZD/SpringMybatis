@@ -8,7 +8,7 @@ import com.web.pojo.vo.UserLogin;
  * 此类用于发送消息到交易系统
  * Created by may on 2018/4/25.
  */
-public interface IOrderTraderService {
+public interface OrderTraderService {
 
     /**
      * 发送登录信息

@@ -27,24 +27,24 @@ import java.util.Map;
  */
 @Service
 @Transactional
-public class FollowOrderTradeRecordServiceImpl implements IFollowOrderTradeRecordService {
+public class FollowOrderTradeRecordServiceImpl implements FollowOrderTradeRecordService {
     @Autowired
     private FollowOrderTradeRecordDao followOrderTradeRecordDao;
 
     @Autowired
-    private IFollowOrderService followOrderService;
+    private FollowOrderService followOrderService;
 
     @Autowired
-    private IFollowOrderClientService followOrderClientService;
+    private FollowOrderClientService followOrderClientService;
 
     @Autowired
     private OrderUserService orderUserService;
 
     @Autowired
-    private IFollowOrderDetailService followOrderDetailService;
+    private FollowOrderDetailService followOrderDetailService;
 
     @Autowired
-    private IClientNetPositionService clientNetPositionService;
+    private ClientNetPositionService clientNetPositionService;
 
     private static Logger log = LogManager.getLogger(FollowOrderTradeRecordServiceImpl.class.getName());
 

@@ -5,8 +5,8 @@ import com.web.pojo.FollowOrder;
 import com.web.pojo.FollowOrderClient;
 import com.web.pojo.vo.FollowOrderClientParamVo;
 import com.web.pojo.vo.OrderUserDetailsVo;
-import com.web.service.IFollowOrderClientService;
-import com.web.service.IFollowOrderService;
+import com.web.service.FollowOrderClientService;
+import com.web.service.FollowOrderService;
 import com.web.service.OrderUserService;
 import com.web.util.common.DateUtil;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,13 +20,13 @@ import java.util.List;
  * Created by may on 2018/5/19.
  */
 @Service@Transactional
-public class FollowOrderClientServiceImpl implements IFollowOrderClientService {
+public class FollowOrderClientServiceImpl implements FollowOrderClientService {
     @Autowired
     private FollowOrderClientDao followOrderClientDao;
     @Autowired
     private OrderUserService orderUserService;
     @Autowired
-    private IFollowOrderService followOrderService;
+    private FollowOrderService followOrderService;
 
     @Override
     public List<Long> getListByUserCode(String userCode) {

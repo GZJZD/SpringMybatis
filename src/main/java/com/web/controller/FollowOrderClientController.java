@@ -1,7 +1,7 @@
 package com.web.controller;
 
 import com.web.pojo.vo.FollowOrderClientParamVo;
-import com.web.service.IFollowOrderClientService;
+import com.web.service.FollowOrderClientService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -13,7 +13,7 @@ import java.util.List;
 @RequestMapping("/followOrderClient")
 public class FollowOrderClientController {
     @Autowired
-    private IFollowOrderClientService followOrderClientService;
+    private FollowOrderClientService followOrderClientService;
 
     /*
      * 通过跟单id，客户列表数据展示
