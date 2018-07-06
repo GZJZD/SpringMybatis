@@ -1,124 +1,63 @@
     var contractInfoTable = $("#contractInfoTable");
-    var varietyTable = $("#varietyTable");
-    var method = "get";
-
-    var url_orderPage = url_+"/followOrder/getListFollowOrder.Action?varietyId="+varietyNum+"&accountId="+accountNum;
-    var unique_Id = "detailId";
+    var varietyTable = $("#varietyTable").val();
+    var method = "post";
+    var url_contractInfoPage = url_+"/contractInfo/getContractInfoList.Action";
+    var unique_Id = "id";
     var sortOrder = "asc";
-    var columns = [{
-        title: '全选',
-        field: 'select',
-        //复选框
-        checkbox: true,
-        align: 'center',
-        valign: 'middle'
+	var contractInfoColumns = [{
+    	field: 'id',
+        title: '序号'
     }, {
-        field: 'followOrder.id',
-        title: '跟单编号'
+        field: 'variety.varietyCode',
+        title: '品种代码'
     }, {
-        field: 'followOrder.followOrderName',
-        title: '跟单方案'
+        field: 'contractName',
+        title: '合约名称'
     }, {
-        field: 'followOrder.account',
-        title: '跟单账号',
-        formatter: function (value, row, index) {
-            return value.platform.name + "-" + value.username;
-        }
-
-    }, {
-        field: 'followOrder.variety.varietyName',
-        title: '品种'
-    }, {
-        field: 'followOrder.followManner',
-        title: '跟单方式',
-        formatter: function (value, row, index) {
-            if (value == 0) {
-                return "跟客户";
-            } else {
-                return "跟净头寸";
-
-            }
-        }
-    }, {
-        field: 'followOrder.startTime',
-        title: '开始时间'
+        field: 'contractCode',
+        title: '合约代码',
     }, {
         field: '',
-        title: '跟单成功率',
+        title: '操作',
+        align: 'center',
+        valign: 'middle',
         formatter: function (value, row, index) {
-            return row.successTotal+"/"+row.allTotal;
+        	var contractInfoId = row.id;
+            var obj=JSON.stringify(row);
+            return "<a onclick='alert(11)' href='javascript:;'>修改</a>   " +
+                       "<a onclick='alert(11)' href='javascript:;'>删除</a>";
         }
-
+	}];
+	
+	var varietyColumns = [{
+    	field: 'id',
+        title: '序号'
     }, {
-        field: 'positionGainAndLoss',
-        title: '持仓盈亏'
+        field: 'varietyCode',
+        title: '品种代码'
     }, {
-        field: 'offsetGainAndLoss',
-        title: '平仓盈亏'
+        field: 'varietytName',
+        title: '品种名称'
     }, {
-        field: 'poundageTotal',
-        title: '手续费'
-    }, {
-        field: 'profitAndLossRate',
-        title: '盈亏效率'
-    }, {
-        field: 'clientProfit',
-        title: '客户盈亏'
-    }, {
-        field: 'followOrder.followOrderStatus',
-        title: '跟单状态',
-        formatter: function (value, row, index) {
-            if (value == 1) {
-                return "<span style='color: #26a69a'>跟进中</span>"
-            } else if (value == 2) {
-                return "<span style='color: #c49f47'>已暂停</span>"
-
-            } else if (value == 0) {
-                return "<span style='color: #8775a7'>已停止</span>"
-
-            }
-        }
-    },
-        {
-            field: 'followOrder.followOrderStatus',
-            title: '操作',
-
-            align: 'center',
-            valign: 'middle',
-            formatter: function (value, row, index) {
-                var followOrderId = row.followOrder.id;
-
-                var obj=JSON.stringify(row);
-
-                if (value == "1") {
-                    return "<a onclick='follow_order_stop(this," + followOrderId + ")' href='javascript:;' title='暂停'> <i class='layui-icon'>&#xe651;</i> </a>" +
-                        "<a onclick='follow_order_stop(this,"+ + followOrderId + ")' href='javascript:;' title='停止'> <i class='layui-icon'>&#x1006;</i> </a>" +
-                        "<a title=\"查看\" onclick='openDeatil("+obj+")' href=\"javascript:;\"><i class=\"layui-icon\"> &#xe615;</i></a>" +
-                        "<a title=\"编辑\" onclick='updateOrderShow("+obj+")' href=\"javascript:;\">\n" +
-                        "<i class=\"layui-icon\">&#xe642;</i>" +
-                        "</a>";
-                } else {
-                    return "<a onclick='follow_order_stop(this," + followOrderId + ")' href='javascript:;' title='启用'> <i class='layui-icon'>&#xe652;</i> </a>" +
-                        "<a onclick='follow_order_stop(this," + followOrderId + ")' href='javascript:;' title='停止'> <i class='layui-icon'>&#x1006;</i> </a>" +
-                        "<a title=\"查看\" onclick='openDeatil("+obj+")'  href=\"javascript:;\"><i class=\"layui-icon\"> &#xe615;</i></a>" +
-                        "<a title=\"编辑\" onclick='updateOrderShow("+obj+")' href=\"javascript:;\">\n" +
-                        "<i class=\"layui-icon\">&#xe642;</i>" +
-                        "</a>";
-                }
-            }
-        }
-    ];
-
+        field: 'tradePlaceName',
+        title: '交易所名称',
+	}];
 
 
     $(function () {
         //发送请求获取跟单页面的统计数据表格加载
-        showByTableId(tableOrderId, method, url_orderPage, unique_Id, sortOrder, columns);
+        showByTableId(contractInfoTable, method, url_contractInfoPage, unique_Id, sortOrder, contractInfoColumns);
+      //合约信息点击事件
+        $("#contractInfo").click(function () {
+            $(contractInfoTable).bootstrapTable('destroy');
+            var url_contractInfoPage = url_+"/contractInfo/getContractInfoList.Action";
+            showByTableId(contractInfoTable, method, url_contractInfoPage, unique_Id, sortOrder, contractInfoColumns);
+        })
         //品种信息点击事件
         $("#varietyInfo").click(function () {
             $(varietyTable).bootstrapTable('destroy');
-            var url_history = url_+"/followOrder/getListFollowOrder.Action?varietyId="+varietyNum+"&accountId="+accountNum+"&status=0";
-            showByTableId(tableHistoryOrderId, method, url_history, unique_Id, sortOrder, columns);
+            var url_variety = url_+"/variety/getListVariety.Action";
+            showByTableId(varietyTable, method, url_variety, unique_Id, sortOrder, varietyColumns);
         })
     });
     
