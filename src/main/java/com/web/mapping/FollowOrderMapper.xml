@@ -184,6 +184,10 @@
         and v.variety_code = #{varietyCode}
         and f.follow_order_status = 1 or f.follow_order_status = 2
     </select>
+    <select id="findAccountStatusByAccountId" resultType="java.lang.Integer">
+        select count(id) from follow_order
+        where tb_account_id = #{accountId} and follow_order_status = 1
+    </select>
 
     <sql id="base_where">
         <where>

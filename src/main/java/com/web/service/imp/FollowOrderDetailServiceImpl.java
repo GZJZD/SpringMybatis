@@ -336,6 +336,7 @@ public class FollowOrderDetailServiceImpl implements FollowOrderDetailService {
             //设置剩下手数
             orderDetail.setRemainHandNumber(orderDetail.getHandNumber());
         }
+        orderDetail.setAccountId(followOrder.getAccount().getId());
         //设置原来手数
         orderDetail.setOriginalHandNumber(followOrderTradeRecord.getHandNumber());
         //设置交易方向
@@ -402,5 +403,13 @@ public class FollowOrderDetailServiceImpl implements FollowOrderDetailService {
     @Override
     public List<FollowOrderDetail> getFollowOrderDetailByUserCode(Long followOrderId, String endTime, String startTime, String clientName) {
         return followOrderDetailDao.getFollowOrderDetailByUserCode(followOrderId,endTime,startTime,clientName);
+    }
+
+    /*
+    * 获取该账号的做单总数和总的平仓盈亏
+    * */
+    @Override
+    public FollowOrderVo getAccountCountAndOffsetGainAndLossBYAccountId(Long accountId) {
+        return followOrderDetailDao.getAccountCountAndOffsetGainAndLossBYAccountId(accountId);
     }
 }

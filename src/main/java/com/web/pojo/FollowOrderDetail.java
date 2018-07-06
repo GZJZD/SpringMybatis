@@ -24,6 +24,8 @@ public class FollowOrderDetail implements Serializable {
     private Double OriginalHandNumber;
     //交易id
     private Long followOrderTradeRecordId;
+    //交易账号id
+    private Long accountId;
     //开仓价
     private Double openPrice;
     //开仓时间
@@ -217,5 +219,13 @@ public class FollowOrderDetail implements Serializable {
 
     public void setOriginalHandNumber(Double originalHandNumber) {
         OriginalHandNumber = originalHandNumber;
+    }
+
+    public Long getAccountId() {
+        return accountId;
+    }
+
+    public void setAccountId(Long accountId) {
+        this.accountId = accountId;
     }
 }
