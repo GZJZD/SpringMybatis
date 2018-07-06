@@ -1,8 +1,5 @@
-
-    var varietyNum= $("#variety_id option:selected").val();
-    var accountNum= $("#variety_id option:selected").val();
-    var tableOrderId = $("#followOrderTable");
-    var tableHistoryOrderId = $("#historyFollowOrderTable");
+    var contractInfoTable = $("#contractInfoTable");
+    var varietyTable = $("#varietyTable");
     var method = "get";
 
     var url_orderPage = url_+"/followOrder/getListFollowOrder.Action?varietyId="+varietyNum+"&accountId="+accountNum;
@@ -13,7 +10,6 @@
         field: 'select',
         //复选框
         checkbox: true,
-
         align: 'center',
         valign: 'middle'
     }, {
@@ -26,7 +22,6 @@
         field: 'followOrder.account',
         title: '跟单账号',
         formatter: function (value, row, index) {
-
             return value.platform.name + "-" + value.username;
         }
 
@@ -117,59 +112,16 @@
 
 
     $(function () {
-        /*
-           * 发送请求获取跟单页面的统计数据
-       * */
-        $.ajax({
-            url:url_+"/followOrder/getFollowOrderPageVo.Action",
-            type:'GET', //GET
-            async:true,    //或false,是否异步
-            data:{
-
-            },
-            timeout:5000,    //超时时间
-            dataType:'json',    //返回的数据格式：json/xml/html/script/jsonp/text
-            beforeSend:function(xhr){
-
-            },
-            success:function (data) {
-                var obj=data;
-                $("#history_close_position").html(obj.historyHandNumber+"/"+obj.historyProfit);
-                if(obj.holdPositionHandNumber == null){
-                    $("#hold_position").html(0+"/"+0);
-                }else{
-                    $("#hold_position").html(obj.holdPositionHandNumber+"/"+obj.holdPositionProfit);
-
-                }
-                $("#profit_rate").html(obj.profitAndLossRate);
-                $("#win_rate").html(obj.winRate+"%");
-            },
-            error:function(xhr,textStatus){
-
-            },
-            complete:function(){
-
-            }
-        })
-        /*
-        * 品种查找
-        * */
-        findByVariety();
-        /*
-        *表格加载
-        * */
+        //发送请求获取跟单页面的统计数据表格加载
         showByTableId(tableOrderId, method, url_orderPage, unique_Id, sortOrder, columns);
-        /*
-        * 跟单历史点击事件
-        * */
-        $("#historyOrder").click(function () {
-            $(tableHistoryOrderId).bootstrapTable('destroy');
+        //品种信息点击事件
+        $("#varietyInfo").click(function () {
+            $(varietyTable).bootstrapTable('destroy');
             var url_history = url_+"/followOrder/getListFollowOrder.Action?varietyId="+varietyNum+"&accountId="+accountNum+"&status=0";
             showByTableId(tableHistoryOrderId, method, url_history, unique_Id, sortOrder, columns);
         })
-
-
     });
+    
     //根据窗口调整表格高度
     $(window).resize(function () {
         $('#detailTable').bootstrapTable('resetView', {
@@ -178,27 +130,6 @@
     })
 
 
-
-/*用户-停用*/
-function follow_order_stop(obj, id) {
-
-        if ($(obj).attr('title') == '启用') {
-            layer.confirm('确认要启用吗？确定后系统将会继续跟进客户的做单数据', function (index) {
-                update_status(id,obj,"暂停","启用",1,'&#xe651;');
-            })
-
-        } else if ($(obj).attr('title') == '暂停') {
-            layer.confirm('确认要暂停吗？确定后系统将不会继续跟进客户的做单数据', function (index) {
-                update_status(id,obj,"启用","暂停",2,'&#xe652;');
-
-            })
-        }else{
-            layer.confirm('确认要停止吗？确定后系统将不会继续跟进客户的做单数据，并同时平仓所有未平的跟单', function (index) {
-                update_status(id,obj,"停止","停止",0,'&#x1006;');
-            })
-        }
-
-}
 /*
 * 条件查询
 * */
@@ -224,12 +155,7 @@ function orderByParameter(num) {
     $(tableOrderId).bootstrapTable('destroy');
     showByTableId(tableOrderId, method, url, unique_Id, sortOrder, columns);
 }
-/*
-* 打开明细
-* */
-function openDeatil(obj) {
-    follow_details(obj,'跟单明细', url_+"/page/documentary/documentary-details.html",1400,750);
-}
+    
 /*
 * 品种筛选
 * */
@@ -265,91 +191,6 @@ function findByVariety() {
     })
 }
 
-/*
-* 修改跟单状态
-* */
-function update_status(id,obj,newTitle,oldTitle,status,i) {
-    $.ajax({
-        url:url_+"/followOrder/updateFollowOrderStatus.Action?id="+id+"&status="+status,
-        type:'POST', //GET
-        async:true,    //或false,是否异步
-        data:{
-
-        },
-        timeout:5000,    //超时时间
-        dataType:'json',    //返回的数据格式：json/xml/html/script/jsonp/text
-        beforeSend:function(xhr){
-
-        },
-        success:function (data) {
-            if(data.success){
-                //发异步把用户状态进行更改,'&#xe651;'
-                $(obj).attr('title', newTitle)
-                $(obj).find('i').html(i);
-                $(obj).parents("tr").find(".td-status").find('span').addClass('layui-btn-disabled').html('已'+oldTitle);
-                layer.msg("状态修改成功", {icon: 6, time: 1000},function () {
-                    $(tableOrderId).bootstrapTable('refresh', {
-                        silent:true//静默跟新
-                    });
-                    $(tableHistoryOrderId).bootstrapTable('refresh', {
-                        silent:true//静默跟新
-                    });
-
-                });
-            }else {
-                //layer.msg(data.msg, {icon: 6, time: 1000});
-                layer.msg("系统出现故障，请联系相关人员进行相应的操作", {icon: 6, time: 1000},function () {
-                    location.reload()
-                });
-            }
-        },
-        error:function(xhr,textStatus){
-
-        },
-        complete:function(){
-
-        }
-    })
-}
-
-    //修改跟单
-    function updateOrderShow(obj){
-            var title = "跟单配置";
-            var url = url_+"/page/documentary/documentary-edit.html";
-            var w=1000;
-            var h=600;
-            if(title == null || title == '') {
-                title = false;
-            };
-            if(url == null || url == '') {
-                url = "404.html";
-            };
-            if(w == null || w == '') {
-                w = ($(window).width() * 0.9);
-            };
-            if(h == null || h == '') {
-                h = ($(window).height() - 50);
-            };
-            layer.open({
-                type: 2,
-                area: [w + 'px', h + 'px'],
-                fix: false, //不固定
-                maxmin: true,
-                shadeClose: false,
-                shade: 0.4,
-                title: title,
-                content: url,
-                success: function (layero, index) {
-                    //找到子页面
-                    var iframeWin = window['layui-layer-iframe' + index]; //得到iframe页的窗口对象，执行iframe页的方法：iframeWin.method();
-                    //调用子页面的方法
-                    iframeWin.setFollowOrderParameter(obj.followOrder);
-
-                }
-            });
-
-
-    }
 
 /*弹出层*/
 /*
