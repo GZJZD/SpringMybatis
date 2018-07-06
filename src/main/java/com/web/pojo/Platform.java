@@ -77,4 +77,8 @@ public class Platform {
         this.id = id;
         this.name = name;
     }
+
+    public Platform() {
+
+    }
 }
