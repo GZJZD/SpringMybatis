@@ -38,7 +38,7 @@
 			<div class="navigation-div">
         		<div class="layui-tab layui-tab-brief" lay-filter="docDemoTabBrief">
 					<ul class="layui-tab-title">
-		                <li>合约信息</li>
+		                <li id="contractInfo">合约信息</li>
 		                <li id="varietyInfo">品种信息</li>
 		            </ul>
             		<div class="layui-tab-content" style="height: 100px;">
@@ -50,51 +50,7 @@
 								<div class="table-case">
 									<div class="table-title"><span class="glyphicon glyphicon-user"></span>合约信息</div>
 									<div class="tab">
-										<table class="layui-table" id="contractInfoTable">
-											<thead>
-												<tr>
-													<th>
-														<div class="layui-unselect header layui-form-checkbox" lay-skin="primary"><i class="layui-icon">&#xe605;</i></div>
-													</th>
-													<th>序号</th>
-													<th>品种代码</th>
-													<th>合约名称</th>
-													<th>信管家合约代码</th>
-													<th>操作</th>
-												</tr>
-											</thead>
-											<tbody>
-												<tr>
-													<td>
-														<div class="layui-unselect layui-form-checkbox" lay-skin="primary" data-id='2'><i class="layui-icon">&#xe605;</i></div>
-													</td>
-													<td>1</td>
-													<td>小明</td>
-													<td>男</td>
-													<td class="td-status">
-														<span class="layui-btn layui-btn-normal layui-btn-mini">已启用</span>
-													</td>
-													<td class="td-manage">
-														<a onclick="documentary_stop(this,'10001')" href="javascript:;" title="启用">
-															<i class="layui-icon">&#xe601;</i>
-														</a>
-														<a title="编辑" onclick="common_show()('编辑','member-edit.html',600,400)" href="javascript:;">
-															<i class="layui-icon">&#xe642;</i>
-														</a>
-														<a onclick="common_show('修改密码','member-password.html',600,400)" title="修改密码" href="javascript:;">
-															<i class="layui-icon">&#xe631;</i>
-														</a>
-														<a title="删除" onclick="documentary_del(this,'要删除的id')" href="javascript:;">
-															<i class="layui-icon">&#xe640;</i>
-														</a>
-				
-														<a title="查看" onclick="common_details('跟单明细','documentary-details.html',)" href="javascript:;">
-															<i class="layui-icon"> &#xe615;</i>
-														</a>
-													</td>
-												</tr>
-											</tbody>
-										</table>
+										<table class="layui-table" id="contractInfoTable"></table>
 										<div id="by-page"></div>
 									</div>
 								</div>
@@ -105,7 +61,9 @@
                        			<div class="table-case">
                            			<div class="table-title"><span class="glyphicon glyphicon-user"></span>品种信息</div>
                            			<div class="tab">
-                               			<table id="varietyTable" class="table-bordered"></table>
+                               			<table id="varietyTable" class="table-bordered">
+                               			<div><h2>sssssss</h2></div>
+                               			</table>
                            			</div>
                        			</div>
                    			</div>

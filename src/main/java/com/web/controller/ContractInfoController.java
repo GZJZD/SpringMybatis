@@ -19,6 +19,7 @@ public class ContractInfoController {
     @RequestMapping("/getContractInfoList.Action")
     @ResponseBody
     public String getContractInfoList(){
+    	System.out.println("sssssss");
         return WebJsion.toJson(contractInfoService.getContractInfoList());
     }
 }

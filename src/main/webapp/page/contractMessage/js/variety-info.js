@@ -1,5 +1,5 @@
     var contractInfoTable = $("#contractInfoTable");
-    var varietyTable = $("#varietyTable").val();
+    var varietyTable = $("#varietyTable");
     var method = "post";
     var url_contractInfoPage = url_+"/contractInfo/getContractInfoList.Action";
     var unique_Id = "id";
@@ -56,7 +56,8 @@
         //品种信息点击事件
         $("#varietyInfo").click(function () {
             $(varietyTable).bootstrapTable('destroy');
-            var url_variety = url_+"/variety/getListVariety.Action";
+            alert(11);
+            var url_variety = "variety/getListVariety.Action";
             showByTableId(varietyTable, method, url_variety, unique_Id, sortOrder, varietyColumns);
         })
     });
