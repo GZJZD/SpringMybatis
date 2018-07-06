@@ -2,8 +2,12 @@ package com.web.service.imp;
 
 import com.web.common.OrderUserEnum;
 import com.web.dao.OrderUserDao;
+import com.web.datebase.OrderHongKongService;
+import com.web.datebase.entity.Agent;
+import com.web.datebase.entity.Prices;
 import com.web.pojo.DataSource;
 import com.web.pojo.OrderUser;
+import com.web.datebase.entity.PlatFromUsers;
 import com.web.pojo.vo.OrderUserDetailsVo;
 import com.web.pojo.vo.OrderUserVo;
 import com.web.service.OrderUserService;
@@ -25,8 +29,12 @@ import java.util.List;
 public class OrderUserServiceImpl implements OrderUserService {
     @Autowired(required = false)
     private OrderUserDao orderUserDao;
+    @Autowired
+    private OrderHongKongService orderHongKongService;
 
     private static Logger log = LogManager.getLogger(OrderUserServiceImpl.class.getName());
+    public static final    String [] platFromList={"orders75","orders76"};
+
 
     @Override
     public List<OrderUser> findAll() {
@@ -204,41 +212,58 @@ public class OrderUserServiceImpl implements OrderUserService {
 
         for (OrderUser orderUser : orderUserlist){
             OrderUserVo orderUserVo1 = new OrderUserVo();
+            Prices prices = orderHongKongService.getMarketPrice(orderUser.getProductCode()); //价格
+             PlatFromUsers platFromUsers =  getPlatFromUser(orderUser);
+
+            Agent agent  = orderHongKongService.getAgent(platFromUsers.getAGENT());//代理人
+
             //持仓数
              double totalHandNumber = 0.00;
              //价位
-             double price = 0.00;
+             double price = prices.getHigh();
             //平仓盈亏
             double profit = 0.00;
             //累计盈亏
+            double totalGainAndLoss = 0.0;
             //胜率
             //回报率
             //盈亏效率
              double profit_loss_than = 0.00;
              double winRate = 0.00; //胜率
+            int doOrderNumber = 0; //做单数
             //客户类型
              for (OrderUser orderUser1 : orderUserlist){
-                 if(orderUser1.getUserCode().equals(orderUser.getUserCode())){
+                 if(orderUser.getUserCode().equals(orderUser1.getUserCode())){
                      //持仓总数
                      if(orderUser1.getCloseTime() == null && StringUtils.isEmpty(orderUser1.getCloseTime())){
                          totalHandNumber = DoubleUtil.add( orderUser1.getHandNumber(),totalHandNumber);//持仓总数
                      }
                      //平仓盈亏
                     if(orderUser1.getCloseTime() != null && !StringUtils.isEmpty(orderUser1.getCloseTime()) && orderUser1.getProfit() != null){
-                        profit = DoubleUtil.add(profit,orderUser1.getProfit()) ;
+                        profit = DoubleUtil.add(profit,orderUser1.getProfit());
+                        doOrderNumber++;
                     }
 
                  }
              }
 
              orderUserVo1.setWinRate(winRate);//胜率
-             orderUserVo1.setAgencyName("阿里巴巴集团");// 代理人
+            if(agent == null){
+                orderUserVo1.setAgencyName("-");//代理人
+            }else {
+                orderUserVo1.setAgencyName(agent.getAgentname());// 代理人
+            }
              orderUserVo1.setPlatformName(orderUser.getPlatFormCode()); //平台名称
-             orderUserVo1.setUserName("马云");//用户名称
+            if (platFromUsers == null) {
+                orderUserVo1.setUserName("-");//用户名称
+            } else {
+                orderUserVo1.setUserName(platFromUsers.getNAME());//用户名称
+            }
              orderUserVo1.setUserCode(orderUser.getUserCode()); //客户
              orderUserVo1.setPosition_gain_and_loss(totalHandNumber);//持仓盈亏
              orderUserVo1.setOffset_gain_and_loss(profit);//平仓盈亏
              orderUserVo1.setProfit_loss_than(profit_loss_than);  //盈亏效率
+             orderUserVo1.setDoOrderNumber(doOrderNumber);//做单数
              orderUserVo1.setTotalGainAndLoss(DoubleUtil.add(totalHandNumber,profit));//累计盈亏
              list.add(orderUserVo1);
 
@@ -321,6 +346,22 @@ public class OrderUserServiceImpl implements OrderUserService {
         return detailsVo;
     }
 
+    /**
+     * 获取不同用户信息
+     * @param orderUser
+     * @return
+     */
 
+    public PlatFromUsers getPlatFromUser(OrderUser orderUser ){
+
+        PlatFromUsers platFromUsers  = new PlatFromUsers();
+        if (orderUser.getPlatFormCode().equals(platFromList[0])){
+            platFromUsers =    orderHongKongService.getUser75(orderUser.getUserCode());
+        }
+        if (orderUser.getPlatFormCode().equals(platFromList[1])){
+            platFromUsers =    orderHongKongService.getUser76(orderUser.getUserCode());
+        }
+        return  platFromUsers;
+    }
 
 }

@@ -55,8 +55,19 @@ public class OrderUserVo {
      * 用户类型
      */
     private String userType;
+    /**
+     * 做单数
+     */
+    private int doOrderNumber;
+    /**
+     * 手数
+     */
+    private int handNumber;
 
-
+    /**
+     * 最近下单时间
+     */
+    private String recentlyTime;
 
 /**********************************************     用户列表所用字段  END   *************************************************************************/
 
@@ -209,5 +220,27 @@ public class OrderUserVo {
         this.productCode = productCode;
     }
 
+    public int getDoOrderNumber() {
+        return doOrderNumber;
+    }
 
+    public void setDoOrderNumber(int doOrderNumber) {
+        this.doOrderNumber = doOrderNumber;
+    }
+
+    public int getHandNumber() {
+        return handNumber;
+    }
+
+    public void setHandNumber(int handNumber) {
+        this.handNumber = handNumber;
+    }
+
+    public String getRecentlyTime() {
+        return recentlyTime;
+    }
+
+    public void setRecentlyTime(String recentlyTime) {
+        this.recentlyTime = recentlyTime;
+    }
 }
