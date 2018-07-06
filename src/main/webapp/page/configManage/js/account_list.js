@@ -1,8 +1,8 @@
 
     var method = "get";
     var tb_account = $("#accountTable");
-    var url_orderPage = url_+"/followOrder/getListFollowOrder.Action?varietyId="+varietyNum+"&accountId="+accountNum;
-    var unique_Id = "detailId";
+    var url_account = url_+"/account/getListAccount.Action";
+    var unique_Id = "id";
     var sortOrder = "asc";
     var columns = [{
         title: '全选',
@@ -13,49 +13,52 @@
         align: 'center',
         valign: 'middle'
     }, {
-        field: 'followOrder.id',
+        field: 'platformName',
         title: '平台'
     }, {
-        field: 'followOrder.followOrderName',
+        field: 'account',
         title: '账号'
     }, {
-        field: 'followOrder.account',
-        title: '对应代理人',
-        formatter: function (value, row, index) {
-
-            return value.platform.name + "-" + value.username;
-        }
+        field: 'agentName',
+        title: '对应代理人'
 
     }, {
-        field: 'followOrder.variety.varietyName',
+        field: 'status',
         title: '跟单状态',
         formatter: function (value, row, index) {
-            if (value == 0) {
-                return "未跟单";
+            if (value == "未跟单") {
+                return "<span style='color: #45b6af'>未跟单</span>";
             } else {
-                return "跟单中";
+                return "<span style='color: #c6c6c6'>跟单中</span>";
 
             }
         }
     }, {
-        field: 'followOrder.followManner',
+        field: 'allTotal',
         title: '跟单次数'
 
     }, {
-        field: 'followOrder.startTime',
+        field: 'profitAndLoss',
         title: '跟单收益'
     }, {
         field: '',
         title: '操作',
         formatter: function (value, row, index) {
-            return "<a href='page/documentary/documentary.html'> <span style='color: #5b9bd1'>查看跟单</span></a>"+
+            return "<a href='javascript:;' onclick='lo()'> <span style='color: #5b9bd1'>查看跟单</span></a>"+
                 "<a href='page/documentary/documentary.html'> <span style='color: #5b9bd1'>修改</span></a>"+
                 "<a href='page/documentary/documentary.html'> <span style='color: #5b9bd1'>删除</span></a>";
         }
     }
     ];
 
+$(function () {
+    showByTableId(tb_account, method, url_account, unique_Id, sortOrder, columns);
 
+})
+    function lo() {
+        url_+"/account/goToFollowOrderPage.Action"
+
+    }
 function accountAdd(){
         var url = "account-add.html";
         var title="账号管理";
