@@ -192,8 +192,6 @@ public class FollowOrderServiceImpl implements FollowOrderService {
                 followOrderVo.setPoundageTotal(commission.setScale(2, BigDecimal.ROUND_HALF_UP).doubleValue());
                 followOrderVo.setHandNumberTotal(handNum.setScale(2, BigDecimal.ROUND_HALF_UP).doubleValue());
 
-                //todo demo过后删除
-                followOrder.setAccount(FollowOrderGenerateUtil.getAccount());
                 followOrderVo.setFollowOrder(followOrder);
                 //设置持仓盈亏
 
@@ -881,5 +879,13 @@ public class FollowOrderServiceImpl implements FollowOrderService {
         }
     }
 
+    /*
+    *
+    * 查找该账号跟单状态为启动
+    * */
+    @Override
+    public int findAccountStatusByAccountId(Long accountId) {
 
+        return followOrderDao.findAccountStatusByAccountId(accountId);
+    }
 }

@@ -10,6 +10,7 @@
     <result column="original_hand_number" property="OriginalHandNumber"/>
     <result column="remain_hand_number" property="remainHandNumber"/>
     <result column="follow_order_trade_record_id" property="followOrderTradeRecordId"/>
+    <result column="tb_account_id" property="accountId"/>
     <result column="open_price" property="openPrice"  />
     <result column="open_time" property="openTime"  />
     <result column="close_price" property="closePrice"  />
@@ -32,6 +33,7 @@
     <result column="poundageTotal" property="poundageTotal"/>
     <result column="clientProfit" property="clientProfit"/>
     <result column="clientName" property="clientName"/>
+    <result column="allTotal" property="allTotal"/>
   </resultMap>
 
   <resultMap id="orderPageMap" type="com.web.pojo.vo.FollowOrderPageVo">
@@ -49,13 +51,13 @@
   </delete>
   <insert id="insert" parameterType="com.web.pojo.FollowOrderDetail" useGeneratedKeys="true" keyProperty="id" >
     insert into follow_order_detail (client_name, variety_name, trade_direction, 
-      hand_number,original_hand_number,remain_hand_number,follow_order_trade_record_id, open_price, open_time,
+      hand_number,original_hand_number,remain_hand_number,follow_order_trade_record_id,tb_account_id, open_price, open_time,
       close_price, close_time, poundage, 
       profit_loss, client_profit, ticket,
       update_date,update_by_user,create_date, follow_order_id, version
       )
     values (#{clientName}, #{varietyName}, #{tradeDirection}, 
-      #{handNumber},#{OriginalHandNumber},#{remainHandNumber},#{followOrderTradeRecordId}, #{openPrice}, #{openTime},
+      #{handNumber},#{OriginalHandNumber},#{remainHandNumber},#{followOrderTradeRecordId}, #{accountId},#{openPrice}, #{openTime},
       #{closePrice}, #{closeTime}, #{poundage}, 
       #{profitLoss}, #{clientProfit}, #{ticket},
       #{updateDate}, #{updateByUser} ,#{createDate},#{followOrderId},#{version}
@@ -84,6 +86,9 @@
       </if>
       <if test="followOrderTradeRecordId != null">
         follow_order_trade_record_id = #{followOrderTradeRecordId},
+      </if>
+      <if test="accountId != null">
+        tb_account_id = #{accountId},
       </if>
       <if test="openPrice != null">
         open_price = #{openPrice},
@@ -228,6 +233,11 @@
     </if>
 
   </select>
+  <select id="getAccountCountAndOffsetGainAndLossBYAccountId" resultMap="followOrderVoMap">
+    select count(id) allTotal,sum(profit_loss) offsetGainAndLoss
+    from follow_order_detail
+    where tb_account_id = #{accountId}
+  </select>
 
   <sql id="base_List">
     id,
@@ -238,6 +248,7 @@
     original_hand_number,
     remain_hand_number,
     follow_order_trade_record_id,
+    tb_account_id,
     open_price,
     open_time,
     close_price,

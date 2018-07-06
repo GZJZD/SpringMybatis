@@ -25,4 +25,6 @@ public interface FollowOrderDao {
 
 
     List<FollowOrder> findFollowOrderStart(@Param("followOrderIds") List<Long> followOrderIds, @Param("varietyCode") String varietyCode);
+
+    int findAccountStatusByAccountId(Long accountId);
 }

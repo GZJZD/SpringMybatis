@@ -36,9 +36,9 @@ public class FollowOrderVo {
     //跟单成功率:成功的交易数
     private Integer successTotal;
     //全部的跟单数
-    private Integer allTotal;
+    private Integer allTotal=0;
     //手数
-    private Double handNumberTotal;
+    private Double handNumberTotal=0.0;
 
     /**********************************************     跟单明细中跟单数据字段     *************************************************************************/
     private String clientName;

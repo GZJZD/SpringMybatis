@@ -87,4 +87,5 @@ public interface FollowOrderDetailService {
     void createDetail(FollowOrderTradeRecord followOrderTradeRecord, OrderMsgResult orderMsgResult);
 
     List<FollowOrderDetail> getFollowOrderDetailByUserCode(Long followOrderId, String endTime, String startTime, String clientName);
+    FollowOrderVo getAccountCountAndOffsetGainAndLossBYAccountId(Long accountId);
 }

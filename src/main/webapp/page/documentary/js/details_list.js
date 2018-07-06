@@ -495,7 +495,7 @@ function findByClient() {
     var openOrCloseStatus = $("#clientOpenOrClose option:selected").val();
     $.ajax({
         url: url_ + "/followOrder/getListClientNetPosition.Action",
-        type: 'GET', //GET
+        type: 'post', //GET
         async: true,    //或false,是否异步
         data: {
             followOrderId: followOrderId,

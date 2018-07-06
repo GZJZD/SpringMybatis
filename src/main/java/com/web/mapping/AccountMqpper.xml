@@ -12,7 +12,7 @@
         <result column="status" property="status"/>
         <association property="agent" columnPrefix="agent_" javaType="com.web.pojo.Agent">
             <id column="id" property="id"/>
-            <result property="name" column=" name"/>
+            <result property="name" column="name"/>
         </association>
         <association property="platform" columnPrefix="platform_" javaType="com.web.pojo.Platform">
             <id column="id" property="id"/>
@@ -70,6 +70,7 @@
         from tb_account account
         join tb_agent agent on agent.id = account.tb_agent_id
         join tb_platform platform on platform.id = account.tb_platform_id
+        order by account.id desc
     </select>
 
     <sql id="base_column">
@@ -83,9 +84,9 @@
         account.modify_time,
         account.modify_user,
         account.status,
-        agent.id,
-        agent.name,
-        platform.id,
-        platform.name
+        agent.id agent_id,
+        agent.name agent_name,
+        platform.id platform_id,
+        platform.name platform_name
     </sql>
 </mapper>
