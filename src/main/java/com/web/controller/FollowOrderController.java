@@ -7,11 +7,10 @@ import com.web.pojo.FollowOrderClient;
 import com.web.pojo.Variety;
 import com.web.pojo.vo.FollowOrderPageVo;
 import com.web.pojo.vo.FollowOrderVo;
-import com.web.service.IFollowOrderClientService;
-import com.web.service.IFollowOrderDetailService;
-import com.web.service.IFollowOrderService;
-import com.web.service.IFollowOrderTradeRecordService;
-import com.web.service.imp.FollowOrderServiceImpl;
+import com.web.service.FollowOrderClientService;
+import com.web.service.FollowOrderDetailService;
+import com.web.service.FollowOrderService;
+import com.web.service.FollowOrderTradeRecordService;
 import com.web.util.json.JSONResult;
 import com.web.util.common.DateUtil;
 import com.web.util.json.WebJsion;
@@ -33,14 +32,14 @@ public class FollowOrderController {
 
 
     @Autowired
-    private IFollowOrderService followOrderService;
+    private FollowOrderService followOrderService;
     @Autowired
-    private IFollowOrderDetailService followOrderDetailService;
+    private FollowOrderDetailService followOrderDetailService;
 
     @Autowired
-    private IFollowOrderClientService followOrderClientService;
+    private FollowOrderClientService followOrderClientService;
     @Autowired
-    private IFollowOrderTradeRecordService followOrderTradeRecordService;
+    private FollowOrderTradeRecordService followOrderTradeRecordService;
 
     private static Logger log = LogManager.getLogger(FollowOrderController.class.getName());
 

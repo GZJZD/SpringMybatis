@@ -12,7 +12,7 @@ import java.util.List;
  * 跟单明细
  * Created by may on 2018/5/23.
  */
-public interface IFollowOrderDetailService {
+public interface FollowOrderDetailService {
 
     void save(FollowOrderDetail followOrderDetail);
 
@@ -86,6 +86,6 @@ public interface IFollowOrderDetailService {
 
     void createDetail(FollowOrderTradeRecord followOrderTradeRecord, OrderMsgResult orderMsgResult);
 
-
     List<FollowOrderDetail> getFollowOrderDetailByUserCode(Long followOrderId, String endTime, String startTime, String clientName);
+    FollowOrderVo getAccountCountAndOffsetGainAndLossBYAccountId(Long accountId);
 }

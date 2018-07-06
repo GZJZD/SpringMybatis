@@ -25,19 +25,19 @@ import java.util.List;
  */
 @Service
 @Transactional
-public class FollowOrderDetailServiceImpl implements IFollowOrderDetailService {
+public class FollowOrderDetailServiceImpl implements FollowOrderDetailService {
     @Autowired
     private FollowOrderDetailDao followOrderDetailDao;
     @Autowired
-    private IFollowOrderTradeRecordService followOrderTradeRecordService;
+    private FollowOrderTradeRecordService followOrderTradeRecordService;
     @Autowired
-    private IVarietyService varietyService;
+    private VarietyService varietyService;
     @Autowired
-    private IFollowOrderClientService followOrderClientService;
+    private FollowOrderClientService followOrderClientService;
     @Autowired
-    private IClientNetPositionService clientNetPositionService;
+    private ClientNetPositionService clientNetPositionService;
     @Autowired
-    private IFollowOrderService followOrderService;
+    private FollowOrderService followOrderService;
     @Autowired
     private OrderUserService orderUserService;
 
@@ -336,6 +336,7 @@ public class FollowOrderDetailServiceImpl implements IFollowOrderDetailService {
             //设置剩下手数
             orderDetail.setRemainHandNumber(orderDetail.getHandNumber());
         }
+        orderDetail.setAccountId(followOrder.getAccount().getId());
         //设置原来手数
         orderDetail.setOriginalHandNumber(followOrderTradeRecord.getHandNumber());
         //设置交易方向
@@ -402,5 +403,13 @@ public class FollowOrderDetailServiceImpl implements IFollowOrderDetailService {
     @Override
     public List<FollowOrderDetail> getFollowOrderDetailByUserCode(Long followOrderId, String endTime, String startTime, String clientName) {
         return followOrderDetailDao.getFollowOrderDetailByUserCode(followOrderId,endTime,startTime,clientName);
+    }
+
+    /*
+    * 获取该账号的做单总数和总的平仓盈亏
+    * */
+    @Override
+    public FollowOrderVo getAccountCountAndOffsetGainAndLossBYAccountId(Long accountId) {
+        return followOrderDetailDao.getAccountCountAndOffsetGainAndLossBYAccountId(accountId);
     }
 }

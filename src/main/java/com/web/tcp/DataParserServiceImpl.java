@@ -1,9 +1,8 @@
 package com.web.tcp;
 
-import com.alibaba.fastjson.JSON;
 import com.web.common.FollowOrderEnum;
 import com.web.pojo.DataSource;
-import com.web.service.IFollowOrderService;
+import com.web.service.FollowOrderService;
 import com.web.service.OrderUserService;
 import com.web.tcp.service.DataParserService;
 import com.web.util.ApplicationContextHolder;
@@ -30,8 +29,8 @@ public class DataParserServiceImpl implements DataParserService,Runnable{
 
     private String socketData;
     private String platformName;
-    private IFollowOrderService
-            followOrderService = (IFollowOrderService) ApplicationContextHolder
+    private FollowOrderService
+            followOrderService = (FollowOrderService) ApplicationContextHolder
             .getBeanByName("followOrderServiceImpl");
     private OrderUserService
             orderUserService = (OrderUserService) ApplicationContextHolder
@@ -70,6 +69,8 @@ public class DataParserServiceImpl implements DataParserService,Runnable{
             }
             dataSource.setProfit(Double.parseDouble(splitArr[index++]));//平仓盈亏
             dataSource.setCommission((Math.abs(Double.parseDouble(splitArr[index++]))));//手续费
+            dataSource.setStopProfit((Double.parseDouble(splitArr[index++])));//止盈
+            dataSource.setStopLoss((Double.parseDouble(splitArr[index++])));//止损
             dataSource.setPlatformName(this.platformName);
             dataSource.setAgencyName("JZT");
             log.debug("接收到一条来自TCP的数据："+WebJsion.toJson(dataSource));

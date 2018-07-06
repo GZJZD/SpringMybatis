@@ -45,7 +45,10 @@ public  class FollowOrderEnum {
         //是否跟单
         NOT_FOLLOW_ORDER_BY_CLIENT("跟单失败",0),
         //是否跟单
-        FOLLOW_ORDER_BY_CLIENT("已跟单",1)
+        FOLLOW_ORDER_BY_CLIENT("已跟单",1),
+        //账号状态
+        ACCOUNT_START("启用",1),
+        ACCOUNT_DELETE("删除",0)
 
         ;
 

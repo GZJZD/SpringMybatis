@@ -9,6 +9,6 @@ import java.util.List;
  * Created by may on 2018/5/21.
  */
 public interface ContractInfoDao {
-    ContractInfo getInfoByVarietyIdAndTradeName(@Param("varietyId") Long varietyId, @Param("tradeName") String tradeName);
+    ContractInfo getInfoByVarietyIdAndPlatformId(@Param("varietyId") Long varietyId, @Param("platformId") Long platformId);
     List<ContractInfo> getContractInfoList();
 }
