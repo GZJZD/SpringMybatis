@@ -1,9 +1,6 @@
-package com.web.datebase.config;
+package com.web.database.config;
 
-import java.lang.annotation.ElementType;
-import java.lang.annotation.Retention;
-import java.lang.annotation.RetentionPolicy;
-import java.lang.annotation.Target;
+import java.lang.annotation.*;
 
 /**
  * 自定义标签
@@ -14,6 +11,7 @@ import java.lang.annotation.Target;
  */
 @Retention(RetentionPolicy.RUNTIME)
 @Target(value= {ElementType.TYPE,ElementType.METHOD})
+@Documented
 public @interface TransFormDataSource {
 	String name() default "";
 }

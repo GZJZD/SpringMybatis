@@ -1,6 +1,9 @@
-package com.web.datebase.entity;
+package com.web.database.entity;
 
-public class Users76 {
+/**
+ * 用于存放 各个平台的用户数据
+ */
+public class PlatFromUsers {
     /**
      * 登录id
      */

@@ -1,12 +1,14 @@
 package com.web.controller;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.web.pojo.Variety;
 import com.web.service.VarietyService;
-import com.web.util.json.WebJsion;
 
 @Controller
 @RequestMapping("/variety")
@@ -18,7 +20,7 @@ public class VarietyController {
      */
     @RequestMapping("/getListVariety.Action")
     @ResponseBody
-    public String getListVariety(){
-        return WebJsion.toJson(varietyService.getVarietyList());
+    public List<Variety> getListVariety(){
+        return varietyService.getVarietyList();
     }
 }

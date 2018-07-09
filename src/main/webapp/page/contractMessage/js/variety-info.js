@@ -1,5 +1,6 @@
+$(function () {
     var contractInfoTable = $("#contractInfoTable");
-    var varietyTable = $("#varietyTable").val();
+    var varietyTable = $("#varietyTable");
     var method = "post";
     var url_contractInfoPage = url_+"/contractInfo/getContractInfoList.Action";
     var unique_Id = "id";
@@ -36,7 +37,7 @@
         field: 'varietyCode',
         title: '品种代码'
     }, {
-        field: 'varietytName',
+        field: 'varietyName',
         title: '品种名称'
     }, {
         field: 'tradePlaceName',
@@ -44,7 +45,7 @@
 	}];
 
 
-    $(function () {
+  
         //发送请求获取跟单页面的统计数据表格加载
         showByTableId(contractInfoTable, method, url_contractInfoPage, unique_Id, sortOrder, contractInfoColumns);
       //合约信息点击事件

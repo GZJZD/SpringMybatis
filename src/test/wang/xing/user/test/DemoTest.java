@@ -1,13 +1,17 @@
 package wang.xing.user.test;
 
+import com.aliyuncs.dysmsapi.model.v20170525.SendSmsResponse;
+import com.aliyuncs.exceptions.ClientException;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.page.PageMethod;
 import com.web.pojo.DataSource;
+import com.web.pojo.Login;
 import com.web.pojo.OrderUser;
 import com.web.pojo.vo.OrderUserVo;
 import com.web.service.OrderUserService;
 import com.web.service.TestService;
 import com.web.util.query.QueryObject;
+import com.web.util.sms.AliSms;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -110,7 +114,7 @@ public class DemoTest {
         strList.add("123");
         String startTime = "2018-5-29 00:00:00";
         String productCode = "黄金";
-        List<OrderUser> orderUserList = orderUserService.findByUserIdList(strList,startTime,"",productCode);
+        List<OrderUser> orderUserList = orderUserService.findByUserIdList(strList,startTime,"",productCode,1);
         System.out.println(orderUserList.size());
         for(OrderUser orderUser : orderUserList){
             System.out.println(orderUser.getUserCode());
@@ -127,7 +131,7 @@ public class DemoTest {
     /**
      * 测试 接口是否调通
      */
-    @Test
+
     public void TestCount(){
         String endTime="";
         String startTime="";
@@ -158,7 +162,7 @@ public class DemoTest {
      */
 
    public void TestgetDays(){
-       List<OrderUser> orderUserList = orderUserService.findAll();
+        List<OrderUser> orderUserList = orderUserService.findAll();
         LinkedHashSet<String> set = new LinkedHashSet<String>(orderUserList.size());
        for(OrderUser orderUser : orderUserList){
            set.add(orderUser.getCreateDate().substring(0,10).trim());
@@ -168,5 +172,25 @@ public class DemoTest {
         System.out.println("做单天数:"+set.size());
    }
 
+  public void TestSms (){
+        int code = (int)(Math.random()*8999)+1000; //生成随机数
+      AliSms aliSms = new AliSms();
+      try {
+          SendSmsResponse sendSmsResponse = AliSms.SendSms("18664879184",code);
+          System.out.println("短信接口返回的数据----------------");
+          System.out.println("Code=" + sendSmsResponse.getCode());
+          System.out.println("Message=" + sendSmsResponse.getMessage());
+          System.out.println("RequestId=" + sendSmsResponse.getRequestId());
+          System.out.println("BizId=" + sendSmsResponse.getBizId());
+      } catch (ClientException e) {
+          e.printStackTrace();
+          System.out.println("发送失败");
+      }
+      System.out.println("发送成功");
+
+
+
+
+  }
 
 }

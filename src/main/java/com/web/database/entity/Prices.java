@@ -1,4 +1,4 @@
-package com.web.datebase.entity;
+package com.web.database.entity;
 
 /**
  * 价格实体类

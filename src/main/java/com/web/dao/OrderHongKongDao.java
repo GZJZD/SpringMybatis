@@ -1,10 +1,8 @@
 package com.web.dao;
 
-import com.web.datebase.entity.Agent;
-import com.web.datebase.entity.Prices;
-import com.web.datebase.entity.Users75;
-import com.web.datebase.entity.Users76;
-import org.apache.ibatis.annotations.Param;
+import com.web.database.entity.Agent;
+import com.web.database.entity.PlatFromUsers;
+import com.web.database.entity.Prices;
 import org.apache.ibatis.annotations.Select;
 import org.springframework.stereotype.Component;
 
@@ -23,27 +21,25 @@ public interface OrderHongKongDao {
 
     /**
      *查询用户姓名
-     * @param Table 表名 不同平台用户 表不一样
      * @param userId 用户id
      * WITHDRAWAL 止盈
      * BALANCE 止损
      * @return
      */
     @Select("select LOGIN,REGDATE,AGENT,NAME,DEPOSIT,WITHDRAWAL,BALANCE from users75 where LOGIN=#{arg1};")
-    public Users75 getUser75 ( String userId);
+    public PlatFromUsers getUser75 (String userId);
 
 
 
     /**
      *查询用户姓名
-     * @param Table 表名 不同平台用户 表不一样
      * @param userId 用户id
      * WITHDRAWAL 止盈
      * BALANCE 止损
      * @return
      */
     @Select("select LOGIN,REGDATE,AGENT,NAME,DEPOSIT,WITHDRAWAL,BALANCE from users76 where LOGIN=#{arg1};")
-    public Users76 getUser76 ( String userId);
+    public PlatFromUsers getUser76 ( String userId);
 
 
 
