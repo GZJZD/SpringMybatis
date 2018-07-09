@@ -55,7 +55,7 @@ public class loginServiceImpl implements LoginService {
             return  message="用户不存在，请与管理员联系！";
         }
         if(null != login.getCode() && login.getCode().equals(code)){
-            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
             if(login.getVerifyTime() != null && !StringUtils.isEmpty(login.getVerifyTime())){
                 try {
                     login.setUUid(UUID.randomUUID().toString());
@@ -139,7 +139,7 @@ public class loginServiceImpl implements LoginService {
         long outTime = CookieConstantTable.outTime;
         Date begin_Time = null;
 
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         if (login != null) {
             try {
                 begin_Time = sdf.parse(verifyTime);
