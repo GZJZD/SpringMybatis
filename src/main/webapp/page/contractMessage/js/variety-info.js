@@ -57,7 +57,7 @@
         $("#varietyInfo").click(function () {
             $(varietyTable).bootstrapTable('destroy');
             alert(11);
-            var url_variety = "variety/getListVariety.Action";
+            var url_variety = url_+"/variety/getListVariety.Action";
             showByTableId(varietyTable, method, url_variety, unique_Id, sortOrder, varietyColumns);
         })
     });
