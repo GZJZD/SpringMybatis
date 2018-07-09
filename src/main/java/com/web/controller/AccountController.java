@@ -33,8 +33,11 @@ public class AccountController {
 
     @RequestMapping("/createAccount.Action")
     @ResponseBody
-    public JSONResult createAccount(Long platformId,Long agentId,String name,String password){
+    public JSONResult createAccount(Long accountId,Long platformId,Long agentId,String name,String password,String regPwd){
         try {
+            if (!regPwd.equals(password)){
+                return new JSONResult(false, "两次密码输入不一致，请重新输入");
+            }
             Account account = new Account();
             account.setAccount(name);
             Agent agent = new Agent();
@@ -48,12 +51,17 @@ public class AccountController {
             account.setCreateUser("猜猜");
             //正常状态
             account.setStatus(FollowOrderEnum.FollowStatus.ACCOUNT_START.getIndex());
-            accountService.save(account);
+            if(accountId != null){
+                account.setId(accountId);
+                accountService.updateAccount(account);
+            }else {
+                accountService.save(account);
+            }
         }catch (Exception e){
             e.printStackTrace();
-            return new JSONResult(false, "创建账号失败");
+            return new JSONResult(false, "保存失败");
         }
-        return new JSONResult( "创建账号成功");
+        return new JSONResult( "保存成功");
     }
 
     @RequestMapping("getListAccount.Action")
@@ -63,9 +71,8 @@ public class AccountController {
         List<Map<String,Object> >  listMap = new ArrayList<>();
         for (Account account : accountList) {
             Map<String,Object> accountMap = new HashMap<>();
-            accountMap.put("id",account.getId());
             accountMap.put("platformName",account.getPlatform().getName());
-            accountMap.put("account",account.getAccount());
+            accountMap.put("account",account);
             accountMap.put("agentName",account.getAgent().getName());
             int count = followOrderService.findAccountStatusByAccountId(account.getId());
             if (count > 0) {
@@ -88,7 +95,23 @@ public class AccountController {
         //forward
 //        return "redirect:/login.thml";
 //        return new ModelAndView("redirect:/login.html");
-        return  "redirect:/login.html";
+        return  "redirect:/page/documentary/documentary.html";
     }
+
+    @RequestMapping("/deleteAccount")
+    @ResponseBody
+    public JSONResult deleteAccount(Long accountId){
+        try {
+            Account account = accountService.getAccountById(accountId);
+            account.setStatus(FollowOrderEnum.FollowStatus.ACCOUNT_DELETE.getIndex());
+            accountService.updateAccount(account);
+        }catch (Exception e){
+            e.printStackTrace();
+            return new JSONResult(false, "删除失败，请联系管理员");
+        }
+        return new JSONResult( "删除成功");
+    }
+
+
 
 }

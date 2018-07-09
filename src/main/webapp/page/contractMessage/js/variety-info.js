@@ -37,7 +37,7 @@ $(function () {
         field: 'varietyCode',
         title: '品种代码'
     }, {
-        field: 'varietytName',
+        field: 'varietyName',
         title: '品种名称'
     }, {
         field: 'tradePlaceName',
@@ -45,7 +45,7 @@ $(function () {
 	}];
 
 
-    $(function () {
+  
         //发送请求获取跟单页面的统计数据表格加载
         showByTableId(contractInfoTable, method, url_contractInfoPage, unique_Id, sortOrder, contractInfoColumns);
       //合约信息点击事件
@@ -57,7 +57,6 @@ $(function () {
         //品种信息点击事件
         $("#varietyInfo").click(function () {
             $(varietyTable).bootstrapTable('destroy');
-            alert(11);
             var url_variety = url_+"/variety/getListVariety.Action";
             showByTableId(varietyTable, method, url_variety, unique_Id, sortOrder, varietyColumns);
         })

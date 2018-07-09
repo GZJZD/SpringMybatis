@@ -70,6 +70,7 @@
         from tb_account account
         join tb_agent agent on agent.id = account.tb_agent_id
         join tb_platform platform on platform.id = account.tb_platform_id
+        where status = 1
         order by account.id desc
     </select>
 

@@ -2,6 +2,8 @@ package com.web.service.imp;
 
 import com.web.common.FollowOrderEnum;
 import com.web.dao.FollowOrderDetailDao;
+
+import com.web.database.OrderHongKongService;
 import com.web.pojo.*;
 
 import com.web.pojo.vo.FollowOrderPageVo;
@@ -40,6 +42,10 @@ public class FollowOrderDetailServiceImpl implements FollowOrderDetailService {
     private FollowOrderService followOrderService;
     @Autowired
     private OrderUserService orderUserService;
+    @Autowired
+    private OrderHongKongService orderHongKongService;
+    @Autowired
+    private ContractInfoService contractInfoService;
 
     private static Logger log = LogManager.getLogger(FollowOrderDetailServiceImpl.class.getName());
 
@@ -88,6 +94,19 @@ public class FollowOrderDetailServiceImpl implements FollowOrderDetailService {
                    if(followOrderDetail.getCloseTime()!=null){
                        followOrderDetail.setCloseTime(DateUtil.strToStr(followOrderDetail.getCloseTime()));
                    }
+//                   if(followOrderDetail.getOpenTime()!=null && followOrderDetail.getCloseTime() == null){
+//                       Prices marketPrice = orderHongKongService.getMarketPrice(followOrderDetail.getVarietyName());
+//                       if(followOrderDetail.getTradeDirection().equals(FollowOrderEnum.FollowStatus.SELL.getIndex())){
+//                           //获取价格
+//                           followOrderDetail.setProfitLoss(DoubleUtil.sub(DoubleUtil.mul(followOrderDetail.getHandNumber(),followOrderDetail.getOpenPrice()),DoubleUtil.mul(followOrderDetail.getHandNumber(),marketPrice.getBid())));
+//
+//                       }else{
+//                           followOrderDetail.setProfitLoss(DoubleUtil.sub(DoubleUtil.mul(followOrderDetail.getHandNumber(),marketPrice.getAsk()),DoubleUtil.mul(followOrderDetail.getHandNumber(),followOrderDetail.getOpenPrice())));
+//
+//                       }
+//                       //1手=100股
+//                       followOrderDetail.setProfitLoss(DoubleUtil.mul(followOrderDetail.getProfitLoss(),100.0));
+//                   }
                }
                return orderDetailList;
            }
@@ -342,7 +361,9 @@ public class FollowOrderDetailServiceImpl implements FollowOrderDetailService {
         //设置交易方向
         orderDetail.setTradeDirection(followOrderTradeRecord.getTradeDirection());
         //设置品种的名称
-        orderDetail.setVarietyName(followOrderTradeRecord.getVarietyCode());
+        varietyService.getVariety(followOrderTradeRecord.getVarietyId());
+        ContractInfo contractInfo = contractInfoService.getInfoByVarietyIdAndPlatformId(followOrderTradeRecord.getVarietyId(), followOrder.getAccount().getPlatform().getId());
+        orderDetail.setVarietyName(contractInfo.getContractCode());
         //设置手续费
         orderDetail.setPoundage(orderMsgResult.getTradeCommission());
         //设置开仓单号

@@ -62,6 +62,8 @@ public class FollowOrderServiceImpl implements FollowOrderService {
     private ClientNetPositionService clientNetPositionService;//客户净头寸关联
     @Autowired
     private OrderHongKongService orderHongKongService;//香港数据库
+    @Autowired
+    private ContractInfoService contractInfoService;//合约信息
 
 
     @Override
@@ -538,8 +540,7 @@ public class FollowOrderServiceImpl implements FollowOrderService {
         Variety variety = varietyService.getVarietyByCode(followOrder.getVariety().getVarietyCode());
         order.setVariety(variety);
         order.setFollowOrderStatus(FollowOrderEnum.FollowStatus.FOLLOW_ORDER_STOP.getIndex());
-        //todo demo后删除
-        order.setAccount(FollowOrderGenerateUtil.getAccount());
+
         //跟单方式
         if (order.getFollowManner().equals(FollowOrderEnum.FollowStatus.FOLLOWMANNER_NET_POSITION.getIndex())) {
             //跟净头寸，设置不处于交易中的状态
@@ -642,7 +643,7 @@ public class FollowOrderServiceImpl implements FollowOrderService {
         followOrderTradeRecord.setFollowOrderId(followOrder.getId());
         //设置品种的id
         followOrderTradeRecord.setVarietyId(followOrder.getVariety().getId());
-        //设置品种代码 todo 通过数据源的品种代码,找到该交易账号所自身的品种代码
+        //设置品种代码
         followOrderTradeRecord.setVarietyCode(varietyCode);
         //设置开平状态
         followOrderTradeRecord.setOpenCloseType(openClose);
@@ -669,8 +670,9 @@ public class FollowOrderServiceImpl implements FollowOrderService {
             close.setBrokerId(followOrder.getAccount().getPlatform().getName());
             //设置交易对象的交易账号
             close.setUserId(followOrder.getAccount().getAccount());
-            //设置平台对应的品种合约代码 todo 实现该功能
-            close.setInstrumentId("GC1808");
+            //设置平台对应的品种合约代码
+            ContractInfo info = contractInfoService.getInfoByVarietyIdAndPlatformId(followOrder.getVariety().getId(), followOrder.getAccount().getPlatform().getId());
+            close.setInstrumentId(info.getContractCode());
             //设置买卖方向
             close.setOrderDirection(orderDirection);
             //平仓
@@ -741,8 +743,10 @@ public class FollowOrderServiceImpl implements FollowOrderService {
             open.setBrokerId(followOrder.getAccount().getPlatform().getName());
             //设置交易对象的交易账号
             open.setUserId(followOrder.getAccount().getAccount());
-            //设置平台对应的品种合约代码 todo 实现该功能
-            open.setInstrumentId("GC1808");
+            //设置平台对应的品种合约代码
+            ContractInfo info = contractInfoService.getInfoByVarietyIdAndPlatformId(followOrder.getVariety().getId(), followOrder.getAccount().getPlatform().getId());
+
+            open.setInstrumentId(info.getContractCode());
             //设置买卖方向
             open.setOrderDirection(orderDirection);
             //开仓
@@ -817,8 +821,7 @@ public class FollowOrderServiceImpl implements FollowOrderService {
     public void closeAllOrderByFollowOrderId(Long followOrderId) {
         List<FollowOrderDetail> orderDetails = followOrderDetailService.getNOCloseDetailListByFollowOrderId(followOrderId);
         FollowOrder followOrder = getFollowOrder(followOrderId);
-        //todo 账号的设置去掉
-        followOrder.setAccount(FollowOrderGenerateUtil.getAccount());
+
         for (FollowOrderDetail orderDetail : orderDetails) {
             Integer direction = orderDetail.getTradeDirection() == FollowOrderEnum.FollowStatus.BUY.getIndex() ?
                     FollowOrderEnum.FollowStatus.SELL.getIndex() : FollowOrderEnum.FollowStatus.BUY.getIndex();
@@ -841,8 +844,7 @@ public class FollowOrderServiceImpl implements FollowOrderService {
     public void manuallyClosePosition(Long detailId) {
         FollowOrderDetail orderDetail = followOrderDetailService.getFollowOrderDetail(detailId);
         FollowOrder followOrder = getFollowOrder(orderDetail.getFollowOrderId());
-        //todo 账号得设置去掉
-        followOrder.setAccount(FollowOrderGenerateUtil.getAccount());
+
         //设置多空方向
         Integer direction = orderDetail.getTradeDirection() == FollowOrderEnum.FollowStatus.BUY.getIndex() ?
                 FollowOrderEnum.FollowStatus.SELL.getIndex() : FollowOrderEnum.FollowStatus.BUY.getIndex();
