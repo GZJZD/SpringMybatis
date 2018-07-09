@@ -85,7 +85,7 @@
 
 
     <!--定义数据源切换类-->
-    <bean id="multipleDataSource" class="com.web.datebase.config.MultipleDataSource">
+    <bean id="multipleDataSource" class="com.web.database.config.MultipleDataSource">
         <!--&lt;!&ndash; 设置默认的目标数据源 &ndash;&gt;-->
         <property name="defaultTargetDataSource" ref="myDataSource"/>
         <property name="targetDataSources">
