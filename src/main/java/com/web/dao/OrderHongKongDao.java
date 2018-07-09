@@ -1,8 +1,8 @@
 package com.web.dao;
 
-import com.web.datebase.entity.Agent;
-import com.web.datebase.entity.PlatFromUsers;
-import com.web.datebase.entity.Prices;
+import com.web.database.entity.Agent;
+import com.web.database.entity.PlatFromUsers;
+import com.web.database.entity.Prices;
 import org.apache.ibatis.annotations.Select;
 import org.springframework.stereotype.Component;
 
@@ -21,7 +21,6 @@ public interface OrderHongKongDao {
 
     /**
      *查询用户姓名
-     * @param Table 表名 不同平台用户 表不一样
      * @param userId 用户id
      * WITHDRAWAL 止盈
      * BALANCE 止损
@@ -34,7 +33,6 @@ public interface OrderHongKongDao {
 
     /**
      *查询用户姓名
-     * @param Table 表名 不同平台用户 表不一样
      * @param userId 用户id
      * WITHDRAWAL 止盈
      * BALANCE 止损
