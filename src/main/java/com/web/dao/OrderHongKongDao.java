@@ -1,10 +1,8 @@
 package com.web.dao;
 
 import com.web.datebase.entity.Agent;
+import com.web.datebase.entity.PlatFromUsers;
 import com.web.datebase.entity.Prices;
-import com.web.datebase.entity.Users75;
-import com.web.datebase.entity.Users76;
-import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Select;
 import org.springframework.stereotype.Component;
 
@@ -30,7 +28,7 @@ public interface OrderHongKongDao {
      * @return
      */
     @Select("select LOGIN,REGDATE,AGENT,NAME,DEPOSIT,WITHDRAWAL,BALANCE from users75 where LOGIN=#{arg1};")
-    public Users75 getUser75 ( String userId);
+    public PlatFromUsers getUser75 (String userId);
 
 
 
@@ -43,7 +41,7 @@ public interface OrderHongKongDao {
      * @return
      */
     @Select("select LOGIN,REGDATE,AGENT,NAME,DEPOSIT,WITHDRAWAL,BALANCE from users76 where LOGIN=#{arg1};")
-    public Users76 getUser76 ( String userId);
+    public PlatFromUsers getUser76 ( String userId);
 
 
 

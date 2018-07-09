@@ -1,3 +1,4 @@
+$(function () {
     var contractInfoTable = $("#contractInfoTable");
     var varietyTable = $("#varietyTable");
     var method = "post";

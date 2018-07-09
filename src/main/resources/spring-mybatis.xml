@@ -13,19 +13,22 @@
                         http://www.springframework.org/schema/context/spring-context-3.1.xsd
                         http://www.springframework.org/schema/tx
                         http://www.springframework.org/schema/tx/spring-tx.xsd">
-    <!-- 自动扫描 -->
-    <context:component-scan base-package="com.web"/>
-    <!-- 启用AjpectJ自动代理 -->
-    <aop:aspectj-autoproxy/>
 
+    <!-- 启用AjpectJ自动代理 -->
+    <aop:aspectj-autoproxy></aop:aspectj-autoproxy>
+
+
+    <!-- 启用注解式事务处理 --><!-- (事务管理)transaction manager, use JtaTransactionManager for global tx -->
+    <!--<tx:annotation-driven transaction-manager="transactionManager"/>-->
     <!-- 第一种方式：加载一个properties文件 -->
     <bean id="propertyConfigurer" class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
+        <property name="order" value="12" />
+        <property name="ignoreUnresolvablePlaceholders" value="true" />
         <property name="location" value="classpath:jdbc.properties"/>
     </bean>
 
-
     <!-- 本地数据源 -->
-    <bean id="dataSource" class="org.apache.commons.dbcp.BasicDataSource"
+    <bean id="myDataSource" class="org.apache.commons.dbcp.BasicDataSource"
           destroy-method="close">
         <property name="driverClassName" value="${driverClasss}"/>
         <property name="url" value="${jdbcUrl}"/>
@@ -61,30 +64,18 @@
         <!-- 获取连接最大等待时间 -->
         <property name="maxWait" value="${jdbc.hongkong.maxWait}"></property>
     </bean>
-    <bean id="multipleDataSource" class="com.web.datebase.config.MultipleDataSource">
-
-        <property name="targetDataSources">
-            <map>
-                <entry key="dataSource" value-ref="dataSource"/>
-                <entry key="dataSourceHongKong" value-ref="dataSourceHongKong"/>
-            </map>
-        </property>
-        <!-- 设置默认的目标数据源 -->
-        <property name="defaultTargetDataSource" ref="dataSource"/>
-    </bean>
-    <!-- mybatis和spring完美整合，不需要mybatis的配置映射文件 -->
-    <bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
-        <property name="dataSource" ref="multipleDataSource"/>
-        <!-- 自动扫描mapping.xml文件 -->
-        <property name="mapperLocations" value="classpath:com/web/mapping/*.xml"></property>
-
-    </bean>
 
     <!-- DAO接口所在包名，Spring会自动查找其下的类 -->
     <bean class="org.mybatis.spring.mapper.MapperScannerConfigurer">
         <property name="basePackage" value="com.web.dao"/>
-        <property name="sqlSessionFactoryBeanName" value="sqlSessionFactory"></property>
+        <!--<property name="sqlSessionFactoryBeanName" value="sqlSessionFactory"></property>-->
     </bean>
+
+    <!-- 自动扫描 -->
+    <context:component-scan base-package="com.web">
+        <context:exclude-filter type="annotation"
+       expression="org.springframework.stereotype.Controller" />
+    </context:component-scan>
 
 
     <!-- (事务管理)transaction manager, use JtaTransactionManager for global tx -->
@@ -92,8 +83,29 @@
         <property name="dataSource" ref="multipleDataSource"/>
     </bean>
 
+
+    <!--定义数据源切换类-->
+    <bean id="multipleDataSource" class="com.web.datebase.config.MultipleDataSource">
+        <!--&lt;!&ndash; 设置默认的目标数据源 &ndash;&gt;-->
+        <property name="defaultTargetDataSource" ref="myDataSource"/>
+        <property name="targetDataSources">
+            <map>
+                <entry key="myDataSource" value-ref="myDataSource"/>
+                <entry key="dataSourceHongKong" value-ref="dataSourceHongKong"/>
+            </map>
+        </property>
+
+    </bean>
+
+    <!-- mybatis和spring完美整合，不需要mybatis的配置映射文件 -->
+    <bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
+        <property name="dataSource" ref="multipleDataSource"/>
+        <!--<property name="configLocation" value="classpath:mybatis.xml"></property>-->
+        <!-- 自动扫描mapping.xml文件 -->
+        <property name="mapperLocations" value="classpath:com/web/mapping/*.xml"></property>
+
+    </bean>
+
     <import resource="spring-activemq.xml"/>
-    <!-- (事务管理)transaction manager, use JtaTransactionManager for global tx -->
-    <tx:annotation-driven transaction-manager="transactionManager"/>
 
 </beans>

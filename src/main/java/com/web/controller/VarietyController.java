@@ -19,6 +19,8 @@ public class VarietyController {
     @RequestMapping("/getListVariety.Action")
     @ResponseBody
     public String getListVariety(){
+
+    	System.out.println("5454545");
         return WebJsion.toJson(varietyService.getVarietyList());
     }
 }

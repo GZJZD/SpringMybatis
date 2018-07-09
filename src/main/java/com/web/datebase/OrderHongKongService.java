@@ -2,9 +2,9 @@ package com.web.datebase;
 
 import com.web.dao.OrderHongKongDao;
 import com.web.datebase.config.TransFormDataSource;
+import com.web.datebase.entity.Agent;
+import com.web.datebase.entity.PlatFromUsers;
 import com.web.datebase.entity.Prices;
-import com.web.datebase.entity.Users75;
-import com.web.datebase.entity.Users76;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -21,15 +21,22 @@ public class OrderHongKongService {
     }
 
     @TransFormDataSource(name="dataSourceHongKong")
-    public Users75 getUser75(String LOGIN){
-        Users75 users75 =  orderHongKongDao.getUser75(LOGIN);
-        return  users75;
+    public PlatFromUsers getUser75(String LOGIN){
+        PlatFromUsers platFromUsers =  orderHongKongDao.getUser75(LOGIN);
+        return  platFromUsers;
     }
 
     @TransFormDataSource(name="dataSourceHongKong")
-    public Users76 getUser76(String LOGIN){
-        Users76 users76 =  orderHongKongDao.getUser76(LOGIN);
-        return  users76;
+    public PlatFromUsers getUser76(String LOGIN){
+
+        PlatFromUsers platFromUsers =  orderHongKongDao.getUser76(LOGIN);
+        return  platFromUsers;
+    }
+
+    @TransFormDataSource(name="dataSourceHongKong")
+    public Agent getAgent(String agentId){
+        Agent agent =  orderHongKongDao.getAgent(agentId);
+        return  agent;
     }
 
 }
