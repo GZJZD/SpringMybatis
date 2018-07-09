@@ -25,7 +25,7 @@
       modify_user,
       create_time,
       create_user
-      from tb_contract_ info
+      from tb_contract_info
       where tb_variety_id =#{varietyId} and tb_platform_id = #{platformId}
     </select>
     <select id="getContractInfoList" resultMap="BaseResultMap">
@@ -39,7 +39,7 @@
       modify_user,
       create_time,
       create_user
-      from tb_contract_ info
+      from tb_contract_info
     </select>
 
 </mapper>
