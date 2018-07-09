@@ -1,4 +1,4 @@
-package com.web.datebase.entity;
+package com.web.database.entity;
 
 /**
  * 用于存放 各个平台的用户数据

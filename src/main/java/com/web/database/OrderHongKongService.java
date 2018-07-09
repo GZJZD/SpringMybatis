@@ -1,10 +1,10 @@
-package com.web.datebase;
+package com.web.database;
 
 import com.web.dao.OrderHongKongDao;
-import com.web.datebase.config.TransFormDataSource;
-import com.web.datebase.entity.Agent;
-import com.web.datebase.entity.PlatFromUsers;
-import com.web.datebase.entity.Prices;
+import com.web.database.config.TransFormDataSource;
+import com.web.database.entity.Agent;
+import com.web.database.entity.PlatFromUsers;
+import com.web.database.entity.Prices;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 

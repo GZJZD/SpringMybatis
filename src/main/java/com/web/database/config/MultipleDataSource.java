@@ -1,4 +1,4 @@
-package com.web.datebase.config;
+package com.web.database.config;
 
 import org.aspectj.lang.annotation.After;
 import org.aspectj.lang.annotation.Aspect;
@@ -16,7 +16,7 @@ public class MultipleDataSource extends AbstractRoutingDataSource {
     private static final ThreadLocal<String> dataSourceKey = new InheritableThreadLocal<String>();
     
     //切入点
-    @Pointcut("@annotation(com.web.datebase.config.TransFormDataSource)")
+    @Pointcut("@annotation(com.web.database.config.TransFormDataSource)")
     public void aspect() {}
 
 

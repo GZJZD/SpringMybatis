@@ -1,4 +1,4 @@
-package com.web.datebase.config;
+package com.web.database.config;
 
 import java.lang.annotation.*;
 
