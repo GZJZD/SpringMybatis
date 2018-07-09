@@ -482,7 +482,7 @@ layui.use(['laypage', 'layer'], function() {
 		count: 100,
 		layout: ['count', 'prev', 'page', 'next', 'limit', 'skip'],
 		jump: function(obj) {
-			console.log(obj)
+			// console.log(obj);
 		}
 	});
 
@@ -544,7 +544,9 @@ function showByTableId(table_Id, method, url, unique_Id, sortOrder, columns) {
 		},
 		buttonsAlign: 'right', //按钮对齐方式
 		columns: columns,
-		onLoadSuccess: function() {},
+		onLoadSuccess: function(data) {
+			console.log(data);
+		},
 		onLoadError: function(status) {
 			console.log(status);
 			//                  showTips("数据加载失败！");
