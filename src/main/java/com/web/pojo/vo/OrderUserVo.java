@@ -62,7 +62,7 @@ public class OrderUserVo {
     /**
      * 手数
      */
-    private int handNumber;
+    private Double handNumber;
 
     /**
      * 最近下单时间
@@ -228,11 +228,11 @@ public class OrderUserVo {
         this.doOrderNumber = doOrderNumber;
     }
 
-    public int getHandNumber() {
+    public Double getHandNumber() {
         return handNumber;
     }
 
-    public void setHandNumber(int handNumber) {
+    public void setHandNumber(Double handNumber) {
         this.handNumber = handNumber;
     }
 
