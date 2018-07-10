@@ -201,4 +201,18 @@ DateUtil {
 
         return date;
     }
+
+
+    /**
+     * 把毫秒转化成日期
+     * @param millSec(毫秒数)
+     * @return  String
+     */
+
+    public static String longToStrDate(Long millSec){
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        Date date= new Date(millSec);
+        return sdf.format(date);
+
+    }
 }
