@@ -17,7 +17,7 @@ public class OrderMsgResult implements Serializable {
     //对返回码的文本描述
     private String ermsg;
     //实际成交的的数量:开仓返回码,平仓的返回码没有
-    private Double tradeVolume;
+    private Integer tradeVolume;
     //价格
     private Double tradePrice;
     //手续费
@@ -27,11 +27,11 @@ public class OrderMsgResult implements Serializable {
     //时间
     private String tradeTime;
 
-    public Double getTradeVolume() {
+    public Integer getTradeVolume() {
         return tradeVolume;
     }
 
-    public void setTradeVolume(Double tradeVolume) {
+    public void setTradeVolume(Integer tradeVolume) {
         this.tradeVolume = tradeVolume;
     }
 
