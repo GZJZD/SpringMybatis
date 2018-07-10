@@ -308,7 +308,7 @@ public class FollowOrderServiceImpl implements FollowOrderService {
         //判断策略的状态是否在交易中,不在交易就进行判断
         if (followOrder.getNetPositionStatus().equals(FollowOrderEnum.FollowStatus.NET_POSITION_TRADING_PAUSE.getIndex())) {
             //获取原有的持仓数
-            Double oldHoldNum = followOrder.getNetPositionHoldNumber();
+            Integer oldHoldNum = followOrder.getNetPositionHoldNumber();
             log.debug(followOrder.getFollowOrderName() + "原有的持仓数:" + oldHoldNum);
             //应持仓多少手
             int newHoldNum = (int) (headNum / followOrder.getNetPositionChange());
@@ -327,7 +327,7 @@ public class FollowOrderServiceImpl implements FollowOrderService {
             if (newHoldNum != oldHoldNum) {
                 //下单为空单，当净头寸的值为正的时候，持仓数应该为负
                 //本次应该下单的数量
-                double interim = Math.abs((int) newHoldNum - oldHoldNum);
+                Integer interim = Math.abs((int) newHoldNum - oldHoldNum);
                 if (newHoldNum <= zero) {
                     //小于0就是空单
                     //并且应持仓数为负数的时候，如果大于原有的持仓数就是要平仓,并且应持仓数不为正数就不需要开仓
@@ -353,13 +353,13 @@ public class FollowOrderServiceImpl implements FollowOrderService {
                             followOrder.setNetPositionStatus(FollowOrderEnum.FollowStatus.NET_POSITION_TRADING_OPENCLOSE.getIndex());
                             //先做开仓,做空单
                             this.sendMsgByTrade(followOrder, FollowOrderEnum.FollowStatus.SELL.getIndex(), FollowOrderEnum.FollowStatus.OPEN.getIndex(),
-                                    (double) Math.abs(newHoldNum), data.getNewTicket(), data.getTicket(), data.getVarietyCode(), clientNetPosition.getId(), data.getLogin());
+                                  Math.abs(newHoldNum), data.getNewTicket(), data.getTicket(), data.getVarietyCode(), clientNetPosition.getId(), data.getLogin());
                         } else {
                             followOrder.setNetPositionStatus(FollowOrderEnum.FollowStatus.NET_POSITION_TRADING_START.getIndex());
                         }
                         //再来做一单，平仓做空单
                         this.sendMsgByTrade(followOrder, FollowOrderEnum.FollowStatus.SELL.getIndex(), FollowOrderEnum.FollowStatus.CLOSE.getIndex(),
-                                (double) Math.abs(oldHoldNum), data.getNewTicket(), data.getTicket(), data.getVarietyCode(), clientNetPosition.getId(), data.getLogin());
+                                Math.abs(oldHoldNum), data.getNewTicket(), data.getTicket(), data.getVarietyCode(), clientNetPosition.getId(), data.getLogin());
                     }
                 } else if (newHoldNum >= zero) {
                     //大于0:就做多单
@@ -386,14 +386,14 @@ public class FollowOrderServiceImpl implements FollowOrderService {
                             //设置正在交易中的状态,发送两条交易状态
                             followOrder.setNetPositionStatus(FollowOrderEnum.FollowStatus.NET_POSITION_TRADING_OPENCLOSE.getIndex());
                             this.sendMsgByTrade(followOrder, FollowOrderEnum.FollowStatus.BUY.getIndex(), FollowOrderEnum.FollowStatus.OPEN.getIndex(),
-                                    (double) Math.abs(newHoldNum), data.getNewTicket(), data.getTicket(), data.getVarietyCode(), clientNetPosition.getId(), data.getLogin());
+                                     Math.abs(newHoldNum), data.getNewTicket(), data.getTicket(), data.getVarietyCode(), clientNetPosition.getId(), data.getLogin());
                         } else {
                             //设置成普通交易状态
                             followOrder.setNetPositionStatus(FollowOrderEnum.FollowStatus.NET_POSITION_TRADING_START.getIndex());
                         }
                         //再来做一单，平仓
                         this.sendMsgByTrade(followOrder, FollowOrderEnum.FollowStatus.BUY.getIndex(), FollowOrderEnum.FollowStatus.CLOSE.getIndex(),
-                                (double) Math.abs(oldHoldNum), data.getNewTicket(), data.getTicket(), data.getVarietyCode(), clientNetPosition.getId(), data.getLogin());
+                                 Math.abs(oldHoldNum), data.getNewTicket(), data.getTicket(), data.getVarietyCode(), clientNetPosition.getId(), data.getLogin());
                     }
                 }
             }
@@ -417,6 +417,9 @@ public class FollowOrderServiceImpl implements FollowOrderService {
         //判断手数类型：按比例=比例数*客户的手数
         Double handNumber = followOrderClient.getHandNumberType().equals(FollowOrderEnum.FollowStatus.CLIENT_HAND_NUMBER_TYPE.getIndex()) ?
                 followOrderClient.getFollowHandNumber() : DoubleUtil.mul(Double.valueOf(followOrderClient.getFollowHandNumber()), data.getHandNumber());
+
+        //手数不能为0
+        int tradeHandNumber= (int) Math.floor(handNumber) == 0?1:(int) Math.floor(handNumber);
         //交易方向
         Integer direction;
         //反向跟单
@@ -432,14 +435,15 @@ public class FollowOrderServiceImpl implements FollowOrderService {
             FollowOrderDetail detail = followOrderDetailService.getFollowOrderDetailByTicket(data.getTicket(), followOrder.getId());
             if (detail != null) {
                 log.debug("跟客户平仓：followOrderName{},ticket{}," + followOrder.getFollowOrderName() + "、" + data.getTicket());
-                this.sendMsgByTrade(followOrder, direction, FollowOrderEnum.FollowStatus.CLOSE.getIndex(), handNumber, data.getNewTicket(), data.getTicket(),
+                //手数向下取整
+                this.sendMsgByTrade(followOrder, direction, FollowOrderEnum.FollowStatus.CLOSE.getIndex(), tradeHandNumber, data.getNewTicket(), data.getTicket(),
                         data.getVarietyCode(), null, data.getLogin());
             }
         } else {
             //开仓跟
             log.debug("跟客户开仓：followOrderName{},ticket{}," + followOrder.getFollowOrderName() + "、" + data.getTicket());
             this.sendMsgByTrade(followOrder, direction,
-                    FollowOrderEnum.FollowStatus.OPEN.getIndex(), handNumber, data.getNewTicket(), data.getTicket(),
+                    FollowOrderEnum.FollowStatus.OPEN.getIndex(), tradeHandNumber, data.getNewTicket(), data.getTicket(),
                     data.getVarietyCode(), null, data.getLogin());
         }
     }
@@ -517,6 +521,21 @@ public class FollowOrderServiceImpl implements FollowOrderService {
                     @Override
                     public void callback_orderClose(int ret, orderCloseResponse rsp) {
                     }
+
+                    @Override
+                    public void callback_instrumentQuery(int ret, instrumentQueryResponse rsp) {
+
+                    }
+
+                    @Override
+                    public void callback_instrumentCommissionQuery(int ret, instrumentCommissionQueryResponse rsp) {
+
+                    }
+
+                    @Override
+                    public void callback_marketDataQuery(int ret, marketDataQueryResponse rsp) {
+
+                    }
                 }, req);
             } catch (Exception e) {
                 e.printStackTrace();
@@ -581,13 +600,13 @@ public class FollowOrderServiceImpl implements FollowOrderService {
     @Override
     public void updateHoldNumByTradeAndFollowOrder(FollowOrder followOrder, FollowOrderTradeRecord followOrderTradeRecord) {
         //设置持仓值,获取原来的持仓值
-        Double oldHoldNum = followOrder.getNetPositionHoldNumber();
+        Integer oldHoldNum = followOrder.getNetPositionHoldNumber();
         if (followOrderTradeRecord.getTradeDirection().equals(FollowOrderEnum.FollowStatus.SELL.getIndex())) {
             //做空就减
-            followOrder.setNetPositionHoldNumber(DoubleUtil.sub(oldHoldNum, followOrderTradeRecord.getHandNumber()));
+            followOrder.setNetPositionHoldNumber(oldHoldNum-followOrderTradeRecord.getHandNumber());
         } else {
             //做多就加
-            followOrder.setNetPositionHoldNumber(DoubleUtil.add(oldHoldNum, followOrderTradeRecord.getHandNumber()));
+            followOrder.setNetPositionHoldNumber(oldHoldNum+followOrderTradeRecord.getHandNumber());
 
         }
     }
@@ -630,7 +649,7 @@ public class FollowOrderServiceImpl implements FollowOrderService {
      * @Date: 11:38 2zero18/5/1zero
      */
     public void sendMsgByTrade(FollowOrder followOrder, Integer orderDirection, Integer openClose,
-                               Double handNumber, String newTicket, String ticket, String varietyCode, Long clientNetPositionId, String clientName) {
+                               Integer handNumber, String newTicket, String ticket, String varietyCode, Long clientNetPositionId, String clientName) {
 
         FollowOrderTradeRecord followOrderTradeRecord = new FollowOrderTradeRecord();
         //设置新开仓单号
@@ -712,10 +731,19 @@ public class FollowOrderServiceImpl implements FollowOrderService {
                             closeResult.setRequestId(rsp.requestId);
                             closeResult.setErmsg(rsp.errmsg);
                             closeResult.setErrcode(rsp.errcode);
-                            closeResult.setTradePrice(rsp.tradePrice);
-                            closeResult.setTradeCommission(rsp.tradeCommission);
-                            closeResult.setTradeDate(rsp.tradeDate);
-                            closeResult.setTradeTime(rsp.tradeTime);
+                            Double closePrice = 0.0;
+                            int handNumber = 0;
+                            for (tradeItem item : rsp.tradeArrayItems) {
+                                closePrice = DoubleUtil.add(closePrice,item.price);
+                                handNumber += item.volume;
+                            }
+                            log.debug("平仓交易数据详情"+WebJsion.toJson(rsp.tradeArrayItems));
+
+                            closeResult.setTradePrice(DoubleUtil.div(closePrice, Double.valueOf(handNumber),2));
+                            //todo 手续费：手数* （开仓/平仓手续费 + 成交价 * 开仓/平仓手续费率）
+                            closeResult.setTradeCommission(22.2);
+                            closeResult.setTradeDate(rsp.tradeArrayItems.get(rsp.tradeArrayItems.size()-1).tradeDate);
+                            closeResult.setTradeTime(rsp.tradeArrayItems.get(rsp.tradeArrayItems.size()-1).tradeTime);
                             log.debug("接受一条平仓交易信息：" + WebJsion.toJson(closeResult));
                             followOrderTradeRecordService.updateRecordByComeBackTradeMsg(closeResult);
                         } else {
@@ -727,6 +755,21 @@ public class FollowOrderServiceImpl implements FollowOrderService {
                                 log.error("Tars框架异常：" + ret);
                             }
                         }
+                    }
+
+                    @Override
+                    public void callback_instrumentQuery(int ret, instrumentQueryResponse rsp) {
+
+                    }
+
+                    @Override
+                    public void callback_instrumentCommissionQuery(int ret, instrumentCommissionQueryResponse rsp) {
+
+                    }
+
+                    @Override
+                    public void callback_marketDataQuery(int ret, marketDataQueryResponse rsp) {
+
                     }
                 }, close);
             } catch (Exception e) {
@@ -777,14 +820,24 @@ public class FollowOrderServiceImpl implements FollowOrderService {
                     public void callback_orderOpen(int ret, orderOpenResponse rsp) {
                         if (ret == 0 && rsp.errcode == 0) {
                             OrderMsgResult openResult = new OrderMsgResult();
-                            openResult.setRequestId(rsp.requestId);
-                            openResult.setErmsg(rsp.errmsg);
-                            openResult.setErrcode(rsp.errcode);
-                            openResult.setTradePrice(rsp.tradePrice);
-                            openResult.setTradeCommission(rsp.tradeCommission);
-                            openResult.setTradeDate(rsp.tradeDate);
-                            openResult.setTradeTime(rsp.tradeTime);
-                            openResult.setTradeVolume(rsp.tradeVolume);
+                            openResult.setRequestId(rsp.requestId);//交易记录id
+                            openResult.setErmsg(rsp.errmsg);//返回信息
+                            openResult.setErrcode(rsp.errcode);//返回的错误码
+                            Double closePrice = 0.0;
+                            int handNumber = 0;
+                            for (tradeItem item : rsp.tradeArrayItems) {
+                                closePrice = DoubleUtil.add(closePrice,item.price);//累加价格
+                                handNumber += item.volume;//累加手数
+                            }
+                            log.debug("开仓交易数据详情"+WebJsion.toJson(rsp));
+
+                            openResult.setTradePrice(DoubleUtil.div(closePrice, Double.valueOf(handNumber),2));
+                            //todo 手续费：手数* （开仓/平仓手续费 + 成交价 * 开仓/平仓手续费率）
+                            openResult.setTradeCommission(22.2);
+                            openResult.setTradeDate(rsp.tradeArrayItems.get(rsp.tradeArrayItems.size()-1).tradeDate);//交易日期：20180512
+                            openResult.setTradeTime(rsp.tradeArrayItems.get(rsp.tradeArrayItems.size()-1).tradeTime);//交易时间：203024
+
+                            openResult.setTradeVolume(handNumber);//成功交易手数
                             log.debug("接收一条开仓交易信息：" + WebJsion.toJson(openResult));
                             followOrderTradeRecordService.updateRecordByComeBackTradeMsg(openResult);
                         } else {
@@ -800,6 +853,21 @@ public class FollowOrderServiceImpl implements FollowOrderService {
 
                     @Override
                     public void callback_orderClose(int ret, orderCloseResponse rsp) {
+                    }
+
+                    @Override
+                    public void callback_instrumentQuery(int ret, instrumentQueryResponse rsp) {
+
+                    }
+
+                    @Override
+                    public void callback_instrumentCommissionQuery(int ret, instrumentCommissionQueryResponse rsp) {
+
+                    }
+
+                    @Override
+                    public void callback_marketDataQuery(int ret, marketDataQueryResponse rsp) {
+
                     }
                 }, open);
             } catch (Exception e) {

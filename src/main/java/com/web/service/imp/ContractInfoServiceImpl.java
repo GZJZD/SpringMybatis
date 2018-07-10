@@ -25,4 +25,9 @@ public class ContractInfoServiceImpl implements ContractInfoService {
     public List<ContractInfo> getContractInfoList() {
         return contractInfoDao.getContractInfoList();
     }
+    
+    @Override
+    public ContractInfo getContractInfoById(Long id) {
+        return contractInfoDao.getContractInfoById(id);
+    }
 }
