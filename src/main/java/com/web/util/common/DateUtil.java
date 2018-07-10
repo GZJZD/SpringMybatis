@@ -1,5 +1,7 @@
 package com.web.util.common;
 
+
+
 import java.text.ParsePosition;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -10,10 +12,10 @@ DateUtil {
     /**
      * 要用到的DATE Format的定义
      */
-    public static String DATE_FORMAT_DATEONLY = "yyyy-MM-dd"; // 年/月/日
-    public static String DATE_FORMAT_DATETIME = "yyyy-MM-dd HH:mm:ss"; // 年/月/日
-    public static SimpleDateFormat sdfDateTime = new SimpleDateFormat(DateUtil.DATE_FORMAT_DATETIME);
-    public static SimpleDateFormat sdfDateOnly = new SimpleDateFormat(DateUtil.DATE_FORMAT_DATEONLY);
+    public static String DATE_YYYY_MM_DD = "yyyy-MM-dd"; // 年/月/日
+    public static String DATE_YYYY_MM_DD_HH_MM_SS = "yyyy-MM-dd HH:mm:ss"; // 年/月/日
+    public static SimpleDateFormat sdfDate_Y_M_D_H_M_S = new SimpleDateFormat(DateUtil.DATE_YYYY_MM_DD_HH_MM_SS);
+    public static SimpleDateFormat sdfDate_Y_M_D = new SimpleDateFormat(DateUtil.DATE_YYYY_MM_DD);
     public static final SimpleDateFormat formatTimestamp = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
     public static final SimpleDateFormat SHORTDATEFORMAT = new SimpleDateFormat("yyyyMMdd");
     public static final SimpleDateFormat SHORT_DATE_FORMAT = new SimpleDateFormat("yyyy-MM-dd");
@@ -27,7 +29,7 @@ DateUtil {
      */
     public static Date getNowDate() {
         Date currentTime = new Date();
-        SimpleDateFormat formatter = new SimpleDateFormat(DATE_FORMAT_DATETIME);
+        SimpleDateFormat formatter = sdfDate_Y_M_D_H_M_S;
         String dateString = formatter.format(currentTime);
         ParsePosition pos = new ParsePosition(8);
         Date currentTime_2 = formatter.parse(dateString, pos);
@@ -42,7 +44,7 @@ DateUtil {
      */
     public static String getStringDate() {
         Date currentTime = new Date();
-        SimpleDateFormat formatter = new SimpleDateFormat(DATE_FORMAT_DATETIME);
+        SimpleDateFormat formatter = sdfDate_Y_M_D_H_M_S;
         String dateString = formatter.format(currentTime);
         return dateString;
     }
@@ -53,7 +55,7 @@ DateUtil {
      */
     public static String getStringDateShort() {
         Date currentTime = new Date();
-        SimpleDateFormat formatter = new SimpleDateFormat(DATE_FORMAT_DATEONLY);
+        SimpleDateFormat formatter = sdfDate_Y_M_D;
         String dateString = formatter.format(currentTime);
         return dateString;
     }
@@ -63,7 +65,7 @@ DateUtil {
      * @return
      */
     public static String getTimeShort() {
-        SimpleDateFormat formatter =  HMS_FORMAT;
+        SimpleDateFormat formatter = new SimpleDateFormat("HH:mm:ss");
         Date currentTime = new Date();
         String dateString = formatter.format(currentTime);
         return dateString;
@@ -75,7 +77,7 @@ DateUtil {
      * @return
      */
     public static Date strToDateLong(String strDate) {
-        SimpleDateFormat formatter = new SimpleDateFormat(DATE_FORMAT_DATETIME);
+        SimpleDateFormat formatter = sdfDate_Y_M_D_H_M_S;
         ParsePosition pos = new ParsePosition(0);
         Date strtodate = formatter.parse(strDate, pos);
         return strtodate;
@@ -87,7 +89,7 @@ DateUtil {
      * @return
      */
     public static String dateToStrLong(Date dateDate) {
-        SimpleDateFormat formatter = new SimpleDateFormat(DATE_FORMAT_DATETIME);
+        SimpleDateFormat formatter = sdfDate_Y_M_D_H_M_S;
         String dateString = formatter.format(dateDate);
         return dateString;
     }
@@ -95,11 +97,11 @@ DateUtil {
      * 将短时间格式时间转换为字符串 yyyy-MM-dd
      *
      * @param dateDate
-     * @param k
+     * @param
      * @return
      */
     public static String dateToStr(Date dateDate) {
-        SimpleDateFormat formatter = new SimpleDateFormat(DATE_FORMAT_DATEONLY);
+        SimpleDateFormat formatter = sdfDate_Y_M_D;
         String dateString = formatter.format(dateDate);
         return dateString;
     }
@@ -110,7 +112,7 @@ DateUtil {
      * @return
      */
     public static Date strToDate(String strDate) {
-        SimpleDateFormat formatter = new SimpleDateFormat(DATE_FORMAT_DATEONLY);
+        SimpleDateFormat formatter = sdfDate_Y_M_D;
         ParsePosition pos = new ParsePosition(0);
         Date strtodate = formatter.parse(strDate, pos);
         return strtodate;
@@ -152,7 +154,7 @@ DateUtil {
      */
     public static String getHour() {
         Date currentTime = new Date();
-        SimpleDateFormat formatter = new SimpleDateFormat(DATE_FORMAT_DATETIME);
+        SimpleDateFormat formatter = sdfDate_Y_M_D_H_M_S;
         String dateString = formatter.format(currentTime);
         String hour;
         hour = dateString.substring(11, 13);
@@ -165,7 +167,7 @@ DateUtil {
      */
     public static String getTime() {
         Date currentTime = new Date();
-        SimpleDateFormat formatter = new SimpleDateFormat(DATE_FORMAT_DATETIME);
+        SimpleDateFormat formatter = sdfDate_Y_M_D_H_M_S;
         String dateString = formatter.format(currentTime);
         String min;
         min = dateString.substring(14, 16);
@@ -222,7 +224,7 @@ DateUtil {
      */
 
     public static String longToStrDate(Long millSec){
-        SimpleDateFormat sdf = new SimpleDateFormat(DATE_FORMAT_DATETIME);
+        SimpleDateFormat sdf = sdfDate_Y_M_D_H_M_S;
         Date date= new Date(millSec);
         return sdf.format(date);
 
