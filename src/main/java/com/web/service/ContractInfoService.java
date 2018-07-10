@@ -17,4 +17,5 @@ public interface ContractInfoService {
      */
     ContractInfo getInfoByVarietyIdAndPlatformId( Long varietyId,Long platformId);
     List<ContractInfo> getContractInfoList();
+    ContractInfo getContractInfoById(Long id);
 }

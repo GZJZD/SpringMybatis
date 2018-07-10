@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.web.dao.ContractInfoDao">
+    <resultMap id="BaseResultMap" type="com.web.pojo.ContractInfo">
+        <id column="id" property="id"/>
+        <result column="max_market_order_volumn" property="maxMarketOrderVolume"/>
+        <result column="min_market_order_volumn" property="minMarketOrderVolume"/>
+        <result column="volumn_multiple" property="volumeMultiple"  />
+        <result column="price_tick" property="priceTick"/>
+        <result column="open_ratio_money" property="openRatioByMoney"/>
+        <result column="open_ratio_volumn" property="openRatioByVolume"/>
+        <result column="close_ratio_money" property="closeRatioByMoney"/>
+        <result column="close_ratio_volumn" property="closeRatioByVolume"/>
+        <association property="contractInfo" javaType="com.web.pojo.ContractInfo" column="contract_info_id" 
+        	select="com.web.dao.ContractInfoDao.getContractInfoById"/>
+    </resultMap>
+
+</mapper>

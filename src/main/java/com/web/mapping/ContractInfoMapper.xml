@@ -41,5 +41,19 @@
       create_user
       from tb_contract_info
     </select>
+    <select id="getContractInfoById" resultMap="BaseResultMap">
+      SELECT
+      id,
+      tb_variety_id,
+      tb_platform_id,
+      contract_code,
+      contract_name,
+      modify_time,
+      modify_user,
+      create_time,
+      create_user
+      from tb_contract_info
+      where id =#{id}
+    </select>
 
 </mapper>

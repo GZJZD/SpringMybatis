@@ -11,4 +11,5 @@ import java.util.List;
 public interface ContractInfoDao {
     ContractInfo getInfoByVarietyIdAndPlatformId(@Param("varietyId") Long varietyId, @Param("platformId") Long platformId);
     List<ContractInfo> getContractInfoList();
+    ContractInfo getContractInfoById(Long id);
 }
