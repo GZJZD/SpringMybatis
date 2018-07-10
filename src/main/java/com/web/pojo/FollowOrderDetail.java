@@ -17,11 +17,11 @@ public class FollowOrderDetail implements Serializable {
     //交易方向:买入/卖出
     private Integer tradeDirection;
     //实际手数
-    private Double handNumber;
+    private Integer handNumber;
     //剩下手数
-    private Double remainHandNumber;
+    private Integer remainHandNumber;
     //应交易的数量
-    private Double OriginalHandNumber;
+    private Integer originalHandNumber;
     //交易id
     private Long followOrderTradeRecordId;
     //交易账号id
@@ -53,21 +53,6 @@ public class FollowOrderDetail implements Serializable {
     //版本
     private Integer version=0;
 
-    public String getUpdateDate() {
-        return updateDate;
-    }
-
-    public void setUpdateDate(String updateDate) {
-        this.updateDate = updateDate;
-    }
-
-    public String getCreateDate() {
-        return createDate;
-    }
-
-    public void setCreateDate(String createDate) {
-        this.createDate = createDate;
-    }
 
     public Long getId() {
         return id;
@@ -101,12 +86,44 @@ public class FollowOrderDetail implements Serializable {
         this.tradeDirection = tradeDirection;
     }
 
-    public Double getHandNumber() {
+    public Integer getHandNumber() {
         return handNumber;
     }
 
-    public void setHandNumber(Double handNumber) {
+    public void setHandNumber(Integer handNumber) {
         this.handNumber = handNumber;
+    }
+
+    public Integer getRemainHandNumber() {
+        return remainHandNumber;
+    }
+
+    public void setRemainHandNumber(Integer remainHandNumber) {
+        this.remainHandNumber = remainHandNumber;
+    }
+
+    public Integer getOriginalHandNumber() {
+        return originalHandNumber;
+    }
+
+    public void setOriginalHandNumber(Integer originalHandNumber) {
+        this.originalHandNumber = originalHandNumber;
+    }
+
+    public Long getFollowOrderTradeRecordId() {
+        return followOrderTradeRecordId;
+    }
+
+    public void setFollowOrderTradeRecordId(Long followOrderTradeRecordId) {
+        this.followOrderTradeRecordId = followOrderTradeRecordId;
+    }
+
+    public Long getAccountId() {
+        return accountId;
+    }
+
+    public void setAccountId(Long accountId) {
+        this.accountId = accountId;
     }
 
     public Double getOpenPrice() {
@@ -117,12 +134,12 @@ public class FollowOrderDetail implements Serializable {
         this.openPrice = openPrice;
     }
 
-    public void setTicket(String ticket) {
-        this.ticket = ticket;
+    public String getOpenTime() {
+        return openTime;
     }
 
-    public String getTicket() {
-        return ticket;
+    public void setOpenTime(String openTime) {
+        this.openTime = openTime;
     }
 
     public Double getClosePrice() {
@@ -131,14 +148,6 @@ public class FollowOrderDetail implements Serializable {
 
     public void setClosePrice(Double closePrice) {
         this.closePrice = closePrice;
-    }
-
-    public String getOpenTime() {
-        return openTime;
-    }
-
-    public void setOpenTime(String openTime) {
-        this.openTime = openTime;
     }
 
     public String getCloseTime() {
@@ -173,6 +182,38 @@ public class FollowOrderDetail implements Serializable {
         this.clientProfit = clientProfit;
     }
 
+    public String getTicket() {
+        return ticket;
+    }
+
+    public void setTicket(String ticket) {
+        this.ticket = ticket;
+    }
+
+    public Long getUpdateByUser() {
+        return updateByUser;
+    }
+
+    public void setUpdateByUser(Long updateByUser) {
+        this.updateByUser = updateByUser;
+    }
+
+    public String getUpdateDate() {
+        return updateDate;
+    }
+
+    public void setUpdateDate(String updateDate) {
+        this.updateDate = updateDate;
+    }
+
+    public String getCreateDate() {
+        return createDate;
+    }
+
+    public void setCreateDate(String createDate) {
+        this.createDate = createDate;
+    }
+
     public Long getFollowOrderId() {
         return followOrderId;
     }
@@ -187,45 +228,5 @@ public class FollowOrderDetail implements Serializable {
 
     public void setVersion(Integer version) {
         this.version = version;
-    }
-
-    public Long getUpdateByUser() {
-        return updateByUser;
-    }
-
-    public void setUpdateByUser(Long updateByUser) {
-        this.updateByUser = updateByUser;
-    }
-
-    public Double getRemainHandNumber() {
-        return remainHandNumber;
-    }
-
-    public void setRemainHandNumber(Double remainHandNumber) {
-        this.remainHandNumber = remainHandNumber;
-    }
-
-    public Long getFollowOrderTradeRecordId() {
-        return followOrderTradeRecordId;
-    }
-
-    public void setFollowOrderTradeRecordId(Long followOrderTradeRecordId) {
-        this.followOrderTradeRecordId = followOrderTradeRecordId;
-    }
-
-    public Double getOriginalHandNumber() {
-        return OriginalHandNumber;
-    }
-
-    public void setOriginalHandNumber(Double originalHandNumber) {
-        OriginalHandNumber = originalHandNumber;
-    }
-
-    public Long getAccountId() {
-        return accountId;
-    }
-
-    public void setAccountId(Long accountId) {
-        this.accountId = accountId;
     }
 }

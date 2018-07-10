@@ -243,7 +243,7 @@ public class FollowOrderDetailServiceImpl implements FollowOrderDetailService {
                 //开仓单号和新开仓单号不一致 和不是固定手数
                 //新建开仓单号
                 FollowOrderDetail detailNew = new FollowOrderDetail();
-                detailNew.setHandNumber(DoubleUtil.sub(detail.getHandNumber(), followOrderTradeRecord.getHandNumber()));
+                detailNew.setHandNumber(detail.getHandNumber()-followOrderTradeRecord.getHandNumber());
                 detailNew.setOriginalHandNumber(detailNew.getHandNumber());
                 detailNew.setTicket(followOrderTradeRecord.getNewTicket());
                 detailNew.setPoundage(detail.getPoundage());
@@ -264,8 +264,8 @@ public class FollowOrderDetailServiceImpl implements FollowOrderDetailService {
             //设置平仓价格
             detail.setClosePrice(orderMsgResult.getTradePrice());
             //设置平仓盈亏
-            detail.setProfitLoss(DoubleUtil.sub(DoubleUtil.mul(detail.getHandNumber(),
-                    detail.getClosePrice()), DoubleUtil.mul(detail.getHandNumber(), detail.getOpenPrice())));
+            detail.setProfitLoss(DoubleUtil.sub(DoubleUtil.mul(Double.valueOf(detail.getHandNumber()),
+                    detail.getClosePrice()), DoubleUtil.mul(Double.valueOf(detail.getHandNumber()), detail.getOpenPrice())));
             //设置平仓盈亏*100:1手等于100股
             detail.setProfitLoss(DoubleUtil.mul(detail.getProfitLoss(),100.0));
             //手续费
@@ -299,7 +299,7 @@ public class FollowOrderDetailServiceImpl implements FollowOrderDetailService {
                     getFollowOrderId(), FollowOrderEnum.FollowStatus.BUY.getIndex());
         }
         //获取交易的手数
-        Double tradeHandNumber;
+        Integer tradeHandNumber;
         if (orderMsgResult.getTradeVolume() != null) {
             tradeHandNumber = orderMsgResult.getTradeVolume();
         } else {
@@ -312,16 +312,16 @@ public class FollowOrderDetailServiceImpl implements FollowOrderDetailService {
             Double detailPrice;//开仓价格
             if (tradeHandNumber != 0) {
                 //获取明细剩下的手数进行平仓
-                Double detailHandNumber = followOrderDetail.getRemainHandNumber();
+                Integer detailHandNumber = followOrderDetail.getRemainHandNumber();
                 if (detailHandNumber > tradeHandNumber) {
-                    tradePrice = DoubleUtil.mul(tradeHandNumber, followOrderTradeRecord.getMarketPrice());
-                    detailPrice = DoubleUtil.mul(tradeHandNumber, followOrderDetail.getOpenPrice());
-                    followOrderDetail.setRemainHandNumber(DoubleUtil.sub(detailHandNumber, tradeHandNumber));
+                    tradePrice = DoubleUtil.mul(Double.valueOf(tradeHandNumber), followOrderTradeRecord.getMarketPrice());
+                    detailPrice = DoubleUtil.mul(Double.valueOf(tradeHandNumber), followOrderDetail.getOpenPrice());
+                    followOrderDetail.setRemainHandNumber(detailHandNumber-tradeHandNumber);
                 } else {
-                    followOrderDetail.setRemainHandNumber(0.0);
-                    tradePrice = DoubleUtil.mul(detailHandNumber, followOrderTradeRecord.getMarketPrice());
-                    detailPrice = DoubleUtil.mul(detailHandNumber, followOrderDetail.getOpenPrice());
-                    tradeHandNumber = DoubleUtil.sub(tradeHandNumber, detailHandNumber);
+                    followOrderDetail.setRemainHandNumber(0);
+                    tradePrice = DoubleUtil.mul(Double.valueOf(detailHandNumber), followOrderTradeRecord.getMarketPrice());
+                    detailPrice = DoubleUtil.mul(Double.valueOf(detailHandNumber), followOrderDetail.getOpenPrice());
+                    tradeHandNumber = tradeHandNumber-detailHandNumber;
                 }
                 profitLoss = DoubleUtil.add(profitLoss, DoubleUtil.sub(tradePrice,
                         detailPrice));

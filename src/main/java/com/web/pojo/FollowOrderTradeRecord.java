@@ -16,7 +16,7 @@ public class FollowOrderTradeRecord implements Serializable {
     //品种代码
     private String varietyCode;
     //手数
-    private Double handNumber;
+    private Integer handNumber;
     //交易时间
     private String tradeTime;
     //交易方向:多/空
@@ -72,11 +72,11 @@ public class FollowOrderTradeRecord implements Serializable {
         this.varietyCode = varietyCode;
     }
 
-    public Double getHandNumber() {
+    public Integer getHandNumber() {
         return handNumber;
     }
 
-    public void setHandNumber(Double handNumber) {
+    public void setHandNumber(Integer handNumber) {
         this.handNumber = handNumber;
     }
 

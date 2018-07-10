@@ -62,7 +62,7 @@ public class FollowOrder extends BaseUtil{
     private Double netPositionSum=0.0;
 
     //持仓值
-    private Double netPositionHoldNumber=0.0;
+    private Integer netPositionHoldNumber=0;
 
     //判断是否正在交易
     private Integer netPositionStatus;
@@ -212,11 +212,11 @@ public class FollowOrder extends BaseUtil{
         this.netPositionSum = netPositionSum;
     }
 
-    public Double getNetPositionHoldNumber() {
+    public Integer getNetPositionHoldNumber() {
         return netPositionHoldNumber;
     }
 
-    public void setNetPositionHoldNumber(Double netPositionHoldNumber) {
+    public void setNetPositionHoldNumber(Integer netPositionHoldNumber) {
         this.netPositionHoldNumber = netPositionHoldNumber;
     }
 
