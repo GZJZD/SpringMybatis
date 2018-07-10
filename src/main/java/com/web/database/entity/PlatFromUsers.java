@@ -13,7 +13,7 @@ public class PlatFromUsers {
      */
     private String REGDATE;
     /**
-     *代理人
+     *代理人ID
      */
     private String AGENT;
     /**

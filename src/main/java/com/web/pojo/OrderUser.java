@@ -66,11 +66,25 @@ public class OrderUser  extends BaseUtil {
      */
     private String agencyName;
 
+    /**
+     * 手续费
+     */
+    private Double commission;
+
+    /**
+     *  止盈
+     */
+    private Double stopProfit;
+
+    /**
+     * 止损
+     */
+    private Double stopLoss;
     public OrderUser() {
 
     }
 
-    public OrderUser(String userCode, String ticket, String productCode, Integer longShort, Double handNumber, Double openPrice, Double closePrice, String openTime, String closeTime, Double profit, Double price, String platFormCode, String agencyName) {
+    public OrderUser(String userCode, String ticket, String productCode, Integer longShort, Double handNumber, Double openPrice, Double closePrice, String openTime, String closeTime, Double profit, Double price, String platFormCode, String agencyName, Double commission, Double stopProfit, Double stopLoss) {
         this.userCode = userCode;
         this.ticket = ticket;
         this.productCode = productCode;
@@ -84,7 +98,33 @@ public class OrderUser  extends BaseUtil {
         this.price = price;
         this.platFormCode = platFormCode;
         this.agencyName = agencyName;
+        this.commission = commission;
+        this.stopProfit = stopProfit;
+        this.stopLoss = stopLoss;
+    }
 
+    public Double getCommission() {
+        return commission;
+    }
+
+    public void setCommission(Double commission) {
+        this.commission = commission;
+    }
+
+    public Double getStopProfit() {
+        return stopProfit;
+    }
+
+    public void setStopProfit(Double stopProfit) {
+        this.stopProfit = stopProfit;
+    }
+
+    public Double getStopLoss() {
+        return stopLoss;
+    }
+
+    public void setStopLoss(Double stopLoss) {
+        this.stopLoss = stopLoss;
     }
 
     public String getUserCode() {
