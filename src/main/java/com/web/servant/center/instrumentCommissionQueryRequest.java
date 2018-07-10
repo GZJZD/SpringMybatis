@@ -11,20 +11,18 @@ import com.qq.tars.protocol.tars.*;
 import com.qq.tars.protocol.tars.annotation.*;
 
 @TarsStruct
-public class orderCloseResponse {
+public class instrumentCommissionQueryRequest {
 
 	@TarsStructProperty(order = 1, isRequire = true)
 	public String typeId = "";
 	@TarsStructProperty(order = 2, isRequire = true)
 	public int requestId = 0;
 	@TarsStructProperty(order = 3, isRequire = true)
-	public int errcode = 0;
+	public String brokerId = "";
 	@TarsStructProperty(order = 4, isRequire = true)
-	public String errmsg = "";
+	public String userId = "";
 	@TarsStructProperty(order = 5, isRequire = true)
 	public String instrumentId = "";
-	@TarsStructProperty(order = 6, isRequire = true)
-	public java.util.List<tradeItem> tradeArrayItems = null;
 
 	public String getTypeId() {
 		return typeId;
@@ -42,20 +40,20 @@ public class orderCloseResponse {
 		this.requestId = requestId;
 	}
 
-	public int getErrcode() {
-		return errcode;
+	public String getBrokerId() {
+		return brokerId;
 	}
 
-	public void setErrcode(int errcode) {
-		this.errcode = errcode;
+	public void setBrokerId(String brokerId) {
+		this.brokerId = brokerId;
 	}
 
-	public String getErrmsg() {
-		return errmsg;
+	public String getUserId() {
+		return userId;
 	}
 
-	public void setErrmsg(String errmsg) {
-		this.errmsg = errmsg;
+	public void setUserId(String userId) {
+		this.userId = userId;
 	}
 
 	public String getInstrumentId() {
@@ -66,24 +64,15 @@ public class orderCloseResponse {
 		this.instrumentId = instrumentId;
 	}
 
-	public java.util.List<tradeItem> getTradeArrayItems() {
-		return tradeArrayItems;
+	public instrumentCommissionQueryRequest() {
 	}
 
-	public void setTradeArrayItems(java.util.List<tradeItem> tradeArrayItems) {
-		this.tradeArrayItems = tradeArrayItems;
-	}
-
-	public orderCloseResponse() {
-	}
-
-	public orderCloseResponse(String typeId, int requestId, int errcode, String errmsg, String instrumentId, java.util.List<tradeItem> tradeArrayItems) {
+	public instrumentCommissionQueryRequest(String typeId, int requestId, String brokerId, String userId, String instrumentId) {
 		this.typeId = typeId;
 		this.requestId = requestId;
-		this.errcode = errcode;
-		this.errmsg = errmsg;
+		this.brokerId = brokerId;
+		this.userId = userId;
 		this.instrumentId = instrumentId;
-		this.tradeArrayItems = tradeArrayItems;
 	}
 
 	@Override
@@ -92,10 +81,9 @@ public class orderCloseResponse {
 		int result = 1;
 		result = prime * result + TarsUtil.hashCode(typeId);
 		result = prime * result + TarsUtil.hashCode(requestId);
-		result = prime * result + TarsUtil.hashCode(errcode);
-		result = prime * result + TarsUtil.hashCode(errmsg);
+		result = prime * result + TarsUtil.hashCode(brokerId);
+		result = prime * result + TarsUtil.hashCode(userId);
 		result = prime * result + TarsUtil.hashCode(instrumentId);
-		result = prime * result + TarsUtil.hashCode(tradeArrayItems);
 		return result;
 	}
 
@@ -107,43 +95,34 @@ public class orderCloseResponse {
 		if (obj == null) {
 			return false;
 		}
-		if (!(obj instanceof orderCloseResponse)) {
+		if (!(obj instanceof instrumentCommissionQueryRequest)) {
 			return false;
 		}
-		orderCloseResponse other = (orderCloseResponse) obj;
+		instrumentCommissionQueryRequest other = (instrumentCommissionQueryRequest) obj;
 		return (
 			TarsUtil.equals(typeId, other.typeId) &&
 			TarsUtil.equals(requestId, other.requestId) &&
-			TarsUtil.equals(errcode, other.errcode) &&
-			TarsUtil.equals(errmsg, other.errmsg) &&
-			TarsUtil.equals(instrumentId, other.instrumentId) &&
-			TarsUtil.equals(tradeArrayItems, other.tradeArrayItems) 
+			TarsUtil.equals(brokerId, other.brokerId) &&
+			TarsUtil.equals(userId, other.userId) &&
+			TarsUtil.equals(instrumentId, other.instrumentId) 
 		);
 	}
 
 	public void writeTo(TarsOutputStream _os) {
 		_os.write(typeId, 1);
 		_os.write(requestId, 2);
-		_os.write(errcode, 3);
-		_os.write(errmsg, 4);
+		_os.write(brokerId, 3);
+		_os.write(userId, 4);
 		_os.write(instrumentId, 5);
-		_os.write(tradeArrayItems, 6);
 	}
 
-	static java.util.List<tradeItem> cache_tradeArrayItems;
-	static { 
-		cache_tradeArrayItems = new java.util.ArrayList<tradeItem>();
-		tradeItem var_2 = new tradeItem();
-		cache_tradeArrayItems.add(var_2);
-	}
 
 	public void readFrom(TarsInputStream _is) {
 		this.typeId = _is.readString(1, true);
 		this.requestId = _is.read(requestId, 2, true);
-		this.errcode = _is.read(errcode, 3, true);
-		this.errmsg = _is.readString(4, true);
+		this.brokerId = _is.readString(3, true);
+		this.userId = _is.readString(4, true);
 		this.instrumentId = _is.readString(5, true);
-		this.tradeArrayItems = (java.util.List<tradeItem>) _is.read(cache_tradeArrayItems, 6, true);
 	}
 
 }

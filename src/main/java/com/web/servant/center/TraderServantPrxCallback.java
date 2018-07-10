@@ -17,4 +17,10 @@ public abstract class TraderServantPrxCallback extends TarsAbstractCallback {
 
 	public abstract void callback_orderClose(int ret, orderCloseResponse rsp);
 
+	public abstract void callback_instrumentQuery(int ret, instrumentQueryResponse rsp);
+
+	public abstract void callback_instrumentCommissionQuery(int ret, instrumentCommissionQueryResponse rsp);
+
+	public abstract void callback_marketDataQuery(int ret, marketDataQueryResponse rsp);
+
 }

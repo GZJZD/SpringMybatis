@@ -11,7 +11,7 @@ import com.qq.tars.protocol.tars.*;
 import com.qq.tars.protocol.tars.annotation.*;
 
 @TarsStruct
-public class orderCloseResponse {
+public class instrumentCommissionQueryResponse {
 
 	@TarsStructProperty(order = 1, isRequire = true)
 	public String typeId = "";
@@ -24,7 +24,13 @@ public class orderCloseResponse {
 	@TarsStructProperty(order = 5, isRequire = true)
 	public String instrumentId = "";
 	@TarsStructProperty(order = 6, isRequire = true)
-	public java.util.List<tradeItem> tradeArrayItems = null;
+	public double openRatioByMoney = 0D;
+	@TarsStructProperty(order = 7, isRequire = true)
+	public double openRatioByVolume = 0D;
+	@TarsStructProperty(order = 8, isRequire = true)
+	public double closeRatioByMoney = 0D;
+	@TarsStructProperty(order = 9, isRequire = true)
+	public double closeRatioByVolume = 0D;
 
 	public String getTypeId() {
 		return typeId;
@@ -66,24 +72,51 @@ public class orderCloseResponse {
 		this.instrumentId = instrumentId;
 	}
 
-	public java.util.List<tradeItem> getTradeArrayItems() {
-		return tradeArrayItems;
+	public double getOpenRatioByMoney() {
+		return openRatioByMoney;
 	}
 
-	public void setTradeArrayItems(java.util.List<tradeItem> tradeArrayItems) {
-		this.tradeArrayItems = tradeArrayItems;
+	public void setOpenRatioByMoney(double openRatioByMoney) {
+		this.openRatioByMoney = openRatioByMoney;
 	}
 
-	public orderCloseResponse() {
+	public double getOpenRatioByVolume() {
+		return openRatioByVolume;
 	}
 
-	public orderCloseResponse(String typeId, int requestId, int errcode, String errmsg, String instrumentId, java.util.List<tradeItem> tradeArrayItems) {
+	public void setOpenRatioByVolume(double openRatioByVolume) {
+		this.openRatioByVolume = openRatioByVolume;
+	}
+
+	public double getCloseRatioByMoney() {
+		return closeRatioByMoney;
+	}
+
+	public void setCloseRatioByMoney(double closeRatioByMoney) {
+		this.closeRatioByMoney = closeRatioByMoney;
+	}
+
+	public double getCloseRatioByVolume() {
+		return closeRatioByVolume;
+	}
+
+	public void setCloseRatioByVolume(double closeRatioByVolume) {
+		this.closeRatioByVolume = closeRatioByVolume;
+	}
+
+	public instrumentCommissionQueryResponse() {
+	}
+
+	public instrumentCommissionQueryResponse(String typeId, int requestId, int errcode, String errmsg, String instrumentId, double openRatioByMoney, double openRatioByVolume, double closeRatioByMoney, double closeRatioByVolume) {
 		this.typeId = typeId;
 		this.requestId = requestId;
 		this.errcode = errcode;
 		this.errmsg = errmsg;
 		this.instrumentId = instrumentId;
-		this.tradeArrayItems = tradeArrayItems;
+		this.openRatioByMoney = openRatioByMoney;
+		this.openRatioByVolume = openRatioByVolume;
+		this.closeRatioByMoney = closeRatioByMoney;
+		this.closeRatioByVolume = closeRatioByVolume;
 	}
 
 	@Override
@@ -95,7 +128,10 @@ public class orderCloseResponse {
 		result = prime * result + TarsUtil.hashCode(errcode);
 		result = prime * result + TarsUtil.hashCode(errmsg);
 		result = prime * result + TarsUtil.hashCode(instrumentId);
-		result = prime * result + TarsUtil.hashCode(tradeArrayItems);
+		result = prime * result + TarsUtil.hashCode(openRatioByMoney);
+		result = prime * result + TarsUtil.hashCode(openRatioByVolume);
+		result = prime * result + TarsUtil.hashCode(closeRatioByMoney);
+		result = prime * result + TarsUtil.hashCode(closeRatioByVolume);
 		return result;
 	}
 
@@ -107,17 +143,20 @@ public class orderCloseResponse {
 		if (obj == null) {
 			return false;
 		}
-		if (!(obj instanceof orderCloseResponse)) {
+		if (!(obj instanceof instrumentCommissionQueryResponse)) {
 			return false;
 		}
-		orderCloseResponse other = (orderCloseResponse) obj;
+		instrumentCommissionQueryResponse other = (instrumentCommissionQueryResponse) obj;
 		return (
 			TarsUtil.equals(typeId, other.typeId) &&
 			TarsUtil.equals(requestId, other.requestId) &&
 			TarsUtil.equals(errcode, other.errcode) &&
 			TarsUtil.equals(errmsg, other.errmsg) &&
 			TarsUtil.equals(instrumentId, other.instrumentId) &&
-			TarsUtil.equals(tradeArrayItems, other.tradeArrayItems) 
+			TarsUtil.equals(openRatioByMoney, other.openRatioByMoney) &&
+			TarsUtil.equals(openRatioByVolume, other.openRatioByVolume) &&
+			TarsUtil.equals(closeRatioByMoney, other.closeRatioByMoney) &&
+			TarsUtil.equals(closeRatioByVolume, other.closeRatioByVolume) 
 		);
 	}
 
@@ -127,15 +166,12 @@ public class orderCloseResponse {
 		_os.write(errcode, 3);
 		_os.write(errmsg, 4);
 		_os.write(instrumentId, 5);
-		_os.write(tradeArrayItems, 6);
+		_os.write(openRatioByMoney, 6);
+		_os.write(openRatioByVolume, 7);
+		_os.write(closeRatioByMoney, 8);
+		_os.write(closeRatioByVolume, 9);
 	}
 
-	static java.util.List<tradeItem> cache_tradeArrayItems;
-	static { 
-		cache_tradeArrayItems = new java.util.ArrayList<tradeItem>();
-		tradeItem var_2 = new tradeItem();
-		cache_tradeArrayItems.add(var_2);
-	}
 
 	public void readFrom(TarsInputStream _is) {
 		this.typeId = _is.readString(1, true);
@@ -143,7 +179,10 @@ public class orderCloseResponse {
 		this.errcode = _is.read(errcode, 3, true);
 		this.errmsg = _is.readString(4, true);
 		this.instrumentId = _is.readString(5, true);
-		this.tradeArrayItems = (java.util.List<tradeItem>) _is.read(cache_tradeArrayItems, 6, true);
+		this.openRatioByMoney = _is.read(openRatioByMoney, 6, true);
+		this.openRatioByVolume = _is.read(openRatioByVolume, 7, true);
+		this.closeRatioByMoney = _is.read(closeRatioByMoney, 8, true);
+		this.closeRatioByVolume = _is.read(closeRatioByVolume, 9, true);
 	}
 
 }
