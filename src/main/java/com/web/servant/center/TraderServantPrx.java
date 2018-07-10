@@ -43,4 +43,28 @@ public interface TraderServantPrx {
 	public void async_orderClose(@TarsCallback TraderServantPrxCallback callback, orderCloseRequest req);
 
 	public void async_orderClose(@TarsCallback TraderServantPrxCallback callback, orderCloseRequest req, @TarsContext java.util.Map<String, String> ctx);
+
+	public int instrumentQuery(instrumentQueryRequest req, @TarsHolder Holder<instrumentQueryResponse> rsp);
+
+	public int instrumentQuery(instrumentQueryRequest req, @TarsHolder Holder<instrumentQueryResponse> rsp, @TarsContext java.util.Map<String, String> ctx);
+
+	public void async_instrumentQuery(@TarsCallback TraderServantPrxCallback callback, instrumentQueryRequest req);
+
+	public void async_instrumentQuery(@TarsCallback TraderServantPrxCallback callback, instrumentQueryRequest req, @TarsContext java.util.Map<String, String> ctx);
+
+	public int instrumentCommissionQuery(instrumentCommissionQueryRequest req, @TarsHolder Holder<instrumentCommissionQueryResponse> rsp);
+
+	public int instrumentCommissionQuery(instrumentCommissionQueryRequest req, @TarsHolder Holder<instrumentCommissionQueryResponse> rsp, @TarsContext java.util.Map<String, String> ctx);
+
+	public void async_instrumentCommissionQuery(@TarsCallback TraderServantPrxCallback callback, instrumentCommissionQueryRequest req);
+
+	public void async_instrumentCommissionQuery(@TarsCallback TraderServantPrxCallback callback, instrumentCommissionQueryRequest req, @TarsContext java.util.Map<String, String> ctx);
+
+	public int marketDataQuery(marketDataQueryRequest req, @TarsHolder Holder<marketDataQueryResponse> rsp);
+
+	public int marketDataQuery(marketDataQueryRequest req, @TarsHolder Holder<marketDataQueryResponse> rsp, @TarsContext java.util.Map<String, String> ctx);
+
+	public void async_marketDataQuery(@TarsCallback TraderServantPrxCallback callback, marketDataQueryRequest req);
+
+	public void async_marketDataQuery(@TarsCallback TraderServantPrxCallback callback, marketDataQueryRequest req, @TarsContext java.util.Map<String, String> ctx);
 }

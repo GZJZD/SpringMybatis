@@ -11,7 +11,7 @@ import com.qq.tars.protocol.tars.*;
 import com.qq.tars.protocol.tars.annotation.*;
 
 @TarsStruct
-public class orderCloseResponse {
+public class marketDataQueryResponse {
 
 	@TarsStructProperty(order = 1, isRequire = true)
 	public String typeId = "";
@@ -24,7 +24,9 @@ public class orderCloseResponse {
 	@TarsStructProperty(order = 5, isRequire = true)
 	public String instrumentId = "";
 	@TarsStructProperty(order = 6, isRequire = true)
-	public java.util.List<tradeItem> tradeArrayItems = null;
+	public java.util.List<bidArrayItem> bidArrayItems = null;
+	@TarsStructProperty(order = 7, isRequire = true)
+	public java.util.List<askArrayItem> askArrayItems = null;
 
 	public String getTypeId() {
 		return typeId;
@@ -66,24 +68,33 @@ public class orderCloseResponse {
 		this.instrumentId = instrumentId;
 	}
 
-	public java.util.List<tradeItem> getTradeArrayItems() {
-		return tradeArrayItems;
+	public java.util.List<bidArrayItem> getBidArrayItems() {
+		return bidArrayItems;
 	}
 
-	public void setTradeArrayItems(java.util.List<tradeItem> tradeArrayItems) {
-		this.tradeArrayItems = tradeArrayItems;
+	public void setBidArrayItems(java.util.List<bidArrayItem> bidArrayItems) {
+		this.bidArrayItems = bidArrayItems;
 	}
 
-	public orderCloseResponse() {
+	public java.util.List<askArrayItem> getAskArrayItems() {
+		return askArrayItems;
 	}
 
-	public orderCloseResponse(String typeId, int requestId, int errcode, String errmsg, String instrumentId, java.util.List<tradeItem> tradeArrayItems) {
+	public void setAskArrayItems(java.util.List<askArrayItem> askArrayItems) {
+		this.askArrayItems = askArrayItems;
+	}
+
+	public marketDataQueryResponse() {
+	}
+
+	public marketDataQueryResponse(String typeId, int requestId, int errcode, String errmsg, String instrumentId, java.util.List<bidArrayItem> bidArrayItems, java.util.List<askArrayItem> askArrayItems) {
 		this.typeId = typeId;
 		this.requestId = requestId;
 		this.errcode = errcode;
 		this.errmsg = errmsg;
 		this.instrumentId = instrumentId;
-		this.tradeArrayItems = tradeArrayItems;
+		this.bidArrayItems = bidArrayItems;
+		this.askArrayItems = askArrayItems;
 	}
 
 	@Override
@@ -95,7 +106,8 @@ public class orderCloseResponse {
 		result = prime * result + TarsUtil.hashCode(errcode);
 		result = prime * result + TarsUtil.hashCode(errmsg);
 		result = prime * result + TarsUtil.hashCode(instrumentId);
-		result = prime * result + TarsUtil.hashCode(tradeArrayItems);
+		result = prime * result + TarsUtil.hashCode(bidArrayItems);
+		result = prime * result + TarsUtil.hashCode(askArrayItems);
 		return result;
 	}
 
@@ -107,17 +119,18 @@ public class orderCloseResponse {
 		if (obj == null) {
 			return false;
 		}
-		if (!(obj instanceof orderCloseResponse)) {
+		if (!(obj instanceof marketDataQueryResponse)) {
 			return false;
 		}
-		orderCloseResponse other = (orderCloseResponse) obj;
+		marketDataQueryResponse other = (marketDataQueryResponse) obj;
 		return (
 			TarsUtil.equals(typeId, other.typeId) &&
 			TarsUtil.equals(requestId, other.requestId) &&
 			TarsUtil.equals(errcode, other.errcode) &&
 			TarsUtil.equals(errmsg, other.errmsg) &&
 			TarsUtil.equals(instrumentId, other.instrumentId) &&
-			TarsUtil.equals(tradeArrayItems, other.tradeArrayItems) 
+			TarsUtil.equals(bidArrayItems, other.bidArrayItems) &&
+			TarsUtil.equals(askArrayItems, other.askArrayItems) 
 		);
 	}
 
@@ -127,14 +140,21 @@ public class orderCloseResponse {
 		_os.write(errcode, 3);
 		_os.write(errmsg, 4);
 		_os.write(instrumentId, 5);
-		_os.write(tradeArrayItems, 6);
+		_os.write(bidArrayItems, 6);
+		_os.write(askArrayItems, 7);
 	}
 
-	static java.util.List<tradeItem> cache_tradeArrayItems;
+	static java.util.List<bidArrayItem> cache_bidArrayItems;
 	static { 
-		cache_tradeArrayItems = new java.util.ArrayList<tradeItem>();
-		tradeItem var_2 = new tradeItem();
-		cache_tradeArrayItems.add(var_2);
+		cache_bidArrayItems = new java.util.ArrayList<bidArrayItem>();
+		bidArrayItem var_3 = new bidArrayItem();
+		cache_bidArrayItems.add(var_3);
+	}
+	static java.util.List<askArrayItem> cache_askArrayItems;
+	static { 
+		cache_askArrayItems = new java.util.ArrayList<askArrayItem>();
+		askArrayItem var_4 = new askArrayItem();
+		cache_askArrayItems.add(var_4);
 	}
 
 	public void readFrom(TarsInputStream _is) {
@@ -143,7 +163,8 @@ public class orderCloseResponse {
 		this.errcode = _is.read(errcode, 3, true);
 		this.errmsg = _is.readString(4, true);
 		this.instrumentId = _is.readString(5, true);
-		this.tradeArrayItems = (java.util.List<tradeItem>) _is.read(cache_tradeArrayItems, 6, true);
+		this.bidArrayItems = (java.util.List<bidArrayItem>) _is.read(cache_bidArrayItems, 6, true);
+		this.askArrayItems = (java.util.List<askArrayItem>) _is.read(cache_askArrayItems, 7, true);
 	}
 
 }

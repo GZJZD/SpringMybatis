@@ -22,15 +22,9 @@ public class orderOpenResponse {
 	@TarsStructProperty(order = 4, isRequire = true)
 	public String errmsg = "";
 	@TarsStructProperty(order = 5, isRequire = true)
-	public double tradeVolume = 0D;
+	public String instrumentId = "";
 	@TarsStructProperty(order = 6, isRequire = true)
-	public double tradePrice = 0D;
-	@TarsStructProperty(order = 7, isRequire = true)
-	public double tradeCommission = 0D;
-	@TarsStructProperty(order = 8, isRequire = true)
-	public String tradeDate = "";
-	@TarsStructProperty(order = 9, isRequire = true)
-	public String tradeTime = "";
+	public java.util.List<tradeItem> tradeArrayItems = null;
 
 	public String getTypeId() {
 		return typeId;
@@ -64,59 +58,32 @@ public class orderOpenResponse {
 		this.errmsg = errmsg;
 	}
 
-	public double getTradeVolume() {
-		return tradeVolume;
+	public String getInstrumentId() {
+		return instrumentId;
 	}
 
-	public void setTradeVolume(double tradeVolume) {
-		this.tradeVolume = tradeVolume;
+	public void setInstrumentId(String instrumentId) {
+		this.instrumentId = instrumentId;
 	}
 
-	public double getTradePrice() {
-		return tradePrice;
+	public java.util.List<tradeItem> getTradeArrayItems() {
+		return tradeArrayItems;
 	}
 
-	public void setTradePrice(double tradePrice) {
-		this.tradePrice = tradePrice;
-	}
-
-	public double getTradeCommission() {
-		return tradeCommission;
-	}
-
-	public void setTradeCommission(double tradeCommission) {
-		this.tradeCommission = tradeCommission;
-	}
-
-	public String getTradeDate() {
-		return tradeDate;
-	}
-
-	public void setTradeDate(String tradeDate) {
-		this.tradeDate = tradeDate;
-	}
-
-	public String getTradeTime() {
-		return tradeTime;
-	}
-
-	public void setTradeTime(String tradeTime) {
-		this.tradeTime = tradeTime;
+	public void setTradeArrayItems(java.util.List<tradeItem> tradeArrayItems) {
+		this.tradeArrayItems = tradeArrayItems;
 	}
 
 	public orderOpenResponse() {
 	}
 
-	public orderOpenResponse(String typeId, int requestId, int errcode, String errmsg, double tradeVolume, double tradePrice, double tradeCommission, String tradeDate, String tradeTime) {
+	public orderOpenResponse(String typeId, int requestId, int errcode, String errmsg, String instrumentId, java.util.List<tradeItem> tradeArrayItems) {
 		this.typeId = typeId;
 		this.requestId = requestId;
 		this.errcode = errcode;
 		this.errmsg = errmsg;
-		this.tradeVolume = tradeVolume;
-		this.tradePrice = tradePrice;
-		this.tradeCommission = tradeCommission;
-		this.tradeDate = tradeDate;
-		this.tradeTime = tradeTime;
+		this.instrumentId = instrumentId;
+		this.tradeArrayItems = tradeArrayItems;
 	}
 
 	@Override
@@ -127,11 +94,8 @@ public class orderOpenResponse {
 		result = prime * result + TarsUtil.hashCode(requestId);
 		result = prime * result + TarsUtil.hashCode(errcode);
 		result = prime * result + TarsUtil.hashCode(errmsg);
-		result = prime * result + TarsUtil.hashCode(tradeVolume);
-		result = prime * result + TarsUtil.hashCode(tradePrice);
-		result = prime * result + TarsUtil.hashCode(tradeCommission);
-		result = prime * result + TarsUtil.hashCode(tradeDate);
-		result = prime * result + TarsUtil.hashCode(tradeTime);
+		result = prime * result + TarsUtil.hashCode(instrumentId);
+		result = prime * result + TarsUtil.hashCode(tradeArrayItems);
 		return result;
 	}
 
@@ -152,11 +116,8 @@ public class orderOpenResponse {
 			TarsUtil.equals(requestId, other.requestId) &&
 			TarsUtil.equals(errcode, other.errcode) &&
 			TarsUtil.equals(errmsg, other.errmsg) &&
-			TarsUtil.equals(tradeVolume, other.tradeVolume) &&
-			TarsUtil.equals(tradePrice, other.tradePrice) &&
-			TarsUtil.equals(tradeCommission, other.tradeCommission) &&
-			TarsUtil.equals(tradeDate, other.tradeDate) &&
-			TarsUtil.equals(tradeTime, other.tradeTime) 
+			TarsUtil.equals(instrumentId, other.instrumentId) &&
+			TarsUtil.equals(tradeArrayItems, other.tradeArrayItems) 
 		);
 	}
 
@@ -165,24 +126,24 @@ public class orderOpenResponse {
 		_os.write(requestId, 2);
 		_os.write(errcode, 3);
 		_os.write(errmsg, 4);
-		_os.write(tradeVolume, 5);
-		_os.write(tradePrice, 6);
-		_os.write(tradeCommission, 7);
-		_os.write(tradeDate, 8);
-		_os.write(tradeTime, 9);
+		_os.write(instrumentId, 5);
+		_os.write(tradeArrayItems, 6);
 	}
 
+	static java.util.List<tradeItem> cache_tradeArrayItems;
+	static { 
+		cache_tradeArrayItems = new java.util.ArrayList<tradeItem>();
+		tradeItem var_1 = new tradeItem();
+		cache_tradeArrayItems.add(var_1);
+	}
 
 	public void readFrom(TarsInputStream _is) {
 		this.typeId = _is.readString(1, true);
 		this.requestId = _is.read(requestId, 2, true);
 		this.errcode = _is.read(errcode, 3, true);
 		this.errmsg = _is.readString(4, true);
-		this.tradeVolume = _is.read(tradeVolume, 5, true);
-		this.tradePrice = _is.read(tradePrice, 6, true);
-		this.tradeCommission = _is.read(tradeCommission, 7, true);
-		this.tradeDate = _is.readString(8, true);
-		this.tradeTime = _is.readString(9, true);
+		this.instrumentId = _is.readString(5, true);
+		this.tradeArrayItems = (java.util.List<tradeItem>) _is.read(cache_tradeArrayItems, 6, true);
 	}
 
 }

@@ -44,31 +44,22 @@ $(function () {
         title: '交易所名称',
 	}];
 
-
-  
-        //发送请求获取跟单页面的统计数据表格加载
+    //发送请求获取跟单页面的统计数据表格加载
+    showByTableId(contractInfoTable, method, url_contractInfoPage, unique_Id, sortOrder, contractInfoColumns);
+    //合约信息点击事件
+    $("#contractInfo").click(function () {
+        $(contractInfoTable).bootstrapTable('destroy');
+        var url_contractInfoPage = url_+"/contractInfo/getContractInfoList.Action";
         showByTableId(contractInfoTable, method, url_contractInfoPage, unique_Id, sortOrder, contractInfoColumns);
-      //合约信息点击事件
-        $("#contractInfo").click(function () {
-            $(contractInfoTable).bootstrapTable('destroy');
-            var url_contractInfoPage = url_+"/contractInfo/getContractInfoList.Action";
-            showByTableId(contractInfoTable, method, url_contractInfoPage, unique_Id, sortOrder, contractInfoColumns);
-        })
-        //品种信息点击事件
-        $("#varietyInfo").click(function () {
-            $(varietyTable).bootstrapTable('destroy');
-            var url_variety = url_+"/variety/getListVariety.Action";
-            showByTableId(varietyTable, method, url_variety, unique_Id, sortOrder, varietyColumns);
-        })
-    });
-    
-    //根据窗口调整表格高度
-    $(window).resize(function () {
-        $('#detailTable').bootstrapTable('resetView', {
-            height: tableHeight()
-        })
     })
-
+    //品种信息点击事件
+	$("#varietyInfo").click(function () {
+        $(varietyTable).bootstrapTable('destroy');
+        var url_variety = url_+"/variety/getListVariety.Action";
+    	showByTableId(varietyTable, method, url_variety, unique_Id, sortOrder, varietyColumns);
+	})
+});
+    
 
 /*
 * 条件查询
@@ -132,7 +123,7 @@ function findByVariety() {
 }
 
 
-/*弹出层*/
+/*弹出层添加合约信息*/
 /*
     参数解释：
     title   标题
@@ -141,9 +132,11 @@ function findByVariety() {
     w       弹出层宽度（缺省调默认值）
     h       弹出层高度（缺省调默认值）
 */
-    function follow_details(obj,title, url, w, h) {
-
-
+function addContractInfo() {
+    var url = "contractInfo-add.html";
+    var title = "合约管理";
+    var w = 1500;
+    var h = 600;
     if (title == null || title == '') {
         title = false;
     }
@@ -165,31 +158,20 @@ function findByVariety() {
         area: [w + 'px', h + 'px'],
         fix: false, //不固定
         maxmin: true,
-        shadeClose: false,
+        shadeClose: true,
         shade: 0.4,
         title: title,
         content: url,
         success: function (layero, index) {
-            var followOrderId = obj.followOrder.id;
-            var successTotal = obj.successTotal;
-            var orderNum= obj.handNumberTotal;
-            var offsetGainAndLoss = obj.offsetGainAndLoss;
-            var poundageTotal = obj.poundageTotal;
-            var manager= obj.followOrder.followManner;
-            var name = obj.followOrder.followOrderName;
             //找到子页面
             var iframeWin = window['layui-layer-iframe' + index]; //得到iframe页的窗口对象，执行iframe页的方法：iframeWin.method();
-            //调用子页面的方法
-            iframeWin.detailShow(name,manager,followOrderId,successTotal+"/"+orderNum,offsetGainAndLoss,poundageTotal);
-            iframeWin.clientTableShow(followOrderId,manager,name);
-            iframeWin.orderParameterShow(obj.followOrder);
-            iframeWin.orderClientTableShow(followOrderId,name);
-
-        },
-        btn: ['关闭']
+            //iframeWin.setParameter(num, account);
+        }
     });
 }
-    function tableHeight() {
-        //可以根据自己页面情况进行调整
-        return $(window).height() - 280;
-    }
+    
+//看情况使用该方法    
+function tableHeight() {
+    //可以根据自己页面情况进行调整
+    return $(window).height() - 280;
+}
