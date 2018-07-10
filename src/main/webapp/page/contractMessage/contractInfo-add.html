@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <title>跟单配置</title>
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport"
+          content="width=device-width,user-scalable=yes, minimum-scale=0.4, initial-scale=0.8,target-densitydpi=low-dpi"/>
+
+    <link rel="stylesheet" href="../../lib/bootstrap/css/bootstrap-table.min.css"/>
+    <link rel="stylesheet" href="http://netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" type="text/css"
+          href="http://cdn.bootcss.com/bootstrap-select/2.0.0-beta1/css/bootstrap-select.css">
+    <link rel="stylesheet" href="../../css/font.css">
+    <link rel="stylesheet" href="../../css/xadmin.css">
+    <script type="text/javascript" src="../../lib/jquery/jquery-3.2.1.min.js"></script>
+    <script type="text/javascript" src="../../lib/layui/layui.js" charset="utf-8"></script>
+    <script type="text/javascript" src="../../js/xadmin.js"></script>
+    <script type="text/javascript"
+            src="http://cdn.bootcss.com/bootstrap-select/2.0.0-beta1/js/bootstrap-select.js"></script>
+    <script src="../../lib/bootstrap/js/bootstrap-table.js"></script>
+    <script src="http://netdna.bootstrapcdn.com/bootstrap/3.0.0/js/bootstrap.min.js"></script>
+    <script src="../../lib/bootstrap/js/bootstrap-table-zh-CN.min.js"></script>
+
+
+</head>
+<style type="text/css">
+    body {
+        height: 100%;
+        width: 100%;
+
+    }
+
+    .if-ok {
+        position: absolute;
+        left: 295px;
+
+    }
+
+    .input-number {
+        position: absolute;
+        left: 442px;
+    }
+
+    .set-input {
+        position: absolute;
+        left: 154px;
+        top: 4px
+
+    }
+
+    .number {
+        border-radius: 15px;
+        background-color: #1e81d2;
+        height: 30%;
+        width: 30%;
+    }
+
+    .title-div {
+        height: 30%;
+        width: 100%;
+
+    }
+
+    .tips {
+        width: 50px;
+        height: 50px;
+        line-height: 50px;
+        text-align: center;
+        border-radius: 50%;
+        color: #1e81d2;
+        background-color: #f0eff0;
+    }
+
+    .active {
+        color: #fff;
+        background-color: #44b7af;
+    }
+
+    .detalis-div {
+        display: none;
+    }
+
+    input[type="radio"], input[type="checkbox"] {
+        margin: 13px 0 0;
+    }
+
+    .disPaly {
+        display: none;
+    }
+
+    .set-div-top {
+        position: absolute;
+        left: 500px;
+        top: 4px;
+    }
+
+    .input-div {
+        margin-top: 30px;
+        width: 250px;
+        padding-left: -600px;
+
+    }
+
+    .text-div {
+        padding-top: 40px;
+        padding-left: 150px;
+    }
+
+    .btn-div {
+        padding-top: 80px;
+        margin-left: 550px;
+    }
+
+    .btn-cancel-div {
+        margin-left: 620px;
+        margin-top: -53px;
+
+    }
+</style>
+<body>
+<div class="container-fluid">
+    <div class="row form-group">
+        <input type="hidden" id="accountId">
+        <label class="col-md-3  text-div control-label">平台：</label>
+        <div class="col-md-6 input-div ">
+            <select class="form-control " id="platform_id">
+            </select>
+        </div>
+    </div>
+    <div class="row form-group">
+        <label class="col-md-3  text-div control-label">对应代理人：</label>
+        <div class="col-md-6 input-div">
+            <select class="form-control " id="agent_id">
+            </select>
+        </div>
+    </div>
+    <form class="layui-form" action="">
+        <div class="row form-group">
+            <label class="col-md-3 text-div control-label">账号：</label>
+            <div class="col-md-6 input-div">
+                <input type="text" class="form-control " required lay-verify="required" autocomplete="off" id="account"
+                       placeholder="请输入账号">
+            </div>
+
+        </div>
+        <div class="row form-group">
+            <div class="layui-form-item">
+                <label class="col-md-3 text-div control-label">密码：</label>
+                <div class=" col-md-6 input-div ">
+                    <input type="password" id="pwd" required lay-verify="required" placeholder="请输入密码"
+                           autocomplete="off"
+                           class="form-control ">
+                </div>
+            </div>
+        </div>
+        <div class="row form-group">
+            <div class="layui-form-item">
+                <label class="col-md-3 text-div control-label">重复密码：</label>
+                <div class=" col-md-6 input-div ">
+                    <input type="password" id="regPwd" required lay-verify="regPwd" placeholder="请输入密码"
+                           autocomplete="off"
+                           class="form-control ">
+                </div>
+            </div>
+        </div>
+
+        <div class="layui-form-item">
+            <div class="layui-input-block btn-div">
+                <button class="layui-btn" lay-filter="save" id="test" lay-submit="">保存</button>
+            </div>
+        </div>
+    </form>
+    <div class="layui-input-block btn-cancel-div">
+        <button class="layui-btn" onclick="cancel()">取消</button>
+    </div>
+</div>
+
+<script src="../../js/commonParameter.js"></script>
+
+<script type="text/javascript" src="../../js/common.js"></script>
+<script type="text/javascript" src="js/account_add.js"></script>
+
+
+</body>
+
+</html>
