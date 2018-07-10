@@ -14,5 +14,66 @@
         <association property="contractInfo" javaType="com.web.pojo.ContractInfo" column="contract_info_id" 
         	select="com.web.dao.ContractInfoDao.getContractInfoById"/>
     </resultMap>
+    <insert id="save" parameterType="com.web.pojo.ContractInfoLink" useGeneratedKeys="true" keyProperty="id">
+        insert into tb_contract_info_link(max_market_order_volumn,min_market_order_volumn,volumn_multiple,price_tick,
+        open_ratio_money,open_ratio_volumn,close_ratio_money,close_ratio_volumn,contract_info_id)
+        values (#{maxMarketOrderVolume},#{minMarketOrderVolume},#{volumeMultiple},#{priceTick},#{openRatioByMoney},
+        #{openRatioByVolume},#{closeRatioByMoney},#{closeRatioByVolume},#{contractInfo.id})
+    </insert>
+    <update id="updateContractInfoLink" parameterType="com.web.pojo.ContractInfoLink">
+        update tb_contract_info_link
+        <set>
+            <if test="maxMarketOrderVolume != null">
+                max_market_order_volumn = #{maxMarketOrderVolume} ,
+            </if>
+            <if test="minMarketOrderVolume != null">
+                min_market_order_volumn = #{minMarketOrderVolume},
+            </if>
+            <if test="volumeMultiple != null">
+                volumn_multiple = #{volumeMultiple},
+            </if>
+            <if test="priceTick != null">
+                price_tick = #{priceTick},
+            </if>
+            <if test="openRatioByMoney != null">
+                open_ratio_money = #{openRatioByMoney},
+            </if>
+            <if test="openRatioByVolume != null">
+                open_ratio_volumn = #{openRatioByVolume},
+            </if>
+            <if test="closeRatioByMoney != null">
+                close_ratio_money = #{closeRatioByMoney},
+            </if>
+            <if test="closeRatioByVolume != null ">
+                close_ratio_volumn = #{closeRatioByVolume},
+            </if>
+            <if test="contractInfo != null ">
+                contract_info_id = #{contractInfo.id},
+            </if>
+        </set>
+        where id =#{id}
+    </update>
+    <select id="getContractInfoLink" resultMap="BaseResultMap">
+        select <include refid="base_column"/>
+        from tb_contract_info_link
+        where id = #{contractInfoLinkId}
+    </select>
+    <select id="getContractInfoLinkByInfoId" resultMap="BaseResultMap">
+        select <include refid="base_column"/>
+        from tb_contract_info_link
+        where contract_info_id = #{contractInfoId}
+    </select>
+    <sql id="base_column">
+        id,
+        max_market_order_volumn,
+        min_market_order_volumn,
+        volumn_multiple,
+        price_tick,
+        open_ratio_money,
+        open_ratio_volumn,
+        close_ratio_money,
+        close_ratio_volumn,
+        contract_info_id
+    </sql>
 
 </mapper>

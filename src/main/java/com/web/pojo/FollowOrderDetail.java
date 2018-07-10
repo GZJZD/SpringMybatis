@@ -12,8 +12,8 @@ public class FollowOrderDetail implements Serializable {
     private Long id;
     //客户名
     private String clientName;
-    //品种名称
-    private String varietyName;
+    //合约代码
+    private String contractCode;
     //交易方向:买入/卖出
     private Integer tradeDirection;
     //实际手数
@@ -53,7 +53,6 @@ public class FollowOrderDetail implements Serializable {
     //版本
     private Integer version=0;
 
-
     public Long getId() {
         return id;
     }
@@ -70,12 +69,12 @@ public class FollowOrderDetail implements Serializable {
         this.clientName = clientName;
     }
 
-    public String getVarietyName() {
-        return varietyName;
+    public String getContractCode() {
+        return contractCode;
     }
 
-    public void setVarietyName(String varietyName) {
-        this.varietyName = varietyName;
+    public void setContractCode(String contractCode) {
+        this.contractCode = contractCode;
     }
 
     public Integer getTradeDirection() {

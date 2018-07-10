@@ -79,6 +79,8 @@ public interface FollowOrderDetailService {
     * @return
     */
     List<FollowOrderDetail> getNOCloseDetailListByFollowOrderId(Long followOrderId);
+
+    List<FollowOrderDetail> getAllNOCloseDetailList();
     void updateDetail(FollowOrderDetail followOrderDetail);
 
 
