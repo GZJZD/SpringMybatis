@@ -64,6 +64,8 @@ public class FollowOrderServiceImpl implements FollowOrderService {
     private OrderHongKongService orderHongKongService;//香港数据库
     @Autowired
     private ContractInfoService contractInfoService;//合约信息
+    @Autowired
+    private ContractInfoLinkService contractInfoLinkService;
 
 
     @Override
@@ -555,7 +557,6 @@ public class FollowOrderServiceImpl implements FollowOrderService {
     @Override
     public void createFollowOrder(FollowOrder followOrder, List<FollowOrderClient> followOrderClients) {
         FollowOrder order = followOrder;
-
         Variety variety = varietyService.getVarietyByCode(followOrder.getVariety().getVarietyCode());
         order.setVariety(variety);
         order.setFollowOrderStatus(FollowOrderEnum.FollowStatus.FOLLOW_ORDER_STOP.getIndex());
@@ -592,6 +593,11 @@ public class FollowOrderServiceImpl implements FollowOrderService {
         followOrderClientService.saveListFollowOrderClient(followOrderClients, order);
 
         this.checkLogin(order);
+        ContractInfo contractInfo = contractInfoService.getInfoByVarietyIdAndPlatformId(followOrder.getVariety().getId(), followOrder.getAccount().getPlatform().getId());
+        //合约信息手续费查找
+        contractInfoLinkService.instrumentCommissionQuery(contractInfo.getId(),followOrder.getAccount());
+        //合约信息查找
+        contractInfoLinkService.instrumentQuery(contractInfo.getId());
     }
 
     /*
