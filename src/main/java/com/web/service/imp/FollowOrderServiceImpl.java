@@ -517,6 +517,21 @@ public class FollowOrderServiceImpl implements FollowOrderService {
                     @Override
                     public void callback_orderClose(int ret, orderCloseResponse rsp) {
                     }
+
+                    @Override
+                    public void callback_instrumentQuery(int ret, instrumentQueryResponse rsp) {
+
+                    }
+
+                    @Override
+                    public void callback_instrumentCommissionQuery(int ret, instrumentCommissionQueryResponse rsp) {
+
+                    }
+
+                    @Override
+                    public void callback_marketDataQuery(int ret, marketDataQueryResponse rsp) {
+
+                    }
                 }, req);
             } catch (Exception e) {
                 e.printStackTrace();
@@ -712,10 +727,19 @@ public class FollowOrderServiceImpl implements FollowOrderService {
                             closeResult.setRequestId(rsp.requestId);
                             closeResult.setErmsg(rsp.errmsg);
                             closeResult.setErrcode(rsp.errcode);
-                            closeResult.setTradePrice(rsp.tradePrice);
-                            closeResult.setTradeCommission(rsp.tradeCommission);
-                            closeResult.setTradeDate(rsp.tradeDate);
-                            closeResult.setTradeTime(rsp.tradeTime);
+                            Double closePrice = 0.0;
+                            int handNumber = 0;
+                            for (tradeItem item : rsp.tradeArrayItems) {
+                                closePrice = DoubleUtil.add(closePrice,item.price);
+                                handNumber += item.volume;
+                            }
+                            log.debug("平仓交易数据详情"+WebJsion.toJson(rsp.tradeArrayItems));
+
+                            closeResult.setTradePrice(DoubleUtil.div(closePrice, Double.valueOf(handNumber),2));
+                            //todo 手续费：手数* （开仓/平仓手续费 + 成交价 * 开仓/平仓手续费率）
+                            closeResult.setTradeCommission(22.2);
+                            closeResult.setTradeDate(rsp.tradeArrayItems.get(rsp.tradeArrayItems.size()-1).tradeDate);
+                            closeResult.setTradeTime(rsp.tradeArrayItems.get(rsp.tradeArrayItems.size()-1).tradeTime);
                             log.debug("接受一条平仓交易信息：" + WebJsion.toJson(closeResult));
                             followOrderTradeRecordService.updateRecordByComeBackTradeMsg(closeResult);
                         } else {
@@ -727,6 +751,21 @@ public class FollowOrderServiceImpl implements FollowOrderService {
                                 log.error("Tars框架异常：" + ret);
                             }
                         }
+                    }
+
+                    @Override
+                    public void callback_instrumentQuery(int ret, instrumentQueryResponse rsp) {
+
+                    }
+
+                    @Override
+                    public void callback_instrumentCommissionQuery(int ret, instrumentCommissionQueryResponse rsp) {
+
+                    }
+
+                    @Override
+                    public void callback_marketDataQuery(int ret, marketDataQueryResponse rsp) {
+
                     }
                 }, close);
             } catch (Exception e) {
@@ -777,14 +816,24 @@ public class FollowOrderServiceImpl implements FollowOrderService {
                     public void callback_orderOpen(int ret, orderOpenResponse rsp) {
                         if (ret == 0 && rsp.errcode == 0) {
                             OrderMsgResult openResult = new OrderMsgResult();
-                            openResult.setRequestId(rsp.requestId);
-                            openResult.setErmsg(rsp.errmsg);
-                            openResult.setErrcode(rsp.errcode);
-                            openResult.setTradePrice(rsp.tradePrice);
-                            openResult.setTradeCommission(rsp.tradeCommission);
-                            openResult.setTradeDate(rsp.tradeDate);
-                            openResult.setTradeTime(rsp.tradeTime);
-                            openResult.setTradeVolume(rsp.tradeVolume);
+                            openResult.setRequestId(rsp.requestId);//交易记录id
+                            openResult.setErmsg(rsp.errmsg);//返回信息
+                            openResult.setErrcode(rsp.errcode);//返回的错误码
+                            Double closePrice = 0.0;
+                            int handNumber = 0;
+                            for (tradeItem item : rsp.tradeArrayItems) {
+                                closePrice = DoubleUtil.add(closePrice,item.price);//累加价格
+                                handNumber += item.volume;//累加手数
+                            }
+                            log.debug("开仓交易数据详情"+WebJsion.toJson(rsp));
+
+                            openResult.setTradePrice(DoubleUtil.div(closePrice, Double.valueOf(handNumber),2));
+                            //todo 手续费：手数* （开仓/平仓手续费 + 成交价 * 开仓/平仓手续费率）
+                            openResult.setTradeCommission(22.2);
+                            openResult.setTradeDate(rsp.tradeArrayItems.get(rsp.tradeArrayItems.size()-1).tradeDate);//交易日期：20180512
+                            openResult.setTradeTime(rsp.tradeArrayItems.get(rsp.tradeArrayItems.size()-1).tradeTime);//交易时间：203024
+
+                            openResult.setTradeVolume(Double.valueOf(handNumber));//成功交易手数
                             log.debug("接收一条开仓交易信息：" + WebJsion.toJson(openResult));
                             followOrderTradeRecordService.updateRecordByComeBackTradeMsg(openResult);
                         } else {
@@ -800,6 +849,21 @@ public class FollowOrderServiceImpl implements FollowOrderService {
 
                     @Override
                     public void callback_orderClose(int ret, orderCloseResponse rsp) {
+                    }
+
+                    @Override
+                    public void callback_instrumentQuery(int ret, instrumentQueryResponse rsp) {
+
+                    }
+
+                    @Override
+                    public void callback_instrumentCommissionQuery(int ret, instrumentCommissionQueryResponse rsp) {
+
+                    }
+
+                    @Override
+                    public void callback_marketDataQuery(int ret, marketDataQueryResponse rsp) {
+
                     }
                 }, open);
             } catch (Exception e) {
