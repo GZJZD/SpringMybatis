@@ -124,7 +124,7 @@ public class FollowOrderTradeRecordServiceImpl implements FollowOrderTradeRecord
                         followOrderService.updateHoldNumByTradeAndFollowOrder(followOrder, tradeRecord);
                     } else {
                         followOrder.setNetPositionSum(0.0);
-                        followOrder.setNetPositionHoldNumber(0.0);
+                        followOrder.setNetPositionHoldNumber(0);
                     }
                     log.debug("交易信息返回，修改净头寸跟单：followOrderName{},netPositionStatus{},netPositionHoldNumber{}"+
                             followOrder.getFollowOrderName()+"、" +
@@ -151,7 +151,7 @@ public class FollowOrderTradeRecordServiceImpl implements FollowOrderTradeRecord
         ClientNetPosition clientNetPosition = clientNetPositionService.getClientNetPosition(tradeRecord.getClientNetPositionId());
 
         //交易为0
-        tradeRecord.setHandNumber(0.0);
+        tradeRecord.setHandNumber(0);
         tradeRecord.setMarketPrice(0.0);
         tradeRecord.setPoundage(0.0);
         //交易失败同时告诉工作人员 todo

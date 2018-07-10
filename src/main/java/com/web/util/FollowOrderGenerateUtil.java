@@ -42,7 +42,7 @@ public  class FollowOrderGenerateUtil {
         followOrder.setNetPositionChange(10);
         followOrder.setNetPositionFollowNumber(1);
         followOrder.setNetPositionSum(0.0);
-        followOrder.setNetPositionHoldNumber(0.0);
+        followOrder.setNetPositionHoldNumber(0);
         followOrder.setFollowOrderName("净头寸初始化策略");
         followOrder.setNetPositionStatus(FollowOrderEnum.FollowStatus.NET_POSITION_TRADING_PAUSE.getIndex());
         followOrder.setFollowOrderStatus(FollowOrderEnum.FollowStatus.FOLLOW_ORDER_STOP.getIndex());
