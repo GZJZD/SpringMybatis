@@ -21,11 +21,14 @@
     <result column="update_date" property="updateDate" jdbcType="VARCHAR" />
     <result column="create_user" property="createUser" jdbcType="VARCHAR" />
     <result column="update_by_user" property="updateByUser" jdbcType="VARCHAR" />
+    <result column="commission" property="commission" jdbcType="DOUBLE" />
+    <result column="stop_profit" property="stopProfit" jdbcType="DOUBLE" />
+    <result column="stop_loss" property="stopLoss" jdbcType="DOUBLE" />
     </resultMap>
 
     <sql id="Base_Column_List" >
     id,user_code ,product_code ,hand_number ,open_time ,close_time ,price ,ticket ,open_price ,agency_name ,plat_form_code ,profit ,
-     close_price,long_short ,create_date ,update_date ,create_user ,update_by_user
+     close_price,long_short ,create_date ,update_date ,create_user ,update_by_user,commission ,stop_profit ,stop_loss
     </sql>
 
     <select id="findAll" resultMap="BaseResultMap">
@@ -38,7 +41,7 @@
       INSERT  INTO tb_order_user(<include refid="Base_Column_List" />)
 
         VALUES(#{id}, #{userCode},#{productCode},#{handNumber},#{openTime},#{closeTime},#{price},#{ticket},#{openPrice},#{agencyName},#{platFormCode},
-        #{profit},#{closePrice},#{longShort},#{createDate},#{updateDate},#{createUser},#{updateByUser})
+        #{profit},#{closePrice},#{longShort},#{createDate},#{updateDate},#{createUser},#{updateByUser},#{commission},#{stopProfit},#{stopLoss})
     </insert>
 
     <select id="findByTicket"

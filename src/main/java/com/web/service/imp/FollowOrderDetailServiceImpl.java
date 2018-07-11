@@ -227,6 +227,15 @@ public class FollowOrderDetailServiceImpl implements FollowOrderDetailService {
         return followOrderDetailDao.getNOCloseDetailListByFollowOrderId(followOrderId);
     }
 
+    /*
+    * 查找所有还没有平仓的明细
+    * */
+    @Override
+    public List<FollowOrderDetail> getAllNOCloseDetailList() {
+        return followOrderDetailDao.getAllNOCloseDetailList();
+    }
+
+
 
     /*
      * 客户平仓
@@ -252,7 +261,7 @@ public class FollowOrderDetailServiceImpl implements FollowOrderDetailService {
                 detailNew.setOpenTime(followOrderTradeRecord.getTradeTime());
                 detailNew.setFollowOrderId(detail.getFollowOrderId());
                 detailNew.setTradeDirection(detail.getTradeDirection());
-                detailNew.setVarietyName(detail.getVarietyName());
+                detailNew.setContractCode(detail.getContractCode());
                 detailNew.setFollowOrderTradeRecordId(detail.getFollowOrderTradeRecordId());
                 save(detailNew);
                 log.debug("客户新开仓明细：newTicket{},handNumber{},"+detailNew.getTicket()+","+detailNew.getHandNumber());
@@ -365,7 +374,7 @@ public class FollowOrderDetailServiceImpl implements FollowOrderDetailService {
         //设置品种的名称
         varietyService.getVariety(followOrderTradeRecord.getVarietyId());
         ContractInfo contractInfo = contractInfoService.getInfoByVarietyIdAndPlatformId(followOrderTradeRecord.getVarietyId(), followOrder.getAccount().getPlatform().getId());
-        orderDetail.setVarietyName(contractInfo.getContractCode());
+        orderDetail.setContractCode(contractInfo.getContractCode());
         //设置手续费
         orderDetail.setPoundage(orderMsgResult.getTradeCommission());
         //设置开仓单号

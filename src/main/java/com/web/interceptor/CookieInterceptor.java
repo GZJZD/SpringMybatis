@@ -82,7 +82,7 @@ public class CookieInterceptor extends HandlerInterceptorAdapter {
             String phoneNumber = strList[0];
             String verifyTime = strList[1];
             Login login = loginService.findByPhoneNumber(phoneNumber);
-            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+            SimpleDateFormat sdf = new SimpleDateFormat(DateUtil.DATE_YYYY_MM_DD_HH_MM_SS);
             Date begin_Time = null;
             try {
                 begin_Time = sdf.parse(login.getVerifyTime());

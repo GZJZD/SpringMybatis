@@ -3,6 +3,7 @@ package com.web.controller;
 import com.alibaba.fastjson.JSONArray;
 import com.web.pojo.OrderUser;
 import com.web.pojo.vo.OrderUserDetailsVo;
+import com.web.pojo.vo.OrderUserListVo;
 import com.web.pojo.vo.OrderUserVo;
 import com.web.service.OrderUserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -48,7 +49,7 @@ public class OrderUserController {
      */
     @RequestMapping(value = "/countOrderUser.Action")
     @ResponseBody
-    public List<OrderUserVo> countOrderUser(String endTime ,String startTime,String platformName,String productCode,String agencyName,String contract,String userCode ){
+    public OrderUserListVo countOrderUser(String endTime ,String startTime,String platformName,String productCode,String agencyName,String contract,String userCode ){
         OrderUserVo orderUserVo = new OrderUserVo();
         orderUserVo.setStartTime(startTime);
         orderUserVo.setEndTime(endTime);
@@ -57,7 +58,7 @@ public class OrderUserController {
         orderUserVo.setPlatformName(platformName);
         orderUserVo.setContract(contract);
         orderUserVo.setUserCode(userCode);
-        List<OrderUserVo> orderUserVos = orderUserService.countOrderUser(orderUserVo);
+        OrderUserListVo orderUserVos = orderUserService.countOrderUser(orderUserVo);
         return orderUserVos;
     }
 
