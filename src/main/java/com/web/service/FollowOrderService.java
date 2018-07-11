@@ -47,4 +47,6 @@ public interface FollowOrderService {
 
     List<FollowOrder> selectListFollowOrder(FollowOrderPageVo followOrderPageVo);
     int findAccountStatusByAccountId(Long accountId);
+    List<FollowOrder> getNOStopFollowOrder();
+
 }

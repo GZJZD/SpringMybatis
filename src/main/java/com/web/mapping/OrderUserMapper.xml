@@ -41,7 +41,7 @@
       INSERT  INTO tb_order_user(<include refid="Base_Column_List" />)
 
         VALUES(#{id}, #{userCode},#{productCode},#{handNumber},#{openTime},#{closeTime},#{price},#{ticket},#{openPrice},#{agencyName},#{platFormCode},
-        #{profit},#{closePrice},#{longShort},#{createDate},#{updateDate},#{createUser},#{updateByUser},#{commission},#{stop_Profit},#{stop_Loss})
+        #{profit},#{closePrice},#{longShort},#{createDate},#{updateDate},#{createUser},#{updateByUser},#{commission},#{stopProfit},#{stopLoss})
     </insert>
 
     <select id="findByTicket"

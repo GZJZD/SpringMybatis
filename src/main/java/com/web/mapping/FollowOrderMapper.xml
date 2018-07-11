@@ -27,13 +27,6 @@
         <result column="start_time" property="startTime"/>
         <result column="follow_order_status" property="followOrderStatus"/>
         <result column="version" property="version"/>
-      <!--  <association property="account" columnPrefix="account_" javaType="com.web.pojo.Account" >
-            <id column="id" property="id"/>
-            <result column="account" property="account"/>
-            <result column="password" property="password"/>
-            <result column="tb_platform_id" property="platform"/>
-            <association property=""
-        </association>-->
         <association property="account" column="tb_account_id" javaType="com.web.pojo.Account" select="com.web.dao.AccountDao.getAccountById" />
         <association property="variety" columnPrefix="v_" javaType="com.web.pojo.Variety">
             <id column="id" property="id"/>
@@ -187,6 +180,16 @@
     <select id="findAccountStatusByAccountId" resultType="java.lang.Integer">
         select count(id) from follow_order
         where tb_account_id = #{accountId} and follow_order_status = 1
+    </select>
+    <select id="getNOStopFollowOrder" resultMap="BaseResultMap">
+        select
+        f.id,
+        f.tb_account_id,
+        v.id v_id,
+        v.variety_code v_variety_code,
+        v.variety_name v_variety_name
+        from follow_order f
+        join tb_variety v on v.id = f.tb_variety_id
     </select>
 
     <sql id="base_where">

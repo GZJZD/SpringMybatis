@@ -956,6 +956,14 @@ public class FollowOrderServiceImpl implements FollowOrderService {
     }
 
     /*
+    * 查找所有没有停止的跟单
+    * */
+    @Override
+    public List<FollowOrder> getNOStopFollowOrder() {
+        return followOrderDao.getNOStopFollowOrder();
+    }
+
+    /*
     *
     * 查找该账号跟单状态为启动
     * */
