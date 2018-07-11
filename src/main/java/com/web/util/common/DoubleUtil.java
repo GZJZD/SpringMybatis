@@ -96,6 +96,7 @@ public abstract class DoubleUtil {
      *     @param v1 *
      *      @param v2 *
      *      scale  保留多少位数
+     *  向（距离）最近的一边舍入，除非两边（的距离）是相等,如果是这样，向下舍入, 例如1.55 保留一位小数结果为1.5
      *  @return Double
      */
      public static Double div(Double v1 ,Integer v2, int scale){
@@ -105,6 +106,6 @@ public abstract class DoubleUtil {
          }
          BigDecimal b2 = new BigDecimal(Integer.toString(v2));
          BigDecimal b1 = new BigDecimal(Double.toString(v1));
-         return b1.divide(b2,scale).doubleValue();
+         return b1.divide(b2,scale,BigDecimal.ROUND_HALF_DOWN ).doubleValue();
      }
 }

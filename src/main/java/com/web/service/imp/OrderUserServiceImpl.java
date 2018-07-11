@@ -225,18 +225,25 @@ public class OrderUserServiceImpl implements OrderUserService {
      * @param orderUserVo
      * @return
      */
-    public List<OrderUserVo> countOrderUser( OrderUserVo orderUserVo){
+    public OrderUserListVo countOrderUser( OrderUserVo orderUserVo){
         List<OrderUserVo> list =  new ArrayList<>();
         List<OrderUser> orderUserlist =  orderUserDao.countOrderUser(orderUserVo);
         OrderUserListVo orderUserListVo = new OrderUserListVo();
-        //总持仓盈亏
-        double total_Position_gain_and_loss = DoubleUtil.Double_val;
-        double  total_gain_and_loss = DoubleUtil.Double_val;
+        double total_Position_gain_and_loss = DoubleUtil.Double_val; //总持仓盈亏
+        double  total_gain_and_loss = DoubleUtil.Double_val;//客户总盈亏
+        double total_commission = DoubleUtil.Double_val; //总手续费
+
         for (OrderUser orderUser : orderUserlist){
             OrderUserVo orderUserVo1 = new OrderUserVo();
             Prices prices = orderHongKongService.getMarketPrice(orderUser.getProductCode()); //价格
             PlatFromUsers platFromUsers =  getPlatFromUser(orderUser);
-            Agent agent  = orderHongKongService.getAgent(platFromUsers.getAGENT());//代理人
+            Agent agent = new Agent();
+            if (platFromUsers == null){
+                agent = null;
+            }else {
+                agent    = orderHongKongService.getAgent(platFromUsers.getAGENT());//代理人
+            }
+
 
             //平仓盈亏
             double profit = DoubleUtil.Double_val;
@@ -247,13 +254,15 @@ public class OrderUserServiceImpl implements OrderUserService {
             //持仓盈亏
             double position_gain_and_loss = DoubleUtil.Double_val;
             //盈亏效率
-            double profit_loss_than = 0.00;
+            double profit_loss_than = DoubleUtil.Double_val;
+
             int doOrderNumber = 0; //做单数
             double handNumber = DoubleUtil.Double_val; //手数
             SimpleDateFormat sdf = new SimpleDateFormat(DateUtil.DATE_YYYY_MM_DD_HH_MM_SS);
             Date recentlyTime = null;//最近下单时间
              for (OrderUser orderUser1 : orderUserlist){
                  if(orderUser.getUserCode().equals(orderUser1.getUserCode())){
+                     total_commission = DoubleUtil.add(total_commission,(orderUser1.getCommission() == null ? DoubleUtil.Double_val : orderUser1.getCommission()));
                      //持仓总数
                      if(orderUser1.getCloseTime() == null && StringUtils.isEmpty(orderUser1.getCloseTime())){
                          //多
@@ -263,18 +272,18 @@ public class OrderUserServiceImpl implements OrderUserService {
                          }
                          //空
                          //（开仓价（orderUser）— 买入（HK））* 持仓数 （orderUser）
-                         if (orderUser1.getLongShort() ==1){
+                         if (orderUser1.getLongShort() == 1){
                              position_gain_and_loss =
                                      DoubleUtil.add(position_gain_and_loss,DoubleUtil.mul(DoubleUtil.sub(orderUser1.getOpenPrice(),prices.getBid()),orderUser1.getHandNumber()));
                          }
                      }
                      //平仓盈亏
                     if(orderUser1.getCloseTime() != null && !StringUtils.isEmpty(orderUser1.getCloseTime()) && orderUser1.getProfit() != null){
-                        profit = DoubleUtil.add(profit,orderUser1.getProfit());
+                        profit = DoubleUtil.add(profit,( orderUser1.getProfit() ==null ? DoubleUtil.Double_val : orderUser1.getProfit() ));
                         doOrderNumber++; //做单数
-                        handNumber = DoubleUtil.add(handNumber,orderUser1.getHandNumber()); //手数计算
+                        handNumber = DoubleUtil.add(handNumber,(orderUser1.getHandNumber() == null ? DoubleUtil.Double_val : orderUser1.getHandNumber())); //手数计算
                         if(orderUser1.getProfit() > 0){
-                            winRate= DoubleUtil.add(winRate,orderUser1.getProfit()); //盈利
+                            winRate= DoubleUtil.add(winRate,(orderUser1.getProfit() == null ? DoubleUtil.Double_val : orderUser1.getProfit())); //盈利
                         }
                     }
                     //计算最近下单时间
@@ -292,14 +301,13 @@ public class OrderUserServiceImpl implements OrderUserService {
                          } catch (ParseException e) {
                              e.printStackTrace();
                          }
-
                      }
-
-
                  }
              }
             if(winRate != DoubleUtil.Double_val){
-                orderUserVo1.setWinRate(DoubleUtil.div(winRate,doOrderNumber,10));//胜率
+                System.out.println("winRate:"+winRate);
+                System.out.println("doOrderNumber:"+doOrderNumber);
+                orderUserVo1.setWinRate(DoubleUtil.div(winRate,doOrderNumber,1));//胜率
             }else{
                 orderUserVo1.setWinRate(DoubleUtil.Double_val);//胜率
             }
@@ -321,22 +329,29 @@ public class OrderUserServiceImpl implements OrderUserService {
              orderUserVo1.setHandNumber(handNumber);//持仓手数
              orderUserVo1.setPosition_gain_and_loss(position_gain_and_loss);//持仓盈亏
              orderUserVo1.setOffset_gain_and_loss(profit);//平仓盈亏
-             profit_loss_than =profit/handNumber;
+
+            if(profit != DoubleUtil.Double_val){
+                profit_loss_than = DoubleUtil.div(profit,handNumber,1);
+            }else {
+                profit_loss_than = DoubleUtil.Double_val;
+            }
+
             if (Double.isNaN(profit_loss_than)){
                 profit_loss_than = 0.0;
             }
              orderUserVo1.setProfit_loss_than(profit_loss_than);  //盈亏效率
              orderUserVo1.setDoOrderNumber(doOrderNumber);//做单数
              orderUserVo1.setTotalGainAndLoss(DoubleUtil.add(position_gain_and_loss,profit));//累计盈亏
-             total_Position_gain_and_loss = DoubleUtil.add(total_Position_gain_and_loss,position_gain_and_loss);
-            total_gain_and_loss = DoubleUtil.add(profit,position_gain_and_loss);
+             total_Position_gain_and_loss = DoubleUtil.add(total_Position_gain_and_loss,position_gain_and_loss); //总持仓盈亏
+             total_gain_and_loss = DoubleUtil.add(DoubleUtil.add(profit,position_gain_and_loss),total_gain_and_loss); //客户总盈亏
              list.add(orderUserVo1);
 
         }
         orderUserListVo.setTotal_gain_and_loss(total_gain_and_loss);
         orderUserListVo.setTotal_Position_gain_and_loss(total_Position_gain_and_loss);
+        orderUserListVo.setTotal_commission(total_commission);
         orderUserListVo.setListVo(list);
-        return list;
+        return orderUserListVo;
     }
 
     /**
@@ -420,8 +435,7 @@ public class OrderUserServiceImpl implements OrderUserService {
      */
 
     public PlatFromUsers getPlatFromUser(OrderUser orderUser ){
-
-        PlatFromUsers platFromUsers  = new PlatFromUsers();
+           PlatFromUsers platFromUsers  = new PlatFromUsers();
         if (orderUser.getPlatFormCode().equals(platFromList[0])){
             platFromUsers =    orderHongKongService.getUser75(orderUser.getUserCode());
         }
