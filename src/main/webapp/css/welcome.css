@@ -129,4 +129,5 @@
 .create-but{
   float: right;
   background-color:#66819f ;
+  border-width:1px;
 }
