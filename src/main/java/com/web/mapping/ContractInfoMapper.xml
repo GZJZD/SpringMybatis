@@ -14,6 +14,40 @@
         <association property="platform" javaType="com.web.pojo.Platform" column="tb_platform_id" 
         	select="com.web.dao.PlatformDao.getPlatformById"/>
     </resultMap>
+	<insert id="save" parameterType="com.web.pojo.ContractInfo" useGeneratedKeys="true" keyProperty="id">
+    	insert into tb_contract_info (tb_variety_id,tb_platform_id,contract_code,contract_name,create_user,create_time, modify_time,modify_user)
+    	values (#{variety.id},#{platform.id},#{contractCode},#{contractName},#{createUser},#{createTime},#{modifyTime},#{modifyUser})
+    </insert>
+    <update id="updateContractInfo" parameterType="com.web.pojo.ContractInfo">
+        update tb_contract_info
+        <set>
+            <if test="variety != null">
+                tb_variety_id = #{variety.id} ,
+            </if>
+            <if test="platform != null">
+                tb_platform_id = #{platform.id},
+            </if>
+            <if test="contractCode != null">
+                contractCode = #{contractCode},
+            </if>
+            <if test="contractName != null">
+                contractName = #{contractName},
+            </if>
+            <if test="createUser != null">
+                create_user = #{createUser},
+            </if>
+            <if test="createTime != null">
+                create_time = #{createTime},
+            </if>
+            <if test="modifyTime != null">
+                modify_time = #{modifyTime},
+            </if>
+            <if test="modifyUser != null ">
+                modify_user = #{modifyUser},
+            </if>
+        </set>
+        where id =#{id}
+    </update>
     <select id="getInfoByVarietyIdAndPlatformId" resultMap="BaseResultMap" >
       SELECT
       id,

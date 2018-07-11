@@ -24,8 +24,8 @@ $(function () {
         valign: 'middle',
         formatter: function (value, row, index) {
         	var contractInfoId = row.id;
-            var obj=JSON.stringify(row);
-            return "<a onclick='alert(11)' href='javascript:;'>修改</a>   " +
+        	var obj = JSON.stringify(row);
+            return "<a onclick='addContractInfo(1," + obj + ")' href='javascript:;'>修改</a>   " +
                        "<a onclick='alert(11)' href='javascript:;'>删除</a>";
         }
 	}];
@@ -132,7 +132,7 @@ function findByVariety() {
     w       弹出层宽度（缺省调默认值）
     h       弹出层高度（缺省调默认值）
 */
-function addContractInfo() {
+function addContractInfo(num,obj) {
     var url = "contractInfo-add.html";
     var title = "合约管理";
     var w = 1500;
@@ -165,7 +165,7 @@ function addContractInfo() {
         success: function (layero, index) {
             //找到子页面
             var iframeWin = window['layui-layer-iframe' + index]; //得到iframe页的窗口对象，执行iframe页的方法：iframeWin.method();
-            //iframeWin.setParameter(num, account);
+            iframeWin.setParameter(num, obj);
         }
     });
 }
