@@ -30,4 +30,14 @@ public class ContractInfoServiceImpl implements ContractInfoService {
     public ContractInfo getContractInfoById(Long id) {
         return contractInfoDao.getContractInfoById(id);
     }
+
+	@Override
+	public void save(ContractInfo contractInfo) {
+		contractInfoDao.save(contractInfo);
+	}
+
+	@Override
+	public void updateContractInfo(ContractInfo contractInfo) {
+		contractInfoDao.updateContractInfo(contractInfo);
+	}
 }

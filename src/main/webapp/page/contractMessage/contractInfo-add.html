@@ -122,54 +122,40 @@
 </style>
 <body>
 <div class="container-fluid">
-    <div class="row form-group">
-        <input type="hidden" id="accountId">
-        <label class="col-md-3  text-div control-label">平台：</label>
-        <div class="col-md-6 input-div ">
-            <select class="form-control " id="platform_id">
-            </select>
-        </div>
-    </div>
-    <div class="row form-group">
-        <label class="col-md-3  text-div control-label">对应代理人：</label>
-        <div class="col-md-6 input-div">
-            <select class="form-control " id="agent_id">
-            </select>
-        </div>
-    </div>
-    <form class="layui-form" action="">
+	<form class="layui-form" action="">
+	    <div class="row form-group">
+	        <input type="hidden" id="contractInfoId">
+	        <label class="col-md-3  text-div control-label">品种代码：</label>
+	        <div class="col-md-6 input-div ">
+	            <select class="form-control " id="variety_id"></select>
+	        </div>
+	    </div>
+	    <div class="row form-group">
+	        <label class="col-md-3  text-div control-label">合约名称：</label>
+	        <div class="col-md-6 input-div">
+	            <input type="text" class="form-control" autocomplete="off" id="contract_name" required
+	                       placeholder="请输入合约名称">
+	        </div>
+	    </div>
         <div class="row form-group">
-            <label class="col-md-3 text-div control-label">账号：</label>
+            <label class="col-md-3 text-div control-label">交易平台：</label>
             <div class="col-md-6 input-div">
-                <input type="text" class="form-control " required lay-verify="required" autocomplete="off" id="account"
-                       placeholder="请输入账号">
+            	<select class="form-control " id="platform_id"></select>
             </div>
 
         </div>
         <div class="row form-group">
             <div class="layui-form-item">
-                <label class="col-md-3 text-div control-label">密码：</label>
+                <label class="col-md-3 text-div control-label">合约代码：</label>
                 <div class=" col-md-6 input-div ">
-                    <input type="password" id="pwd" required lay-verify="required" placeholder="请输入密码"
-                           autocomplete="off"
-                           class="form-control ">
+                    <input type="text" class="form-control" id="contract_code" autocomplete="off"  required
+                     	placeholder="请输入合约代码"/>
                 </div>
             </div>
         </div>
-        <div class="row form-group">
-            <div class="layui-form-item">
-                <label class="col-md-3 text-div control-label">重复密码：</label>
-                <div class=" col-md-6 input-div ">
-                    <input type="password" id="regPwd" required lay-verify="regPwd" placeholder="请输入密码"
-                           autocomplete="off"
-                           class="form-control ">
-                </div>
-            </div>
-        </div>
-
         <div class="layui-form-item">
             <div class="layui-input-block btn-div">
-                <button class="layui-btn" lay-filter="save" id="test" lay-submit="">保存</button>
+                <button class="layui-btn" lay-filter="save" id="test" >保存</button>
             </div>
         </div>
     </form>
@@ -179,11 +165,8 @@
 </div>
 
 <script src="../../js/commonParameter.js"></script>
-
 <script type="text/javascript" src="../../js/common.js"></script>
-<script type="text/javascript" src="js/account_add.js"></script>
-
-
+<script type="text/javascript" src="js/contract_add.js"></script>
 </body>
 
 </html>
