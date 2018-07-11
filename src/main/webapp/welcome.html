@@ -37,28 +37,28 @@
 				<div class="row block">
 					<div class="col-xs-3">
 						<div class="area text-right">
-							<div class="font-24">-42342</div>
+							<div class="font-24 total_Position_gain_and_loss" >-</div>
 							<div class="font-25">持仓盈亏</div>
 							<div class="a-foot text-left"></div>
 						</div>
 					</div>
 					<div class="col-xs-3">
 						<div class="area text-right">
-							<div class="font-24">-31232</div>
+							<div class="font-24 total_gain_and_loss">-</div>
 							<div class="font-25">客户总盈亏</div>
 							<div class="a-foot text-left"></div>
 						</div>
 					</div>
 					<div class="col-xs-3">
 						<div class="area text-right">
-							<div class="font-24">321233</div>
+							<div class="font-24 total_commission">-</div>
 							<div class="font-25">手续费</div>
 							<!--<div class="a-foot text-left">手续费</div>-->
 						</div>
 					</div>
 					<div class="col-xs-3">
 						<div class="area text-right">
-							<div class="font-24">-12.3</div>
+							<div class="font-24"></div>
 							<div class="font-25">盈亏效率</div>
 							<!--<div class="a-foot text-left">手续费</div>-->
 						</div>
@@ -210,7 +210,7 @@
                         title: '盈亏效率'
                     },
                     {
-                        field: '',
+                        field: 'listVo.total_Position_gain_and_loss',
                         title: '客户类型'
                     },
                     {
@@ -227,8 +227,89 @@
                     }
                 ];
 
-				showByTableId(tableId,method,url_,unique_Id,sortOrder,columns);
+                $.ajax({
+                    url:url_,
+                    type:'POST', //GET
+                    async:true,    //或false,是否异步
+					dataType:'json',    //返回的数据格式：json/xml/html/script/jsonp/text
+                    beforeSend:function(xhr){
+
+                    },
+                    success:function(data_,textStatus,jqXHR){
+                        var data = [];
+                        $.each(data_.listVo, function(i, d) {
+                            data.push(d);
+                        });
+						showClients(tableId,method,unique_Id,sortOrder,columns,data);
+
+						$('.total_Position_gain_and_loss').html(data_.total_Position_gain_and_loss);
+						$('.total_gain_and_loss').html(data_.total_gain_and_loss);
+						$('.total_commission').html(data_.total_commission);
+						},
+                    error:function(xhr,textStatus){
+
+                    },
+                    complete:function(){
+
+                    }
+                })
+
+
+
+
 			})
+
+            function showClients(table_Id, method, unique_Id, sortOrder, columns,data) {
+                $(table_Id).bootstrapTable({
+					data:data,
+                    method: method,
+                    contentType: "application/x-www-form-urlencoded", //必须要有！！！！
+                    striped: false, //是否显示行间隔色
+					clickToSelect: true,
+                    uniqueId: unique_Id, //每一行的唯一标识，一般为主键列
+                    pagination: true, //是否显示分页（*）
+                    sortable: true, //是否启用排序
+                    sortOrder: sortOrder, //排序方式
+                    clickToSelect: true, // 是否启用点击选中行
+                    pageSize: 10, //单页记录数
+                    pageList: [50, 100], //分页步进值
+                    //			search: true, //是否显示表格搜索，此搜索是客户端搜索，不会进服务端，所以，个人感觉意义不大
+                    strictSearch: true,
+                    showColumns: false, //是否显示所有的列
+                    showRefresh: false, //是否显示刷新按钮
+                    showToggle: false, //是否显示详细视图和列表视图的切换按钮
+                    cardView: false, //是否显示详细视图
+                    detailView: false, //是否显示父子表
+                    //			height:tableHeight(),//高度调整
+                    queryParams: function(params) {
+                        return {
+                            offset: params.offset, //页码
+                            limit: params.limit, //页面大小
+                            search: params.search, //搜索
+                            order: params.order, //排序
+                            ordername: params.sort, //排序
+                        };
+                    },
+                    buttonsAlign: 'right', //按钮对齐方式
+                    columns: columns,
+                    onLoadSuccess: function(data) {
+                        console.log(data);
+                    },
+                    onLoadError: function(status) {
+                        console.log(status);
+                        //                  showTips("数据加载失败！");
+                    },
+                    onDblClickRow: function(row, $element) {
+                        console.log(row);
+                        var id = row.id;
+                        EditViewById(id, 'view');
+                        // console.log(id);
+                    },
+
+                });
+
+            }
+
 			//根据窗口调整表格高度
 			$(window).resize(function() {
 				$('#table').bootstrapTable('resetView', {
@@ -410,8 +491,5 @@
 		}
 
 		</script>
-
-
 	</body>
-
 </html>
