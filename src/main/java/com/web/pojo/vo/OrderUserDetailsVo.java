@@ -19,6 +19,7 @@ public class OrderUserDetailsVo {
     private String createTime;//创建时间
     private Double position_gain_and_loss;//持仓盈亏
     private Double offset_gain_and_loss;//平仓盈亏
+    private Double everyHandNumber;//每单手数
     private List<OrderUser>holdList;//持仓记录
     private List<OrderUser>profitList; //平仓记录
 
@@ -148,5 +149,13 @@ public class OrderUserDetailsVo {
 
     public void setRemainMoney(Double remainMoney) {
         this.remainMoney = remainMoney;
+    }
+
+    public Double getEveryHandNumber() {
+        return everyHandNumber;
+    }
+
+    public void setEveryHandNumber(Double everyHandNumber) {
+        this.everyHandNumber = everyHandNumber;
     }
 }

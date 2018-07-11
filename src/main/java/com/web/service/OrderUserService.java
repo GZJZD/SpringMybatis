@@ -16,4 +16,6 @@ public interface OrderUserService {
     OrderUserListVo countOrderUser(OrderUserVo orderUserVo);
     List<OrderUser>findByUserIdList(List<String> list, String startTime, String endTime, String productCode, Integer openOrCloseStatus);
     OrderUserDetailsVo getUserDetails(String userCode, String productCode);
+    OrderUserDetailsVo  getOrderUserCount(String userCode, String productCode);
+
 }

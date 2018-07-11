@@ -108,4 +108,22 @@ public abstract class DoubleUtil {
          BigDecimal b1 = new BigDecimal(Double.toString(v1));
          return b1.divide(b2,scale,BigDecimal.ROUND_HALF_DOWN ).doubleValue();
      }
+
+    /**
+     * Integer 类型除以 Double类型
+     *     @param v1 *
+     *      @param v2 *
+     *      scale  保留多少位数
+     *  向（距离）最近的一边舍入，除非两边（的距离）是相等,如果是这样，向下舍入, 例如1.55 保留一位小数结果为1.5
+     *  @return Double
+     */
+    public static Double div(Integer v1 ,Double v2, int scale){
+        if (scale < 0) {
+            throw new IllegalArgumentException(
+                    "The scale must be a positive integer or zero");
+        }
+        BigDecimal b2 = new BigDecimal(Integer.toString(v1));
+        BigDecimal b1 = new BigDecimal(Double.toString(v2));
+        return b2.divide(b1,scale,BigDecimal.ROUND_HALF_DOWN ).doubleValue();
+    }
 }
