@@ -4,6 +4,7 @@ import com.web.common.FollowOrderEnum;
 import com.web.dao.FollowOrderDetailDao;
 import com.web.database.OrderHongKongService;
 
+import com.web.database.entity.PlatFromUsers;
 import com.web.pojo.*;
 
 import com.web.pojo.vo.FollowOrderPageVo;
@@ -100,6 +101,7 @@ public class FollowOrderDetailServiceImpl implements FollowOrderDetailService {
                     if (followOrderDetail.getCloseTime() == null) {
                         Map<String, Double> askAndBid = SweepTableSchedule.getAskAndBidByFollowOrderId(followOrderId);
                         if (askAndBid != null) {
+                            log.debug(askAndBid);
                             if (followOrderDetail.getTradeDirection().equals(FollowOrderEnum.FollowStatus.SELL.getIndex())) {
                                 //交易方向为空：获取买入价：bid
                                 //持仓盈亏
@@ -170,9 +172,11 @@ public class FollowOrderDetailServiceImpl implements FollowOrderDetailService {
             if (netPositionDetailVo.getRemainHandNumber()!=null&&netPositionDetailVo.getRemainHandNumber() != 0) {
                 Map<String, Double> askAndBid = SweepTableSchedule.getAskAndBidByFollowOrderId(followOrder.getId());
                 if (askAndBid != null) {
+                    log.debug(askAndBid);
                     if (tradeRecord.getTradeDirection().equals(FollowOrderEnum.FollowStatus.BUY.getIndex())) {
                         //交易方向为多，查询：卖出价（ask）
                         netPositionDetailVo.setProfit(DoubleUtil.mul(DoubleUtil.sub(askAndBid.get("ask"), netPositionDetailVo.getMarketPrice()), netPositionDetailVo.getRemainHandNumber()));
+
                     } else {
                         //交易方向为空，查询：买入价（bid）
                         netPositionDetailVo.setProfit(DoubleUtil.mul(DoubleUtil.sub(netPositionDetailVo.getMarketPrice(), askAndBid.get("bid")), netPositionDetailVo.getRemainHandNumber()));
@@ -360,9 +364,9 @@ public class FollowOrderDetailServiceImpl implements FollowOrderDetailService {
         orderDetail.setFollowOrderId(followOrderTradeRecord.getFollowOrderId());
         //设置交易id
         orderDetail.setFollowOrderTradeRecordId(followOrderTradeRecord.getId());
-        //客户编号
+        //客户姓名
         OrderUser orderUser = orderUserService.findByTicket(orderDetail.getTicket());
-        orderDetail.setClientName(orderUser.getUserCode());
+        orderDetail.setClientName(followOrderTradeRecord.getClientName());
         //客户的盈亏
         orderDetail.setClientProfit(orderUser.getProfit());
         save(orderDetail);

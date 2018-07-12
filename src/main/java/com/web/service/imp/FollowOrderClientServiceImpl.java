@@ -55,6 +55,7 @@ public class FollowOrderClientServiceImpl implements FollowOrderClientService {
                 FollowOrderClient followOrderClient = new FollowOrderClient();
                 followOrderClient.setFollowOrderId(followOrder.getId());
                 followOrderClient.setUserCode(orderClient.getUserCode());
+                followOrderClient.setUserName(orderClient.getUserName());
                 followOrderClient.setFollowDirection(orderClient.getFollowDirection());
                 followOrderClient.setHandNumberType(orderClient.getHandNumberType());
                 followOrderClient.setFollowHandNumber(orderClient.getFollowHandNumber());
