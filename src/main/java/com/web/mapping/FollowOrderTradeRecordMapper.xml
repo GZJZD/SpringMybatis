@@ -4,7 +4,6 @@
     <resultMap id="BaseResultMap" type="com.web.pojo.FollowOrderTradeRecord">
         <id column="id" property="id"/>
         <result column="variety_id" property="varietyId"/>
-        <result column="variety_code" property="varietyCode"/>
         <result column="hand_number" property="handNumber"/>
         <result column="trade_time" property="tradeTime"/>
         <result column="trade_direction" property="tradeDirection"/>
@@ -31,13 +30,13 @@
     where id = #{id}
   </delete>
     <insert id="insert" parameterType="com.web.pojo.FollowOrderTradeRecord" useGeneratedKeys="true" keyProperty="id">
-    insert into follow_order_trade_record ( variety_id, variety_code,
+    insert into follow_order_trade_record ( variety_id,
       hand_number, trade_time, trade_direction, 
       open_close_type, market_price,
       account_id, follow_order_id,
       ticket, new_ticket,
       poundage,client_net_position_id,client_name,update_date,create_date,version)
-    values ( #{varietyId}, #{varietyCode},
+    values ( #{varietyId},
       #{handNumber}, #{tradeTime}, #{tradeDirection}, 
       #{openCloseType}, #{marketPrice},
       #{accountId}, #{followOrderId},
@@ -51,9 +50,7 @@
             <if test="varietyId != null">
                 variety_id = #{varietyId},
             </if>
-            <if test="varietyCode != null">
-                variety_code = #{varietyCode},
-            </if>
+
             <if test="handNumber != null">
                 hand_number = #{handNumber},
             </if>
@@ -165,7 +162,6 @@
     <sql id="base_List">
     id,
     variety_id,
-    variety_code,
     hand_number,
     trade_time,
     trade_direction,

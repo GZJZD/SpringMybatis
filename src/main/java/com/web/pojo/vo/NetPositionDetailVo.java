@@ -24,9 +24,9 @@ public class NetPositionDetailVo {
     //手续费
     private Double poundage;
     //盈亏
-    private Double profit;
+    private Double profit=0.0;
     //剩下手数
-    private Double remainHandNumber;
+    private Integer remainHandNumber=0;
     //明细id
     private Long detailId;
     //客户名字
@@ -68,11 +68,11 @@ public class NetPositionDetailVo {
 
     public String getOpenCloseType() {
 
-        return openCloseType == FollowOrderEnum.FollowStatus.CLOSE.getIndex()? FollowOrderEnum.FollowStatus.CLOSE.getName() : FollowOrderEnum.FollowStatus.OPEN.getName();
+        return openCloseType == FollowOrderEnum.FollowStatus.CLOSE.getIndex() ? FollowOrderEnum.FollowStatus.CLOSE.getName() : FollowOrderEnum.FollowStatus.OPEN.getName();
     }
 
-    public Double getRemainHandNumber() {
-        return remainHandNumber;
+    public void setOpenCloseType(Integer openCloseType) {
+        this.openCloseType = openCloseType;
     }
 
     public Long getDetailId() {
@@ -83,24 +83,8 @@ public class NetPositionDetailVo {
         this.detailId = detailId;
     }
 
-    public void setRemainHandNumber(Double remainHandNumber) {
-        this.remainHandNumber = remainHandNumber;
-    }
-
-    public void setOpenCloseType(Integer openCloseType) {
-        this.openCloseType = openCloseType;
-    }
-
-    public String getHandNumber() {
-        return handNumber;
-    }
-
-    public void setHandNumber(String handNumber) {
-        this.handNumber = handNumber;
-    }
-
     public String getTradeDirection() {
-        return tradeDirection == FollowOrderEnum.FollowStatus.SELL.getIndex()? "卖出" : "买入";
+        return tradeDirection == FollowOrderEnum.FollowStatus.SELL.getIndex() ? "卖出" : "买入";
     }
 
     public void setTradeDirection(Integer tradeDirection) {
@@ -153,5 +137,21 @@ public class NetPositionDetailVo {
 
     public void setFollowOrderClientStatus(Integer followOrderClientStatus) {
         this.followOrderClientStatus = followOrderClientStatus;
+    }
+
+    public String getHandNumber() {
+        return handNumber;
+    }
+
+    public void setHandNumber(String handNumber) {
+        this.handNumber = handNumber;
+    }
+
+    public Integer getRemainHandNumber() {
+        return remainHandNumber;
+    }
+
+    public void setRemainHandNumber(Integer remainHandNumber) {
+        this.remainHandNumber = remainHandNumber;
     }
 }

@@ -2,19 +2,20 @@ package com.web.pojo;
 
 import java.io.Serializable;
 import java.util.Date;
+
 /**
  * 跟单交易记录
- *@Author: May
- *@param
- *@Date: 15:46 2018/5/21
+ *
+ * @param
+ * @Author: May
+ * @Date: 15:46 2018/5/21
  */
 public class FollowOrderTradeRecord implements Serializable {
     private Long id;
 
     //品种id
     private Long varietyId;
-    //品种代码
-    private String varietyCode;
+
     //手数
     private Integer handNumber;
     //交易时间
@@ -46,7 +47,7 @@ public class FollowOrderTradeRecord implements Serializable {
     //创建时间
     private String createDate;
     //版本
-    private Integer version=0;
+    private Integer version = 0;
 
     public Long getId() {
         return id;
@@ -64,13 +65,6 @@ public class FollowOrderTradeRecord implements Serializable {
         this.varietyId = varietyId;
     }
 
-    public String getVarietyCode() {
-        return varietyCode;
-    }
-
-    public void setVarietyCode(String varietyCode) {
-        this.varietyCode = varietyCode;
-    }
 
     public Integer getHandNumber() {
         return handNumber;
@@ -128,7 +122,6 @@ public class FollowOrderTradeRecord implements Serializable {
     public void setFollowOrderId(Long followOrderId) {
         this.followOrderId = followOrderId;
     }
-
 
 
     public String getTicket() {
