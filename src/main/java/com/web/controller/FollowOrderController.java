@@ -6,6 +6,7 @@ import com.web.pojo.FollowOrder;
 import com.web.pojo.FollowOrderClient;
 import com.web.pojo.Variety;
 import com.web.pojo.vo.FollowOrderPageVo;
+import com.web.pojo.vo.FollowOrderQuery;
 import com.web.pojo.vo.FollowOrderVo;
 import com.web.service.FollowOrderClientService;
 import com.web.service.FollowOrderDetailService;
@@ -51,7 +52,7 @@ public class FollowOrderController {
     @RequestMapping(value = "/getListDetails.Action")
     @ResponseBody
     public List<?> getListDetails(Long followOrderId, String endTime, String startTime, Integer status) {
-        return followOrderDetailService.getDetailListByFollowOrderId(followOrderId, endTime, startTime, status);
+        return followOrderDetailService.findDetailList(followOrderId, endTime, startTime, status);
     }
 
     /*
@@ -65,20 +66,20 @@ public class FollowOrderController {
      */
     @RequestMapping("/getListFollowOrder.Action")
     @ResponseBody
-    public List<FollowOrderVo> getListFollowOrder(Long varietyId, Long accountId, String endTime, String startTime, Integer status) {
-        FollowOrderPageVo followOrderPageVo = new FollowOrderPageVo();
-        followOrderPageVo.setVarietyId(varietyId);
-        followOrderPageVo.setStatus(status);
-        followOrderPageVo.setAccountId(accountId);
+    public FollowOrderPageVo getListFollowOrder(Long varietyId, Long accountId, String endTime, String startTime, Integer status) {
+        FollowOrderQuery followOrderQuery = new FollowOrderQuery();
+        followOrderQuery.setVarietyId(varietyId);
+        followOrderQuery.setStatus(status);
+        followOrderQuery.setAccountId(accountId);
         if (endTime != null && !"".equals(endTime)) {
             String date = DateUtil.dateToStrLong(DateUtil.getEndDate(DateUtil.strToDate(endTime)));
-            followOrderPageVo.setEndTime(date);
+            followOrderQuery.setEndTime(date);
         }
         if (startTime != null && !"".equals(startTime)) {
-            followOrderPageVo.setStartTime(startTime);
+            followOrderQuery.setStartTime(startTime);
         }
-        List<FollowOrderVo> listFollowOrderVo = followOrderService.getListFollowOrderVo(followOrderPageVo);
-        return listFollowOrderVo;
+
+        return followOrderService.getListFollowOrderVo(followOrderQuery);
     }
 
     /*
@@ -188,14 +189,6 @@ public class FollowOrderController {
         return new JSONResult("手动平仓成功");
     }
 
-    /*
-     * 跟单列表头展示
-     * */
-    @RequestMapping("/getFollowOrderPageVo.Action")
-    @ResponseBody
-    public FollowOrderPageVo getFollowOrderPageVo() {
-        return followOrderDetailService.getFollowOrderPageVo();
-    }
 
 
     /*

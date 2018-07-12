@@ -27,6 +27,8 @@ public interface FollowOrderDetailService {
     FollowOrderDetail getFollowOrderDetailByTicket(String ticket, Long followOrderId);
 
     FollowOrderDetail getFollowOrderDetail(Long id);
+
+    List<FollowOrderDetail> getDetailListByFollowOrderId(Long followOrderId, String endTime, String startTime, Integer status);
     /**
      * 通过对应的跟单id找到对应的明细，时间倒序
      *@Author: May
@@ -36,7 +38,7 @@ public interface FollowOrderDetailService {
      * @param startTime
      * @param status
      */
-    List<?> getDetailListByFollowOrderId(Long followOrderId, String endTime, String startTime, Integer status);
+    List<?> findDetailList(Long followOrderId, String endTime, String startTime, Integer status);
 
     /**净头寸平仓
      * 找到对应的开多 or  开空 明细，并且剩下手数不为0的明细记录
@@ -46,30 +48,8 @@ public interface FollowOrderDetailService {
      */
     List<FollowOrderDetail> getDetailListByOrderIdAndDirection(Long followOrderId,Integer direction);
 
-    /*
-     *
-     *   对应跟单的明细总平仓盈亏
-     * @author may
-     * @date 2018/5/25 15:59
-     * @param
-     * @return
-     */
-    FollowOrderVo getOffsetGainAndLossAndHandNumberByFollowOrderId (Long followOrderId);
 
-    /*
-     *
-     *   对应跟单的明细总手续费和手数
-     * @author may
-     * @date 2018/5/25 16:02
-     * @param
-     * @return
-     */
-    Double getCommissionTotal(Long followOrderId);
 
-    /*
-    * 统计对应跟单的开仓总手数
-    * */
-    Double getOpenHandNumber(Long followOrderId);
    /*
     *
     *   获取未平的所有明细
@@ -80,11 +60,11 @@ public interface FollowOrderDetailService {
     */
     List<FollowOrderDetail> getNOCloseDetailListByFollowOrderId(Long followOrderId);
 
-    List<FollowOrderDetail> getAllNOCloseDetailList();
+
     void updateDetail(FollowOrderDetail followOrderDetail);
 
 
-    FollowOrderPageVo getFollowOrderPageVo();
+
 
     void createDetail(FollowOrderTradeRecord followOrderTradeRecord, OrderMsgResult orderMsgResult);
 

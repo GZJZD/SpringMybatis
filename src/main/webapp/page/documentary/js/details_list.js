@@ -7,9 +7,9 @@ var unique_Id = "detailId";
 var sortOrder = "asc";
 var clientStatus = $("#clientFollowOrder option:selected").val();
 var clientName = $("#clientName option:selected").val();
-
+var varietyName;
 var columns = [
-   {
+    {
         title: '序号',
 
         formatter: function (value, row, index) {
@@ -27,6 +27,7 @@ var columns = [
     }, {
         field: 'varietyName',
         title: '品种'
+
     }, {
         field: 'openCloseType',
         title: '类型'
@@ -66,7 +67,7 @@ var columns = [
         valign: 'middle',
         formatter: function (value, row, index) {
             var detailId = row.detailId;
-            if (value == "0.0") {
+            if (value == "0" || value == null) {
                 return "-";
             } else {
                 return "<a href='javascript:;' class='btn btn-xs green' onclick='manually_close_position(" + detailId + ")' >  <span style='color: #4cae4c'>手动平仓</span></a>"
@@ -103,14 +104,16 @@ function manually_close_position(id) {
 /*
 * 展示跟单明细列表
 * */
-function detailShow(name,manager, id, orderNum, offsetGainAndLoss, poundageTotal) {
+function detailShow(varietyName, name, manager, id, orderNum, offsetGainAndLoss, poundageTotal) {
     $("#orderNum").html(orderNum);
     $("#offsetGainAndLoss").html(offsetGainAndLoss);
     $("#positionGainAndLoss").html(0);
     $("#poundageTotal").html(poundageTotal);
     url_detail = url_ + "/followOrder/getListDetails.Action?followOrderId=" + id;
     followOrderId = id;
+    varietyName = varietyName;
     if (manager == "1") {
+
         showByTableId(tableId, method, url_detail, unique_Id, sortOrder, columns);
 
     } else {
@@ -124,7 +127,10 @@ function detailShow(name,manager, id, orderNum, offsetGainAndLoss, poundageTotal
                 title: '客户名'
             }, {
                 field: 'varietyName',
-                title: '品种'
+                title: '品种',
+                formatter: function () {
+                    return varietyName;
+                }
             }, {
                 field: 'tradeDirection',
                 title: '方向',
@@ -182,7 +188,7 @@ function detailShow(name,manager, id, orderNum, offsetGainAndLoss, poundageTotal
 
         showByTableId(tableId, method, url_detail, unique_Id, sortOrder, clientDetailColumns);
         $("#detailExport").click(function () {
-            tableExportFile(tableId,name+"的跟单明细");
+            tableExportFile(tableId, name + "的跟单明细");
         })
     }
 
@@ -193,7 +199,7 @@ function detailShow(name,manager, id, orderNum, offsetGainAndLoss, poundageTotal
 * 展示客户数据列表
 * */
 
-function clientTableShow(id, manager,name) {
+function clientTableShow(id, manager, name) {
 
     followOrderId = id;
     var url_client = url_ + "/followOrder/getListClientNetPosition.Action?followOrderId=" + id + "&status=" + clientStatus + "&clientName=" + clientName;
@@ -213,8 +219,8 @@ function clientTableShow(id, manager,name) {
             field: 'netPositionSum',
             title: '净头寸'
         }, {
-            field: 'userName',
-            title: '客户编号'
+            field: 'clientName',
+            title: '客户名'
         }, {
             field: 'varietyName',
             title: '品种'
@@ -342,16 +348,17 @@ function clientTableShow(id, manager,name) {
     //下拉列表客户名字获取
     findByClientName(id);
     $("#clientExport").click(function () {
-        tableExportFile(tableClientId,name+'的客户做单明细');
+        tableExportFile(tableClientId, name + '的客户做单明细');
     })
 }
+
 /*
 *
 * 展示跟每单中跟单数据
 * */
-function orderClientTableShow(followOrderId,name) {
-    var orderClientTable =$("#orderClientTable");
-    var url_order_client = url_ + "/followOrder/getListClientFollowOrderTrade.Action?followOrderId=" + followOrderId ;
+function orderClientTableShow(followOrderId, name) {
+    var orderClientTable = $("#orderClientTable");
+    var url_order_client = url_ + "/followOrder/getListClientFollowOrderTrade.Action?followOrderId=" + followOrderId;
     var orderClientColumns = [
         {
             field: 'clientName',
@@ -405,7 +412,7 @@ function orderClientTableShow(followOrderId,name) {
             align: 'center',
             valign: 'middle',
             formatter: function (value, row, index) {
-                    return "<a href='javascript:;'><span style='color: #26a69a'>资料</span></a>"
+                return "<a href='javascript:;'><span style='color: #26a69a'>资料</span></a>"
 
             }
         }
@@ -415,7 +422,7 @@ function orderClientTableShow(followOrderId,name) {
 
     $("#orderClientExport").click(function () {
 
-        tableExportFile(orderClientTable,name+"的跟单数据");
+        tableExportFile(orderClientTable, name + "的跟单数据");
     })
 }
 
@@ -474,16 +481,18 @@ function actionFormatter(value, row, index) {
 
     return result;
 }
+
 /*
 * 表格导出
 * */
-function tableExportFile(tableId,fileName) {
+function tableExportFile(tableId, fileName) {
     $(tableId).tableExport({
-        type:'excel',
-        escape:'false',
+        type: 'excel',
+        escape: 'false',
         fileName: fileName
     });
 }
+
 /*
 *
 * 客户查询条件
@@ -559,6 +568,7 @@ function findByDetail() {
         }
     })
 }
+
 /*
 * 跟单明细中跟单数据查询
 * */
@@ -593,33 +603,32 @@ function findByOrderUserClient() {
         }
     })
 }
+
 /*
 * 品种筛选
 * */
 function findByClientName(followOrderId) {
     $.ajax({
-        url:url_+"/followOrderClient/findListUserCode.Action?followOrderId="+followOrderId,
-        type:'GET', //GET
-        async:true,    //或false,是否异步
-        data:{
+        url: url_ + "/followOrderClient/findListUserCode.Action?followOrderId=" + followOrderId,
+        type: 'GET', //GET
+        async: true,    //或false,是否异步
+        data: {},
+        timeout: 5000,    //超时时间
+        dataType: 'json',    //返回的数据格式：json/xml/html/script/jsonp/text
+        beforeSend: function (xhr) {
 
         },
-        timeout:5000,    //超时时间
-        dataType:'json',    //返回的数据格式：json/xml/html/script/jsonp/text
-        beforeSend:function(xhr){
-
-        },
-        success:function (data) {
+        success: function (data) {
             var content = "";
-            $.each(data,function (index,ele) {
-                content += "<option value="+ele+">"+ele+"</option>"
+            $.each(data, function (index, ele) {
+                content += "<option value=" + ele + ">" + ele + "</option>"
             });
             $("#clientName").append(content);
         },
-        error:function(xhr,textStatus){
+        error: function (xhr, textStatus) {
 
         },
-        complete:function(){
+        complete: function () {
 
         }
     })

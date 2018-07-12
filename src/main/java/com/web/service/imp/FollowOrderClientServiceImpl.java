@@ -55,6 +55,7 @@ public class FollowOrderClientServiceImpl implements FollowOrderClientService {
                 FollowOrderClient followOrderClient = new FollowOrderClient();
                 followOrderClient.setFollowOrderId(followOrder.getId());
                 followOrderClient.setUserCode(orderClient.getUserCode());
+                followOrderClient.setUserName(orderClient.getUserName());
                 followOrderClient.setFollowDirection(orderClient.getFollowDirection());
                 followOrderClient.setHandNumberType(orderClient.getHandNumberType());
                 followOrderClient.setFollowHandNumber(orderClient.getFollowHandNumber());
@@ -81,7 +82,7 @@ public class FollowOrderClientServiceImpl implements FollowOrderClientService {
 
         for (FollowOrderClient followOrderClient : followOrderClients) {
             FollowOrderClientParamVo followOrderClientParamVo = new FollowOrderClientParamVo();
-            OrderUserDetailsVo userDetails = orderUserService.getUserDetails(followOrderClient.getUserCode(),
+            OrderUserDetailsVo userDetails = orderUserService.getOrderUserCount(followOrderClient.getUserCode(),
                     followOrder.getVariety().getVarietyCode());
             followOrderClientParamVo.setUserCode(followOrderClient.getUserCode());//用户编号
             followOrderClientParamVo.setUserName("向日葵");//用户姓名

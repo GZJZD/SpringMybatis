@@ -89,14 +89,6 @@ public class AccountController {
         }
         return listMap;
     }
-    @RequestMapping(value = "/goToFollowOrderPage.Action")
-    public String goToFollowOrderPage(String gotoPage){
-
-        //forward
-//        return "redirect:/login.thml";
-//        return new ModelAndView("redirect:/login.html");
-        return  "redirect:/page/documentary/documentary.html";
-    }
 
     @RequestMapping("/deleteAccount")
     @ResponseBody

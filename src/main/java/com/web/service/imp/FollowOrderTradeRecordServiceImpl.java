@@ -1,6 +1,8 @@
 package com.web.service.imp;
 
 import com.web.dao.FollowOrderTradeRecordDao;
+import com.web.database.OrderHongKongService;
+import com.web.database.entity.PlatFromUsers;
 import com.web.pojo.*;
 
 import com.web.pojo.vo.FollowOrderVo;
@@ -45,6 +47,9 @@ public class FollowOrderTradeRecordServiceImpl implements FollowOrderTradeRecord
 
     @Autowired
     private ClientNetPositionService clientNetPositionService;
+
+    @Autowired
+    private OrderHongKongService orderHongKongService;
 
     private static Logger log = LogManager.getLogger(FollowOrderTradeRecordServiceImpl.class.getName());
 
@@ -213,6 +218,13 @@ public class FollowOrderTradeRecordServiceImpl implements FollowOrderTradeRecord
                     orderUser.setCloseTime(DateUtil.strToStr(orderUser.getCloseTime()));
                 }
                 orderUserMap.put("orderUser", orderUser);
+                PlatFromUsers users;
+                if(orderUser.getPlatFormCode().equals("orders75")){
+                    users = orderHongKongService.getUser75(orderUser.getUserCode());
+                }else {
+                    users = orderHongKongService.getUser76(orderUser.getUserCode());
+                }
+                orderUserMap.put("clientName",users.getNAME());
                 //查找对应的明细
                 FollowOrderDetail detail = followOrderDetailService.getFollowOrderDetailByTicket(orderUser.getTicket(), followOrderId);
                 //查找对应的交易记录，如果没有就是跟每单的固定手数，客户拆手数进行交易

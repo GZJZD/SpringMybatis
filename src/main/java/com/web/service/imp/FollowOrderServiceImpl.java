@@ -7,14 +7,17 @@ import com.qq.tars.client.CommunicatorFactory;
 import com.web.common.FollowOrderEnum;
 import com.web.dao.FollowOrderDao;
 import com.web.database.OrderHongKongService;
+import com.web.database.entity.PlatFromUsers;
 import com.web.database.entity.Prices;
 import com.web.pojo.*;
 import com.web.pojo.vo.FollowOrderPageVo;
+import com.web.pojo.vo.FollowOrderQuery;
 import com.web.pojo.vo.FollowOrderVo;
 import com.web.pojo.vo.OrderMsgResult;
+import com.web.schedule.SweepTableSchedule;
 import com.web.servant.center.*;
 import com.web.service.*;
-import com.web.util.FollowOrderGenerateUtil;
+
 import com.web.util.common.DateUtil;
 import com.web.util.common.DoubleUtil;
 import com.web.util.json.WebJsion;
@@ -27,6 +30,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 /**
  * 跟单模块
@@ -40,8 +44,7 @@ public class FollowOrderServiceImpl implements FollowOrderService {
     private static Logger log = LogManager.getLogger(FollowOrderServiceImpl.class.getName());
     //大于就是正数，小于就是负数
     private int zero = 0;
-    //映射页面的跟单总价算
-    private FollowOrderPageVo followOrderPageVo;
+
     //跟单客户
     @Autowired
     private FollowOrderClientService followOrderClientService;
@@ -62,6 +65,8 @@ public class FollowOrderServiceImpl implements FollowOrderService {
     private ClientNetPositionService clientNetPositionService;//客户净头寸关联
     @Autowired
     private OrderHongKongService orderHongKongService;//香港数据库
+    @Autowired
+    private OrderUserService orderUserService; //客户
     @Autowired
     private ContractInfoService contractInfoService;//合约信息
     @Autowired
@@ -148,8 +153,8 @@ public class FollowOrderServiceImpl implements FollowOrderService {
      *@param:FollowOrderPageVo 查询条件
      * */
     @Override
-    public List<FollowOrder> selectListFollowOrder(FollowOrderPageVo followOrderPageVo) {
-        return followOrderDao.selectListFollowOrder(followOrderPageVo);
+    public List<FollowOrder> selectListFollowOrder(FollowOrderQuery followOrderQuery) {
+        return followOrderDao.selectListFollowOrder(followOrderQuery);
     }
 
     /*
@@ -175,76 +180,130 @@ public class FollowOrderServiceImpl implements FollowOrderService {
      * @return
      */
     @Override
-    public List<FollowOrderVo> getListFollowOrderVo(FollowOrderPageVo followOrderPageVo) {
-        List<FollowOrderVo> followOrderVos = new ArrayList<>();
-        List<FollowOrder> followOrders = selectListFollowOrder(followOrderPageVo);
-        followOrderPageVo = new FollowOrderPageVo();
+    public FollowOrderPageVo getListFollowOrderVo(FollowOrderQuery followOrderQuery) {
+        FollowOrderPageVo followOrderPageVo = new FollowOrderPageVo();
+        //总平仓单数
+        Integer closePositionTotalNumber=0;
+
+        //盈利单数
+        Integer closePositionWinSum=0;
+
+        List<FollowOrderVo> followOrderVoList = new ArrayList<>();
+        List<FollowOrder> followOrders = selectListFollowOrder(followOrderQuery);
         if (followOrders.size() != 0) {
             for (FollowOrder followOrder : followOrders) {
                 FollowOrderVo followOrderVo = new FollowOrderVo();
-                //设置总手续费
-                followOrderVo.setPoundageTotal(followOrderDetailService.getCommissionTotal(followOrder.getId()) == null ?
-                        0.0 : followOrderDetailService.getCommissionTotal(followOrder.getId()));
+                Integer openHandNum = 0;
+                Integer successCount = 0;
+                List<FollowOrderDetail> detailList = followOrderDetailService.getDetailListByFollowOrderId(followOrder.getId(), null, null, null);
+                if(detailList.size()!=0){
+                    for (FollowOrderDetail detail : detailList) {
+                        //累计总手续费
+                        followOrderVo.setPoundageTotal(DoubleUtil.add(followOrderVo.getPoundageTotal(), detail.getPoundage()));
+                        //累计手数
+                        followOrderVo.setHandNumberTotal(followOrderVo.getHandNumberTotal() + detail.getHandNumber());
 
-                //设置手数
-                followOrderVo.setHandNumberTotal(followOrderDetailService.getOpenHandNumber(followOrder.getId()) == null ?
-                        0.0 : followOrderDetailService.getOpenHandNumber(followOrder.getId()));
+                        //累计持仓盈亏
+                        if (detail.getRemainHandNumber() !=null &&  detail.getRemainHandNumber() != 0|| (detail.getRemainHandNumber() == null && detail.getCloseTime() == null)) {
+                            //做单成功数
+                            successCount+=1;
+                            //这条detail数据本身的持仓数
+                            int detailOpenHandNum = 0;
+                            //剩下得手数
+                            if(detail.getRemainHandNumber()!=null){
+                                openHandNum += detail.getRemainHandNumber();
+                                detailOpenHandNum = detail.getRemainHandNumber();
+                            }else {
+                                openHandNum += detail.getHandNumber();
+                                detailOpenHandNum = detail.getHandNumber();
+                            }
+                            Map<String, Double> askAndBid = SweepTableSchedule.getAskAndBidByFollowOrderId(followOrder.getId());
+                            if (askAndBid != null) {
+                                if (detail.getTradeDirection().equals(FollowOrderEnum.FollowStatus.BUY.getIndex())) {
+                                    //交易方向为多，查询：卖出价（ask）
+                                    // 卖出价（逸富）-开仓价（detail）
+                                    followOrderVo.setPositionGainAndLoss(DoubleUtil.add(followOrderVo.getPositionGainAndLoss(),
+                                            DoubleUtil.mul(DoubleUtil.sub(askAndBid.get("ask"), detail.getOpenPrice()), detailOpenHandNum))) ;
 
-                BigDecimal commission = new BigDecimal(followOrderVo.getPoundageTotal());
-                BigDecimal handNum = new BigDecimal(followOrderVo.getHandNumberTotal());
+                                } else {
+                                    //交易方向为空，查询：买入价（bid）
+                                    //开仓价（detail）-买入价（逸富）
+                                    followOrderVo.setPositionGainAndLoss(DoubleUtil.add(followOrderVo.getPositionGainAndLoss(),
+                                            DoubleUtil.mul(DoubleUtil.sub(detail.getOpenPrice(), askAndBid.get("bid")), detailOpenHandNum)));
 
-                followOrderVo.setPoundageTotal(commission.setScale(2, BigDecimal.ROUND_HALF_UP).doubleValue());
-                followOrderVo.setHandNumberTotal(handNum.setScale(2, BigDecimal.ROUND_HALF_UP).doubleValue());
+                                }
+                            } else {
+                                followOrderVo.setPositionGainAndLoss(0.0);
+                            }
+                        }
+                        if(detail.getRemainHandNumber()!=null&&detail.getRemainHandNumber()==0){
+                            //做单成功数
+                            successCount+=1;
+                        }
+                        if(detail.getCloseTime()!=null){
+                            if(detail.getOpenTime()!=null){
+                                //客户一条平仓记录 = 开仓 + 平仓
+                                successCount += 2;
+                            }else {
+                                successCount +=1;
+                            }
+
+                            //平仓手数
+                            followOrderVo.setOffsetHandNumber(followOrderVo.getOffsetHandNumber()+detail.getHandNumber());
+                            //客户盈亏
+                            followOrderVo.setClientProfit(DoubleUtil.add(followOrderVo.getClientProfit(),detail.getClientProfit()));
+                            //平仓盈亏
+                            followOrderVo.setOffsetGainAndLoss(DoubleUtil.add(followOrderVo.getOffsetGainAndLoss(),detail.getProfitLoss()));
+                            if(detail.getProfitLoss() > 0){
+                                //盈利大于 0
+                                closePositionWinSum ++;
+                                closePositionTotalNumber ++;
+                            }else{
+
+                                closePositionTotalNumber ++;
+                            }
+                        }
+
+                    }
+                }
+                //detail 循环结束
+
 
                 followOrderVo.setFollowOrder(followOrder);
-                //设置持仓盈亏
-
-//                //买入持仓手数
-//                Double buyHandNum=0.0;
-//                List<FollowOrderDetail> buyDetail =
-//                        followOrderDetailService.getDetailListByOrderIdAndDirection(followOrder.getId(),FollowOrderEnum.FollowStatus.BUY.getIndex());
-//                for (FollowOrderDetail detail : buyDetail) {
-//                    buyHandNum= DoubleUtil.add(buyHandNum,detail.getRemainHandNumber()==null?detail.getHandNumber():detail.getRemainHandNumber());
-//                }
-//                //卖出价持仓手数
-//                Double sellHandNum=0.0;
-//
-//                List<FollowOrderDetail> sellDetail =
-//                        followOrderDetailService.getDetailListByOrderIdAndDirection(followOrder.getId(),FollowOrderEnum.FollowStatus.SELL.getIndex());
-//                for (FollowOrderDetail detail : sellDetail) {
-//                    sellHandNum= DoubleUtil.add(buyHandNum,detail.getRemainHandNumber()==null?detail.getHandNumber():detail.getRemainHandNumber());
-//                }
-//                //盈亏
-//                Double gainAndLoss = 0.0;
-//                gainAndLoss = DoubleUtil.add(DoubleUtil.mul(sellHandNum))
-
-
-
-                //获取价格
-                Prices marketPrice = orderHongKongService.getMarketPrice(followOrder.getVariety().getVarietyCode());
-                followOrderVo.setPositionGainAndLoss(0.0);
-                //设置平仓盈亏,客户盈亏
-                FollowOrderVo offset = followOrderDetailService.getOffsetGainAndLossAndHandNumberByFollowOrderId(followOrder.getId());
-                followOrderVo.setOffsetGainAndLoss(offset == null ? 0.0 : offset.getOffsetGainAndLoss());
                 //设置累计盈亏
-                followOrderVo.setGainAndLossTotal(DoubleUtil.add(followOrderVo.getPositionGainAndLoss(),
-                        followOrderVo.getOffsetGainAndLoss()) == null ? 0.0 : DoubleUtil.add(followOrderVo.getPositionGainAndLoss(),
-                        followOrderVo.getOffsetGainAndLoss()));
-                //客户盈亏
-                followOrderVo.setClientProfit(offset == null ? 0.0 : offset.getClientProfit());
-                //盈亏率
-                followOrderVo.setProfitAndLossRate(DoubleUtil.div(followOrderVo.getOffsetGainAndLoss() == null ? 0.0 : followOrderVo.getOffsetGainAndLoss(),
-                        offset == null ? 1.0 : offset.getOffsetHandNumber(), 2));
-                //跟单成功:false:算总跟单的成功交易数,
-                followOrderVo.setSuccessTotal(followOrderTradeRecordService.getFollowOrderSuccessTradeTotal(followOrder.getId(), false, null, null).get(0).getSuccessTotal());
+                followOrderVo.setGainAndLossTotal(DoubleUtil.add(followOrderVo.getPositionGainAndLoss(),followOrderVo.getOffsetGainAndLoss()));
+               //平仓手数
+
+                //盈亏率:平仓盈亏之和除以手数之和，保留1位小数
+                followOrderVo.setProfitAndLossRate(DoubleUtil.div(followOrderVo.getOffsetGainAndLoss() ,
+                        followOrderVo.getOffsetHandNumber() == 0 ? 1 : followOrderVo.getOffsetHandNumber(), 1));
+                //跟单的成功交易数,
+                followOrderVo.setSuccessTotal(successCount);
                 //跟单总数：false:算总跟单的交易数
                 followOrderVo.setAllTotal(followOrderTradeRecordService.getFollowOrderTradeTotalCount(followOrder.getId(), false, null, null).get(0).getAllTotal());
 
-                followOrderVos.add(followOrderVo);
+                followOrderVoList.add(followOrderVo);
 
+                //累计历史平仓跟单手数
+                followOrderPageVo.setHistoryHandNumber(followOrderPageVo.getHoldPositionHandNumber()+followOrderVo.getOffsetHandNumber());
+                //累计平仓盈亏
+                followOrderPageVo.setHistoryProfit(DoubleUtil.add(followOrderPageVo.getHistoryProfit(),followOrderVo.getOffsetGainAndLoss()));
+                //累计持仓手数
+                followOrderPageVo.setHoldPositionHandNumber(followOrderPageVo.getHoldPositionHandNumber()+openHandNum);
+                //累计持仓收益
+                followOrderPageVo.setHoldPositionProfit(DoubleUtil.add(followOrderPageVo.getHoldPositionProfit(),followOrderVo.getPositionGainAndLoss()));
             }
+            //followOrder 循环结束
+
+
+            //盈亏效率:所有平仓单的平仓盈亏除以平仓手数
+            followOrderPageVo.setProfitAndLossRate(DoubleUtil.div(followOrderPageVo.getHistoryProfit(),followOrderPageVo.getHistoryHandNumber(),2));
+            //胜率：所有平仓单中盈利单数除以总平仓单数closePositionWinSum
+            followOrderPageVo.setWinRate(DoubleUtil.div(Double.valueOf(closePositionWinSum),closePositionTotalNumber,1));
+            followOrderPageVo.setWinRate(DoubleUtil.mul(followOrderPageVo.getWinRate(),100));
+            followOrderPageVo.setFollowOrderVoList(followOrderVoList);
         }
-        return followOrderVos;
+        return followOrderPageVo;
     }
 
     /**
@@ -260,7 +319,6 @@ public class FollowOrderServiceImpl implements FollowOrderService {
         List<FollowOrder> listFollowOrder = getListFollowOrderByClientName(data.getLogin(), data.getVarietyCode());
         if (listFollowOrder != null) {
             for (FollowOrder followOrder : listFollowOrder) {
-                followOrder.setAccount(FollowOrderGenerateUtil.getAccount());
                 if (followOrder.getFollowOrderStatus().equals(FollowOrderEnum.FollowStatus.FOLLOW_ORDER_START.getIndex())) {
                     //跟单为启动
                     if (followOrder.getFollowManner().equals(FollowOrderEnum.FollowStatus.FOLLOWMANNER_NET_POSITION.getIndex())) {
@@ -355,7 +413,7 @@ public class FollowOrderServiceImpl implements FollowOrderService {
                             followOrder.setNetPositionStatus(FollowOrderEnum.FollowStatus.NET_POSITION_TRADING_OPENCLOSE.getIndex());
                             //先做开仓,做空单
                             this.sendMsgByTrade(followOrder, FollowOrderEnum.FollowStatus.SELL.getIndex(), FollowOrderEnum.FollowStatus.OPEN.getIndex(),
-                                  Math.abs(newHoldNum), data.getNewTicket(), data.getTicket(), data.getVarietyCode(), clientNetPosition.getId(), data.getLogin());
+                                    Math.abs(newHoldNum), data.getNewTicket(), data.getTicket(), data.getVarietyCode(), clientNetPosition.getId(), data.getLogin());
                         } else {
                             followOrder.setNetPositionStatus(FollowOrderEnum.FollowStatus.NET_POSITION_TRADING_START.getIndex());
                         }
@@ -388,14 +446,14 @@ public class FollowOrderServiceImpl implements FollowOrderService {
                             //设置正在交易中的状态,发送两条交易状态
                             followOrder.setNetPositionStatus(FollowOrderEnum.FollowStatus.NET_POSITION_TRADING_OPENCLOSE.getIndex());
                             this.sendMsgByTrade(followOrder, FollowOrderEnum.FollowStatus.BUY.getIndex(), FollowOrderEnum.FollowStatus.OPEN.getIndex(),
-                                     Math.abs(newHoldNum), data.getNewTicket(), data.getTicket(), data.getVarietyCode(), clientNetPosition.getId(), data.getLogin());
+                                    Math.abs(newHoldNum), data.getNewTicket(), data.getTicket(), data.getVarietyCode(), clientNetPosition.getId(), data.getLogin());
                         } else {
                             //设置成普通交易状态
                             followOrder.setNetPositionStatus(FollowOrderEnum.FollowStatus.NET_POSITION_TRADING_START.getIndex());
                         }
                         //再来做一单，平仓
                         this.sendMsgByTrade(followOrder, FollowOrderEnum.FollowStatus.BUY.getIndex(), FollowOrderEnum.FollowStatus.CLOSE.getIndex(),
-                                 Math.abs(oldHoldNum), data.getNewTicket(), data.getTicket(), data.getVarietyCode(), clientNetPosition.getId(), data.getLogin());
+                                Math.abs(oldHoldNum), data.getNewTicket(), data.getTicket(), data.getVarietyCode(), clientNetPosition.getId(), data.getLogin());
                     }
                 }
             }
@@ -421,7 +479,7 @@ public class FollowOrderServiceImpl implements FollowOrderService {
                 followOrderClient.getFollowHandNumber() : DoubleUtil.mul(Double.valueOf(followOrderClient.getFollowHandNumber()), data.getHandNumber());
 
         //手数不能为0
-        int tradeHandNumber= (int) Math.floor(handNumber) == 0?1:(int) Math.floor(handNumber);
+        int tradeHandNumber = (int) Math.floor(handNumber) == 0 ? 1 : (int) Math.floor(handNumber);
         //交易方向
         Integer direction;
         //反向跟单
@@ -460,11 +518,11 @@ public class FollowOrderServiceImpl implements FollowOrderService {
         if (data.getCmd().equals(FollowOrderEnum.FollowStatus.BUY.getIndex())) {
             //多，增加净头寸
             netPositionSum = DoubleUtil.add(netPositionSum, data.getHandNumber());
-            //净头寸值
+
         } else {
             //空，减少净头寸
             netPositionSum = DoubleUtil.sub(netPositionSum, data.getHandNumber());
-            //净头寸值
+
         }
         log.debug(followOrder.getFollowOrderName() + "策略现在的净头寸的值：" + netPositionSum);
         followOrder.setNetPositionSum(netPositionSum);
@@ -487,6 +545,8 @@ public class FollowOrderServiceImpl implements FollowOrderService {
             CommunicatorConfig cfg = new CommunicatorConfig();
             Communicator communicator = CommunicatorFactory.getInstance().getCommunicator(cfg);
             TraderServantPrx proxy = communicator.stringToProxy(TraderServantPrx.class, "TestApp.HelloServer.HelloTrade@tcp -h 192.168.3.189 -p 50506 -t 60000");
+            //tars end
+
             userLoginRequest req = new userLoginRequest();
             req.setTypeId("userLogin");
             req.setRequestId(followOrder.getId().intValue());
@@ -595,7 +655,7 @@ public class FollowOrderServiceImpl implements FollowOrderService {
         this.checkLogin(order);
         ContractInfo contractInfo = contractInfoService.getInfoByVarietyIdAndPlatformId(followOrder.getVariety().getId(), followOrder.getAccount().getPlatform().getId());
         //合约信息手续费查找
-        contractInfoLinkService.instrumentCommissionQuery(contractInfo.getId(),followOrder.getAccount());
+        contractInfoLinkService.instrumentCommissionQuery(contractInfo.getId(), followOrder.getAccount());
         //合约信息查找
         contractInfoLinkService.instrumentQuery(contractInfo.getId());
     }
@@ -609,10 +669,10 @@ public class FollowOrderServiceImpl implements FollowOrderService {
         Integer oldHoldNum = followOrder.getNetPositionHoldNumber();
         if (followOrderTradeRecord.getTradeDirection().equals(FollowOrderEnum.FollowStatus.SELL.getIndex())) {
             //做空就减
-            followOrder.setNetPositionHoldNumber(oldHoldNum-followOrderTradeRecord.getHandNumber());
+            followOrder.setNetPositionHoldNumber(oldHoldNum - followOrderTradeRecord.getHandNumber());
         } else {
             //做多就加
-            followOrder.setNetPositionHoldNumber(oldHoldNum+followOrderTradeRecord.getHandNumber());
+            followOrder.setNetPositionHoldNumber(oldHoldNum + followOrderTradeRecord.getHandNumber());
 
         }
     }
@@ -663,13 +723,18 @@ public class FollowOrderServiceImpl implements FollowOrderService {
         //设置开仓单号
         followOrderTradeRecord.setTicket(ticket);
         //设置客户姓名
-        followOrderTradeRecord.setClientName(clientName);
+        OrderUser orderUser = orderUserService.findByTicket(ticket);
+        PlatFromUsers users;
+        if(orderUser.getPlatFormCode().equals("orders75")){
+            users = orderHongKongService.getUser75(orderUser.getUserCode());
+        }else {
+            users = orderHongKongService.getUser76(orderUser.getUserCode());
+        }
+        followOrderTradeRecord.setClientName(users.getNAME());
         //设置跟单id
         followOrderTradeRecord.setFollowOrderId(followOrder.getId());
         //设置品种的id
         followOrderTradeRecord.setVarietyId(followOrder.getVariety().getId());
-        //设置品种代码
-        followOrderTradeRecord.setVarietyCode(varietyCode);
         //设置开平状态
         followOrderTradeRecord.setOpenCloseType(openClose);
         //设置多空
@@ -696,7 +761,7 @@ public class FollowOrderServiceImpl implements FollowOrderService {
             //设置交易对象的交易账号
             close.setUserId(followOrder.getAccount().getAccount());
             //设置平台对应的品种合约代码
-            ContractInfo info = contractInfoService.getInfoByVarietyIdAndPlatformId(followOrder.getVariety().getId(), followOrder.getAccount().getPlatform().getId());
+            final ContractInfo info = contractInfoService.getInfoByVarietyIdAndPlatformId(followOrder.getVariety().getId(), followOrder.getAccount().getPlatform().getId());
             close.setInstrumentId(info.getContractCode());
             //设置买卖方向
             close.setOrderDirection(orderDirection);
@@ -740,16 +805,24 @@ public class FollowOrderServiceImpl implements FollowOrderService {
                             Double closePrice = 0.0;
                             int handNumber = 0;
                             for (tradeItem item : rsp.tradeArrayItems) {
-                                closePrice = DoubleUtil.add(closePrice,item.price);
+                                //累计平仓价格
+                                closePrice = DoubleUtil.add(closePrice, item.price);
+                                //手数累计
                                 handNumber += item.volume;
                             }
-                            log.debug("平仓交易数据详情"+WebJsion.toJson(rsp.tradeArrayItems));
+                            log.debug("平仓交易数据详情" + WebJsion.toJson(rsp.tradeArrayItems));
+                            //获取平均值
+                            closePrice = DoubleUtil.div(closePrice, Double.valueOf(handNumber), 2);
+                            //交易价格
+                            closeResult.setTradePrice(closePrice);
 
-                            closeResult.setTradePrice(DoubleUtil.div(closePrice, Double.valueOf(handNumber),2));
-                            //todo 手续费：手数* （开仓/平仓手续费 + 成交价 * 开仓/平仓手续费率）
-                            closeResult.setTradeCommission(22.2);
-                            closeResult.setTradeDate(rsp.tradeArrayItems.get(rsp.tradeArrayItems.size()-1).tradeDate);
-                            closeResult.setTradeTime(rsp.tradeArrayItems.get(rsp.tradeArrayItems.size()-1).tradeTime);
+                            ContractInfoLink link = contractInfoLinkService.getContractInfoLinkByInfoId(info.getId());
+                            //手续费：手数* （开仓/平仓手续费 + 成交价 * 开仓/平仓手续费率）
+                            closeResult.setTradeCommission(DoubleUtil.add(link.getOpenRatioByVolume(), DoubleUtil.mul(closePrice, link.getOpenRatioByMoney())));
+                            log.debug("平仓ContractInfoLinkId:" + WebJsion.toJson(info.getId()));
+
+                            closeResult.setTradeDate(rsp.tradeArrayItems.get(rsp.tradeArrayItems.size() - 1).tradeDate);//交易日期：20180512
+                            closeResult.setTradeTime(rsp.tradeArrayItems.get(rsp.tradeArrayItems.size() - 1).tradeTime);//交易时间：203024
                             log.debug("接受一条平仓交易信息：" + WebJsion.toJson(closeResult));
                             followOrderTradeRecordService.updateRecordByComeBackTradeMsg(closeResult);
                         } else {
@@ -793,13 +866,14 @@ public class FollowOrderServiceImpl implements FollowOrderService {
             //设置交易对象的交易账号
             open.setUserId(followOrder.getAccount().getAccount());
             //设置平台对应的品种合约代码
-            ContractInfo info = contractInfoService.getInfoByVarietyIdAndPlatformId(followOrder.getVariety().getId(), followOrder.getAccount().getPlatform().getId());
+            final ContractInfo info = contractInfoService.getInfoByVarietyIdAndPlatformId(followOrder.getVariety().getId(), followOrder.getAccount().getPlatform().getId());
 
             open.setInstrumentId(info.getContractCode());
             //设置买卖方向
             open.setOrderDirection(orderDirection);
             //开仓
             open.setTypeId("orderOpen");
+            //应成交手数
             open.setVolumeTotalOriginal(handNumber);
 
             log.debug(followOrder.getFollowOrderName() + "策略发送一条开仓交易信息：" + WebJsion.toJson(open));
@@ -829,19 +903,23 @@ public class FollowOrderServiceImpl implements FollowOrderService {
                             openResult.setRequestId(rsp.requestId);//交易记录id
                             openResult.setErmsg(rsp.errmsg);//返回信息
                             openResult.setErrcode(rsp.errcode);//返回的错误码
-                            Double closePrice = 0.0;
+                            Double openPrice = 0.0;
                             int handNumber = 0;
                             for (tradeItem item : rsp.tradeArrayItems) {
-                                closePrice = DoubleUtil.add(closePrice,item.price);//累加价格
+                                openPrice = DoubleUtil.add(openPrice, item.price);//累加价格
                                 handNumber += item.volume;//累加手数
                             }
-                            log.debug("开仓交易数据详情"+WebJsion.toJson(rsp));
+                            log.debug("开仓交易数据详情:" + WebJsion.toJson(rsp));
+                            //设置交易价格
+                            openResult.setTradePrice(DoubleUtil.div(openPrice, Double.valueOf(handNumber), 2));
+                            //手续费：手数* （开仓/平仓手续费 + 成交价 * 开仓/平仓手续费率）
+                            ContractInfoLink link = contractInfoLinkService.getContractInfoLinkByInfoId(info.getId());
+                            openResult.setTradeCommission(DoubleUtil.add(link.getOpenRatioByVolume(), DoubleUtil.mul(openPrice, link.getOpenRatioByMoney())));
 
-                            openResult.setTradePrice(DoubleUtil.div(closePrice, Double.valueOf(handNumber),2));
-                            //todo 手续费：手数* （开仓/平仓手续费 + 成交价 * 开仓/平仓手续费率）
-                            openResult.setTradeCommission(22.2);
-                            openResult.setTradeDate(rsp.tradeArrayItems.get(rsp.tradeArrayItems.size()-1).tradeDate);//交易日期：20180512
-                            openResult.setTradeTime(rsp.tradeArrayItems.get(rsp.tradeArrayItems.size()-1).tradeTime);//交易时间：203024
+                            log.debug("开仓ContractInfoLinkId:" + WebJsion.toJson(info.getId()));
+
+                            openResult.setTradeDate(rsp.tradeArrayItems.get(rsp.tradeArrayItems.size() - 1).tradeDate);//交易日期：20180512
+                            openResult.setTradeTime(rsp.tradeArrayItems.get(rsp.tradeArrayItems.size() - 1).tradeTime);//交易时间：203024
 
                             openResult.setTradeVolume(handNumber);//成功交易手数
                             log.debug("接收一条开仓交易信息：" + WebJsion.toJson(openResult));
@@ -897,8 +975,10 @@ public class FollowOrderServiceImpl implements FollowOrderService {
         FollowOrder followOrder = getFollowOrder(followOrderId);
 
         for (FollowOrderDetail orderDetail : orderDetails) {
+            //BUY:多；
             Integer direction = orderDetail.getTradeDirection() == FollowOrderEnum.FollowStatus.BUY.getIndex() ?
                     FollowOrderEnum.FollowStatus.SELL.getIndex() : FollowOrderEnum.FollowStatus.BUY.getIndex();
+
             this.sendMsgByTrade(followOrder, direction, FollowOrderEnum.FollowStatus.CLOSE.getIndex(),
                     orderDetail.getRemainHandNumber(), orderDetail.getTicket(),
                     orderDetail.getTicket(), followOrder.getVariety().getVarietyCode(), null, orderDetail.getClientName());
@@ -956,17 +1036,17 @@ public class FollowOrderServiceImpl implements FollowOrderService {
     }
 
     /*
-    * 查找所有没有停止的跟单
-    * */
+     * 查找所有没有停止的跟单
+     * */
     @Override
     public List<FollowOrder> getNOStopFollowOrder() {
         return followOrderDao.getNOStopFollowOrder();
     }
 
     /*
-    *
-    * 查找该账号跟单状态为启动
-    * */
+     *
+     * 查找该账号跟单状态为启动
+     * */
     @Override
     public int findAccountStatusByAccountId(Long accountId) {
 

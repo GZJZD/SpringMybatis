@@ -20,7 +20,7 @@ public class FollowOrderVo {
     //平仓盈亏
     private Double offsetGainAndLoss=0.0;
 
-    private Double offsetHandNumber;//平仓手数
+    private Integer offsetHandNumber=0;//平仓手数
     //累计盈亏:平仓盈亏+持仓盈亏
     private Double gainAndLossTotal;
 
@@ -38,7 +38,7 @@ public class FollowOrderVo {
     //全部的跟单数
     private Integer allTotal=0;
     //手数
-    private Double handNumberTotal=0.0;
+    private Integer handNumberTotal=0;
 
     /**********************************************     跟单明细中跟单数据字段     *************************************************************************/
     private String clientName;
@@ -128,19 +128,19 @@ public class FollowOrderVo {
         this.allTotal = allTotal;
     }
 
-    public Double getHandNumberTotal() {
+    public Integer getHandNumberTotal() {
         return handNumberTotal;
     }
 
-    public void setHandNumberTotal(Double handNumberTotal) {
+    public void setHandNumberTotal(Integer handNumberTotal) {
         this.handNumberTotal = handNumberTotal;
     }
 
-    public Double getOffsetHandNumber() {
+    public Integer getOffsetHandNumber() {
         return offsetHandNumber;
     }
 
-    public void setOffsetHandNumber(Double offsetHandNumber) {
+    public void setOffsetHandNumber(Integer offsetHandNumber) {
         this.offsetHandNumber = offsetHandNumber;
     }
 
