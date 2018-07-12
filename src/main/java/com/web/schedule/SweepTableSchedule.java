@@ -26,7 +26,6 @@ import java.util.Map;
 
 @Component
 @EnableScheduling
-@PropertySource("classpath:scheduleConfig.properties")
 public class SweepTableSchedule {
 
     private static Map<Long,Map<String,Double>> detailPositionGainAndLoss = new HashMap<>();
@@ -41,7 +40,7 @@ public class SweepTableSchedule {
         return detailPositionGainAndLoss.get(followOrderId);
     }
 
-    @Scheduled(cron = "${schedule}")
+    @Scheduled(cron = "*/3 * * * * ?")
     public void doSweepTable(){
         List<FollowOrder> followOrder = followOrderService.getNOStopFollowOrder();
         System.out.println(11111);
