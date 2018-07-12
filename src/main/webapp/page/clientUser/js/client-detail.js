@@ -17,7 +17,7 @@ $(function(){
 
 
  }
- function  showDetails(userCode){
+ function  showDetails(userCode,platformName){
 
    var productCode =  parent.$("#product-val-id option:selected").val(); //商品
        $.ajax({
@@ -27,7 +27,8 @@ $(function(){
          dataType:'json',
          data:{
              userCode:userCode,
-             productCode:productCode
+             productCode:productCode,
+             platformName:platformName
          },
 
          beforeSend:function(xhr){
@@ -35,7 +36,7 @@ $(function(){
          },
          success:function(data,textStatus,jqXHR){
              $('#inMoney-id').text(data.inMoney);//入金
-             $('#createTime-id').text(data.createTime);//注册时间
+             $('#createTime-id').text(data.loginTime);//注册时间
              $('#agencyName-id').text(data.agencyName);//代理人
              $('#profit-id').text(data.profit);//平仓盈亏
              $('#remainMoney-id').text(data.remainMoney);//余额
@@ -44,6 +45,8 @@ $(function(){
              $('#offset_gain_and_loss-id').text(data.offset_gain_and_loss);//持仓盈亏
              $('#position_gain_and_loss-id').text(data.position_gain_and_loss);//平仓盈亏
              $('#platformName-id').text(data.platformName);//注册平台
+             $("#outMoney-id").text(data.outMoney);//出金
+             $('#cmmission-id').text(data.cmmission);//手续费
              setHoldOrderTableData(data.holdList,"#holdOrderList");
              setprofitOrderTableData(data.profitList,"#profitOrderList");
          },
@@ -74,20 +77,20 @@ $(function(){
          },
 
          {
-             field: 'price',
-             title: '价位'
+             field: 'openPrice',
+             title: '开仓价'
          },
 
          {
-             field: '',
+             field: 'stopProfit',
              title: '止盈'
          },
          {
-             field:'',
+             field:'stopLoss',
              title:'止损'
          },
          {
-             field:'',
+             field:'commission',
              title:'手续费'
 
          }
@@ -132,15 +135,15 @@ $(function(){
          },
 
          {
-             field: '',
+             field: 'stopProfit',
              title: '止盈'
          },
          {
-             field:'',
+             field:'stopLoss',
              title:'止损'
          },
          {
-             field:'',
+             field:'commission',
              title:'手续费'
 
          }
