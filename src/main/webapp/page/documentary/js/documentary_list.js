@@ -115,11 +115,24 @@ var columns = [{
 
 
 $(function () {
+
     /*
-       * 发送请求获取跟单页面的统计数据
-   * */
+    * 品种查找
+    * */
+    findByVariety();
+
+    // showByTableId(tableOrderId, method, url_orderPage, unique_Id, sortOrder, columns);
+    /*
+    * 跟单历史点击事件
+    * */
+    var url_history = url_ + "/followOrder/getListFollowOrder.Action?varietyId=" + varietyNum + "&accountId=" + accountNum + "&status=0";
+    showByTableId(tableHistoryOrderId, "post", url_history, unique_Id, sortOrder, columns);
+    /*
+      *表格加载
+      * */
+
     $.ajax({
-        url: url_ + "/followOrder/getFollowOrderPageVo.Action",
+        url: url_orderPage,
         type: 'GET', //GET
         async: true,    //或false,是否异步
         data: {},
@@ -129,16 +142,17 @@ $(function () {
 
         },
         success: function (data) {
-            var obj = data;
-            $("#history_close_position").html(obj.historyHandNumber + "/" + obj.historyProfit);
-            if (obj.holdPositionHandNumber == null) {
+            showByOrderId(tableOrderId, method, unique_Id, sortOrder, columns,data.followOrderVoList);
+
+            $("#history_close_position").html(data.historyHandNumber + "/" + data.historyProfit);
+            if (data.holdPositionHandNumber == null) {
                 $("#hold_position").html(0 + "/" + 0);
             } else {
-                $("#hold_position").html(obj.holdPositionHandNumber + "/" + obj.holdPositionProfit);
+                $("#hold_position").html(data.holdPositionHandNumber + "/" + data.holdPositionProfit);
 
             }
-            $("#profit_rate").html(obj.profitAndLossRate);
-            $("#win_rate").html(obj.winRate + "%");
+            $("#profit_rate").html(data.profitAndLossRate);
+            $("#win_rate").html(data.winRate + "%");
         },
         error: function (xhr, textStatus) {
 
@@ -147,19 +161,6 @@ $(function () {
 
         }
     })
-    /*
-    * 品种查找
-    * */
-    findByVariety();
-    /*
-    *表格加载
-    * */
-    showByTableId(tableOrderId, method, url_orderPage, unique_Id, sortOrder, columns);
-    /*
-    * 跟单历史点击事件
-    * */
-    var url_history = url_ + "/followOrder/getListFollowOrder.Action?varietyId=" + varietyNum + "&accountId=" + accountNum + "&status=0";
-    showByTableId(tableHistoryOrderId, "post", url_history, unique_Id, sortOrder, columns);
 
 
 });
@@ -169,6 +170,66 @@ $(window).resize(function () {
         height: tableHeight()
     })
 })
+
+
+function showByOrderId(table_Id, method,  unique_Id, sortOrder, columns,data) {
+    $(table_Id).bootstrapTable({
+        method: method,
+        contentType: "application/x-www-form-urlencoded", //必须要有！！！！
+        async:true,//异步加载
+        striped: false, //是否显示行间隔色
+        data: data,
+        clickToSelect: true,
+        uniqueId: unique_Id, //每一行的唯一标识，一般为主键列
+        pagination: true, //是否显示分页（*）
+        sortable: true, //是否启用排序
+        sortOrder: sortOrder, //排序方式
+        clickToSelect: true, // 是否启用点击选中行
+        pageSize: 10, //单页记录数
+        pageList: [50, 100], //分页步进值
+        //			search: true, //是否显示表格搜索，此搜索是客户端搜索，不会进服务端，所以，个人感觉意义不大
+        strictSearch: true,
+        showColumns: false, //是否显示所有的列
+        showRefresh: false, //是否显示刷新按钮
+        showToggle: false, //是否显示详细视图和列表视图的切换按钮
+        cardView: false, //是否显示详细视图
+        detailView: false, //是否显示父子表
+        //			height:tableHeight(),//高度调整
+        queryParams: function(params) {
+            return {
+                offset: params.offset, //页码
+                limit: params.limit, //页面大小
+                search: params.search, //搜索
+                order: params.order, //排序
+                ordername: params.sort, //排序
+            };
+        },
+        buttonsAlign: 'right', //按钮对齐方式
+        columns: columns,
+        onLoadSuccess: function(data) {
+            // console.log(data);
+
+        },
+        onLoadError: function(status) {
+            console.log(status);
+            //                  showTips("数据加载失败！");
+        },
+        onDblClickRow: function(row, $element) {
+            console.log(row);
+            var id = row.id;
+            EditViewById(id, 'view');
+            // console.log(id);
+        },
+        formatLoadingMessage: function(){
+            return "";
+        }
+
+    });
+
+}
+
+
+
 
 
 /*用户-停用*/
@@ -241,9 +302,9 @@ function findByVariety() {
         },
         success: function (data) {
             //
-            var obj = eval('(' + data + ')');
+
             var content = "";
-            $.each(obj, function (index, ele) {
+            $.each(data, function (index, ele) {
                 content += "<option value=" + ele.id + ">" + ele.varietyCode + "</option>"
             });
             $("#variety_id").append(content);
