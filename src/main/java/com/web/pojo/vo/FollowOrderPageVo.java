@@ -2,19 +2,29 @@ package com.web.pojo.vo;
 
 //用于映射页面交易的总数据
 
-public class FollowOrderPageVo {
-    /***************************************     跟单头所用字段      ******************************************/
-    private Double historyHandNumber=0.0; //历史跟单手数
-    private Double historyProfit=0.0; //历史收益
+import java.util.List;
 
-    private Double holdPositionHandNumber=0.0; //持仓手数
+public class FollowOrderPageVo {
+
+    private List<FollowOrderVo> followOrderVoList;
+    /***************************************     跟单头所用字段      ******************************************/
+    private Integer historyHandNumber=0; //历史平仓跟单手数
+    private Double historyProfit=0.0; //历史平仓收益
+
+    private Integer holdPositionHandNumber=0; //持仓手数
     private Double holdPositionProfit=0.0; //持仓收益
 
-    //盈亏效率:所有平仓单的平仓盈亏除以手数
+    //盈亏效率:所有平仓单的平仓盈亏除以平仓手数
     private Double profitAndLossRate=0.0;
 
     //胜率：所有平仓单中盈利单数除以总平仓单数
     private Double winRate=0.0;
+
+
+
+
+
+
     //总平仓单数
     private Integer closePositionTotalNumber=0;
     //盈利单数
@@ -23,27 +33,28 @@ public class FollowOrderPageVo {
     /**************************************     跟单头所用字段 END     ******************************************/
 
 
+    public List<FollowOrderVo> getFollowOrderVoList() {
+        return followOrderVoList;
+    }
 
+    public void setFollowOrderVoList(List<FollowOrderVo> followOrderVoList) {
+        this.followOrderVoList = followOrderVoList;
+    }
 
-
-
-
-    /***************************************     查询条件     ******************************************/
-    private Long varietyId;//品种id
-    private Long accountId; //账号ID
-    private String  startTime; //起始时间
-    private String endTime; //结束时间
-    private Integer status; //跟单状态
-    /***************************************     查询条件end     ******************************************/
-
-
-
-    public Double getHistoryHandNumber() {
+    public Integer getHistoryHandNumber() {
         return historyHandNumber;
     }
 
-    public void setHistoryHandNumber(Double historyHandNumber) {
+    public void setHistoryHandNumber(Integer historyHandNumber) {
         this.historyHandNumber = historyHandNumber;
+    }
+
+    public Integer getHoldPositionHandNumber() {
+        return holdPositionHandNumber;
+    }
+
+    public void setHoldPositionHandNumber(Integer holdPositionHandNumber) {
+        this.holdPositionHandNumber = holdPositionHandNumber;
     }
 
     public Double getHistoryProfit() {
@@ -54,13 +65,7 @@ public class FollowOrderPageVo {
         this.historyProfit = historyProfit;
     }
 
-    public Double getHoldPositionHandNumber() {
-        return holdPositionHandNumber;
-    }
 
-    public void setHoldPositionHandNumber(Double holdPositionHandNumber) {
-        this.holdPositionHandNumber = holdPositionHandNumber;
-    }
 
     public Double getHoldPositionProfit() {
         return holdPositionProfit;
@@ -94,46 +99,6 @@ public class FollowOrderPageVo {
         this.closePositionTotalNumber = closePositionTotalNumber;
     }
 
-    public Long getVarietyId() {
-        return varietyId;
-    }
-
-    public void setVarietyId(Long varietyId) {
-        this.varietyId = varietyId;
-    }
-
-    public Long getAccountId() {
-        return accountId;
-    }
-
-    public void setAccountId(Long accountId) {
-        this.accountId = accountId;
-    }
-
-    public String getStartTime() {
-        return startTime;
-    }
-
-    public void setStartTime(String startTime) {
-        this.startTime = startTime;
-    }
-
-    public String getEndTime() {
-        return endTime;
-    }
-
-    public void setEndTime(String endTime) {
-        this.endTime = endTime;
-    }
-
-    public Integer getStatus() {
-        return status;
-    }
-
-    public void setStatus(Integer status) {
-        this.status = status;
-    }
-
     public Integer getClosePositionWinSum() {
         return closePositionWinSum;
     }
@@ -141,6 +106,4 @@ public class FollowOrderPageVo {
     public void setClosePositionWinSum(Integer closePositionWinSum) {
         this.closePositionWinSum = closePositionWinSum;
     }
-
-
 }

@@ -6,6 +6,7 @@ import com.web.pojo.FollowOrder;
 import com.web.pojo.FollowOrderClient;
 import com.web.pojo.FollowOrderTradeRecord;
 import com.web.pojo.vo.FollowOrderPageVo;
+import com.web.pojo.vo.FollowOrderQuery;
 import com.web.pojo.vo.FollowOrderVo;
 
 import java.util.List;
@@ -27,7 +28,7 @@ public interface FollowOrderService {
 
     FollowOrder getFollowOrder(Long id);
 
-    List<FollowOrderVo> getListFollowOrderVo(FollowOrderPageVo followOrderPageVo);
+    FollowOrderPageVo getListFollowOrderVo( FollowOrderQuery followOrderQuery);
 
     void madeAnOrder(DataSource data);
 
@@ -45,7 +46,7 @@ public interface FollowOrderService {
     void manuallyClosePosition(Long detailId);
 
 
-    List<FollowOrder> selectListFollowOrder(FollowOrderPageVo followOrderPageVo);
+    List<FollowOrder> selectListFollowOrder(FollowOrderQuery followOrderQuery);
     int findAccountStatusByAccountId(Long accountId);
     List<FollowOrder> getNOStopFollowOrder();
 

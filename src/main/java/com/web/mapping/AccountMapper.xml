@@ -21,7 +21,7 @@
     </resultMap>
     <insert id="save" parameterType="com.web.pojo.Account" useGeneratedKeys="true" keyProperty="id">
     insert into tb_account (tb_agent_id,tb_platform_id,account,password,create_user,create_time, modify_time,modify_user,status)
-    values (#{agent.id},#{platform.id},#{account},#{password},#{createUser},#{createTime},#{modifyUser},#{modifyTime},#{status})
+    values (#{agent.id},#{platform.id},#{account},#{password},#{createUser},#{createTime},#{modifyTime},#{modifyUser},#{status})
     </insert>
     <update id="updateAccount" parameterType="com.web.pojo.Account">
         update tb_account
