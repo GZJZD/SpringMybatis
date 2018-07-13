@@ -6,7 +6,7 @@ import com.web.database.entity.PlatFromUsers;
 import com.web.pojo.*;
 
 import com.web.pojo.vo.followOrder.FollowOrderVo;
-import com.web.pojo.vo.NetPositionDetailVo;
+import com.web.pojo.vo.followOrder.NetPositionDetailVo;
 import com.web.pojo.vo.OrderMsgResult;
 import com.web.service.*;
 import com.web.common.FollowOrderEnum;

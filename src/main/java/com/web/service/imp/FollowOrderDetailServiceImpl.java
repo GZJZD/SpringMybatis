@@ -7,7 +7,7 @@ import com.web.database.OrderHongKongService;
 import com.web.pojo.*;
 
 import com.web.pojo.vo.followOrder.FollowOrderVo;
-import com.web.pojo.vo.NetPositionDetailVo;
+import com.web.pojo.vo.followOrder.NetPositionDetailVo;
 import com.web.pojo.vo.OrderMsgResult;
 import com.web.schedule.SweepTableSchedule;
 import com.web.service.*;
