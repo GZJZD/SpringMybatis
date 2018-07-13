@@ -40,7 +40,8 @@ public class SweepTableSchedule {
         return detailPositionGainAndLoss.get(followOrderId);
     }
 
-    @Scheduled(cron = "*/3 * * * * ?")
+    //每3秒： */3 * * * * ?
+    @Scheduled(cron = "* 0/7 * * * ?")
     public void doSweepTable(){
         List<FollowOrder> followOrder = followOrderService.getNOStopFollowOrder();
         System.out.println(11111);
@@ -142,6 +143,8 @@ public class SweepTableSchedule {
                 sellHandNumber += orderDetail.getRemainHandNumber();
             }
         }
+        System.out.println("buyHandNumber="+buyHandNumber);
+        System.out.println("sellHandNumber="+sellHandNumber);
         //用于计算
         Integer buyHandNum = buyHandNumber;
         Integer sellHandNum = sellHandNumber;
@@ -180,6 +183,6 @@ public class SweepTableSchedule {
         holdPrice.put("ask",ask);
         holdPrice.put("bid",bid);
         detailPositionGainAndLoss.put((long) resp.getRequestId(),holdPrice);
-
+        System.out.println(holdPrice);
     }
 }

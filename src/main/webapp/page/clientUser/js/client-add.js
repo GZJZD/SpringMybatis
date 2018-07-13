@@ -343,10 +343,11 @@ function commit(){
     $("#mytable tbody").find('tr').each(function(){
         var tdArr = $(this).children();
         var userCode = tdArr.eq(0).html();//用户编号
+        var userName = tdArr.eq(1).html();//用户编号
         var followDirection = tdArr.eq(4.).find(".followDirection option:selected").val();//跟单方向
         var handNumberType= tdArr.eq(5).find(".handNumberType option:selected").val();//手数类型
         var followHandNumber = tdArr.eq(6).find(".followHandNumber").val();//手数
-        var json_ = {"userCode":userCode,"followDirection":followDirection,"handNumberType":handNumberType,"followHandNumber":followHandNumber};
+        var json_ = {"userCode":userCode,"userName":userName,"followDirection":followDirection,"handNumberType":handNumberType,"followHandNumber":followHandNumber};
         fayuan_data.push(json_);
     });
     var str = JSON.stringify(fayuan_data);

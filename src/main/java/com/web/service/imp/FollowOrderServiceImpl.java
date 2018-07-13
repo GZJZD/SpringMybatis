@@ -7,6 +7,7 @@ import com.qq.tars.client.CommunicatorFactory;
 import com.web.common.FollowOrderEnum;
 import com.web.dao.FollowOrderDao;
 import com.web.database.OrderHongKongService;
+import com.web.database.entity.PlatFromUsers;
 import com.web.database.entity.Prices;
 import com.web.pojo.*;
 import com.web.pojo.vo.FollowOrderPageVo;
@@ -64,6 +65,8 @@ public class FollowOrderServiceImpl implements FollowOrderService {
     private ClientNetPositionService clientNetPositionService;//客户净头寸关联
     @Autowired
     private OrderHongKongService orderHongKongService;//香港数据库
+    @Autowired
+    private OrderUserService orderUserService; //客户
     @Autowired
     private ContractInfoService contractInfoService;//合约信息
     @Autowired
@@ -179,13 +182,11 @@ public class FollowOrderServiceImpl implements FollowOrderService {
     @Override
     public FollowOrderPageVo getListFollowOrderVo(FollowOrderQuery followOrderQuery) {
         FollowOrderPageVo followOrderPageVo = new FollowOrderPageVo();
-
         //总平仓单数
         Integer closePositionTotalNumber=0;
 
         //盈利单数
         Integer closePositionWinSum=0;
-
 
         List<FollowOrderVo> followOrderVoList = new ArrayList<>();
         List<FollowOrder> followOrders = selectListFollowOrder(followOrderQuery);
@@ -722,7 +723,14 @@ public class FollowOrderServiceImpl implements FollowOrderService {
         //设置开仓单号
         followOrderTradeRecord.setTicket(ticket);
         //设置客户姓名
-        followOrderTradeRecord.setClientName(clientName);
+        OrderUser orderUser = orderUserService.findByTicket(ticket);
+        PlatFromUsers users;
+        if(orderUser.getPlatFormCode().equals("orders75")){
+            users = orderHongKongService.getUser75(orderUser.getUserCode());
+        }else {
+            users = orderHongKongService.getUser76(orderUser.getUserCode());
+        }
+        followOrderTradeRecord.setClientName(users.getNAME());
         //设置跟单id
         followOrderTradeRecord.setFollowOrderId(followOrder.getId());
         //设置品种的id
