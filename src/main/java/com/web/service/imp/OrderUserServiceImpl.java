@@ -8,6 +8,7 @@ import com.web.database.entity.Prices;
 import com.web.pojo.DataSource;
 import com.web.pojo.OrderUser;
 import com.web.database.entity.PlatFromUsers;
+import com.web.pojo.vo.orderuser.HoldOrderUserVo;
 import com.web.pojo.vo.orderuser.OrderUserDetailsVo;
 import com.web.pojo.vo.orderuser.OrderUserListVo;
 import com.web.pojo.vo.orderuser.OrderUserVo;
@@ -389,7 +390,7 @@ public class OrderUserServiceImpl implements OrderUserService {
                 List<OrderUser> orderUserList = orderUserDao.getUserDetails(userCode,productCode);
                 Prices prices = orderHongKongService.getMarketPrice(productCode); //价格
                 LinkedHashSet<String> set = new LinkedHashSet<String>(orderUserList.size());
-                List<OrderUser> handList = new ArrayList<>();
+                List<HoldOrderUserVo> holdList = new ArrayList<>();
                 List<OrderUser> profitList = new ArrayList<>();
                 double totalHandNumber = DoubleUtil.Double_val;//持仓数
                 double profit = DoubleUtil.Double_val; //平仓盈亏
@@ -420,7 +421,7 @@ public class OrderUserServiceImpl implements OrderUserService {
                                        DoubleUtil.add(position_gain_and_loss,DoubleUtil.mul(DoubleUtil.sub(orderUser.getOpenPrice(),prices.getBid()),orderUser.getHandNumber()));
                            }
                        }
-                        handList.add(orderUser);//构造持仓list
+                        holdList.add(addHandListDetail(orderUser));//构造持仓list
                     }
                     if(orderUser.getCreateDate() != null && !StringUtils.isEmpty(orderUser.getCreateDate())){
                         set.add(orderUser.getCreateDate().substring(index,endIndex).trim());//计算做单天数
@@ -448,7 +449,7 @@ public class OrderUserServiceImpl implements OrderUserService {
                 //构造vo类
                 detailsVo.setDoOrderDays(set.size()); //做单天数
                 detailsVo.setCountNumber(countNumber);//做单数
-                detailsVo.setHoldList(handList);//持仓数据
+                detailsVo.setHoldList(holdList);//持仓数据
                 detailsVo.setProfitList(profitList);//平仓数据
                 detailsVo.setPosition_gain_and_loss(profit);//平仓盈亏
                 detailsVo.setPosition_gain_and_loss(position_gain_and_loss);//持仓盈亏
@@ -485,6 +486,8 @@ public class OrderUserServiceImpl implements OrderUserService {
         }
         return  platFromUsers;
     }
+
+
     /**
      * 获取用户在平仓盈亏以及盈亏效率
      */
@@ -531,5 +534,38 @@ public class OrderUserServiceImpl implements OrderUserService {
 
         return detailsVo;
     }
+
+    public HoldOrderUserVo addHandListDetail(OrderUser orderUser) {
+        HoldOrderUserVo holdOrderUserVo = new HoldOrderUserVo();
+        holdOrderUserVo.setHandNumber(orderUser.getHandNumber());//手数
+        holdOrderUserVo.setPlatFormCode(orderUser.getPlatFormCode()); //平台
+        holdOrderUserVo.setProductCode(orderUser.getProductCode());//品种代码
+        holdOrderUserVo.setHandNumber(orderUser.getHandNumber());//手数
+        holdOrderUserVo.setOpenPrice(orderUser.getOpenPrice());//开仓价
+        holdOrderUserVo.setStopProfit(orderUser.getStopProfit());//止盈
+        holdOrderUserVo.setStopLoss(orderUser.getStopLoss());//止损
+        holdOrderUserVo.setCreateDate(orderUser.getCreateDate());
+        holdOrderUserVo.setCommission(orderUser.getCommission());//手续费
+        Prices prices = orderHongKongService.getMarketPrice(orderUser.getProductCode()); //价格
+        //持仓盈亏
+        if (orderUser.getCloseTime() == null || StringUtils.isEmpty(orderUser.getCloseTime())) {
+            if (prices != null) {
+                //多
+                if (orderUser.getLongShort() == 0) {
+                    holdOrderUserVo.setMarketPrice(prices.getAsk());
+                    //（卖出价（Hk）  - 买入（orderUser）） * 持仓数（orderUser）
+                    holdOrderUserVo.setGain_and_loss(DoubleUtil.mul(DoubleUtil.sub(prices.getAsk(), orderUser.getOpenPrice()), orderUser.getHandNumber()));
+                }
+                //空
+                //（开仓价（orderUser）— 买入（HK））* 持仓数 （orderUser）
+                if (orderUser.getLongShort() == 1) {
+                    holdOrderUserVo.setMarketPrice(prices.getBid());
+                    holdOrderUserVo.setGain_and_loss(DoubleUtil.mul(DoubleUtil.sub(orderUser.getOpenPrice(), prices.getBid()), orderUser.getHandNumber()));
+                }
+            }
+        }
+        return holdOrderUserVo;
+    }
+
 
 }
