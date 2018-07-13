@@ -263,7 +263,8 @@ public class OrderUserServiceImpl implements OrderUserService {
             SimpleDateFormat sdf = new SimpleDateFormat(DateUtil.DATE_YYYY_MM_DD_HH_MM_SS);
             Date recentlyTime = null;//最近下单时间
              for (OrderUser orderUser1 : orderUserlist){
-                 if(orderUser.getUserCode().equals(orderUser1.getUserCode())){
+                 if(orderUser.getUserCode().equals(orderUser1.getUserCode())&& orderUser.getPlatFormCode().equals(orderUser1.getPlatFormCode())){
+
                      total_commission = DoubleUtil.add(total_commission,(orderUser1.getCommission() == null ? DoubleUtil.Double_val : orderUser1.getCommission()));
 
                      if(orderUser1.getCloseTime() == null && StringUtils.isEmpty(orderUser1.getCloseTime())){
@@ -304,6 +305,7 @@ public class OrderUserServiceImpl implements OrderUserService {
                              e.printStackTrace();
                          }
                      }
+
                  }
              }
             if(winRate != DoubleUtil.Double_val){
