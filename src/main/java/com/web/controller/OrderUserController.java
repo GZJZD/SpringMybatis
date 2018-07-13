@@ -1,10 +1,9 @@
 package com.web.controller;
 
-import com.alibaba.fastjson.JSONArray;
 import com.web.pojo.OrderUser;
-import com.web.pojo.vo.OrderUserDetailsVo;
-import com.web.pojo.vo.OrderUserListVo;
-import com.web.pojo.vo.OrderUserVo;
+import com.web.pojo.vo.orderuser.OrderUserDetailsVo;
+import com.web.pojo.vo.orderuser.OrderUserListVo;
+import com.web.pojo.vo.orderuser.OrderUserVo;
 import com.web.service.OrderUserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -70,9 +69,9 @@ public class OrderUserController {
      */
     @RequestMapping(value = "/getOrderUser.Action")
     @ResponseBody
-    public OrderUserDetailsVo getOrderUser (String productCode,String userCode){
+    public OrderUserDetailsVo getOrderUser (String productCode,String userCode,String platformName){
 
-        OrderUserDetailsVo orderUserDetailsVos =  orderUserService.getUserDetails(userCode,productCode);
+        OrderUserDetailsVo orderUserDetailsVos =  orderUserService.getUserDetails(userCode,productCode,platformName);
         return orderUserDetailsVos;
     }
 }

@@ -95,7 +95,7 @@
         <if test="status == 0">and close_time is  null </if>
     </select>
 
-    <select id="countOrderUser" parameterType="com.web.pojo.vo.OrderUserVo" resultMap="BaseResultMap">
+    <select id="countOrderUser" parameterType="com.web.pojo.vo.orderuser.OrderUserVo" resultMap="BaseResultMap">
         SELECT
            <include refid="Base_Column_List" />
         FROM

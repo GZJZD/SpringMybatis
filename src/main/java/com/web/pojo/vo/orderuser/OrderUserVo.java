@@ -1,4 +1,4 @@
-package com.web.pojo.vo;
+package com.web.pojo.vo.orderuser;
 
 
 /**

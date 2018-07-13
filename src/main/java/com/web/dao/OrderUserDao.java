@@ -2,7 +2,7 @@ package com.web.dao;
 
 
 import com.web.pojo.OrderUser;
-import com.web.pojo.vo.OrderUserVo;
+import com.web.pojo.vo.orderuser.OrderUserVo;
 import org.apache.ibatis.annotations.Param;
 
 import java.util.List;

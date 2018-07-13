@@ -4,7 +4,7 @@ import com.web.dao.FollowOrderClientDao;
 import com.web.pojo.FollowOrder;
 import com.web.pojo.FollowOrderClient;
 import com.web.pojo.vo.FollowOrderClientParamVo;
-import com.web.pojo.vo.OrderUserDetailsVo;
+import com.web.pojo.vo.orderuser.OrderUserDetailsVo;
 import com.web.service.FollowOrderClientService;
 import com.web.service.FollowOrderService;
 import com.web.service.OrderUserService;

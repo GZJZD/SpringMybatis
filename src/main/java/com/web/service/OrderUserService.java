@@ -2,9 +2,9 @@ package com.web.service;
 
 import com.web.pojo.DataSource;
 import com.web.pojo.OrderUser;
-import com.web.pojo.vo.OrderUserDetailsVo;
-import com.web.pojo.vo.OrderUserListVo;
-import com.web.pojo.vo.OrderUserVo;
+import com.web.pojo.vo.orderuser.OrderUserDetailsVo;
+import com.web.pojo.vo.orderuser.OrderUserListVo;
+import com.web.pojo.vo.orderuser.OrderUserVo;
 
 import java.util.List;
 
@@ -15,7 +15,7 @@ public interface OrderUserService {
     String update(OrderUser orderUser);
     OrderUserListVo countOrderUser(OrderUserVo orderUserVo);
     List<OrderUser>findByUserIdList(List<String> list, String startTime, String endTime, String productCode, Integer openOrCloseStatus);
-    OrderUserDetailsVo getUserDetails(String userCode, String productCode);
+    OrderUserDetailsVo getUserDetails(String userCode, String productCode,String platformName);
     OrderUserDetailsVo  getOrderUserCount(String userCode, String productCode);
 
 }

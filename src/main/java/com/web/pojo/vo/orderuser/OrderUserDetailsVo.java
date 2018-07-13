@@ -1,4 +1,4 @@
-package com.web.pojo.vo;
+package com.web.pojo.vo.orderuser;
 
 import com.web.pojo.OrderUser;
 
@@ -10,9 +10,9 @@ public class OrderUserDetailsVo {
     private String lastOrderTime;//最近下单时间
     private String agencyName;//代理人
     private Integer doOrderDays;//做单天数
-    private Long countNumber;
+    private Long countNumber;//做单数
     private Double winRate;//胜率
-    private Double serviceChargeTotal;//手续费
+    private Double cmmission;//手续费
     private Double inMoney;//入金
     private Double outMoney;//出金
     private Double remainMoney;//账户余额
@@ -95,12 +95,12 @@ public class OrderUserDetailsVo {
         this.winRate = winRate;
     }
 
-    public Double getServiceChargeTotal() {
-        return serviceChargeTotal;
+    public Double getCmmission() {
+        return cmmission;
     }
 
-    public void setServiceChargeTotal(Double serviceChargeTotal) {
-        this.serviceChargeTotal = serviceChargeTotal;
+    public void setCmmission(Double cmmission) {
+        this.cmmission = cmmission;
     }
 
     public Double getInMoney() {
