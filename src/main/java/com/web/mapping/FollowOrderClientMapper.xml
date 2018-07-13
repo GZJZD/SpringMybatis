@@ -91,7 +91,7 @@
       select
       follow_order_id
       from follow_order_client
-      where user_code =#{userCode} and platformCode = #{platformCode}
+      where user_code =#{userCode} and platform_code = #{platformCode}
     </select>
     <select id="findClientByIdAndName" resultMap="BaseResultMap">
         select
@@ -109,7 +109,7 @@
         select
         <include refid="base_List"/>
         from follow_order_client
-        where user_code =#{userCode} and platformCode = #{platformCode} and followOrderId =#{followOrderId}
+        where user_code =#{userCode} and platform_code = #{platformCode} and followOrderId =#{followOrderId}
     </select>
 
 
