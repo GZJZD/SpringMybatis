@@ -11,16 +11,18 @@ function findPlatform(platformId) {
         beforeSend:function(xhr){
         },
         success:function (data) {
+            console.log(data);
             var content = "";
             $.each(data,function (index,ele) {
-                if(platformId==ele.id){
+                if(platformId == ele.id){
                     content += "<option value="+ele.id+" selected>"+ele.name+"</option>"
                 }else {
                     content += "<option value="+ele.id+">"+ele.name+"</option>"
                 }
             });
-            alert(content);
+            console.log(content);
             $("#platform_id").append(content);
+
         },
         error:function(xhr,textStatus){
         },
