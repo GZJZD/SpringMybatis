@@ -19,6 +19,7 @@ function findPlatform(platformId) {
                     content += "<option value="+ele.id+">"+ele.name+"</option>"
                 }
             });
+            alert(content);
             $("#platform_id").append(content);
         },
         error:function(xhr,textStatus){
@@ -42,7 +43,7 @@ function findVariety(varietyId) {
         success:function (data) {
             var content = "";
             $.each(data,function (index,ele) {
-                if(agentId == ele.id){
+                if(varietyId == ele.id){
                     content += "<option value="+ele.id+" selected>"+ele.varietyName+"</option>"
                 }else {
                     content += "<option value="+ele.id+">"+ele.varietyName+"</option>"
@@ -67,8 +68,8 @@ function setParameter(num,obj) {
     	findVariety(obj.variety.id);
         findPlatform(obj.platform.id);
     }else{
-    	findVariety();
-        findPlatform();
+    	findVariety(-1);
+        findPlatform(-1);
     }
     if(num==1) {
         $("#contractInfoId").val(obj.id);
