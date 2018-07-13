@@ -36,8 +36,8 @@ public class FollowOrderTradeRecord implements Serializable {
     private String ticket;
     //新开仓单号
     private String newTicket;
-    //客户姓名
-    private String clientName;
+    //关联：跟单和客户之间的联系
+    private FollowOrderClient followOrderClient;
     //手续费
     private Double poundage;
     //客户净头寸id
@@ -180,11 +180,11 @@ public class FollowOrderTradeRecord implements Serializable {
         this.version = version;
     }
 
-    public String getClientName() {
-        return clientName;
+    public FollowOrderClient getFollowOrderClient() {
+        return followOrderClient;
     }
 
-    public void setClientName(String clientName) {
-        this.clientName = clientName;
+    public void setFollowOrderClient(FollowOrderClient followOrderClient) {
+        this.followOrderClient = followOrderClient;
     }
 }

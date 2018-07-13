@@ -15,15 +15,17 @@
         <result column="new_ticket" property="newTicket"/>
         <result column="poundage" property="poundage"/>
         <result column="client_net_position_id" property="clientNetPositionId"/>
-        <result column="client_name" property="clientName"/>
         <result column="update_date" property="updateDate"/>
         <result column="create_date" property="createDate"/>
         <result column="version" property="version"/>
+        <association property="followOrderClient" javaType="com.web.pojo.FollowOrderClient" column="follow_order_client_id"
+                     select="com.web.dao.FollowOrderClientDao.selectByPrimaryKey"/>
     </resultMap>
-    <resultMap id="followOrderVoMap" type="com.web.pojo.vo.FollowOrderVo">
+    <resultMap id="followOrderVoMap" type="com.web.pojo.vo.followOrder.FollowOrderVo">
         <result property="successTotal" column="successTotal"/>
         <result property="allTotal" column="allTotal"/>
-        <result property="clientName" column="clientName"/>
+        <association property="followOrderClient" javaType="com.web.pojo.FollowOrderClient" column="follow_order_client_id"
+                     select="com.web.dao.FollowOrderClientDao.selectByPrimaryKey"/>
     </resultMap>
     <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
     delete from follow_order_trade_record
@@ -33,13 +35,13 @@
     insert into follow_order_trade_record ( variety_id,
       hand_number, trade_time, trade_direction, 
       open_close_type, market_price,
-      account_id, follow_order_id,
+      account_id, follow_order_id,follow_order_client_id,
       ticket, new_ticket,
-      poundage,client_net_position_id,client_name,update_date,create_date,version)
+      poundage,client_net_position_id,update_date,create_date,version)
     values ( #{varietyId},
       #{handNumber}, #{tradeTime}, #{tradeDirection}, 
       #{openCloseType}, #{marketPrice},
-      #{accountId}, #{followOrderId},
+      #{accountId}, #{followOrderId},#{followOrderClient.id}
       #{ticket}, #{newTicket},
       #{poundage},#{clientNetPositionId},#{clientName},#{updateDate},#{createDate},#{version})
   </insert>
@@ -73,6 +75,9 @@
             <if test="followOrderId != null">
                 follow_order_id = #{followOrderId},
             </if>
+            <if test="followOrderClient != null">
+                follow_order_client_id = #{followOrderClient.id},
+            </if>
 
             <if test="ticket != null">
                 ticket = #{ticket},
@@ -86,9 +91,6 @@
             </if>
             <if test="clientNetPositionId != null">
                 client_net_position_id = #{clientNetPositionId},
-            </if>
-            <if test="clientName != null">
-                client_name = #{clientName},
             </if>
 
             <if test="updateDate != null ">
@@ -120,7 +122,7 @@
     <select id="getFollowOrderTradeTotalCount" resultMap="followOrderVoMap">
         select count(id) allTotal
         <if test="userCode">
-            ,client_name clientName
+            ,follow_order_client_id follow_order_client_id
         </if>
         from follow_order_trade_record
         where follow_order_id =#{followOrderId}
@@ -131,13 +133,13 @@
             and create_date <![CDATA[ >= ]]> #{startTime}
         </if>
         <if test="userCode">
-            group by client_name
+            group by follow_order_client_id
         </if>
     </select>
     <select id="getFollowOrderSuccessTradeTotal" resultMap="followOrderVoMap">
         select count(id) successTotal
         <if test="userCode">
-            ,client_name clientName
+            ,follow_order_client_id follow_order_client_id
         </if>
          from follow_order_trade_record
         where hand_number != 0 and trade_time is not null and follow_order_id = #{followOrderId}
@@ -148,7 +150,7 @@
             and create_date <![CDATA[ >= ]]> #{startTime}
         </if>
         <if test="userCode">
-            group by client_name
+            group by follow_order_client_id
         </if>
     </select>
     <select id="getListOrderTradeByTicketAndTime" resultMap="BaseResultMap">
@@ -169,10 +171,10 @@
     market_price,
     account_id,
     follow_order_id,
+    follow_order_client_id,
     ticket,
     new_ticket,
     client_net_position_id,
-    client_name,
     update_date,
     create_date,
     poundage,

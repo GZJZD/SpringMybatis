@@ -1,4 +1,4 @@
-package com.web.pojo.vo;
+package com.web.pojo.vo.followOrder;
 
 /*
 * 查询条件

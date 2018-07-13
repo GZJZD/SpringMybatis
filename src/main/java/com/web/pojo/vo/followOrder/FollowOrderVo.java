@@ -1,6 +1,7 @@
-package com.web.pojo.vo;
+package com.web.pojo.vo.followOrder;
 
 import com.web.pojo.FollowOrder;
+import com.web.pojo.FollowOrderClient;
 
 /**
  * 跟单映射表
@@ -41,7 +42,7 @@ public class FollowOrderVo {
     private Integer handNumberTotal=0;
 
     /**********************************************     跟单明细中跟单数据字段     *************************************************************************/
-    private String clientName;
+    private FollowOrderClient followOrderClient;
 
     /**********************************************     跟单数据END     *************************************************************************/
 
@@ -56,12 +57,12 @@ public class FollowOrderVo {
         this.followOrder = followOrder;
     }
 
-    public String getClientName() {
-        return clientName;
+    public FollowOrderClient getFollowOrderClient() {
+        return followOrderClient;
     }
 
-    public void setClientName(String clientName) {
-        this.clientName = clientName;
+    public void setFollowOrderClient(FollowOrderClient followOrderClient) {
+        this.followOrderClient = followOrderClient;
     }
 
     public Double getPositionGainAndLoss() {

@@ -4,12 +4,10 @@ import com.web.common.FollowOrderEnum;
 import com.web.dao.FollowOrderDetailDao;
 import com.web.database.OrderHongKongService;
 
-import com.web.database.entity.PlatFromUsers;
 import com.web.pojo.*;
 
-import com.web.pojo.vo.FollowOrderPageVo;
-import com.web.pojo.vo.FollowOrderVo;
-import com.web.pojo.vo.NetPositionDetailVo;
+import com.web.pojo.vo.followOrder.FollowOrderVo;
+import com.web.pojo.vo.followOrder.NetPositionDetailVo;
 import com.web.pojo.vo.OrderMsgResult;
 import com.web.schedule.SweepTableSchedule;
 import com.web.service.*;
@@ -366,7 +364,7 @@ public class FollowOrderDetailServiceImpl implements FollowOrderDetailService {
         orderDetail.setFollowOrderTradeRecordId(followOrderTradeRecord.getId());
         //客户姓名
         OrderUser orderUser = orderUserService.findByTicket(orderDetail.getTicket());
-        orderDetail.setClientName(followOrderTradeRecord.getClientName());
+        orderDetail.setFollowOrderClientId(followOrderTradeRecord.getFollowOrderClient().getId());
         //客户的盈亏
         orderDetail.setClientProfit(orderUser.getProfit());
         save(orderDetail);

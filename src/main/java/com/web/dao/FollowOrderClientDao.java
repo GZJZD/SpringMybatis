@@ -23,18 +23,18 @@ public interface FollowOrderClientDao {
     int updateByPrimaryKey(FollowOrderClient record);
     /**通过客户的编号找到关联的跟单id
      *@Author: May
-     *@param
      *@Date: 10:39 2018/5/21
+     * @param userCode
+     * @param platformCode
      */
-    List<Long> findListFollowOrderIDsByUserCode(String userCode);
+    List<Long> findListFollowOrderIDsByUserCode(@Param("userCode") String userCode, @Param("platformCode") String platformCode);
 
     List<FollowOrderClient> getListByFollowOrderId(Long followOrderId);
 
-    /*
-    *
-    * 通过跟单id,查找对应的客户名称
-    * */
-    List<String> getListUserCodeByFollowOrderId(Long followOrderId);
 
     FollowOrderClient findClientByIdAndName(@Param("followOrderId") Long followOrderId, @Param("userCode") String userCode);
+
+    List<String> getListUserCodeByFollowOrderId(Long followOrderId);
+
+    FollowOrderClient getByUserCodeAndPlatformCode(@Param("userCode") String userCode, @Param("platformCode") String platformCode, @Param("followOrderId") Long followOrderId);
 }

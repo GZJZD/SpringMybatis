@@ -14,8 +14,8 @@ public class FollowOrderClient extends BaseUtil{
     private Long followOrderId;
     //客户的编号
     private String userCode;
-    //客户姓名
-    private String userName;
+    //平台
+    private String platformCode;
     //跟单方式:反向/正向
     private Integer followDirection;
     //手数类型:按比例/固定手数
@@ -75,19 +75,19 @@ public class FollowOrderClient extends BaseUtil{
     }
 
 
-    public String getUserName() {
-        return userName;
-    }
-
-    public void setUserName(String userName) {
-        this.userName = userName;
-    }
-
     public Integer getVersion() {
         return version;
     }
 
     public void setVersion(Integer version) {
         this.version = version;
+    }
+
+    public String getPlatformCode() {
+        return platformCode;
+    }
+
+    public void setPlatformCode(String platformCode) {
+        this.platformCode = platformCode;
     }
 }
