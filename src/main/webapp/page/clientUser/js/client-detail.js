@@ -95,11 +95,11 @@ $(function(){
 
          }
          ,{
-             field:'',
+             field:'marketPrice',
              title:'市价'
 
          },{
-             field:'',
+             field:'gain_and_loss',
              title:'盈亏'
 
          }
