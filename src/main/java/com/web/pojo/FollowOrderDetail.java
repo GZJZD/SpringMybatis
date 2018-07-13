@@ -10,8 +10,6 @@ import java.util.Date;
  */
 public class FollowOrderDetail implements Serializable {
     private Long id;
-    //客户名
-    private String clientName;
     //合约代码
     private String contractCode;
     //交易方向:买入/卖出
@@ -26,6 +24,8 @@ public class FollowOrderDetail implements Serializable {
     private Long followOrderTradeRecordId;
     //交易账号id
     private Long accountId;
+    //关联
+    private Long followOrderClientId;
     //开仓价
     private Double openPrice;
     //开仓时间
@@ -61,12 +61,12 @@ public class FollowOrderDetail implements Serializable {
         this.id = id;
     }
 
-    public String getClientName() {
-        return clientName;
+    public Long getFollowOrderClientId() {
+        return followOrderClientId;
     }
 
-    public void setClientName(String clientName) {
-        this.clientName = clientName;
+    public void setFollowOrderClientId(Long followOrderClientId) {
+        this.followOrderClientId = followOrderClientId;
     }
 
     public String getContractCode() {

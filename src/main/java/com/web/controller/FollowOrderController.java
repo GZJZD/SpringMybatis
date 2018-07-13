@@ -1,17 +1,10 @@
 package com.web.controller;
 
 import com.web.common.FollowOrderEnum;
-import com.web.pojo.Account;
-import com.web.pojo.FollowOrder;
-import com.web.pojo.FollowOrderClient;
-import com.web.pojo.Variety;
-import com.web.pojo.vo.FollowOrderPageVo;
-import com.web.pojo.vo.FollowOrderQuery;
-import com.web.pojo.vo.FollowOrderVo;
-import com.web.service.FollowOrderClientService;
-import com.web.service.FollowOrderDetailService;
-import com.web.service.FollowOrderService;
-import com.web.service.FollowOrderTradeRecordService;
+import com.web.pojo.*;
+import com.web.pojo.vo.followOrder.FollowOrderPageVo;
+import com.web.pojo.vo.followOrder.FollowOrderQuery;
+import com.web.service.*;
 import com.web.util.json.JSONResult;
 import com.web.util.common.DateUtil;
 import com.web.util.json.WebJsion;
@@ -41,6 +34,8 @@ public class FollowOrderController {
     private FollowOrderClientService followOrderClientService;
     @Autowired
     private FollowOrderTradeRecordService followOrderTradeRecordService;
+    @Autowired
+    private ContractInfoService contractInfoService ;
 
     private static Logger log = LogManager.getLogger(FollowOrderController.class.getName());
 
@@ -118,8 +113,9 @@ public class FollowOrderController {
             Account account = new Account();
             account.setId(accountId);
             followOrder.setAccount(account);
+            ContractInfo contractInfo = contractInfoService.findVarietyByContractCode(varietyCode);
             Variety variety = new Variety();
-            variety.setVarietyCode(varietyCode);
+            variety.setId(contractInfo.getVariety().getId());
             followOrder.setVariety(variety);
             followOrder.setMaxProfit(maxProfit);
             followOrder.setMaxProfitNumber(maxProfitNumber);

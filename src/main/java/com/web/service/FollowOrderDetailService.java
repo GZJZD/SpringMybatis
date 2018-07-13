@@ -2,8 +2,7 @@ package com.web.service;
 
 import com.web.pojo.FollowOrderDetail;
 import com.web.pojo.FollowOrderTradeRecord;
-import com.web.pojo.vo.FollowOrderPageVo;
-import com.web.pojo.vo.FollowOrderVo;
+import com.web.pojo.vo.followOrder.FollowOrderVo;
 import com.web.pojo.vo.OrderMsgResult;
 
 import java.util.List;

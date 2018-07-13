@@ -12,6 +12,8 @@ import com.web.pojo.ContractInfoLink;
 import com.web.servant.center.*;
 import com.web.service.ContractInfoLinkService;
 import com.web.service.ContractInfoService;
+import com.web.util.common.DoubleUtil;
+import com.web.util.json.WebJsion;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -65,15 +67,19 @@ public class ContractInfoLinkServiceImpl implements ContractInfoLinkService {
     @Override
     public void instrumentCommissionQuery(Long contractInfoId, Account account) {
         ContractInfoLink linkByInfoId = this.getContractInfoLinkByInfoId(contractInfoId);
-        if(linkByInfoId.getCloseRatioByMoney()==null) {
+        log.debug("查找合约手续费:"+WebJsion.toJson(linkByInfoId));
+        if(linkByInfoId ==null||linkByInfoId.getCloseRatioByMoney()==null) {
             ContractInfo contractInfo = contractInfoService.getContractInfoById(contractInfoId);
 
             final instrumentCommissionQueryRequest req = new instrumentCommissionQueryRequest();
             req.setTypeId("instrumentCommissionQueryRequest");
+            req.setRequestId(contractInfoId.intValue());
             req.setBrokerId(account.getPlatform().getName());
             req.setUserId(account.getAccount());
             req.setInstrumentId(contractInfo.getContractCode());
             CommunicatorConfig cfg = new CommunicatorConfig();
+//            cfg.setAsyncInvokeTimeout(6000000);
+//            cfg.setSyncInvokeTimeout(600000);
             Communicator communicator = CommunicatorFactory.getInstance().getCommunicator(cfg);
             TraderServantPrx proxy = communicator.stringToProxy(TraderServantPrx.class, "TestApp.HelloServer.HelloTrade@tcp -h 192.168.3.189 -p 50506 -t 60000");
 
@@ -112,13 +118,14 @@ public class ContractInfoLinkServiceImpl implements ContractInfoLinkService {
 
                     @Override
                     public void callback_instrumentCommissionQuery(int ret, instrumentCommissionQueryResponse rsp) {
+                        log.debug("返回合约手续费:"+WebJsion.toJson(rsp));
                         if (ret == 0 && rsp.errcode == 0) {
-                            ContractInfoLink link = getContractInfoLinkByInfoId((long) rsp.getRequestId());
+                            ContractInfoLink link = new ContractInfoLink();
 
-                            link.setOpenRatioByMoney(rsp.openRatioByMoney);
-                            link.setOpenRatioByVolume(rsp.openRatioByVolume);
-                            link.setCloseRatioByMoney(rsp.closeRatioByMoney);
-                            link.setCloseRatioByVolume(rsp.closeRatioByVolume);
+                            link.setOpenRatioByMoney(DoubleUtil.div(rsp.openRatioByMoney,1,2));
+                            link.setOpenRatioByVolume(DoubleUtil.div(rsp.openRatioByVolume,1,2));
+                            link.setCloseRatioByMoney(DoubleUtil.div(rsp.closeRatioByMoney,1,2));
+                            link.setCloseRatioByVolume(DoubleUtil.div(rsp.closeRatioByVolume,1,2));
                             if (link.getContractInfo() != null) {
                                 updateContractInfoLink(link);
                             } else {
@@ -127,7 +134,7 @@ public class ContractInfoLinkServiceImpl implements ContractInfoLinkService {
                                 contractInfo.setId((long) rsp.getRequestId());
                                 save(link);
                             }
-
+                            instrumentQuery(link.getId());
                         } else {
                             if (ret == 0) {
                                 log.error("合约信息手续费查询异常：" + rsp.errmsg);
@@ -156,14 +163,17 @@ public class ContractInfoLinkServiceImpl implements ContractInfoLinkService {
      * 查找合约的最大成交量和最小成交量
      * */
     @Override
-    public void instrumentQuery(Long contractInfoId) {
-        ContractInfoLink linkByInfoId = this.getContractInfoLinkByInfoId(contractInfoId);
+    public void instrumentQuery(Long contractInfoLinkId) {
+        log.debug("查找合约:"+WebJsion.toJson(contractInfoLinkId));
+        ContractInfoLink linkByInfoId = this.getContractInfoLink(contractInfoLinkId);
         if(linkByInfoId.getMaxMarketOrderVolume()==null){
             CommunicatorConfig cfg = new CommunicatorConfig();
             Communicator communicator = CommunicatorFactory.getInstance().getCommunicator(cfg);
             TraderServantPrx proxy = communicator.stringToProxy(TraderServantPrx.class, "TestApp.HelloServer.HelloTrade@tcp -h 192.168.3.189 -p 50506 -t 60000");
             instrumentQueryRequest req = new instrumentQueryRequest();
-
+            req.setTypeId("instrumentQuery");
+            req.setInstrumentId(linkByInfoId.getContractInfo().getContractCode());
+            req.setRequestId(contractInfoLinkId.intValue());
             try {
                 proxy.async_instrumentQuery(new TraderServantPrxCallback() {
                     @Override
@@ -193,13 +203,15 @@ public class ContractInfoLinkServiceImpl implements ContractInfoLinkService {
 
                     @Override
                     public void callback_instrumentQuery(int ret, instrumentQueryResponse rsp) {
+                        log.debug("返回查找合约:"+WebJsion.toJson(rsp));
                         if (ret == 0 && rsp.errcode == 0) {
                             ContractInfoLink InfoLink = getContractInfoLinkByInfoId((long) rsp.getRequestId());
 
                             InfoLink.setMaxMarketOrderVolume((long) rsp.maxMarketOrderVolume);
-                            InfoLink.setMinMarketOrderVolume((long) rsp.minMarketOrderVolume);
                             InfoLink.setVolumeMultiple((long) rsp.volumeMultiple);
                             InfoLink.setPriceTick(rsp.priceTick);
+                            InfoLink.setPriceTick(DoubleUtil.div(InfoLink.getPriceTick(),1,2));
+                            InfoLink.setMinMarketOrderVolume(Long.valueOf(rsp.minMarketOrderVolume));
                             if (InfoLink.getContractInfo() != null) {
 
                                 updateContractInfoLink(InfoLink);

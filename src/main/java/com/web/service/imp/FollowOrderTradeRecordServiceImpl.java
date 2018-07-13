@@ -5,7 +5,7 @@ import com.web.database.OrderHongKongService;
 import com.web.database.entity.PlatFromUsers;
 import com.web.pojo.*;
 
-import com.web.pojo.vo.FollowOrderVo;
+import com.web.pojo.vo.followOrder.FollowOrderVo;
 import com.web.pojo.vo.NetPositionDetailVo;
 import com.web.pojo.vo.OrderMsgResult;
 import com.web.service.*;
@@ -50,6 +50,8 @@ public class FollowOrderTradeRecordServiceImpl implements FollowOrderTradeRecord
 
     @Autowired
     private OrderHongKongService orderHongKongService;
+    @Autowired
+    private ContractInfoService contractInfoService;
 
     private static Logger log = LogManager.getLogger(FollowOrderTradeRecordServiceImpl.class.getName());
 
@@ -206,7 +208,10 @@ public class FollowOrderTradeRecordServiceImpl implements FollowOrderTradeRecord
             userCode.add(clientName);
         }
         FollowOrder followOrder = followOrderService.getFollowOrder(followOrderId);
-        List<OrderUser> userList = orderUserService.findByUserIdList(userCode, followOrder.getStartTime(), null, followOrder.getVariety().getVarietyCode(), openOrCloseStatus);
+        //todo 是哪个数据源不清楚
+        ContractInfo info = contractInfoService.getInfoByVarietyIdAndPlatformId(followOrder.getVariety().getId(), 2L);
+
+        List<OrderUser> userList = orderUserService.findByUserIdList(userCode, followOrder.getStartTime(), null,info.getContractCode(), openOrCloseStatus);
         for (OrderUser orderUser : userList) {
             if (orderUser.getOpenTime() != null) {
                 Map<String, Object> orderUserMap = new HashMap<>();
@@ -259,16 +264,30 @@ public class FollowOrderTradeRecordServiceImpl implements FollowOrderTradeRecord
             userCode.add(clientName);
         }
         FollowOrder followOrder = followOrderService.getFollowOrder(followOrderId);
-        List<OrderUser> userList = orderUserService.findByUserIdList(userCode, followOrder.getStartTime(), null, followOrder.getVariety().getVarietyCode(), openOrCloseStatus);
+        //todo 是哪个数据源不清楚
+        ContractInfo info = contractInfoService.getInfoByVarietyIdAndPlatformId(followOrder.getVariety().getId(), 2L);
+
+        List<OrderUser> userList = orderUserService.findByUserIdList(userCode, followOrder.getStartTime(), null,info.getContractCode(), openOrCloseStatus);
         List<NetPositionDetailVo> netPositionDetailVoList = new ArrayList<>();
 
         for (OrderUser orderUser : userList) {
             NetPositionDetailVo netPositionDetailVo = new NetPositionDetailVo();
             netPositionDetailVo.setVarietyName(orderUser.getProductCode());//设置品种名字
             netPositionDetailVo.setHandNumber(orderUser.getHandNumber() + "");//设置手数
-            netPositionDetailVo.setUserName(orderUser.getUserCode());//设置用户名
+            PlatFromUsers users;
+            if(orderUser.getPlatFormCode().equals("orders75")){
+                users = orderHongKongService.getUser75(orderUser.getUserCode());
+            }else {
+                users = orderHongKongService.getUser76(orderUser.getUserCode());
+            }
+            if(users==null){
+                netPositionDetailVo.setUserName("-");
+            }else{
+
+                netPositionDetailVo.setUserName(users.getNAME()==null?"-":users.getNAME());//设置用户名
+            }
             netPositionDetailVo.setTradeDirection(orderUser.getLongShort());//设置多空方向
-            netPositionDetailVo.setPoundage(1.0);//设置手续费 todo 等数据过来后重新设置
+            netPositionDetailVo.setPoundage(orderUser.getCommission());//设置手续费 todo 等数据过来后重新设置
             netPositionDetailVo.setProfit(orderUser.getProfit());//设置盈亏
             netPositionDetailVo.setMarketPrice(orderUser.getOpenPrice() == null ? orderUser.getClosePrice() : orderUser.getOpenPrice());//市场价
             //设置交易时间
@@ -365,7 +384,7 @@ public class FollowOrderTradeRecordServiceImpl implements FollowOrderTradeRecord
         FollowOrder followOrder = followOrderService.getFollowOrder(followOrderId);
         for (FollowOrderVo followOrderVo : tradeTotalCount) {
             for (FollowOrderVo orderVo : successTradeTotal) {
-                if (orderVo.getClientName().equals(followOrderVo.getClientName())) {
+                if (orderVo.getFollowOrderClient().getUserCode().equals(followOrderVo.getFollowOrderClient().getUserCode())) {
                     //用户名一致，修改跟单成功数
                     followOrderVo.setSuccessTotal(orderVo.getSuccessTotal());//成功数
                 }
@@ -374,7 +393,7 @@ public class FollowOrderTradeRecordServiceImpl implements FollowOrderTradeRecord
         for (FollowOrderVo followOrderVo : tradeTotalCount) {
 
             List<FollowOrderDetail> detail = followOrderDetailService.getFollowOrderDetailByUserCode(followOrderId,
-                    endTime, startTime, followOrderVo.getClientName());
+                    endTime, startTime, followOrderVo.getFollowOrderClient().getUserCode());
             for (FollowOrderDetail followOrderDetail : detail) {
                 //客户盈亏
                 followOrderVo.setClientProfit(DoubleUtil.add(followOrderVo.getClientProfit(), followOrderDetail.getClientProfit()));
@@ -389,14 +408,22 @@ public class FollowOrderTradeRecordServiceImpl implements FollowOrderTradeRecord
                 }
             }
             Map<String, Object> orderUserMap = new HashMap<>();
-            orderUserMap.put("clientName", followOrderVo.getClientName());//客户姓名
+
             orderUserMap.put("varietyCode", followOrder.getVariety().getVarietyCode());//品种
             orderUserMap.put("winRate", followOrderVo.getSuccessTotal() + "/" + followOrderVo.getAllTotal());//成功率
             orderUserMap.put("clientProfit", followOrderVo.getClientProfit());//客户盈亏
             orderUserMap.put("poundageTotal", followOrderVo.getPoundageTotal());//手续费
             orderUserMap.put("positionGainAndLoss", followOrderVo.getPositionGainAndLoss());//持仓盈亏
             orderUserMap.put("offsetGainAndLoss", followOrderVo.getOffsetGainAndLoss());//平仓盈亏
-            FollowOrderClient client = followOrderClientService.findClientByIdAndName(followOrderId, followOrderVo.getClientName());
+            //todo
+            FollowOrderClient client = followOrderVo.getFollowOrderClient();
+            PlatFromUsers users;
+            if(client.getPlatformCode().equals("orders75")){
+                users = orderHongKongService.getUser75(client.getUserCode());
+            }else {
+                users = orderHongKongService.getUser76(client.getUserCode());
+            }
+            orderUserMap.put("clientName", users.getNAME());//客户姓名
             orderUserMap.put("followDirection", client.getFollowDirection());//跟单方向
             orderUserMap.put("handNumberType", client.getHandNumberType());//手数类型
             if (client.getHandNumberType().equals(FollowOrderEnum.FollowStatus.CLIENT_HAND_NUMBER_TYPE.getIndex())) {

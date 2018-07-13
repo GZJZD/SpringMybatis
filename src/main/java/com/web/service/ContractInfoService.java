@@ -3,6 +3,7 @@ package com.web.service;
 import java.util.List;
 
 import com.web.pojo.ContractInfo;
+import com.web.pojo.ContractInfoLink;
 
 /**
  * 合约信息
@@ -18,6 +19,7 @@ public interface ContractInfoService {
     ContractInfo getInfoByVarietyIdAndPlatformId( Long varietyId,Long platformId);
     List<ContractInfo> getContractInfoList();
     ContractInfo getContractInfoById(Long id);
+    ContractInfo findVarietyByContractCode(String contractCode);
     void save (ContractInfo contractInfo);
     void updateContractInfo(ContractInfo contractInfo);
 }

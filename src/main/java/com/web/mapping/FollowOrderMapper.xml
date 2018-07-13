@@ -174,7 +174,7 @@
                 #{item}
             </if>
         </foreach>
-        and v.variety_code = #{varietyCode}
+        and v.id = #{varietyId}
         and f.follow_order_status = 1 or f.follow_order_status = 2
     </select>
     <select id="findAccountStatusByAccountId" resultType="java.lang.Integer">

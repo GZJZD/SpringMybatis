@@ -1,116 +1,123 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
-<mapper namespace="com.web.dao.FollowOrderClientDao" >
-  <resultMap id="BaseResultMap" type="com.web.pojo.FollowOrderClient" >
-    <id column="id" property="id"  />
-    <result column="follow_order_id" property="followOrderId"  />
-    <result column="user_code" property="userCode"  />
-    <result column="user_name" property="userName"  />
-    <result column="follow_direction" property="followDirection"  />
-    <result column="hand_number_type" property="handNumberType"  />
-    <result column="follow_hand_number" property="followHandNumber"  />
-    <result column="update_date" property="updateDate"  />
-    <result column="update_by_user" property="updateByUser"/>
-    <result column="create_date" property="createDate"/>
-    <result column="create_user" property="createUser"/>
-    <result column="version" property="version" />
-  </resultMap>
-  <delete id="deleteByFollowOrderId" parameterType="java.lang.Long" >
+<mapper namespace="com.web.dao.FollowOrderClientDao">
+    <resultMap id="BaseResultMap" type="com.web.pojo.FollowOrderClient">
+        <id column="id" property="id"/>
+        <result column="follow_order_id" property="followOrderId"/>
+        <result column="user_code" property="userCode"/>
+        <result column="platform_code" property="platformCode"/>
+        <result column="follow_direction" property="followDirection"/>
+        <result column="hand_number_type" property="handNumberType"/>
+        <result column="follow_hand_number" property="followHandNumber"/>
+        <result column="update_date" property="updateDate"/>
+        <result column="update_by_user" property="updateByUser"/>
+        <result column="create_date" property="createDate"/>
+        <result column="create_user" property="createUser"/>
+        <result column="version" property="version"/>
+    </resultMap>
+    <delete id="deleteByFollowOrderId" parameterType="java.lang.Long">
     delete from follow_order_client
     where follow_order_id = #{followOrderId}
   </delete>
-  <insert id="insert" parameterType="com.web.pojo.FollowOrderClient" useGeneratedKeys="true" keyProperty="id" >
-    insert into follow_order_client (follow_order_id, user_code,user_name, follow_direction,
+    <insert id="insert" parameterType="com.web.pojo.FollowOrderClient" useGeneratedKeys="true" keyProperty="id">
+    insert into follow_order_client (follow_order_id, user_code,platform_code, follow_direction,
       hand_number_type, follow_hand_number, update_date,update_by_user,create_date,create_user,
       version)
-    values (#{followOrderId}, #{userCode},#{userName} #{followDirection},
+    values (#{followOrderId}, #{userCode},#{platformCode}, #{followDirection},
       #{handNumberType}, #{followHandNumber}, #{updateDate}, #{updateByUser} ,#{createDate},#{createUser},
      #{version})
   </insert>
-  <update id="updateByPrimaryKey" parameterType="com.web.pojo.FollowOrderClient" >
-    update follow_order_client
-    <set>
-      <if test="followOrderId != null ">
-        follow_order_id = #{followOrderId},
-      </if>
-      <if test="userCode != null ">
-        user_code = #{userCode},
-      </if>
-      <if test="userName != null ">
-        user_name = #{userName},
-      </if>
-      <if test="followDirection != null ">
-        follow_direction = #{followDirection},
-      </if>
-      <if test="handNumberType != null ">
-        hand_number_type = #{handNumberType},
-      </if>
-      <if test="followHandNumber != null ">
-        follow_hand_number = #{followHandNumber},
-      </if>
-      <if test="updateDate != null ">
-        update_date = #{updateDate},
-      </if>
-      <if test="updateByUser != null ">
-        update_by_user = #{updateByUser},
-      </if>
-      <if test="createDate != null ">
-        create_date = #{createDate},
-      </if>
-      <if test="createUser != null ">
-        create_user = #{createUser},
-      </if>
-      <if test="version != null ">
-        version = #{version} + 1,
-      </if>
+    <update id="updateByPrimaryKey" parameterType="com.web.pojo.FollowOrderClient">
+        update follow_order_client
+        <set>
+            <if test="followOrderId != null ">
+                follow_order_id = #{followOrderId},
+            </if>
+            <if test="userCode != null ">
+                user_code = #{userCode},
+            </if>
+            <if test="platformCode != null ">
+                platform_code = #{platformCode},
+            </if>
+            <if test="followDirection != null ">
+                follow_direction = #{followDirection},
+            </if>
+            <if test="handNumberType != null ">
+                hand_number_type = #{handNumberType},
+            </if>
+            <if test="followHandNumber != null ">
+                follow_hand_number = #{followHandNumber},
+            </if>
+            <if test="updateDate != null ">
+                update_date = #{updateDate},
+            </if>
+            <if test="updateByUser != null ">
+                update_by_user = #{updateByUser},
+            </if>
+            <if test="createDate != null ">
+                create_date = #{createDate},
+            </if>
+            <if test="createUser != null ">
+                create_user = #{createUser},
+            </if>
+            <if test="version != null ">
+                version = #{version} + 1,
+            </if>
 
-    </set>
+        </set>
 
-    where id = #{id} and version = #{version}
-  </update>
-  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
-    select
-    <include refid="base_List"/>
-    from follow_order_client
-    where id = #{id}
-  </select>
-  <select id="selectAll" resultMap="BaseResultMap" >
-    select
-    <include refid="base_List"/>
-    from follow_order_client
-  </select>
+        where id = #{id} and version = #{version}
+    </update>
+    <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long">
+        select
+        <include refid="base_List"/>
+        from follow_order_client
+        where id = #{id}
+    </select>
+    <select id="selectAll" resultMap="BaseResultMap">
+        select
+        <include refid="base_List"/>
+        from follow_order_client
+    </select>
 
     <select id="getListByFollowOrderId" resultMap="BaseResultMap">
-      select
-      <include refid="base_List"/>
-      from follow_order_client
-      where follow_order_id =#{followOrderId}
+        select
+        <include refid="base_List"/>
+        from follow_order_client
+        where follow_order_id =#{followOrderId}
     </select>
-  <select id="getListUserCodeByFollowOrderId" resultType="java.lang.String">
-    select
-    user_code
-    from follow_order_client
-    where follow_order_id =#{followOrderId}
-  </select>
+
     <select id="findListFollowOrderIDsByUserCode" resultType="java.lang.Long">
       select
       follow_order_id
       from follow_order_client
-      where user_code =#{userCode}
+      where user_code =#{userCode} and platformCode = #{platformCode}
     </select>
-  <select id="findClientByIdAndName" resultMap="BaseResultMap">
+    <select id="findClientByIdAndName" resultMap="BaseResultMap">
+        select
+        <include refid="base_List"/>
+        from follow_order_client
+        where user_code =#{userCode} and follow_order_id =#{followOrderId}
+    </select>
+    <select id="getListUserCodeByFollowOrderId" resultType="java.lang.String">
       select
-      <include refid="base_List"/>
-      from follow_order_client
-      where user_code =#{userCode} and follow_order_id =#{followOrderId}
+    user_code
+    from follow_order_client
+    where follow_order_id =#{followOrderId}
   </select>
+    <select id="getByUserCodeAndPlatformCode" resultMap="BaseResultMap">
+        select
+        <include refid="base_List"/>
+        from follow_order_client
+        where user_code =#{userCode} and platformCode = #{platformCode} and followOrderId =#{followOrderId}
+    </select>
 
 
-  <sql id="base_List">
+    <sql id="base_List">
     id,
     follow_order_id,
     user_code,
-    user_name,
+    platform_code,
     follow_direction,
     hand_number_type,
     follow_hand_number,
