@@ -1,6 +1,6 @@
 package com.web.controller;
 
-import com.web.pojo.vo.FollowOrderClientParamVo;
+import com.web.pojo.vo.followOrder.FollowOrderClientParamVo;
 import com.web.service.FollowOrderClientService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -28,10 +28,10 @@ public class FollowOrderClientController {
     /*
     * 返回该跟单下的客户编号
     * */
-    @RequestMapping("/findListUserCode.Action")
+    @RequestMapping("/findListUserName.Action")
     @ResponseBody
-    public List<String> findListUserCode(Long followOrderId){
-        return followOrderClientService.getListUserCodeByFollowOrderId(followOrderId);
+    public List<String> findListUserName(Long followOrderId){
+        return followOrderClientService.getListUserNameByFollowOrderId(followOrderId);
     }
 
 

@@ -1,8 +1,8 @@
 package com.web.service;
 
 import com.web.pojo.FollowOrderTradeRecord;
-import com.web.pojo.vo.FollowOrderVo;
-import com.web.pojo.vo.NetPositionDetailVo;
+import com.web.pojo.vo.followOrder.FollowOrderVo;
+import com.web.pojo.vo.followOrder.NetPositionDetailVo;
 import com.web.pojo.vo.OrderMsgResult;
 
 import java.util.List;

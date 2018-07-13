@@ -152,8 +152,17 @@ function orderTableShow(url){
         },
         success: function (data) {
 
-            showByOrderId(tableOrderId, method, unique_Id, sortOrder, columns,data.followOrderVoList);
+            if(data.followOrderVoList == null ){
+                $(tableOrderId).bootstrapTable({load:data.followOrderVoList,
+                    columns:columns,
+                    formatLoadingMessage: function(){
+                        return "";
+                    }
+                });
+            }else {
 
+                showByOrderId(tableOrderId, method, unique_Id, sortOrder, columns,data.followOrderVoList);
+            }
             $("#history_close_position").html(data.historyHandNumber + "/" + data.historyProfit);
             if (data.holdPositionHandNumber == null) {
                 $("#hold_position").html(0 + "/" + 0);
@@ -357,7 +366,7 @@ function orderByParameter(num) {
         },
         success: function (data) {
             console.log(data);
-            if(data.followOrderVoList == null){
+            if(data.followOrderVoList == null ){
                 $(tableOrderId).bootstrapTable({load:data.followOrderVoList,
                     columns:columns,
                     formatLoadingMessage: function(){
@@ -365,6 +374,7 @@ function orderByParameter(num) {
                     }
                 });
             }else {
+
                 showByOrderId(tableOrderId, method, unique_Id, sortOrder, columns,data.followOrderVoList);
             }
 

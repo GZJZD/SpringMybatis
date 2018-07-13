@@ -13,4 +13,6 @@ public interface ContractInfoDao {
     ContractInfo getContractInfoById(Long id);
     void save (ContractInfo contractInfo);
     void updateContractInfo(ContractInfo contractInfo);
+
+    ContractInfo  findVarietyByContractCode(String contractCode);
 }

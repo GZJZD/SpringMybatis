@@ -219,7 +219,7 @@ function clientTableShow(id, manager, name) {
             field: 'netPositionSum',
             title: '净头寸'
         }, {
-            field: 'clientName',
+            field: 'userName',
             title: '客户名'
         }, {
             field: 'varietyName',
@@ -609,10 +609,12 @@ function findByOrderUserClient() {
 * */
 function findByClientName(followOrderId) {
     $.ajax({
-        url: url_ + "/followOrderClient/findListUserCode.Action?followOrderId=" + followOrderId,
-        type: 'GET', //GET
+        url: url_ + "/followOrderClient/findListUserName.Action",
+        type: 'post', //GET
         async: true,    //或false,是否异步
-        data: {},
+        data: {
+            followOrderId:followOrderId
+        },
         timeout: 5000,    //超时时间
         dataType: 'json',    //返回的数据格式：json/xml/html/script/jsonp/text
         beforeSend: function (xhr) {

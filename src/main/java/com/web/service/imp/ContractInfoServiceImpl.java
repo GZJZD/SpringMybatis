@@ -31,7 +31,12 @@ public class ContractInfoServiceImpl implements ContractInfoService {
         return contractInfoDao.getContractInfoById(id);
     }
 
-	@Override
+    @Override
+    public ContractInfo findVarietyByContractCode(String contractCode) {
+        return contractInfoDao.findVarietyByContractCode(contractCode);
+    }
+
+    @Override
 	public void save(ContractInfo contractInfo) {
 		contractInfoDao.save(contractInfo);
 	}

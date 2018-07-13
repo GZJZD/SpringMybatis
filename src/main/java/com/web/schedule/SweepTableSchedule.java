@@ -43,8 +43,8 @@ public class SweepTableSchedule {
     //每3秒： */3 * * * * ?
     @Scheduled(cron = "* 0/7 * * * ?")
     public void doSweepTable(){
+//        log.debug("定时器执行");
         List<FollowOrder> followOrder = followOrderService.getNOStopFollowOrder();
-        System.out.println(11111);
         CommunicatorConfig cfg = new CommunicatorConfig();
         Communicator communicator = CommunicatorFactory.getInstance().getCommunicator(cfg);
         TraderServantPrx proxy = communicator.stringToProxy(TraderServantPrx.class, "TestApp.HelloServer.HelloTrade@tcp -h 192.168.3.189 -p 50506 -t 60000");
