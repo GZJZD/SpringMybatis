@@ -232,9 +232,51 @@ public class OrderUserServiceImpl implements OrderUserService {
         double total_gain_and_loss = DoubleUtil.Double_val;//客户总盈亏
         double total_commission = DoubleUtil.Double_val; //总手续费
         double total_profit_loss_than = DoubleUtil.Double_val; //总盈亏效率
-        int size = orderUserlist.size();
 
-        for (int i = 0; i < size; i++) {
+        for (int i = 0; i < orderUserlist.size(); i++) {
+
+            OrderUserVo orderUserVo1 = new OrderUserVo();
+
+            if (orderUserlist.size() != 0) {
+
+                OrderUser orderUser = orderUserlist.get(i);
+                PlatFromUsers platFromUsers = getPlatFromUser(orderUser);
+                for (int o =(i+1); o < orderUserlist.size(); o++ ){
+                    OrderUser orderUser1 = orderUserlist.get(o);
+                    if (orderUser1.getUserCode().equals(orderUser.getUserCode()) ){
+                        System.out.println(orderUser.getUserCode());
+                        orderUserlist.remove(o);
+                        System.out.println(o);
+                    }
+
+
+                }
+                if (platFromUsers == null) {
+                    orderUserVo1.setUserName("-");//用户名称
+                } else {
+                    orderUserVo1.setUserName(platFromUsers.getNAME());//用户名称
+                }
+                orderUserVo1.setUserCode(orderUser.getUserCode()); //客户
+                list.add(orderUserVo1);
+            }
+        }
+        orderUserListVo.setListVo(list);
+        return orderUserListVo;
+    }
+
+
+
+    public OrderUserListVo countOrderUser_old(OrderUserVo orderUserVo) {
+        List<OrderUserVo> list = new ArrayList<>();
+        List<OrderUser> orderUserlist = orderUserDao.countOrderUser(orderUserVo);
+        OrderUserListVo orderUserListVo = new OrderUserListVo();
+        double total_Position_gain_and_loss = DoubleUtil.Double_val; //总持仓盈亏
+        double total_gain_and_loss = DoubleUtil.Double_val;//客户总盈亏
+        double total_commission = DoubleUtil.Double_val; //总手续费
+        double total_profit_loss_than = DoubleUtil.Double_val; //总盈亏效率
+
+
+        for (int i = 0; i < orderUserlist.size(); i++) {
             if (orderUserlist.size() != 0) {
                 OrderUser orderUser = orderUserlist.get(0);
                 OrderUserVo orderUserVo1 = new OrderUserVo();
@@ -264,7 +306,7 @@ public class OrderUserServiceImpl implements OrderUserService {
                 SimpleDateFormat sdf = new SimpleDateFormat(DateUtil.DATE_YYYY_MM_DD_HH_MM_SS);
                 Date recentlyTime = null;//最近下单时间
 
-                for (int o = 0; o < size; o++) {
+                for (int o = 0; o < orderUserlist.size(); o++) {
                     if (orderUserlist.size() != 0) {
 
                         OrderUser orderUser1 = orderUserlist.get(0);
@@ -339,7 +381,7 @@ public class OrderUserServiceImpl implements OrderUserService {
                     orderUserVo1.setUserName(platFromUsers.getNAME());//用户名称
                 }
 
-//            orderUserVo1.setRecentlyTime(DateUtil.longToStrDate(recentlyTime.getTime()));//最近下单时间
+               orderUserVo1.setRecentlyTime(DateUtil.longToStrDate(recentlyTime.getTime()));//最近下单时间
                 orderUserVo1.setUserCode(orderUser.getUserCode()); //客户
                 orderUserVo1.setHandNumber(handNumber);//持仓手数
                 orderUserVo1.setPosition_gain_and_loss(position_gain_and_loss);//持仓盈亏
