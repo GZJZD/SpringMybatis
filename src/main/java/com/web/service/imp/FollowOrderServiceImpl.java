@@ -91,7 +91,7 @@ public class FollowOrderServiceImpl implements FollowOrderService {
         //通过客户的名字找到对应的客户id,
         List<Long> followOrderIds = followOrderClientService.getListByUserCodeAndPlatformCode(dataSource.getLogin(),dataSource.getPlatformName());
         List<FollowOrder> followOrderList;
-        if (followOrderIds.size() != 0) {
+        if (followOrderIds.size() != 0&& contractInfo!=null) {
             //然后逐个找到符合的跟单,并且状态为启动
             followOrderList = followOrderDao.findFollowOrderStart(followOrderIds,contractInfo.getVariety().getId());
             return followOrderList;
@@ -192,6 +192,7 @@ public class FollowOrderServiceImpl implements FollowOrderService {
         if (followOrders.size() != 0) {
             for (FollowOrder followOrder : followOrders) {
                 FollowOrderVo followOrderVo = new FollowOrderVo();
+                followOrderVo.setFollowOrder(followOrder);
                 Integer openHandNum = 0;
                 Integer successCount = 0;
                 List<FollowOrderDetail> detailList = followOrderDetailService.getDetailListByFollowOrderId(followOrder.getId(), null, null, null);
@@ -269,8 +270,6 @@ public class FollowOrderServiceImpl implements FollowOrderService {
                 }
                 //detail 循环结束
 
-
-                followOrderVo.setFollowOrder(followOrder);
                 //设置累计盈亏
                 followOrderVo.setGainAndLossTotal(DoubleUtil.add(followOrderVo.getPositionGainAndLoss(),followOrderVo.getOffsetGainAndLoss()));
                //平仓手数
@@ -819,14 +818,13 @@ public class FollowOrderServiceImpl implements FollowOrderService {
                                 handNumber += item.volume;
                             }
                             log.debug("平仓交易数据详情" + WebJsion.toJson(rsp.tradeArrayItems));
-                            //获取平均值
-                            closePrice = DoubleUtil.div(closePrice, Double.valueOf(handNumber), 2);
-                            //交易价格
-                            closeResult.setTradePrice(closePrice);
+                            //交易价格:平均值
+                            closeResult.setTradePrice(DoubleUtil.div(closePrice, Double.valueOf(handNumber), 2));
 
                             ContractInfoLink link = contractInfoLinkService.getContractInfoLinkByInfoId(info.getId());
                             //手续费：手数* （开仓/平仓手续费 + 成交价 * 开仓/平仓手续费率）
                             closeResult.setTradeCommission(DoubleUtil.add(link.getOpenRatioByVolume(), DoubleUtil.mul(closePrice, link.getOpenRatioByMoney())));
+                            closeResult.setTradeCommission(DoubleUtil.div(closeResult.getTradeCommission(),1,2));
                             log.debug("平仓ContractInfoLinkId:" + WebJsion.toJson(info.getId()));
 
                             closeResult.setTradeDate(rsp.tradeArrayItems.get(rsp.tradeArrayItems.size() - 1).tradeDate);//交易日期：20180512
@@ -909,7 +907,6 @@ public class FollowOrderServiceImpl implements FollowOrderService {
 
                     @Override
                     public void callback_orderOpen(int ret, orderOpenResponse rsp) {
-                        System.out.println(2222);
                         if (ret == 0 && rsp.errcode == 0) {
                             OrderMsgResult openResult = new OrderMsgResult();
                             openResult.setRequestId(rsp.requestId);//交易记录id
@@ -923,7 +920,7 @@ public class FollowOrderServiceImpl implements FollowOrderService {
                             }
                             log.debug("开仓交易数据详情:" + WebJsion.toJson(rsp));
                             //设置交易价格
-                            openResult.setTradePrice(DoubleUtil.div(openPrice, Double.valueOf(handNumber), 2));
+                            openResult.setTradePrice(DoubleUtil.div(openPrice,handNumber, 2));
                             //手续费：手数* （开仓/平仓手续费 + 成交价 * 开仓/平仓手续费率）
                             ContractInfoLink link = contractInfoLinkService.getContractInfoLinkByInfoId(info.getId());
                             openResult.setTradeCommission(DoubleUtil.add(link.getOpenRatioByVolume(), DoubleUtil.mul(openPrice, link.getOpenRatioByMoney())));
