@@ -36,7 +36,7 @@ public interface FollowOrderDetailDao {
 
 
 
-    List<FollowOrderDetail> getFollowOrderDetailByUserCode(@Param("followOrderId") Long followOrderId, @Param("endTime") String endTime, @Param("startTime") String startTime, @Param("clientName") String clientName);
+    List<FollowOrderDetail> getFollowOrderDetailByUserCode(@Param("followOrderId") Long followOrderId, @Param("endTime") String endTime, @Param("startTime") String startTime, @Param("followOrderClientId") Long followOrderClientId);
 
     FollowOrderVo getAccountCountAndOffsetGainAndLossBYAccountId(Long accountId);
 

@@ -38,7 +38,7 @@ var columns = [
         field: 'tradeDirection',
         title: '方向',
         formatter: function (value, row, index) {
-            if (value == "1") {
+            if (value == 1) {
                 return "空";
             } else {
                 return "多";
@@ -143,7 +143,14 @@ function detailShow(varietyName, name, manager, id, orderNum, offsetGainAndLoss,
                 }
             }, {
                 field: 'handNumber',
-                title: '手数'
+                title: '手数',
+                formatter: function (value, row, index) {
+                    if(row.originalHandNumber==value){
+                        return value;
+                    }else {
+                        return value+"("+row.originalHandNumber+")";
+                    }
+                }
             }, {
                 field: 'openPrice',
                 title: '开仓价'

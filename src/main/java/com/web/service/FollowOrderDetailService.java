@@ -15,14 +15,14 @@ public interface FollowOrderDetailService {
 
     void save(FollowOrderDetail followOrderDetail);
 
-   /*  
-    *    
-    * 客户平仓，通过开仓单号找到对应的明细
-    * @author may  
-    * @date 2018/5/25 14:37  
-    * @param   
-    * @return   
-    */  
+    /*
+     *
+     * 客户平仓，通过开仓单号找到对应的明细
+     * @author may
+     * @date 2018/5/25 14:37
+     * @param
+     * @return
+     */
     FollowOrderDetail getFollowOrderDetailByTicket(String ticket, Long followOrderId);
 
     FollowOrderDetail getFollowOrderDetail(Long id);
@@ -49,14 +49,14 @@ public interface FollowOrderDetailService {
 
 
 
-   /*
-    *
-    *   获取未平的所有明细
-    * @author may
-    * @date 2018/6/5 18:29
-    * @param
-    * @return
-    */
+    /*
+     *
+     *   获取未平的所有明细
+     * @author may
+     * @date 2018/6/5 18:29
+     * @param
+     * @return
+     */
     List<FollowOrderDetail> getNOCloseDetailListByFollowOrderId(Long followOrderId);
 
 
@@ -67,6 +67,6 @@ public interface FollowOrderDetailService {
 
     void createDetail(FollowOrderTradeRecord followOrderTradeRecord, OrderMsgResult orderMsgResult);
 
-    List<FollowOrderDetail> getFollowOrderDetailByUserCode(Long followOrderId, String endTime, String startTime, String clientName);
+    List<FollowOrderDetail> getFollowOrderDetailByUserCode(Long followOrderId, String endTime, String startTime, Long followOrderClientId);
     FollowOrderVo getAccountCountAndOffsetGainAndLossBYAccountId(Long accountId);
 }

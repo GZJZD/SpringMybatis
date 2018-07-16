@@ -4,6 +4,7 @@ import com.web.common.FollowOrderEnum;
 import com.web.dao.FollowOrderDetailDao;
 import com.web.database.OrderHongKongService;
 
+import com.web.database.entity.PlatFromUsers;
 import com.web.pojo.*;
 
 import com.web.pojo.vo.followOrder.FollowOrderVo;
@@ -20,6 +21,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -89,12 +91,27 @@ public class FollowOrderDetailServiceImpl implements FollowOrderDetailService {
                 return findNetPositionDetail(orderDetailList, followOrder);
             } else {
                 //客户
+
                 for (FollowOrderDetail followOrderDetail : orderDetailList) {
+                    Map<String,Object> clientDetail = new HashMap<>();
+                    clientDetail .put("id",followOrderDetail.getId());
+                    clientDetail .put("contractCode",followOrderDetail.getContractCode());
+                    clientDetail .put("tradeDirection",followOrderDetail.getTradeDirection());
+                    clientDetail .put("handNumber",followOrderDetail.getHandNumber());
+                    clientDetail .put("originalHandNumber",followOrderDetail.getOriginalHandNumber());
+
+                    clientDetail .put("followOrderTradeRecordId",followOrderDetail.getFollowOrderTradeRecordId());
+                    clientDetail .put("followOrderClientId",followOrderDetail.getFollowOrderClientId());
+                    clientDetail .put("openPrice",followOrderDetail.getOpenPrice());
+                    clientDetail .put("poundage",followOrderDetail.getPoundage());
+                    clientDetail .put("clientProfit",followOrderDetail.getClosePrice());
+                    clientDetail .put("followOrderId",followOrderDetail.getFollowOrderId());
                     if (followOrderDetail.getOpenTime() != null) {
-                        followOrderDetail.setOpenTime(DateUtil.strToStr(followOrderDetail.getOpenTime()));
+                        clientDetail .put("openTime",DateUtil.strToStr(followOrderDetail.getOpenTime()));
                     }
                     if (followOrderDetail.getCloseTime() != null) {
-                        followOrderDetail.setCloseTime(DateUtil.strToStr(followOrderDetail.getCloseTime()));
+                        clientDetail .put("closeTime",DateUtil.strToStr(followOrderDetail.getCloseTime()));
+                        clientDetail .put("closePrice",followOrderDetail.getClosePrice());
                     }
                     if (followOrderDetail.getCloseTime() == null) {
                         Map<String, Double> askAndBid = SweepTableSchedule.getAskAndBidByFollowOrderId(followOrderId);
@@ -115,6 +132,7 @@ public class FollowOrderDetailServiceImpl implements FollowOrderDetailService {
 
                             followOrderDetail.setProfitLoss(0.0);
                         }
+                        clientDetail .put("profitLoss",followOrderDetail.getProfitLoss());
                     }
                 }
                 return orderDetailList;
@@ -166,6 +184,16 @@ public class FollowOrderDetailServiceImpl implements FollowOrderDetailService {
             netPositionDetailVo.setDetailId(followOrderDetail.getId());
             //设置盈亏
             netPositionDetailVo.setProfit(followOrderDetail.getProfitLoss());
+            FollowOrderClient followOrderClient = followOrderClientService.getFollowOrderClient(followOrderDetail.getFollowOrderClientId());
+            PlatFromUsers users;
+            if(followOrderClient.getPlatformCode().equals("orders75")){
+                users = orderHongKongService.getUser75(followOrderClient.getUserCode());
+            }else {
+                users = orderHongKongService.getUser76(followOrderClient.getUserCode());
+            }
+            if(users!=null){
+                netPositionDetailVo.setUserName(users.getNAME());
+            }
             //剩下得手数
             if (netPositionDetailVo.getRemainHandNumber()!=null&&netPositionDetailVo.getRemainHandNumber() != 0) {
                 Map<String, Double> askAndBid = SweepTableSchedule.getAskAndBidByFollowOrderId(followOrder.getId());
@@ -174,6 +202,7 @@ public class FollowOrderDetailServiceImpl implements FollowOrderDetailService {
                     if (tradeRecord.getTradeDirection().equals(FollowOrderEnum.FollowStatus.BUY.getIndex())) {
                         //交易方向为多，查询：卖出价（ask）
                         netPositionDetailVo.setProfit(DoubleUtil.mul(DoubleUtil.sub(askAndBid.get("ask"), netPositionDetailVo.getMarketPrice()), netPositionDetailVo.getRemainHandNumber()));
+                        log.debug(netPositionDetailVo.getDetailId()+"L明细盈亏:"+netPositionDetailVo.getProfit()+",ask:"+askAndBid.get("ask"));
 
                     } else {
                         //交易方向为空，查询：买入价（bid）
@@ -381,10 +410,11 @@ public class FollowOrderDetailServiceImpl implements FollowOrderDetailService {
      */
     public void createDetail(FollowOrderTradeRecord followOrderTradeRecord, OrderMsgResult orderMsgResult) {
         FollowOrderDetail orderDetail = new FollowOrderDetail();
+        FollowOrder followOrder = followOrderService.getFollowOrder(followOrderTradeRecord.getFollowOrderId());
         //判断跟单方向
         if (followOrderTradeRecord != null) {
             if (followOrderTradeRecord.getOpenCloseType().equals(FollowOrderEnum.FollowStatus.CLOSE.getIndex())) {
-                if (followOrderTradeRecord.getClientNetPositionId() == null) {
+                if (!followOrder.getFollowManner().equals(FollowOrderEnum.FollowStatus.FOLLOWMANNER_NET_POSITION.getIndex())) {
                     //客户平仓
                     createClientCloseDetail(followOrderTradeRecord, orderMsgResult);
                 } else {
@@ -410,8 +440,8 @@ public class FollowOrderDetailServiceImpl implements FollowOrderDetailService {
      * 查客户的所有明细详情
      * */
     @Override
-    public List<FollowOrderDetail> getFollowOrderDetailByUserCode(Long followOrderId, String endTime, String startTime, String clientName) {
-        return followOrderDetailDao.getFollowOrderDetailByUserCode(followOrderId, endTime, startTime, clientName);
+    public List<FollowOrderDetail> getFollowOrderDetailByUserCode(Long followOrderId, String endTime, String startTime, Long followOrderClientId) {
+        return followOrderDetailDao.getFollowOrderDetailByUserCode(followOrderId, endTime, startTime, followOrderClientId);
     }
 
     /*

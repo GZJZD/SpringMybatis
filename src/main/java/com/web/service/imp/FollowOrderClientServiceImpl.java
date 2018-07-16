@@ -85,9 +85,9 @@ public class FollowOrderClientServiceImpl implements FollowOrderClientService {
     }
 
     /*
-    * 通过跟单id，返回跟单编辑中的客户列表
-    * param 跟单id
-    * */
+     * 通过跟单id，返回跟单编辑中的客户列表
+     * param 跟单id
+     * */
     @Override
     public List<FollowOrderClientParamVo> getListFollowOrderClientParamVo(Long followOrderId) {
         List<FollowOrderClient> followOrderClients = getListByFollowOrderId(followOrderId);
@@ -96,12 +96,12 @@ public class FollowOrderClientServiceImpl implements FollowOrderClientService {
         ContractInfo info = contractInfoService.getInfoByVarietyIdAndPlatformId(followOrder.getVariety().getId(), 2L);
         for (FollowOrderClient followOrderClient : followOrderClients) {
             FollowOrderClientParamVo followOrderClientParamVo = new FollowOrderClientParamVo();
-            OrderUserDetailsVo userDetails = orderUserService.getOrderUserCount(followOrderClient.getUserCode(),
+            OrderUserDetailsVo orderUserCount = orderUserService.getOrderUserCount(followOrderClient.getUserCode(),
                     info.getContractCode());
             followOrderClientParamVo.setUserCode(followOrderClient.getUserCode());//用户编号
             followOrderClientParamVo.setUserName("向日葵");//用户姓名
-            followOrderClientParamVo.setOffset_gain_and_loss(userDetails.getOffset_gain_and_loss());//平仓盈亏
-            followOrderClientParamVo.setProfit_loss_than(userDetails.getPosition_gain_and_loss());//持仓盈亏
+            followOrderClientParamVo.setOffset_gain_and_loss(orderUserCount.getOffset_gain_and_loss());//平仓盈亏
+            followOrderClientParamVo.setProfit_loss_than(orderUserCount.getPosition_gain_and_loss());//持仓盈亏
             followOrderClientParamVo.setFollowDirection(followOrderClient.getFollowDirection());//跟单方向
             followOrderClientParamVo.setHandNumber(followOrderClient.getFollowHandNumber());//跟单手数
             followOrderClientParamVo.setHandNumberType(followOrderClient.getHandNumberType());//跟单类型
@@ -111,13 +111,18 @@ public class FollowOrderClientServiceImpl implements FollowOrderClientService {
     }
 
     /*
-    *
-    * 找到对应跟单id的客户跟单数据
-    * @param userCode:客户编号
-    * */
+     *
+     * 找到对应跟单id的客户跟单数据
+     * @param userCode:客户编号
+     * */
     @Override
     public FollowOrderClient findClientByIdAndName(Long followOrderId, String userCode) {
         return followOrderClientDao.findClientByIdAndName(followOrderId,userCode);
+    }
+
+    @Override
+    public FollowOrderClient getFollowOrderClient(Long followOrderClientId) {
+        return followOrderClientDao.getFollowOrderClient(followOrderClientId);
     }
 
     @Override
@@ -132,7 +137,12 @@ public class FollowOrderClientServiceImpl implements FollowOrderClientService {
             }else {
                 users = orderHongKongService.getUser76(orderClient.getUserCode());
             }
-            userName.add(users.getNAME());
+            if(users == null){
+
+                userName.add(orderClient.getUserCode());
+            }else {
+                userName.add(users.getNAME());
+            }
         }
         return userName;
     }

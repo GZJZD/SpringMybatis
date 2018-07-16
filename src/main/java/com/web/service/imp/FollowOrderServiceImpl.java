@@ -223,12 +223,14 @@ public class FollowOrderServiceImpl implements FollowOrderService {
                                     // 卖出价（逸富）-开仓价（detail）
                                     followOrderVo.setPositionGainAndLoss(DoubleUtil.add(followOrderVo.getPositionGainAndLoss(),
                                             DoubleUtil.mul(DoubleUtil.sub(askAndBid.get("ask"), detail.getOpenPrice()), detailOpenHandNum))) ;
+                                    log.debug(followOrderVo.getFollowOrder().getId()+"L盈亏:"+followOrderVo.getPositionGainAndLoss()+"ask:"+askAndBid.get("ask"));
 
                                 } else {
                                     //交易方向为空，查询：买入价（bid）
                                     //开仓价（detail）-买入价（逸富）
                                     followOrderVo.setPositionGainAndLoss(DoubleUtil.add(followOrderVo.getPositionGainAndLoss(),
                                             DoubleUtil.mul(DoubleUtil.sub(detail.getOpenPrice(), askAndBid.get("bid")), detailOpenHandNum)));
+                                    log.debug(followOrderVo.getFollowOrder().getId()+"L盈亏:"+followOrderVo.getPositionGainAndLoss()+"bid:"+askAndBid.get("bid"));
 
                                 }
                             } else {
@@ -456,13 +458,7 @@ public class FollowOrderServiceImpl implements FollowOrderService {
                     }
                 }
             }
-            FollowOrder followOrder1 = this.getFollowOrder(followOrder.getId());
-            followOrder.setVersion(followOrder1.getVersion());
-            //修改策略
-            this.updateFollowOrder(followOrder);
-            log.debug("净头寸跟单修改后：followOrderName{},netPositionChange{},netPositionDirection{},netPositionFollowNumber{},netPositionHoldNumber{},netPositionStatus{},netPositionSum{}," +
-                    followOrder.getFollowOrderName() + "," + followOrder.getNetPositionChange() + "," + followOrder.getNetPositionFollowNumber() + "," + followOrder.getNetPositionHoldNumber() + ","
-                    + followOrder.getNetPositionStatus() + "," + followOrder.getNetPositionSum());
+
         }
     }
 
@@ -472,7 +468,8 @@ public class FollowOrderServiceImpl implements FollowOrderService {
     public void followUserOrder(FollowOrder followOrder, DataSource data) {
         log.debug("跟每单跟单：followOrderName{}," + followOrder.getFollowOrderName());
         //跟客户的策略判断
-        FollowOrderClient followOrderClient = followOrderClientService.findClientByIdAndName(followOrder.getId(), data.getLogin());
+        log.debug("userCode:"+data.getLogin()+",PlatformName:"+data.getPlatformName()+",followOrderId:"+followOrder.getId());
+      FollowOrderClient followOrderClient = followOrderClientService.getByUserCodeAndPlatformCode(data.getLogin(),data.getPlatformName(),followOrder.getId());
         //判断手数类型：按比例=比例数*客户的手数
         Double handNumber = followOrderClient.getHandNumberType().equals(FollowOrderEnum.FollowStatus.CLIENT_HAND_NUMBER_TYPE.getIndex()) ?
                 followOrderClient.getFollowHandNumber() : DoubleUtil.mul(Double.valueOf(followOrderClient.getFollowHandNumber()), data.getHandNumber());
@@ -557,10 +554,12 @@ public class FollowOrderServiceImpl implements FollowOrderService {
                 proxy.async_userLogin(new TraderServantPrxCallback() {
                     @Override
                     public void callback_expired() {
+                        System.out.println(11111);
                     }
 
                     @Override
                     public void callback_exception(Throwable ex) {
+                        System.out.println(2222);
                     }
 
                     @Override
@@ -716,6 +715,14 @@ public class FollowOrderServiceImpl implements FollowOrderService {
      */
     public void sendMsgByTrade(FollowOrder followOrder, Integer orderDirection, Integer openClose,
                                Integer handNumber, String newTicket, String ticket, Long clientNetPositionId) {
+
+        FollowOrder followOrder1 = this.getFollowOrder(followOrder.getId());
+        followOrder.setVersion(followOrder1.getVersion());
+        //修改策略
+        this.updateFollowOrder(followOrder);
+        log.debug("净头寸跟单修改后：followOrderName{},netPositionChange{},netPositionDirection{},netPositionFollowNumber{},netPositionHoldNumber{},netPositionStatus{},netPositionSum{}," +
+                followOrder.getFollowOrderName() + "," + followOrder.getNetPositionChange() + "," + followOrder.getNetPositionFollowNumber() + "," + followOrder.getNetPositionHoldNumber() + ","
+                + followOrder.getNetPositionStatus() + "," + followOrder.getNetPositionSum());
 
         FollowOrderTradeRecord followOrderTradeRecord = new FollowOrderTradeRecord();
         //设置新开仓单号
@@ -882,11 +889,13 @@ public class FollowOrderServiceImpl implements FollowOrderService {
                 proxy.async_orderOpen(new TraderServantPrxCallback() {
                     @Override
                     public void callback_expired() {
-
+                        System.out.println("超时");
                     }
 
                     @Override
                     public void callback_exception(Throwable ex) {
+
+                        log.debug("异常："+ex.getMessage());
                     }
 
                     @Override
@@ -900,6 +909,7 @@ public class FollowOrderServiceImpl implements FollowOrderService {
 
                     @Override
                     public void callback_orderOpen(int ret, orderOpenResponse rsp) {
+                        System.out.println(2222);
                         if (ret == 0 && rsp.errcode == 0) {
                             OrderMsgResult openResult = new OrderMsgResult();
                             openResult.setRequestId(rsp.requestId);//交易记录id
@@ -981,9 +991,20 @@ public class FollowOrderServiceImpl implements FollowOrderService {
             Integer direction = orderDetail.getTradeDirection() == FollowOrderEnum.FollowStatus.BUY.getIndex() ?
                     FollowOrderEnum.FollowStatus.SELL.getIndex() : FollowOrderEnum.FollowStatus.BUY.getIndex();
 
-            this.sendMsgByTrade(followOrder, direction, FollowOrderEnum.FollowStatus.CLOSE.getIndex(),
-                    orderDetail.getRemainHandNumber(), orderDetail.getTicket(),
-                    orderDetail.getTicket(),  null);
+
+            if(followOrder.getFollowManner().equals(FollowOrderEnum.FollowStatus.FOLLOWMANNER_NET_POSITION.getIndex())){
+                //净头寸
+                //发送交易信息
+
+                this.sendMsgByTrade(followOrder, direction, FollowOrderEnum.FollowStatus.CLOSE.getIndex(),
+                        orderDetail.getRemainHandNumber(), orderDetail.getTicket(),
+                        orderDetail.getTicket(), null);
+            }else{
+
+                this.sendMsgByTrade(followOrder, direction, FollowOrderEnum.FollowStatus.CLOSE.getIndex(),
+                        orderDetail.getHandNumber(), orderDetail.getTicket(),
+                        orderDetail.getTicket(), null);
+            }
         }
     }
 
@@ -1004,10 +1025,23 @@ public class FollowOrderServiceImpl implements FollowOrderService {
         //设置多空方向
         Integer direction = orderDetail.getTradeDirection() == FollowOrderEnum.FollowStatus.BUY.getIndex() ?
                 FollowOrderEnum.FollowStatus.SELL.getIndex() : FollowOrderEnum.FollowStatus.BUY.getIndex();
-        //发送交易信息
-        this.sendMsgByTrade(followOrder, direction, FollowOrderEnum.FollowStatus.CLOSE.getIndex(),
-                orderDetail.getRemainHandNumber(), orderDetail.getTicket(),
-                orderDetail.getTicket(), null);
+        if(followOrder.getFollowManner().equals(FollowOrderEnum.FollowStatus.FOLLOWMANNER_NET_POSITION.getIndex())){
+            //净头寸
+            //发送交易信息
+            if(orderDetail.getRemainHandNumber()==0){
+                return;
+            }
+            this.sendMsgByTrade(followOrder, direction, FollowOrderEnum.FollowStatus.CLOSE.getIndex(),
+                    orderDetail.getRemainHandNumber(), orderDetail.getTicket(),
+                    orderDetail.getTicket(), null);
+        }else{
+            if(orderDetail.getCloseTime()!=null){
+                return;
+            }
+            this.sendMsgByTrade(followOrder, direction, FollowOrderEnum.FollowStatus.CLOSE.getIndex(),
+                    orderDetail.getHandNumber(), orderDetail.getTicket(),
+                    orderDetail.getTicket(), null);
+        }
     }
 
     /*
