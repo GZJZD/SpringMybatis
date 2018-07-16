@@ -7,7 +7,7 @@ import com.web.pojo.ContractInfo;
 import com.web.pojo.FollowOrder;
 import com.web.pojo.FollowOrderClient;
 import com.web.pojo.vo.followOrder.FollowOrderClientParamVo;
-import com.web.pojo.vo.OrderUserDetailsVo;
+import com.web.pojo.vo.orderuser.OrderUserDetailsVo;
 import com.web.service.ContractInfoService;
 import com.web.service.FollowOrderClientService;
 import com.web.service.FollowOrderService;
