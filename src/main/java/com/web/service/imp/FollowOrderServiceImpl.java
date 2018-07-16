@@ -197,6 +197,9 @@ public class FollowOrderServiceImpl implements FollowOrderService {
                 Integer successCount = 0;
                 List<FollowOrderDetail> detailList = followOrderDetailService.getDetailListByFollowOrderId(followOrder.getId(), null, null, null);
                 if(detailList.size()!=0){
+                    Map<String, Double> askAndBid = SweepTableSchedule.getAskAndBidByFollowOrderId(followOrder.getId());
+                    Double ask = askAndBid.get("ask");
+                    Double bid = askAndBid.get("bid");
                     for (FollowOrderDetail detail : detailList) {
                         //累计总手续费
                         followOrderVo.setPoundageTotal(DoubleUtil.add(followOrderVo.getPoundageTotal(), detail.getPoundage()));
@@ -217,21 +220,21 @@ public class FollowOrderServiceImpl implements FollowOrderService {
                                 openHandNum += detail.getHandNumber();
                                 detailOpenHandNum = detail.getHandNumber();
                             }
-                            Map<String, Double> askAndBid = SweepTableSchedule.getAskAndBidByFollowOrderId(followOrder.getId());
+
                             if (askAndBid != null) {
                                 if (detail.getTradeDirection().equals(FollowOrderEnum.FollowStatus.BUY.getIndex())) {
                                     //交易方向为多，查询：卖出价（ask）
                                     // 卖出价（逸富）-开仓价（detail）
                                     followOrderVo.setPositionGainAndLoss(DoubleUtil.add(followOrderVo.getPositionGainAndLoss(),
-                                            DoubleUtil.mul(DoubleUtil.sub(askAndBid.get("ask"), detail.getOpenPrice()), detailOpenHandNum))) ;
-                                    log.debug(followOrderVo.getFollowOrder().getId()+"L盈亏:"+followOrderVo.getPositionGainAndLoss()+"ask:"+askAndBid.get("ask"));
+                                            DoubleUtil.mul(DoubleUtil.sub(ask, detail.getOpenPrice()), detailOpenHandNum))) ;
+                                    log.debug(followOrderVo.getFollowOrder().getId()+"L盈亏:"+followOrderVo.getPositionGainAndLoss()+",ask:"+ask);
 
                                 } else {
                                     //交易方向为空，查询：买入价（bid）
                                     //开仓价（detail）-买入价（逸富）
                                     followOrderVo.setPositionGainAndLoss(DoubleUtil.add(followOrderVo.getPositionGainAndLoss(),
-                                            DoubleUtil.mul(DoubleUtil.sub(detail.getOpenPrice(), askAndBid.get("bid")), detailOpenHandNum)));
-                                    log.debug(followOrderVo.getFollowOrder().getId()+"L盈亏:"+followOrderVo.getPositionGainAndLoss()+"bid:"+askAndBid.get("bid"));
+                                            DoubleUtil.mul(DoubleUtil.sub(detail.getOpenPrice(), bid), detailOpenHandNum)));
+                                    log.debug(followOrderVo.getFollowOrder().getId()+"L盈亏:"+followOrderVo.getPositionGainAndLoss()+",bid:"+bid);
 
                                 }
                             } else {
