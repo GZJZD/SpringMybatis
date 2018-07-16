@@ -5,9 +5,8 @@ import com.web.pojo.DataSource;
 import com.web.pojo.FollowOrder;
 import com.web.pojo.FollowOrderClient;
 import com.web.pojo.FollowOrderTradeRecord;
-import com.web.pojo.vo.FollowOrderPageVo;
-import com.web.pojo.vo.FollowOrderQuery;
-import com.web.pojo.vo.FollowOrderVo;
+import com.web.pojo.vo.followOrder.FollowOrderPageVo;
+import com.web.pojo.vo.followOrder.FollowOrderQuery;
 
 import java.util.List;
 

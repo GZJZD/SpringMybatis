@@ -1,4 +1,4 @@
-package com.web.pojo.vo;
+package com.web.pojo.vo.followOrder;
 
 /*
 * 跟单编辑中客户参数的映射列表

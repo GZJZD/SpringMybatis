@@ -2,7 +2,7 @@ package com.web.dao;
 
 
 import com.web.pojo.FollowOrderTradeRecord;
-import com.web.pojo.vo.FollowOrderVo;
+import com.web.pojo.vo.followOrder.FollowOrderVo;
 import org.apache.ibatis.annotations.Param;
 
 import java.util.List;

@@ -3,7 +3,6 @@
 <mapper namespace="com.web.dao.FollowOrderDetailDao">
     <resultMap id="BaseResultMap" type="com.web.pojo.FollowOrderDetail">
         <id column="id" property="id"/>
-        <result column="client_name" property="clientName"/>
         <result column="contract_code" property="contractCode"/>
         <result column="trade_direction" property="tradeDirection"/>
         <result column="hand_number" property="handNumber"/>
@@ -23,20 +22,22 @@
         <result column="update_by_user" property="updateByUser"/>
         <result column="create_date" property="createDate"/>
         <result column="follow_order_id" property="followOrderId"/>
+        <result column="follow_order_client_id" property="followOrderClientId"/>
         <result column="version" property="version"/>
     </resultMap>
-    <resultMap id="followOrderVoMap" type="com.web.pojo.vo.FollowOrderVo">
+    <resultMap id="followOrderVoMap" type="com.web.pojo.vo.followOrder.FollowOrderVo">
         <result column="handNumberTotal" property="handNumberTotal"/>
         <result column="offsetHandNumber" property="offsetHandNumber"/>
         <result column="offsetGainAndLoss" property="offsetGainAndLoss"/>
         <result column="positionGainAndLoss" property="positionGainAndLoss"/>
         <result column="poundageTotal" property="poundageTotal"/>
         <result column="clientProfit" property="clientProfit"/>
-        <result column="clientName" property="clientName"/>
         <result column="allTotal" property="allTotal"/>
+        <association property="followOrderClient" column="follow_order_client_id"
+                     select="com.web.dao.FollowOrderClientDao.selectByPrimaryKey"/>
     </resultMap>
 
-    <resultMap id="orderPageMap" type="com.web.pojo.vo.FollowOrderPageVo">
+    <resultMap id="orderPageMap" type="com.web.pojo.vo.followOrder.FollowOrderPageVo">
         <result column="history_hand_number" property="historyHandNumber"/>
         <result column="history_profit_loss" property="historyProfit"/>
         <result column="close_position_total_number" property="closePositionTotalNumber"/>
@@ -50,14 +51,14 @@
     where id = #{id}
   </delete>
     <insert id="insert" parameterType="com.web.pojo.FollowOrderDetail" useGeneratedKeys="true" keyProperty="id">
-    insert into follow_order_detail (client_name, contract_code, trade_direction, 
-      hand_number,original_hand_number,remain_hand_number,follow_order_trade_record_id,tb_account_id, open_price, open_time,
-      close_price, close_time, poundage, 
+    insert into follow_order_detail (contract_code, trade_direction,
+      hand_number,original_hand_number,remain_hand_number,follow_order_trade_record_id,follow_order_client_id,tb_account_id, open_price, open_time,
+      close_price, close_time, poundage,
       profit_loss, client_profit, ticket,
       update_date,update_by_user,create_date, follow_order_id, version
       )
     values (#{clientName}, #{contractCode}, #{tradeDirection}, 
-      #{handNumber},#{originalHandNumber},#{remainHandNumber},#{followOrderTradeRecordId}, #{accountId},#{openPrice}, #{openTime},
+      #{handNumber},#{originalHandNumber},#{remainHandNumber},#{followOrderTradeRecordId},#{followOrderClientId} #{accountId},#{openPrice}, #{openTime},
       #{closePrice}, #{closeTime}, #{poundage}, 
       #{profitLoss}, #{clientProfit}, #{ticket},
       #{updateDate}, #{updateByUser} ,#{createDate},#{followOrderId},#{version}
@@ -66,9 +67,7 @@
     <update id="updateByPrimaryKey" parameterType="com.web.pojo.FollowOrderDetail">
         update follow_order_detail
         <set>
-            <if test="clientName != null">
-                client_name = #{clientName},
-            </if>
+
             <if test="contractCode != null">
                 contract_code = #{contractCode},
             </if>
@@ -86,6 +85,9 @@
             </if>
             <if test="followOrderTradeRecordId != null">
                 follow_order_trade_record_id = #{followOrderTradeRecordId},
+            </if>
+            <if test="followOrderClientId != null">
+                follow_order_client_id = #{followOrderClientId},
             </if>
             <if test="accountId != null">
                 tb_account_id = #{accountId},
@@ -215,13 +217,13 @@
 
     <sql id="base_List">
     id,
-    client_name,
     contract_code,
     trade_direction,
     hand_number,
     original_hand_number,
     remain_hand_number,
     follow_order_trade_record_id,
+    follow_order_client_id,
     tb_account_id,
     open_price,
     open_time,

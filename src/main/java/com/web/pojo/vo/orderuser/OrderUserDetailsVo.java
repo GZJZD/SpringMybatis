@@ -4,6 +4,9 @@ import com.web.pojo.OrderUser;
 
 import java.util.List;
 
+/**
+ * 用户明细Vo映射类
+ */
 public class OrderUserDetailsVo {
     private String platformName;//平台名称
     private String  loginTime; //注册时间
@@ -20,7 +23,7 @@ public class OrderUserDetailsVo {
     private Double position_gain_and_loss;//持仓盈亏
     private Double offset_gain_and_loss;//平仓盈亏
     private Double everyHandNumber;//每单手数
-    private List<OrderUser>holdList;//持仓记录
+    private List<HoldOrderUserVo>holdList;//持仓记录
     private List<OrderUser>profitList; //平仓记录
 
     public Long getCountNumber() {
@@ -127,11 +130,11 @@ public class OrderUserDetailsVo {
         this.createTime = createTime;
     }
 
-    public List<OrderUser> getHoldList() {
+    public List<HoldOrderUserVo> getHoldList() {
         return holdList;
     }
 
-    public void setHoldList(List<OrderUser> holdList) {
+    public void setHoldList(List<HoldOrderUserVo> holdList) {
         this.holdList = holdList;
     }
 

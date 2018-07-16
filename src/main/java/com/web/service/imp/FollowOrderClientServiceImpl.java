@@ -1,10 +1,15 @@
 package com.web.service.imp;
 
 import com.web.dao.FollowOrderClientDao;
+import com.web.database.OrderHongKongService;
+import com.web.database.entity.PlatFromUsers;
+import com.web.pojo.ContractInfo;
 import com.web.pojo.FollowOrder;
 import com.web.pojo.FollowOrderClient;
-import com.web.pojo.vo.FollowOrderClientParamVo;
+import com.web.pojo.vo.followOrder.FollowOrderClientParamVo;
+
 import com.web.pojo.vo.orderuser.OrderUserDetailsVo;
+import com.web.service.ContractInfoService;
 import com.web.service.FollowOrderClientService;
 import com.web.service.FollowOrderService;
 import com.web.service.OrderUserService;
@@ -27,10 +32,14 @@ public class FollowOrderClientServiceImpl implements FollowOrderClientService {
     private OrderUserService orderUserService;
     @Autowired
     private FollowOrderService followOrderService;
+    @Autowired
+    private ContractInfoService contractInfoService;
+    @Autowired
+    private OrderHongKongService orderHongKongService;
 
     @Override
-    public List<Long> getListByUserCode(String userCode) {
-        return followOrderClientDao.findListFollowOrderIDsByUserCode(userCode);
+    public List<Long> getListByUserCodeAndPlatformCode(String userCode,String PlatformCode) {
+        return followOrderClientDao.findListFollowOrderIDsByUserCode(userCode,PlatformCode);
     }
 
     @Override
@@ -41,6 +50,12 @@ public class FollowOrderClientServiceImpl implements FollowOrderClientService {
     @Override
     public void deleteByFollowOrderId(Long followOrderId) {
         followOrderClientDao.deleteByFollowOrderId(followOrderId);
+    }
+
+
+    @Override
+    public FollowOrderClient getByUserCodeAndPlatformCode(String userCode, String platformCode, Long followOrderId) {
+        return followOrderClientDao.getByUserCodeAndPlatformCode(userCode,platformCode,followOrderId);
     }
 
     @Override
@@ -55,7 +70,7 @@ public class FollowOrderClientServiceImpl implements FollowOrderClientService {
                 FollowOrderClient followOrderClient = new FollowOrderClient();
                 followOrderClient.setFollowOrderId(followOrder.getId());
                 followOrderClient.setUserCode(orderClient.getUserCode());
-                followOrderClient.setUserName(orderClient.getUserName());
+                followOrderClient.setPlatformCode(orderClient.getPlatformCode());
                 followOrderClient.setFollowDirection(orderClient.getFollowDirection());
                 followOrderClient.setHandNumberType(orderClient.getHandNumberType());
                 followOrderClient.setFollowHandNumber(orderClient.getFollowHandNumber());
@@ -79,11 +94,11 @@ public class FollowOrderClientServiceImpl implements FollowOrderClientService {
         List<FollowOrderClient> followOrderClients = getListByFollowOrderId(followOrderId);
         FollowOrder followOrder = followOrderService.getFollowOrder(followOrderId);
         List<FollowOrderClientParamVo> followOrderClientParamVoList = new ArrayList<>();
-
+        ContractInfo info = contractInfoService.getInfoByVarietyIdAndPlatformId(followOrder.getVariety().getId(), 2L);
         for (FollowOrderClient followOrderClient : followOrderClients) {
             FollowOrderClientParamVo followOrderClientParamVo = new FollowOrderClientParamVo();
             OrderUserDetailsVo userDetails = orderUserService.getOrderUserCount(followOrderClient.getUserCode(),
-                    followOrder.getVariety().getVarietyCode());
+                    info.getContractCode());
             followOrderClientParamVo.setUserCode(followOrderClient.getUserCode());//用户编号
             followOrderClientParamVo.setUserName("向日葵");//用户姓名
             followOrderClientParamVo.setOffset_gain_and_loss(userDetails.getOffset_gain_and_loss());//平仓盈亏
@@ -104,5 +119,22 @@ public class FollowOrderClientServiceImpl implements FollowOrderClientService {
     @Override
     public FollowOrderClient findClientByIdAndName(Long followOrderId, String userCode) {
         return followOrderClientDao.findClientByIdAndName(followOrderId,userCode);
+    }
+
+    @Override
+    public List<String> getListUserNameByFollowOrderId(Long followOrderId) {
+        List<FollowOrderClient> followOrderClients = followOrderClientDao.getListByFollowOrderId(followOrderId);
+        List<String> userName = new ArrayList<>();
+        for (FollowOrderClient orderClient : followOrderClients) {
+
+            PlatFromUsers users;
+            if(orderClient.getPlatformCode().equals("orders75")){
+                users = orderHongKongService.getUser75(orderClient.getUserCode());
+            }else {
+                users = orderHongKongService.getUser76(orderClient.getUserCode());
+            }
+            userName.add(users.getNAME());
+        }
+        return userName;
     }
 }

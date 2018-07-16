@@ -1,4 +1,4 @@
-package com.web.pojo.vo;
+package com.web.pojo.vo.followOrder;
 
 //用于映射页面交易的总数据
 
