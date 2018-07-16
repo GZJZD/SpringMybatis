@@ -19,13 +19,13 @@
         <result column="create_date" property="createDate"/>
         <result column="version" property="version"/>
         <association property="followOrderClient" javaType="com.web.pojo.FollowOrderClient" column="follow_order_client_id"
-                     select="com.web.dao.FollowOrderClientDao.selectByPrimaryKey"/>
+                     select="com.web.dao.FollowOrderClientDao.getFollowOrderClient"/>
     </resultMap>
     <resultMap id="followOrderVoMap" type="com.web.pojo.vo.followOrder.FollowOrderVo">
         <result property="successTotal" column="successTotal"/>
         <result property="allTotal" column="allTotal"/>
         <association property="followOrderClient" javaType="com.web.pojo.FollowOrderClient" column="follow_order_client_id"
-                     select="com.web.dao.FollowOrderClientDao.selectByPrimaryKey"/>
+                     select="com.web.dao.FollowOrderClientDao.getFollowOrderClient"/>
     </resultMap>
     <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
     delete from follow_order_trade_record
@@ -33,17 +33,17 @@
   </delete>
     <insert id="insert" parameterType="com.web.pojo.FollowOrderTradeRecord" useGeneratedKeys="true" keyProperty="id">
     insert into follow_order_trade_record ( variety_id,
-      hand_number, trade_time, trade_direction, 
+      hand_number, trade_time, trade_direction,
       open_close_type, market_price,
       account_id, follow_order_id,follow_order_client_id,
       ticket, new_ticket,
       poundage,client_net_position_id,update_date,create_date,version)
     values ( #{varietyId},
-      #{handNumber}, #{tradeTime}, #{tradeDirection}, 
+      #{handNumber}, #{tradeTime}, #{tradeDirection},
       #{openCloseType}, #{marketPrice},
-      #{accountId}, #{followOrderId},#{followOrderClient.id}
+      #{accountId}, #{followOrderId},#{followOrderClient.id},
       #{ticket}, #{newTicket},
-      #{poundage},#{clientNetPositionId},#{clientName},#{updateDate},#{createDate},#{version})
+      #{poundage},#{clientNetPositionId},#{updateDate},#{createDate},#{version})
   </insert>
     <update id="updateByPrimaryKey" parameterType="com.web.pojo.FollowOrderTradeRecord">
         update follow_order_trade_record
@@ -141,7 +141,7 @@
         <if test="userCode">
             ,follow_order_client_id follow_order_client_id
         </if>
-         from follow_order_trade_record
+        from follow_order_trade_record
         where hand_number != 0 and trade_time is not null and follow_order_id = #{followOrderId}
         <if test="endTime != '' and endTime != null">
             and create_date <![CDATA[ <= ]]> #{endTime}

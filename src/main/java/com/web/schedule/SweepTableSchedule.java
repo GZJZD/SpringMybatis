@@ -41,7 +41,7 @@ public class SweepTableSchedule {
     }
 
     //每3秒： */3 * * * * ?
-    @Scheduled(cron = "* 0/7 * * * ?")
+    @Scheduled(cron = "* 30 * * * ?")
     public void doSweepTable(){
 //        log.debug("定时器执行");
         List<FollowOrder> followOrder = followOrderService.getNOStopFollowOrder();
