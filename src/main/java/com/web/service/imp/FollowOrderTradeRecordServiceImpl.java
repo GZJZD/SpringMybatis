@@ -229,7 +229,10 @@ public class FollowOrderTradeRecordServiceImpl implements FollowOrderTradeRecord
                 }else {
                     users = orderHongKongService.getUser76(orderUser.getUserCode());
                 }
-                orderUserMap.put("clientName",users.getNAME());
+                if(users!=null){
+
+                    orderUserMap.put("clientName",users.getNAME());
+                }
                 //查找对应的明细
                 FollowOrderDetail detail = followOrderDetailService.getFollowOrderDetailByTicket(orderUser.getTicket(), followOrderId);
                 //查找对应的交易记录，如果没有就是跟每单的固定手数，客户拆手数进行交易
@@ -423,7 +426,9 @@ public class FollowOrderTradeRecordServiceImpl implements FollowOrderTradeRecord
             }else {
                 users = orderHongKongService.getUser76(client.getUserCode());
             }
-            orderUserMap.put("clientName", users.getNAME());//客户姓名
+            if(users!=null){
+                orderUserMap.put("clientName", users.getNAME());//客户姓名
+            }
             orderUserMap.put("followDirection", client.getFollowDirection());//跟单方向
             orderUserMap.put("handNumberType", client.getHandNumberType());//手数类型
             if (client.getHandNumberType().equals(FollowOrderEnum.FollowStatus.CLIENT_HAND_NUMBER_TYPE.getIndex())) {
