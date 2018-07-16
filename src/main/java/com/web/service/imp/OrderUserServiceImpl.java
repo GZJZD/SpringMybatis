@@ -265,6 +265,7 @@ public class OrderUserServiceImpl implements OrderUserService {
             Date recentlyTime = null;//最近下单时间
 
             for (int o = 0; o<orderUserlist.size(); o++){
+                
                 OrderUser orderUser1 = orderUserlist.get(o);
 
 
