@@ -657,8 +657,7 @@ public class FollowOrderServiceImpl implements FollowOrderService {
         ContractInfo contractInfo = contractInfoService.getInfoByVarietyIdAndPlatformId(followOrder.getVariety().getId(), followOrder.getAccount().getPlatform().getId());
         //合约信息手续费查找
         contractInfoLinkService.instrumentCommissionQuery(contractInfo.getId(), followOrder.getAccount());
-        //合约信息查找
-//        contractInfoLinkService.instrumentQuery(contractInfo.getId());
+
     }
 
     /*
