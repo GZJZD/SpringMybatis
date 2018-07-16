@@ -58,7 +58,7 @@ struct orderOpenRequest
 	4 require string userId;
 	5 require string instrumentId;
 	6 require int    orderDirection;
-	7 require double volumeTotalOriginal;
+	7 require int volumeTotalOriginal;
 	8 optional int   orderTimeout = 5000;
 };
 
@@ -81,7 +81,7 @@ struct orderCloseRequest
 	4 require string userId;
 	5 require string instrumentId;
 	6 require int    orderDirection;
-	7 require double orderVolume;
+	7 require int orderVolume;
 };
 
 struct orderCloseResponse

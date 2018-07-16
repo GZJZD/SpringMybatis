@@ -26,7 +26,7 @@ public class orderCloseRequest {
 	@TarsStructProperty(order = 6, isRequire = true)
 	public int orderDirection = 0;
 	@TarsStructProperty(order = 7, isRequire = true)
-	public double orderVolume = 0D;
+	public int orderVolume = 0;
 
 	public String getTypeId() {
 		return typeId;
@@ -76,18 +76,18 @@ public class orderCloseRequest {
 		this.orderDirection = orderDirection;
 	}
 
-	public double getOrderVolume() {
+	public int getOrderVolume() {
 		return orderVolume;
 	}
 
-	public void setOrderVolume(double orderVolume) {
+	public void setOrderVolume(int orderVolume) {
 		this.orderVolume = orderVolume;
 	}
 
 	public orderCloseRequest() {
 	}
 
-	public orderCloseRequest(String typeId, int requestId, String brokerId, String userId, String instrumentId, int orderDirection, double orderVolume) {
+	public orderCloseRequest(String typeId, int requestId, String brokerId, String userId, String instrumentId, int orderDirection, int orderVolume) {
 		this.typeId = typeId;
 		this.requestId = requestId;
 		this.brokerId = brokerId;

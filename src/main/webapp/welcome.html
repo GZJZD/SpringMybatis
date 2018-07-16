@@ -58,7 +58,7 @@
 					</div>
 					<div class="col-xs-3">
 						<div class="area text-right">
-							<div class="font-24"></div>
+							<div class="font-24 total_profit_loss_than">-</div>
 							<div class="font-25">盈亏效率</div>
 							<!--<div class="a-foot text-left">手续费</div>-->
 						</div>
@@ -245,6 +245,7 @@
 						$('.total_Position_gain_and_loss').html(data_.total_Position_gain_and_loss);
 						$('.total_gain_and_loss').html(data_.total_gain_and_loss);
 						$('.total_commission').html(data_.total_commission);
+						$('.total_profit_loss_than').html(data_.total_profit_loss_than);
 						},
                     error:function(xhr,textStatus){
 
@@ -260,6 +261,7 @@
 			})
 
             function showClients(table_Id, method, unique_Id, sortOrder, columns,data) {
+
                 $(table_Id).bootstrapTable({
 					data:data,
                     method: method,
@@ -363,11 +365,16 @@
 			//操作栏的格式化
 			function actionFormatter(value, row, index) {
 				var userCode = row.userCode;
-				var result = "";
+
+                var platformName = row.platformName;
+               if(platformName=='undefined' || platformName==''){
+                   return layui.msg('此用户没有平台归属，无法查看明细');
+			   }
+                var result = "";
 				var editUrl ="page/clientUser/client-detail.html";
 				var edit_w = 1500;
 				var edit_h = 800;
-				result += "<a href='javascript:;' class='btn btn-xs green' onclick=\"openDetails('" + userCode + "', view='客户明细','"+editUrl+"','"+edit_w+"','"+edit_h+"')\" title='查看'><span class='glyphicon glyphicon-search'></span></a>";
+				result += "<a href='javascript:;' class='btn btn-xs green' onclick=\"openDetails('" + userCode + "','"+platformName+"', view='客户明细','"+editUrl+"','"+edit_w+"','"+edit_h+"')\" title='查看'><span class='glyphicon glyphicon-search'></span></a>";
 				return result;
 			}
 
@@ -457,7 +464,7 @@
 			}
 
 
-		function openDetails(userCode,title,url,w,h){
+		function openDetails(userCode,platformName,title,url,w,h){
 
             if(title == null || title == '') {
                 title = false;
@@ -485,7 +492,7 @@
                     //找到子页面
                     var iframeWin = window['layui-layer-iframe' + index]; //得到iframe页的窗口对象，执行iframe页的方法：iframeWin.method();
                     //调用子页面的方法
-                    iframeWin.showDetails(userCode);
+                    iframeWin.showDetails(userCode,platformName);
                 }
             });
 		}
