@@ -34,7 +34,7 @@
         <result column="clientProfit" property="clientProfit"/>
         <result column="allTotal" property="allTotal"/>
         <association property="followOrderClient" column="follow_order_client_id"
-                     select="com.web.dao.FollowOrderClientDao.selectByPrimaryKey"/>
+                     select="com.web.dao.FollowOrderClientDao.getFollowOrderClient"/>
     </resultMap>
 
     <resultMap id="orderPageMap" type="com.web.pojo.vo.followOrder.FollowOrderPageVo">
@@ -57,9 +57,9 @@
       profit_loss, client_profit, ticket,
       update_date,update_by_user,create_date, follow_order_id, version
       )
-    values (#{clientName}, #{contractCode}, #{tradeDirection}, 
-      #{handNumber},#{originalHandNumber},#{remainHandNumber},#{followOrderTradeRecordId},#{followOrderClientId} #{accountId},#{openPrice}, #{openTime},
-      #{closePrice}, #{closeTime}, #{poundage}, 
+    values ( #{contractCode}, #{tradeDirection},
+      #{handNumber},#{originalHandNumber},#{remainHandNumber},#{followOrderTradeRecordId},#{followOrderClientId}, #{accountId},#{openPrice}, #{openTime},
+      #{closePrice}, #{closeTime}, #{poundage},
       #{profitLoss}, #{clientProfit}, #{ticket},
       #{updateDate}, #{updateByUser} ,#{createDate},#{followOrderId},#{version}
       )
@@ -154,10 +154,12 @@
                 and create_date <![CDATA[ <= ]]> #{endTime}
             </if>
             <if test="status == 1">
-                and close_time is not null
+                and (close_time is not null or (remain_hand_number = 0 and  close_time is  null))
             </if>
             <if test="status == 0">
-                and close_time is null
+                and ((remain_hand_number != 0 and
+                remain_hand_number is not null) or
+                (close_time is null and remain_hand_number is null))
             </if>
             order by id desc
         </where>
@@ -199,7 +201,8 @@
         select
         <include refid="base_List"/>
         from follow_order_detail
-        where follow_order_id = #{followOrderId} and client_name = #{clientName}
+
+        where follow_order_id = #{followOrderId} and follow_order_client_id = #{followOrderClientId}
         <if test="endTime != '' and endTime != null">
             and create_date <![CDATA[ <= ]]> #{endTime}
         </if>

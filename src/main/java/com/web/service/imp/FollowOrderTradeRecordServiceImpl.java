@@ -133,10 +133,10 @@ public class FollowOrderTradeRecordServiceImpl implements FollowOrderTradeRecord
                         followOrder.setNetPositionSum(0.0);
                         followOrder.setNetPositionHoldNumber(0);
                     }
+                    followOrderService.updateFollowOrder(followOrder);
                     log.debug("交易信息返回，修改净头寸跟单：followOrderName{},netPositionStatus{},netPositionHoldNumber{}"+
                             followOrder.getFollowOrderName()+"、" +
-                          followOrder.getNetPositionStatus()+"、"+followOrder.getNetPositionHoldNumber()  );
-                    followOrderService.updateFollowOrder(followOrder);
+                            followOrder.getNetPositionStatus()+"、"+followOrder.getNetPositionHoldNumber()  );
 
                 }
                 //设置修改时间
@@ -393,7 +393,7 @@ public class FollowOrderTradeRecordServiceImpl implements FollowOrderTradeRecord
         for (FollowOrderVo followOrderVo : tradeTotalCount) {
 
             List<FollowOrderDetail> detail = followOrderDetailService.getFollowOrderDetailByUserCode(followOrderId,
-                    endTime, startTime, followOrderVo.getFollowOrderClient().getUserCode());
+                    endTime, startTime, followOrderVo.getFollowOrderClient().getId());
             for (FollowOrderDetail followOrderDetail : detail) {
                 //客户盈亏
                 followOrderVo.setClientProfit(DoubleUtil.add(followOrderVo.getClientProfit(), followOrderDetail.getClientProfit()));

@@ -20,7 +20,6 @@ function findPlatform(platformId) {
                     content += "<option value="+ele.id+">"+ele.name+"</option>"
                 }
             });
-            console.log(content);
             $("#platform_id").append(content);
 
         },

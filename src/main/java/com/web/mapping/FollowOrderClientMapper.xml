@@ -68,12 +68,7 @@
 
         where id = #{id} and version = #{version}
     </update>
-    <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long">
-        select
-        <include refid="base_List"/>
-        from follow_order_client
-        where id = #{id}
-    </select>
+
     <select id="selectAll" resultMap="BaseResultMap">
         select
         <include refid="base_List"/>
@@ -109,7 +104,13 @@
         select
         <include refid="base_List"/>
         from follow_order_client
-        where user_code =#{userCode} and platform_code = #{platformCode} and followOrderId =#{followOrderId}
+        where user_code = #{userCode} and platform_code = #{platformCode} and follow_order_id =#{followOrderId}
+    </select>
+    <select id="getFollowOrderClient" resultMap="BaseResultMap">
+        select
+        <include refid="base_List"/>
+        from follow_order_client
+        where id = #{followOrderClientId}
     </select>
 
 

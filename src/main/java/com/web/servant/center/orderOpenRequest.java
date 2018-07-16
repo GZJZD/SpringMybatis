@@ -26,7 +26,7 @@ public class orderOpenRequest {
 	@TarsStructProperty(order = 6, isRequire = true)
 	public int orderDirection = 0;
 	@TarsStructProperty(order = 7, isRequire = true)
-	public double volumeTotalOriginal = 0D;
+	public int volumeTotalOriginal = 0;
 	@TarsStructProperty(order = 8, isRequire = false)
 	public int orderTimeout = 5000;
 
@@ -78,11 +78,11 @@ public class orderOpenRequest {
 		this.orderDirection = orderDirection;
 	}
 
-	public double getVolumeTotalOriginal() {
+	public int getVolumeTotalOriginal() {
 		return volumeTotalOriginal;
 	}
 
-	public void setVolumeTotalOriginal(double volumeTotalOriginal) {
+	public void setVolumeTotalOriginal(int volumeTotalOriginal) {
 		this.volumeTotalOriginal = volumeTotalOriginal;
 	}
 
@@ -97,7 +97,7 @@ public class orderOpenRequest {
 	public orderOpenRequest() {
 	}
 
-	public orderOpenRequest(String typeId, int requestId, String brokerId, String userId, String instrumentId, int orderDirection, double volumeTotalOriginal, int orderTimeout) {
+	public orderOpenRequest(String typeId, int requestId, String brokerId, String userId, String instrumentId, int orderDirection, int volumeTotalOriginal, int orderTimeout) {
 		this.typeId = typeId;
 		this.requestId = requestId;
 		this.brokerId = brokerId;
