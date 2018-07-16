@@ -93,7 +93,7 @@ var columns = [{
             var followOrderId = row.followOrder.id;
 
             var obj = JSON.stringify(row);
-                var varietyName = row.followOrder.variety.varietyName;
+            var varietyName = row.followOrder.variety.varietyName;
 
             if (value == "1") {
                 return "<a onclick='follow_order_stop(this," + followOrderId + ")' href='javascript:;' title='暂停'> <i class='layui-icon'>&#xe651;</i> </a>" +
@@ -346,7 +346,7 @@ function orderByParameter(num) {
         (($('#history-end-time').val()) == 'undefined') ? (endTime = '') : (endTime = ($("#history-end-time").val()));
     }
 
-        // ?varietyId=" + varietyNum + "&accountId=" + accountNum + "&startTime=" + startTime + "&endTime=" + endTime
+    // ?varietyId=" + varietyNum + "&accountId=" + accountNum + "&startTime=" + startTime + "&endTime=" + endTime
     var url = url_ + "/followOrder/getListFollowOrder.Action";
     $(tableOrderId).bootstrapTable('destroy');
     $.ajax({
@@ -403,7 +403,7 @@ function orderByParameter(num) {
 * 打开明细
 * */
 function openDeatil(obj) {
-    follow_details(obj, '跟单明细', url_ + "/page/documentary/documentary-details.html", 1400, 750);
+    follow_details(obj, '跟单明细', url_ + "/page/documentary/documentary-details.html", 1000, 750);
 }
 
 /*
