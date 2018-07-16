@@ -37,6 +37,17 @@ public class SweepTableSchedule {
     private static Logger log = LogManager.getLogger(SweepTableSchedule.class.getName());
 
     public static Map<String,Double> getAskAndBidByFollowOrderId(Long followOrderId){
+        Map<String,Double> mapOne = new HashMap<>();
+        Map<String,Double> mapTwo = new HashMap<>();
+        mapOne.put("bid",50.2);
+        mapOne.put("ask",55.2);
+
+
+
+        mapTwo.put("ask",51.3);
+        mapTwo.put("bid",52.3);
+        detailPositionGainAndLoss.put(1L,mapOne);
+        detailPositionGainAndLoss.put(3L,mapTwo);
         return detailPositionGainAndLoss.get(followOrderId);
     }
 
@@ -56,7 +67,7 @@ public class SweepTableSchedule {
                     marketDataQueryRequest req = new marketDataQueryRequest();
                     req.setTypeId("marketDataQueryRequest");
                     req.setRequestId(order.getId().intValue());//跟单id
-                    req.setInstrumentId(detailList.get(1).getContractCode());
+                    req.setInstrumentId(detailList.get(0).getContractCode());
                     proxy.async_marketDataQuery(new TraderServantPrxCallback() {
                         @Override
                         public void callback_expired() {
