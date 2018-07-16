@@ -198,7 +198,6 @@ public class FollowOrderDetailServiceImpl implements FollowOrderDetailService {
             if (netPositionDetailVo.getRemainHandNumber()!=null&&netPositionDetailVo.getRemainHandNumber() != 0) {
                 Map<String, Double> askAndBid = SweepTableSchedule.getAskAndBidByFollowOrderId(followOrder.getId());
                 if (askAndBid != null) {
-                    log.debug(askAndBid);
                     if (tradeRecord.getTradeDirection().equals(FollowOrderEnum.FollowStatus.BUY.getIndex())) {
                         //交易方向为多，查询：卖出价（ask）
                         netPositionDetailVo.setProfit(DoubleUtil.mul(DoubleUtil.sub(askAndBid.get("ask"), netPositionDetailVo.getMarketPrice()), netPositionDetailVo.getRemainHandNumber()));

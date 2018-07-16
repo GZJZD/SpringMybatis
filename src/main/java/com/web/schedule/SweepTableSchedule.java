@@ -37,17 +37,7 @@ public class SweepTableSchedule {
     private static Logger log = LogManager.getLogger(SweepTableSchedule.class.getName());
 
     public static Map<String,Double> getAskAndBidByFollowOrderId(Long followOrderId){
-        Map<String,Double> mapOne = new HashMap<>();
-        Map<String,Double> mapTwo = new HashMap<>();
-        mapOne.put("bid",50.2);
-        mapOne.put("ask",55.2);
 
-
-
-        mapTwo.put("ask",51.3);
-        mapTwo.put("bid",52.3);
-        detailPositionGainAndLoss.put(1L,mapOne);
-        detailPositionGainAndLoss.put(3L,mapTwo);
         return detailPositionGainAndLoss.get(followOrderId);
     }
 
@@ -154,8 +144,7 @@ public class SweepTableSchedule {
                 sellHandNumber += orderDetail.getRemainHandNumber();
             }
         }
-        System.out.println("buyHandNumber="+buyHandNumber);
-        System.out.println("sellHandNumber="+sellHandNumber);
+
         //用于计算
         Integer buyHandNum = buyHandNumber;
         Integer sellHandNum = sellHandNumber;
@@ -194,6 +183,6 @@ public class SweepTableSchedule {
         holdPrice.put("ask",ask);
         holdPrice.put("bid",bid);
         detailPositionGainAndLoss.put((long) resp.getRequestId(),holdPrice);
-        System.out.println(holdPrice);
+
     }
 }
