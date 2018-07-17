@@ -256,7 +256,9 @@ public class OrderUserServiceImpl implements OrderUserService {
                     double profit_loss_than = DoubleUtil.Double_val;
                     int doOrderNumber = 0; //做单数
                     double handNumber = DoubleUtil.Double_val; //手数
+
                     Date recentlyTime = null;//最近下单时间
+
                 for (int o = 1; o < orderUserlist.size(); o++) {
                         OrderUser orderUser1 = orderUserlist.get(o);
                     if (orderUser.getUserCode().equals(orderUser1.getUserCode()) && orderUser.getPlatFormCode().equals(orderUser1.getPlatFormCode())) {
@@ -274,12 +276,12 @@ public class OrderUserServiceImpl implements OrderUserService {
                                         winRate = DoubleUtil.add(winRate, (orderUser1.getProfit() == null ? DoubleUtil.Double_val : orderUser1.getProfit())); //盈利
                                     }
                                 }
-
+                        //计算最近下单时间
+                        recentlyTime = countRecentlyTime(recentlyTime ,orderUser1);
+                        System.out.println(DateUtil.longToStrDate(recentlyTime.getTime()));
                     }
-                    //计算最近下单时间
 
-                    recentlyTime = countRecentlyTime(recentlyTime ,orderUser1);
-                    System.out.println(DateUtil.longToStrDate(recentlyTime.getTime()));
+
                 }
 
                 if (winRate != DoubleUtil.Double_val) {
@@ -301,7 +303,7 @@ public class OrderUserServiceImpl implements OrderUserService {
                 }
 
 
-                orderUserVo1.setRecentlyTime(DateUtil.longToStrDate(recentlyTime.getTime()));//最近下单时间
+//                orderUserVo1.setRecentlyTime(DateUtil.longToStrDate(recentlyTime.getTime()));//最近下单时间
 
                 orderUserVo1.setUserCode(orderUser.getUserCode()); //客户
                 orderUserVo1.setHandNumber(handNumber);//持仓手数
@@ -422,9 +424,17 @@ public class OrderUserServiceImpl implements OrderUserService {
                 detailsVo.setOutMoney(DoubleUtil.Double_val);//出金
                 detailsVo.setRemainMoney(DoubleUtil.Double_val);//BALANCE 余额
                 agent = null;
+
             } else {
-                BigDecimal DEPOSIT =   new BigDecimal(platFromUsers.getDEPOSIT());//入金
-                BigDecimal WITHDRAWAL =   new BigDecimal(platFromUsers.getWITHDRAWAL());//出金
+                BigDecimal DEPOSIT =  null;//入金
+                BigDecimal WITHDRAWAL = null;
+                if(platFromUsers.getWITHDRAWAL()!= null){
+                    WITHDRAWAL =   new BigDecimal(platFromUsers.getWITHDRAWAL());//出金
+                }
+                if(DEPOSIT != null){
+                    DEPOSIT =   new BigDecimal(platFromUsers.getDEPOSIT());
+                    System.out.println(DEPOSIT);
+                }
 
                 detailsVo.setLoginTime(platFromUsers.getREGDATE());//注册时间
                 detailsVo.setInMoney(platFromUsers.getDEPOSIT() == null ? DoubleUtil.Double_val : DEPOSIT.setScale(1, BigDecimal.ROUND_DOWN).doubleValue());//入金platFromUsers.getDEPOSIT()
