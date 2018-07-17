@@ -82,11 +82,11 @@ public class NetPositionDetailVo {
     public void setDetailId(Long detailId) {
         this.detailId = detailId;
     }
-    //todo 改过
+
     public Integer getTradeDirection() {
         return tradeDirection;
     }
-    //结束
+
     public void setTradeDirection(Integer tradeDirection) {
         this.tradeDirection = tradeDirection;
     }

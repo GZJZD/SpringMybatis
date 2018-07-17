@@ -42,7 +42,7 @@ public class SweepTableSchedule {
     }
 
     //每3秒： */3 * * * * ?
-    @Scheduled(cron = "* 30 * * * ?")
+//    @Scheduled(cron = "*/3 * * * * ?")
     public void doSweepTable(){
 //        log.debug("定时器执行");
         List<FollowOrder> followOrder = followOrderService.getNOStopFollowOrder();
@@ -65,6 +65,7 @@ public class SweepTableSchedule {
 
                         @Override
                         public void callback_exception(Throwable ex) {
+                            log.debug("定时器异常："+ex.getMessage());
                         }
 
                         @Override
@@ -177,11 +178,12 @@ public class SweepTableSchedule {
             }
         }
         //算平均值
-        ask =DoubleUtil.div(ask,buyHandNumber,2);
-        bid = DoubleUtil.div(bid,sellHandNumber,2);
+        ask =DoubleUtil.div(ask,buyHandNumber==0?1:buyHandNumber,2);
+        bid = DoubleUtil.div(bid,sellHandNumber==0?1:sellHandNumber,2);
         Map<String,Double> holdPrice = new HashMap<>();
         holdPrice.put("ask",ask);
         holdPrice.put("bid",bid);
+//        log.debug(holdPrice);
         detailPositionGainAndLoss.put((long) resp.getRequestId(),holdPrice);
 
     }

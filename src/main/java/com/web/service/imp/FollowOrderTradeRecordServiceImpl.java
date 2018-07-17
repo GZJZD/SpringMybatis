@@ -287,10 +287,10 @@ public class FollowOrderTradeRecordServiceImpl implements FollowOrderTradeRecord
                 netPositionDetailVo.setUserName("-");
             }else{
 
-                netPositionDetailVo.setUserName(users.getNAME()==null?"-":users.getNAME());//设置用户名
+                netPositionDetailVo.setUserName(users.getNAME());//设置用户名
             }
             netPositionDetailVo.setTradeDirection(orderUser.getLongShort());//设置多空方向
-            netPositionDetailVo.setPoundage(orderUser.getCommission());//设置手续费 todo 等数据过来后重新设置
+            netPositionDetailVo.setPoundage(orderUser.getCommission());//设置手续费
             netPositionDetailVo.setProfit(orderUser.getProfit());//设置盈亏
             netPositionDetailVo.setMarketPrice(orderUser.getOpenPrice() == null ? orderUser.getClosePrice() : orderUser.getOpenPrice());//市场价
             //设置交易时间
@@ -305,11 +305,12 @@ public class FollowOrderTradeRecordServiceImpl implements FollowOrderTradeRecord
                 ClientNetPosition clientNetPositionOpen = clientNetPositionService.selectByTicketAndTime(orderUser.getTicket(), orderUser.getOpenTime(), null, followOrderId);
                 if (clientNetPositionClose != null && clientNetPositionOpen != null) {
 
-
                     NetPositionDetailVo netPositionDetailVoClose = new NetPositionDetailVo();
                     netPositionDetailVoClose.setVarietyName(orderUser.getProductCode());
                     netPositionDetailVoClose.setHandNumber(orderUser.getHandNumber() + "");
-                    netPositionDetailVoClose.setUserName(orderUser.getUserCode());
+
+                    netPositionDetailVoClose.setUserName(netPositionDetailVo.getUserName());
+
                     if (orderUser.getLongShort().equals(FollowOrderEnum.FollowStatus.BUY.getIndex())) {
                         //开仓与平仓方向相反
                         netPositionDetailVo.setTradeDirection(FollowOrderEnum.FollowStatus.SELL.getIndex());//开仓：空
@@ -323,14 +324,21 @@ public class FollowOrderTradeRecordServiceImpl implements FollowOrderTradeRecord
 
                     //设置交易时间
                     netPositionDetailVoClose.setTradeTime(DateUtil.strToStr(orderUser.getCloseTime()));
-                    netPositionDetailVoClose.setPoundage(1.0);//手续费
+                    netPositionDetailVoClose.setPoundage(orderUser.getCommission());//手续费
                     netPositionDetailVoClose.setProfit(orderUser.getProfit());//客户盈亏
                     netPositionDetailVoClose.setNetPositionSum(clientNetPositionClose.getNetPositionSum());//净头寸
                     netPositionDetailVoClose.setFollowOrderClientStatus(clientNetPositionClose.getStatus());//跟单是否成功
-                    netPositionDetailVoClose.setOpenCloseType(FollowOrderEnum.FollowStatus.CLOSE.getIndex());//平仓
+                    netPositionDetailVoClose.setOpenCloseType(FollowOrderEnum.FollowStatus.CLOSE.getIndex());//开平设置为平仓
+                    //该方法是：当交易系统没有返回交易信息时，交易记录无法进行跟新，导致无法知悉是否跟单成功时，需要进行计算更改状态
+                    checkFollowClientOrderStatus(netPositionDetailVoClose,orderUser,followOrder);
+
                     //重置
                     netPositionDetailVo.setNetPositionSum(clientNetPositionOpen.getNetPositionSum());//设置净头寸
                     netPositionDetailVo.setFollowOrderClientStatus(clientNetPositionOpen.getStatus());//设置状态
+
+                    //该方法是：当交易系统没有返回交易信息时，交易记录无法进行跟新，导致无法知悉是否跟单成功时，需要进行计算更改状态
+                    checkFollowClientOrderStatus(netPositionDetailVoClose,orderUser,followOrder);
+
                     netPositionDetailVo.setProfit(0.0);//盈亏为0
                     netPositionDetailVo.setOpenCloseType(FollowOrderEnum.FollowStatus.OPEN.getIndex());//开仓
                     //判断状态
@@ -342,8 +350,15 @@ public class FollowOrderTradeRecordServiceImpl implements FollowOrderTradeRecord
                 //一条不完整的记录
                 ClientNetPosition clientNetPosition = clientNetPositionService.selectByTicketAndTime(orderUser.getTicket(), orderUser.getOpenTime(), orderUser.getCloseTime(), followOrderId);
                 if (clientNetPosition != null) {
+
+
+
                     netPositionDetailVo.setNetPositionSum(clientNetPosition.getNetPositionSum());//设置净头寸
                     netPositionDetailVo.setFollowOrderClientStatus(clientNetPosition.getStatus());//状态
+                    netPositionDetailVo.setPoundage(orderUser.getCommission());//手续费
+                    //该方法是：当交易系统没有返回交易信息时，交易记录无法进行跟新，导致无法知悉是否跟单成功时，需要进行计算更改状态
+                    checkFollowClientOrderStatus(netPositionDetailVo,orderUser,followOrder);
+
                     findClientByStatus(status, netPositionDetailVo, netPositionDetailVoList);
                 }
             }
@@ -351,6 +366,32 @@ public class FollowOrderTradeRecordServiceImpl implements FollowOrderTradeRecord
         }
         return netPositionDetailVoList;
     }
+    /*
+    * 当交易系统没有返回交易信息时，交易记录无法进行跟新，导致无法知悉是否跟单成功时，需要进行计算更改状态
+    * */
+    private void checkFollowClientOrderStatus(NetPositionDetailVo netPositionDetailVo,OrderUser orderUser,FollowOrder followOrder){
+        //已经计算好得净头寸值
+        Double netPositionSum = netPositionDetailVo.getNetPositionSum();
+        //还没有进行计算得净头寸
+        Double sum;
+
+        if(orderUser.getLongShort().equals(FollowOrderEnum.FollowStatus.SELL.getIndex())){
+            //该数据交易方向为空是：sum = netPositionSum + 交易得手数
+            sum = DoubleUtil.add(netPositionSum, orderUser.getHandNumber());//本来金头寸的值
+        }else{
+            //该数据交易方向为多是：sum = netPositionSum - 交易得手数
+            sum = DoubleUtil.sub(netPositionSum, orderUser.getHandNumber());//本来金头寸的值
+        }
+        //oldNum 原始持仓手数
+        int oldNum = (int) (sum / followOrder.getNetPositionChange());
+        // 现有得持仓手数
+        int newOldNum = (int) (netPositionSum / followOrder.getNetPositionChange());
+        if(oldNum!=newOldNum && netPositionDetailVo.getFollowOrderClientStatus()==null){
+            //oldNum!=newOldNum，并且该状态没有被记录时就更改为跟单失败
+            netPositionDetailVo.setFollowOrderClientStatus(FollowOrderEnum.FollowStatus.NOT_FOLLOW_ORDER_BY_CLIENT.getIndex());
+        }
+    }
+
 
     /*
      * 客户的跟单状态查询

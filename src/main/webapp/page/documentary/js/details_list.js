@@ -104,10 +104,10 @@ function manually_close_position(id) {
 /*
 * 展示跟单明细列表
 * */
-function detailShow(varietyName, name, manager, id, orderNum, offsetGainAndLoss, poundageTotal) {
+function detailShow(varietyName, name, manager, id, orderNum, offsetGainAndLoss,positionGainAndLoss, poundageTotal) {
     $("#orderNum").html(orderNum);
     $("#offsetGainAndLoss").html(offsetGainAndLoss);
-    $("#positionGainAndLoss").html(0);
+    $("#positionGainAndLoss").html(positionGainAndLoss);
     $("#poundageTotal").html(poundageTotal);
     url_detail = url_ + "/followOrder/getListDetails.Action?followOrderId=" + id;
     followOrderId = id;
@@ -289,8 +289,8 @@ function clientTableShow(id, manager, name) {
             title: '跟单编号'
 
         }, {
-            field: 'orderUser.userCode',
-            title: '客户编号'
+            field: 'clientName',
+            title: '客户名'
         }, {
             field: 'orderUser.productCode',
             title: '品种'
