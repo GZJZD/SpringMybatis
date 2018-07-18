@@ -97,8 +97,8 @@ public class FollowOrderClientServiceImpl implements FollowOrderClientService {
         for (FollowOrderClient followOrderClient : followOrderClients) {
             FollowOrderClientParamVo followOrderClientParamVo = new FollowOrderClientParamVo();
             OrderUserDetailsVo orderUserCount = orderUserService.getOrderUserCount(followOrderClient.getUserCode(),
-                    info.getContractCode());
-            followOrderClientParamVo.setUserCode(followOrderClient.getUserCode());//用户编号
+                    info.getContractCode(),followOrderClient.getPlatformCode());
+            followOrderClientParamVo.setUserCode(followOrderClient.getUserCode());//用户编号 todo
             followOrderClientParamVo.setUserName("向日葵");//用户姓名
             followOrderClientParamVo.setOffset_gain_and_loss(orderUserCount.getOffset_gain_and_loss());//平仓盈亏
             followOrderClientParamVo.setProfit_loss_than(orderUserCount.getPosition_gain_and_loss());//持仓盈亏
