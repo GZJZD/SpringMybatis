@@ -360,49 +360,49 @@ function commit(){
         fayuan_data.push(json_);
     });
     var str = JSON.stringify(fayuan_data);
-    console.log(str);
-    // $.ajax({
-    //     url:url_+"/followOrder/createFollowOrder.Action",
-    //     type:'POST', //GET
-    //     async:true,    //或false,是否异步
-    //     data:{
-    //         followOrderClients:str, // 用户数组字符串
-    //         followOrderName:followOrderName, //策略名称
-    //         accountId:id,//跟单人id
-    //         varietyCode:varietyCode, //商品id
-    //         maxProfit:maxProfit,//最大止盈
-    //         maxProfitNumber : maxProfitNumber,//止盈点数
-    //         maxLoss:maxLoss, //止损
-    //         maxLossNumber : maxLossNumber,//止损点数
-    //         accountLoss:accountLoss,//账户止损
-    //         accountLossNumber:accountLossNumber, //账户止损金额
-    //         orderPoint:orderPoint,//下单点位
-    //         clientPoint :clientPoint, //比客户点位
-    //         clientPointNumber:clientPointNumber, //点位
-    //         netPositionDirection:netPositionDirection,//跟单正反向
-    //         netPositionChange:netPositionChange,//变化基数
-    //         netPositionFollowNumber:netPositionFollowNumber,//手数
-    //         followManner :followManner //跟单方式:用户or净头寸
-    //     },
-    //     // timeout:5000,    //超时时间
-    //     dataType:'json',    //返回的数据格式：json/xml/html/script/jsonp/text
-    //     beforeSend:function(xhr){
-    //
-    //     },
-    //     success:function(data,textStatus,jqXHR){
-    //         if(data.success){
-    //             parent.layer.closeAll();
-    //
-    //         }else{
-    //             layer.msg(data.msg);
-    //         }
-    //         parent.layer.msg(data.msg);
-    //     },
-    //     error:function(xhr,textStatus){
-    //
-    //     },
-    //     complete:function(){
-    //
-    //     }
-    // })
+
+    $.ajax({
+        url:url_+"/followOrder/createFollowOrder.Action",
+        type:'POST', //GET
+        async:true,    //或false,是否异步
+        data:{
+            followOrderClients:str, // 用户数组字符串
+            followOrderName:followOrderName, //策略名称
+            accountId:id,//跟单人id
+            varietyCode:varietyCode, //商品id
+            maxProfit:maxProfit,//最大止盈
+            maxProfitNumber : maxProfitNumber,//止盈点数
+            maxLoss:maxLoss, //止损
+            maxLossNumber : maxLossNumber,//止损点数
+            accountLoss:accountLoss,//账户止损
+            accountLossNumber:accountLossNumber, //账户止损金额
+            orderPoint:orderPoint,//下单点位
+            clientPoint :clientPoint, //比客户点位
+            clientPointNumber:clientPointNumber, //点位
+            netPositionDirection:netPositionDirection,//跟单正反向
+            netPositionChange:netPositionChange,//变化基数
+            netPositionFollowNumber:netPositionFollowNumber,//手数
+            followManner :followManner //跟单方式:用户or净头寸
+        },
+        // timeout:5000,    //超时时间
+        dataType:'json',    //返回的数据格式：json/xml/html/script/jsonp/text
+        beforeSend:function(xhr){
+
+        },
+        success:function(data,textStatus,jqXHR){
+            if(data.success){
+                parent.layer.closeAll();
+
+            }else{
+                layer.msg(data.msg);
+            }
+            parent.layer.msg(data.msg);
+        },
+        error:function(xhr,textStatus){
+
+        },
+        complete:function(){
+
+        }
+    })
 }
