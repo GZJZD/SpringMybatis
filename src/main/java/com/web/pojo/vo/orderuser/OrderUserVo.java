@@ -24,7 +24,7 @@ public class OrderUserVo extends FiltrateParameter {
     /**
      * 平台名称
      */
-     private String platformName;
+     private String platFormCode;
     /**
      * 代理人
      */
@@ -72,7 +72,40 @@ public class OrderUserVo extends FiltrateParameter {
      */
     private String recentlyTime;
 
-/**********************************************     用户列表所用字段  END   *************************************************************************/
+    public OrderUserVo() {
+
+    }
+
+
+
+
+    public OrderUserVo(String startTime, String endTime, String contract, String productCode, String userCode, String userName, String platFormCode, String agencyName, Double position_gain_and_loss, Double offset_gain_and_loss, Double totalGainAndLoss, Double winRate, Double rateOfReturn, Double profit_loss_than, String userType, int doOrderNumber, Double handNumber, String recentlyTime) {
+        super(startTime, endTime, contract, productCode);
+        this.userCode = userCode;
+        this.userName = userName;
+        this.platFormCode = platFormCode;
+        this.agencyName = agencyName;
+        this.position_gain_and_loss = position_gain_and_loss;
+        this.offset_gain_and_loss = offset_gain_and_loss;
+        this.totalGainAndLoss = totalGainAndLoss;
+        this.winRate = winRate;
+        this.rateOfReturn = rateOfReturn;
+        this.profit_loss_than = profit_loss_than;
+        this.userType = userType;
+        this.doOrderNumber = doOrderNumber;
+        this.handNumber = handNumber;
+        this.recentlyTime = recentlyTime;
+    }
+
+    public String getPlatFormCode() {
+        return platFormCode;
+    }
+
+    public void setPlatFormCode(String platFormCode) {
+        this.platFormCode = platFormCode;
+    }
+
+    /**********************************************     用户列表所用字段  END   *************************************************************************/
 
 
 
@@ -95,13 +128,6 @@ public class OrderUserVo extends FiltrateParameter {
         this.userName = userName;
     }
 
-    public String getPlatformName() {
-        return platformName;
-    }
-
-    public void setPlatformName(String platformName) {
-        this.platformName = platformName;
-    }
 
     public String getAgencyName() {
         return agencyName;
