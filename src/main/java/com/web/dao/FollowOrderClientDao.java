@@ -32,8 +32,6 @@ public interface FollowOrderClientDao {
     List<FollowOrderClient> getListByFollowOrderId(Long followOrderId);
 
 
-    FollowOrderClient findClientByIdAndName(@Param("followOrderId") Long followOrderId, @Param("userCode") String userCode);
-
     List<String> getListUserCodeByFollowOrderId(Long followOrderId);
 
     FollowOrderClient getByUserCodeAndPlatformCode(@Param("userCode") String userCode, @Param("platformCode") String platformCode, @Param("followOrderId") Long followOrderId);

@@ -110,15 +110,6 @@ public class FollowOrderClientServiceImpl implements FollowOrderClientService {
         return followOrderClientParamVoList;
     }
 
-    /*
-     *
-     * 找到对应跟单id的客户跟单数据
-     * @param userCode:客户编号
-     * */
-    @Override
-    public FollowOrderClient findClientByIdAndName(Long followOrderId, String userCode) {
-        return followOrderClientDao.findClientByIdAndName(followOrderId,userCode);
-    }
 
     @Override
     public FollowOrderClient getFollowOrderClient(Long followOrderClientId) {

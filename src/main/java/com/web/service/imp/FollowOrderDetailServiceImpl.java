@@ -91,7 +91,7 @@ public class FollowOrderDetailServiceImpl implements FollowOrderDetailService {
                 return findNetPositionDetail(orderDetailList, followOrder);
             } else {
                 //客户
-
+                List<Map<String,Object>> clientDetailList = new ArrayList<>();
                 for (FollowOrderDetail followOrderDetail : orderDetailList) {
                     Map<String,Object> clientDetail = new HashMap<>();
                     clientDetail .put("id",followOrderDetail.getId());
@@ -113,10 +113,22 @@ public class FollowOrderDetailServiceImpl implements FollowOrderDetailService {
                         clientDetail .put("closeTime",DateUtil.strToStr(followOrderDetail.getCloseTime()));
                         clientDetail .put("closePrice",followOrderDetail.getClosePrice());
                     }
+
+                    PlatFromUsers users;
+                    FollowOrderClient client = followOrderClientService.getFollowOrderClient(followOrderDetail.getFollowOrderClientId());
+
+                    if(client.getPlatformCode().equals("orders75")){
+                        users = orderHongKongService.getUser75(client.getUserCode());
+                    }else {
+                        users = orderHongKongService.getUser76(client.getUserCode());
+                    }
+                    if(users!=null){
+
+                        clientDetail.put("clientName",users.getNAME());
+                    }
                     if (followOrderDetail.getCloseTime() == null) {
                         Map<String, Double> askAndBid = SweepTableSchedule.getAskAndBidByFollowOrderId(followOrderId);
                         if (askAndBid != null) {
-                            log.debug(askAndBid);
                             if (followOrderDetail.getTradeDirection().equals(FollowOrderEnum.FollowStatus.SELL.getIndex())) {
                                 //交易方向为空：获取买入价：bid
                                 //持仓盈亏
@@ -134,8 +146,9 @@ public class FollowOrderDetailServiceImpl implements FollowOrderDetailService {
                         }
                         clientDetail .put("profitLoss",followOrderDetail.getProfitLoss());
                     }
+                    clientDetailList.add(clientDetail);
                 }
-                return orderDetailList;
+                return clientDetailList;
             }
         }
         return null;
@@ -247,17 +260,23 @@ public class FollowOrderDetailServiceImpl implements FollowOrderDetailService {
         //客户平仓,
         FollowOrderDetail detail = getFollowOrderDetailByTicket(followOrderTradeRecord.getTicket(), followOrderTradeRecord.getFollowOrderId());
         OrderUser user = orderUserService.findByTicket(followOrderTradeRecord.getTicket());
-        FollowOrderClient followOrderClient = followOrderClientService.findClientByIdAndName(followOrderTradeRecord.getFollowOrderId(), user.getUserCode());
+
+        FollowOrderClient followOrderClient  = followOrderTradeRecord.getFollowOrderClient();
+
+
         if (detail != null && detail.getCloseTime() == null) {
             log.debug("跟每单客户平仓：ticket{}," + detail.getTicket());
+            //剩下手数
+            int hand = detail.getHandNumber() - followOrderTradeRecord.getHandNumber();
             if (!followOrderTradeRecord.getTicket().equals(followOrderTradeRecord.getNewTicket()) &&
-                    !followOrderClient.getHandNumberType().equals(FollowOrderEnum.FollowStatus.CLIENT_HAND_NUMBER_TYPE.getIndex())) {
+                    !followOrderClient.getHandNumberType().equals(FollowOrderEnum.FollowStatus.CLIENT_HAND_NUMBER_TYPE.getIndex())
+                    && hand!=0) {
                 //开仓单号和新开仓单号不一致 和不是固定手数
                 //新建开仓单号
 
                 Double poundage = DoubleUtil.div(detail.getPoundage(), detail.getHandNumber(), 2);//每一手的手续费
                 FollowOrderDetail detailNew = new FollowOrderDetail();
-                detailNew.setHandNumber(detail.getHandNumber() - followOrderTradeRecord.getHandNumber());
+                detailNew.setHandNumber(hand);
                 detailNew.setOriginalHandNumber(detailNew.getHandNumber());
                 detailNew.setTicket(followOrderTradeRecord.getNewTicket());
                 detailNew.setPoundage(DoubleUtil.mul(poundage, detailNew.getHandNumber()));

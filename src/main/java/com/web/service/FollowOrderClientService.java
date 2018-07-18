@@ -31,6 +31,6 @@ public interface FollowOrderClientService {
 
     void update(FollowOrderClient record);
 
-    FollowOrderClient findClientByIdAndName(Long followOrderId, String login);
+
     FollowOrderClient getFollowOrderClient(Long followOrderClientId);
 }
