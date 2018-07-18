@@ -17,9 +17,9 @@ $(function(){
 
 
  }
- function  showDetails(userCode,platformName){
+ function  showDetails(userCode,platFormCode){
 
-   var productCode =  parent.$("#product-val-id option:selected").val(); //商品
+     var productCode =  parent.$("#product-val-id option:selected").val(); //商品
        $.ajax({
          url:url_ +'/orderUser/getOrderUser.Action?',
          type:'POST',
@@ -28,7 +28,7 @@ $(function(){
          data:{
              userCode:userCode,
              productCode:productCode,
-             platformName:platformName
+             platFormCode:platFormCode
          },
 
          beforeSend:function(xhr){
@@ -45,9 +45,15 @@ $(function(){
              $('#offset_gain_and_loss-id').text(data.offset_gain_and_loss);//持仓盈亏
              $('#position_gain_and_loss-id').text(data.position_gain_and_loss);//平仓盈亏
              $('#platformName-id').text(data.platformName);//注册平台
-             $("#outMoney-id").text(data.outMoney);//出金
+             $('#outMoney-id').text(data.outMoney);//出金
              $('#cmmission-id').text(data.cmmission);//手续费
-             setHoldOrderTableData(data.holdList,"#holdOrderList");
+             $('#countNumberAndHandNumber-id').text(data.countNumber+'/'+data.handNumber);
+             var winRate = (data.winRate*100)+'%'+'('+data.profitNumber+'/'+data.lossNumber+')';
+             $('#winRate-id').text(winRate); //胜率（盈利单数/亏损单数）
+             $('#profitAndLossRatio-id').text(data.profitAndLossRatio+'('+data.profitVal+'/'+data.lossVal+')')
+             $('#profitAndLossEfficiency-id').text(data.profitAndLossEfficiency+'('+data.offset_gain_and_loss+'/'+data.handNumber+')'); //平仓盈亏除以手数
+
+             setHoldOrderTableData(data.holdList,"#holdOrderList"); //持仓
              setprofitOrderTableData(data.profitList,"#profitOrderList");
          },
          error:function(xhr,textStatus){
@@ -64,7 +70,11 @@ $(function(){
          },
          {
              field: '类型',
-             title: '买入'
+             title: '类型',
+             formatter: function (value, row, index) {
+
+                 return '买入';
+             }
          },
 
          {
@@ -117,7 +127,11 @@ $(function(){
          },
          {
              field: '类型',
-             title: '买入'
+             title: '类型',
+             formatter: function (value, row, index) {
+
+                 return '平仓';
+             }
          },
 
          {

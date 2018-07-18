@@ -79,7 +79,7 @@ function  setParameter() {
         },
 
         {
-            field: 'profit',
+            field: 'offset_gain_and_loss',
             title: '平仓盈亏'
         },
 
@@ -108,6 +108,14 @@ function  setParameter() {
             align: 'center',
             valign: 'middle',
             formatter:handNumber
+        }
+        ,
+        {
+            field: 'platFormCode',
+            title: '平台',
+            align: 'center',
+            valign: 'middle',
+            hidden:false
         }
         ,
         {
@@ -343,56 +351,58 @@ function commit(){
     $("#mytable tbody").find('tr').each(function(){
         var tdArr = $(this).children();
         var userCode = tdArr.eq(0).html();//用户编号
-        var userName = tdArr.eq(1).html();//用户编号
+        var userName = tdArr.eq(1).html();//用户姓名
         var followDirection = tdArr.eq(4.).find(".followDirection option:selected").val();//跟单方向
         var handNumberType= tdArr.eq(5).find(".handNumberType option:selected").val();//手数类型
         var followHandNumber = tdArr.eq(6).find(".followHandNumber").val();//手数
-        var json_ = {"userCode":userCode,"userName":userName,"followDirection":followDirection,"handNumberType":handNumberType,"followHandNumber":followHandNumber};
+        var platFormCode = tdArr.eq(7).html();//平台
+        var json_ = {"userCode":userCode,"userName":userName,"followDirection":followDirection,"handNumberType":handNumberType,"followHandNumber":followHandNumber,"platFormCode":platFormCode};
         fayuan_data.push(json_);
     });
     var str = JSON.stringify(fayuan_data);
-    $.ajax({
-        url:url_+"/followOrder/createFollowOrder.Action",
-        type:'POST', //GET
-        async:true,    //或false,是否异步
-        data:{
-            followOrderClients:str, // 用户数组字符串
-            followOrderName:followOrderName, //策略名称
-            accountId:id,//跟单人id
-            varietyCode:varietyCode, //商品id
-            maxProfit:maxProfit,//最大止盈
-            maxProfitNumber : maxProfitNumber,//止盈点数
-            maxLoss:maxLoss, //止损
-            maxLossNumber : maxLossNumber,//止损点数
-            accountLoss:accountLoss,//账户止损
-            accountLossNumber:accountLossNumber, //账户止损金额
-            orderPoint:orderPoint,//下单点位
-            clientPoint :clientPoint, //比客户点位
-            clientPointNumber:clientPointNumber, //点位
-            netPositionDirection:netPositionDirection,//跟单正反向
-            netPositionChange:netPositionChange,//变化基数
-            netPositionFollowNumber:netPositionFollowNumber,//手数
-            followManner :followManner //跟单方式:用户or净头寸
-        },
-        // timeout:5000,    //超时时间
-        dataType:'json',    //返回的数据格式：json/xml/html/script/jsonp/text
-        beforeSend:function(xhr){
-
-        },
-        success:function(data,textStatus,jqXHR){
-            if(data.success){
-                parent.layer.closeAll();
-
-            }else{
-                layer.msg(data.msg);
-            }
-            parent.layer.msg(data.msg);
-        },
-        error:function(xhr,textStatus){
-
-        },
-        complete:function(){
-
-        }
-    })
+    console.log(str);
+    // $.ajax({
+    //     url:url_+"/followOrder/createFollowOrder.Action",
+    //     type:'POST', //GET
+    //     async:true,    //或false,是否异步
+    //     data:{
+    //         followOrderClients:str, // 用户数组字符串
+    //         followOrderName:followOrderName, //策略名称
+    //         accountId:id,//跟单人id
+    //         varietyCode:varietyCode, //商品id
+    //         maxProfit:maxProfit,//最大止盈
+    //         maxProfitNumber : maxProfitNumber,//止盈点数
+    //         maxLoss:maxLoss, //止损
+    //         maxLossNumber : maxLossNumber,//止损点数
+    //         accountLoss:accountLoss,//账户止损
+    //         accountLossNumber:accountLossNumber, //账户止损金额
+    //         orderPoint:orderPoint,//下单点位
+    //         clientPoint :clientPoint, //比客户点位
+    //         clientPointNumber:clientPointNumber, //点位
+    //         netPositionDirection:netPositionDirection,//跟单正反向
+    //         netPositionChange:netPositionChange,//变化基数
+    //         netPositionFollowNumber:netPositionFollowNumber,//手数
+    //         followManner :followManner //跟单方式:用户or净头寸
+    //     },
+    //     // timeout:5000,    //超时时间
+    //     dataType:'json',    //返回的数据格式：json/xml/html/script/jsonp/text
+    //     beforeSend:function(xhr){
+    //
+    //     },
+    //     success:function(data,textStatus,jqXHR){
+    //         if(data.success){
+    //             parent.layer.closeAll();
+    //
+    //         }else{
+    //             layer.msg(data.msg);
+    //         }
+    //         parent.layer.msg(data.msg);
+    //     },
+    //     error:function(xhr,textStatus){
+    //
+    //     },
+    //     complete:function(){
+    //
+    //     }
+    // })
 }
