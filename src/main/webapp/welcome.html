@@ -140,11 +140,11 @@
                 // $('#startTime-id').val();
                 var endTime = '';
                 // $('#endTime-id').val();
-                var platformName = '';
+                var platFormCode = '';
                 var agencyName = '';
                 var contract = '';
                 var userCode = '';
-                var url ="orderUser/countOrderUser.Action?productCode="+productCode+'&endTime='+endTime+'&startTime='+startTime+'&platformName='+platformName+'&agencyName='+agencyName+'&contract='+contract+'&userCode='+userCode;
+                var url ="orderUser/countOrderUser.Action?productCode="+productCode+'&endTime='+endTime+'&startTime='+startTime+'&platFormCode='+platFormCode+'&agencyName='+agencyName+'&contract='+contract+'&userCode='+userCode;
                 var method = "post";
                 var url_  = url;
                 var unique_Id = "userCode";
@@ -170,7 +170,7 @@
                     }
                     ,
                     {
-                        field: 'platformName',
+                        field: 'platFormCode',
                         title: '平台'
                     },
                     {
@@ -366,15 +366,15 @@
 			function actionFormatter(value, row, index) {
 				var userCode = row.userCode;
 
-                var platformName = row.platformName;
-               if(platformName=='undefined' || platformName==''){
+                var platFormCode = row.platFormCode;
+               if(platFormCode=='undefined' || platFormCode==''){
                    return layui.msg('此用户没有平台归属，无法查看明细');
 			   }
                 var result = "";
 				var editUrl ="page/clientUser/client-detail.html";
 				var edit_w = 1500;
 				var edit_h = 800;
-				result += "<a href='javascript:;' class='btn btn-xs green' onclick=\"openDetails('" + userCode + "','"+platformName+"', view='客户明细','"+editUrl+"','"+edit_w+"','"+edit_h+"')\" title='查看'><span class='glyphicon glyphicon-search'></span></a>";
+				result += "<a href='javascript:;' class='btn btn-xs green' onclick=\"openDetails('" + userCode + "','"+platFormCode+"', view='客户明细','"+editUrl+"','"+edit_w+"','"+edit_h+"')\" title='查看'><span class='glyphicon glyphicon-search'></span></a>";
 				return result;
 			}
 
@@ -464,7 +464,7 @@
 			}
 
 
-		function openDetails(userCode,platformName,title,url,w,h){
+		function openDetails(userCode,platFormCode,title,url,w,h){
 
             if(title == null || title == '') {
                 title = false;
@@ -492,7 +492,7 @@
                     //找到子页面
                     var iframeWin = window['layui-layer-iframe' + index]; //得到iframe页的窗口对象，执行iframe页的方法：iframeWin.method();
                     //调用子页面的方法
-                    iframeWin.showDetails(userCode,platformName);
+                    iframeWin.showDetails(userCode,platFormCode);
                 }
             });
 		}
