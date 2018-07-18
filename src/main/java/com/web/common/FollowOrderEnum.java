@@ -42,10 +42,13 @@ public  class FollowOrderEnum {
         //客户:手数类型
         CLIENT_HAND_NUMBER_TYPE("固定手数",0),
 
-        //是否跟单
+        //跟单失败
         NOT_FOLLOW_ORDER_BY_CLIENT("跟单失败",0),
-        //是否跟单
+        //已跟单
         FOLLOW_ORDER_BY_CLIENT("已跟单",1),
+        //无需跟单
+        FOLLOW_ORDER_BY_CLIENT_NO_NEED("无需跟单",2),
+
         //账号状态
         ACCOUNT_START("启用",1),
         ACCOUNT_DELETE("删除",0)

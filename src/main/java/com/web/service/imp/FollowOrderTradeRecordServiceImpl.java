@@ -52,6 +52,8 @@ public class FollowOrderTradeRecordServiceImpl implements FollowOrderTradeRecord
     private OrderHongKongService orderHongKongService;
     @Autowired
     private ContractInfoService contractInfoService;
+    @Autowired
+    private UselessTicketService uselessTicketService;
 
     private static Logger log = LogManager.getLogger(FollowOrderTradeRecordServiceImpl.class.getName());
 
@@ -240,14 +242,20 @@ public class FollowOrderTradeRecordServiceImpl implements FollowOrderTradeRecord
                     orderUserMap.put("detailId", detail.getId());
                     orderUserMap.put("status", FollowOrderEnum.FollowStatus.FOLLOW_ORDER_BY_CLIENT.getIndex());
 
-                } else {
-                    orderUserMap.put("status", FollowOrderEnum.FollowStatus.NOT_FOLLOW_ORDER_BY_CLIENT.getIndex());
+                } else  {
+                    UselessTicket ticket = uselessTicketService.getUselessTicketByTicket(orderUser.getTicket());
+                    if(ticket!=null){
+                        orderUserMap.put("status", FollowOrderEnum.FollowStatus.FOLLOW_ORDER_BY_CLIENT_NO_NEED.getIndex());
+                    }else {
+                        orderUserMap.put("status", FollowOrderEnum.FollowStatus.NOT_FOLLOW_ORDER_BY_CLIENT.getIndex());
+                    }
                 }
                 //条件查询
                 if (status.equals(orderUserMap.get("status"))) {
                     orderUserList.add(orderUserMap);
-                } else if (status.equals(-1)) {
+                }else if(status.equals(-1)){
                     orderUserList.add(orderUserMap);
+
                 }
             }
         }
