@@ -278,7 +278,7 @@ function clientTableShow(id, manager, name) {
                 if (value == "1") {
                     return "<span style='color: #26a69a'>已跟单</span>";
                 } else if (value == "0") {
-                    return "<span style='color: #c49f47'>跟单失败</span>";
+                    return "<span style='color: #c49f47'>未跟单</span>";
                 }
             }
         }
@@ -342,6 +342,9 @@ function clientTableShow(id, manager, name) {
                     return "<span style='color: #26a69a'>已跟单</span>";
                 } else if (value == "0") {
                     return "<span style='color: #c49f47'>未跟单</span>";
+                }else if(value == "2") {
+                    return "<span style='color: #c44b73'>无需跟单</span>";
+
                 }
             }
         }
@@ -349,6 +352,7 @@ function clientTableShow(id, manager, name) {
     if (manager == "1") {
         showByTableId(tableClientId, method, url_client, unique_Id, sortOrder, clientNetPositionColumns);
     } else {
+        $("#clientFollowOrder").append("<option value='2'>无需跟单</option>");
         showByTableId(tableClientId, method, url_client, unique_Id, sortOrder, clientColumns);
 
     }
@@ -437,7 +441,7 @@ function orderClientTableShow(followOrderId, name) {
 * 展示跟单参数
 * */
 function orderParameterShow(followOrder) {
-    $("#accountName").html(followOrder.account.platform.name + "-" + followOrder.account.username);
+    $("#accountName").html(followOrder.account.platform.name + "-" + followOrder.account.account);
     $("#varietyName").html(followOrder.variety.varietyName);
     var num = 0;//1:不设置/净头寸/正向，0代表设置/客户/反向
 

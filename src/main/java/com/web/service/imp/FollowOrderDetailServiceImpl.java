@@ -50,6 +50,8 @@ public class FollowOrderDetailServiceImpl implements FollowOrderDetailService {
     private OrderHongKongService orderHongKongService;
     @Autowired
     private ContractInfoService contractInfoService;
+    @Autowired
+    private UselessTicketService uselessTicketService;
 
     @Override
     public void save(FollowOrderDetail followOrderDetail) {
@@ -144,8 +146,8 @@ public class FollowOrderDetailServiceImpl implements FollowOrderDetailService {
 
                             followOrderDetail.setProfitLoss(0.0);
                         }
-                        clientDetail .put("profitLoss",followOrderDetail.getProfitLoss());
                     }
+                    clientDetail .put("profitLoss",followOrderDetail.getProfitLoss());
                     clientDetailList.add(clientDetail);
                 }
                 return clientDetailList;
@@ -287,11 +289,21 @@ public class FollowOrderDetailServiceImpl implements FollowOrderDetailService {
                 detailNew.setTradeDirection(detail.getTradeDirection());
                 detailNew.setContractCode(detail.getContractCode());
                 detailNew.setFollowOrderTradeRecordId(detail.getFollowOrderTradeRecordId());
+                detailNew.setFollowOrderClientId(detail.getFollowOrderClientId());
+                detailNew.setAccountId(detail.getAccountId());
                 save(detailNew);
                 log.debug("客户新开仓明细：newTicket{},handNumber{}," + detailNew.getTicket() + "," + detailNew.getHandNumber());
                 detail.setHandNumber(followOrderTradeRecord.getHandNumber());
                 detail.setOriginalHandNumber(followOrderTradeRecord.getHandNumber());
                 detail.setPoundage(DoubleUtil.mul(poundage, detail.getHandNumber()));
+            }
+            if(!followOrderTradeRecord.getTicket().equals(followOrderTradeRecord.getNewTicket())&&
+                    (followOrderClient.getHandNumberType().equals(FollowOrderEnum.FollowStatus.CLIENT_HAND_NUMBER_TYPE.getIndex()) || hand ==0 )){
+                //当两个Ticket不一样时，而且是固定手数or 相减等于0时，代表newTicket是要保存在无需跟单的表中
+                UselessTicket uselessTicket = new UselessTicket();
+                uselessTicket.setTicket(followOrderTradeRecord.getNewTicket());
+                uselessTicket.setCreateDate(DateUtil.getStringDate());
+                uselessTicketService.save(uselessTicket);
             }
             //设置平仓时间
             detail.setCloseTime(orderMsgResult.getTradeDate() + orderMsgResult.getTradeTime());

@@ -70,6 +70,8 @@ public class FollowOrderServiceImpl implements FollowOrderService {
     private ContractInfoLinkService contractInfoLinkService;
     @Autowired
     private AccountService accountService;//账号
+    @Autowired
+    private UselessTicketService uselessTicketService;//无需跟单ticket记录
 
 
     @Override
@@ -227,15 +229,12 @@ public class FollowOrderServiceImpl implements FollowOrderService {
                                     // 卖出价（逸富）-开仓价（detail）
                                     followOrderVo.setPositionGainAndLoss(DoubleUtil.add(followOrderVo.getPositionGainAndLoss(),
                                             DoubleUtil.mul(DoubleUtil.sub(ask, detail.getOpenPrice()), detailOpenHandNum))) ;
-                                    log.debug(followOrderVo.getFollowOrder().getId()+"L盈亏:"+followOrderVo.getPositionGainAndLoss()+",ask:"+ask);
 
                                 } else {
                                     //交易方向为空，查询：买入价（bid）
                                     //开仓价（detail）-买入价（逸富）
                                     followOrderVo.setPositionGainAndLoss(DoubleUtil.add(followOrderVo.getPositionGainAndLoss(),
                                             DoubleUtil.mul(DoubleUtil.sub(detail.getOpenPrice(), bid), detailOpenHandNum)));
-                                    log.debug(followOrderVo.getFollowOrder().getId()+"L盈亏:"+followOrderVo.getPositionGainAndLoss()+",bid:"+bid);
-
                                 }
                             } else {
                                 followOrderVo.setPositionGainAndLoss(0.0);
@@ -252,11 +251,8 @@ public class FollowOrderServiceImpl implements FollowOrderService {
                             }else {
                                 successCount +=1;
                             }
-
                             //平仓手数
                             followOrderVo.setOffsetHandNumber(followOrderVo.getOffsetHandNumber()+detail.getHandNumber());
-                            //客户盈亏
-                            followOrderVo.setClientProfit(DoubleUtil.add(followOrderVo.getClientProfit(),detail.getClientProfit()));
                             //平仓盈亏
                             followOrderVo.setOffsetGainAndLoss(DoubleUtil.add(followOrderVo.getOffsetGainAndLoss(),detail.getProfitLoss()));
                             if(detail.getProfitLoss() > 0){
@@ -268,14 +264,14 @@ public class FollowOrderServiceImpl implements FollowOrderService {
                                 closePositionTotalNumber ++;
                             }
                         }
-
+                        //客户盈亏
+                        followOrderVo.setClientProfit(DoubleUtil.add(followOrderVo.getClientProfit(),detail.getClientProfit()));
                     }
+                    //detail 循环结束
                 }
-                //detail 循环结束
 
                 //设置累计盈亏
                 followOrderVo.setGainAndLossTotal(DoubleUtil.add(followOrderVo.getPositionGainAndLoss(),followOrderVo.getOffsetGainAndLoss()));
-               //平仓手数
 
                 //盈亏率:平仓盈亏之和除以手数之和，保留1位小数
                 followOrderVo.setProfitAndLossRate(DoubleUtil.div(followOrderVo.getOffsetGainAndLoss() ,
@@ -297,7 +293,6 @@ public class FollowOrderServiceImpl implements FollowOrderService {
                 followOrderPageVo.setHoldPositionProfit(DoubleUtil.add(followOrderPageVo.getHoldPositionProfit(),followOrderVo.getPositionGainAndLoss()));
             }
             //followOrder 循环结束
-
 
             //盈亏效率:所有平仓单的平仓盈亏除以平仓手数
             followOrderPageVo.setProfitAndLossRate(DoubleUtil.div(followOrderPageVo.getHistoryProfit(),followOrderPageVo.getHistoryHandNumber()==0?1:followOrderPageVo.getHistoryHandNumber(),2));
@@ -497,6 +492,20 @@ public class FollowOrderServiceImpl implements FollowOrderService {
                 //手数向下取整
                 this.sendMsgByTrade(followOrder, direction, FollowOrderEnum.FollowStatus.CLOSE.getIndex(), tradeHandNumber, data.getNewTicket(), data.getTicket(),
                         null);
+            }else{
+
+                //1.判断两个ticket是否一致
+                if(!data.getTicket().equals(data.getNewTicket())){
+                    //2.通过ticket,去tb_useless_ticket查找是否被标记为无需跟单
+                    UselessTicket uselessTicket = uselessTicketService.getUselessTicketByTicket(data.getTicket());
+                    if(uselessTicket!=null){
+                        //3.需要记录一次新ticket
+                        UselessTicket uselessTicket1 = new UselessTicket();
+                        uselessTicket1.setTicket(data.getNewTicket());
+                        uselessTicket1.setCreateDate(DateUtil.getStringDate());
+                        uselessTicketService.save(uselessTicket1);
+                    }
+                }
             }
         } else {
             //开仓跟

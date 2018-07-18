@@ -37,14 +37,24 @@ public class SweepTableSchedule {
     private static Logger log = LogManager.getLogger(SweepTableSchedule.class.getName());
 
     public static Map<String,Double> getAskAndBidByFollowOrderId(Long followOrderId){
+        Map<String,Double> mapOne = new HashMap<>();
+        Map<String,Double> mapTwo = new HashMap<>();
+        mapOne.put("bid",50.2);
+        mapOne.put("ask",55.2);
 
+
+
+        mapTwo.put("ask",51.3);
+        mapTwo.put("bid",52.3);
+        detailPositionGainAndLoss.put(1L,mapOne);
+        detailPositionGainAndLoss.put(3L,mapTwo);
         return detailPositionGainAndLoss.get(followOrderId);
     }
 
     //每3秒： */3 * * * * ?
-//    @Scheduled(cron = "*/3 * * * * ?")
+//    @Scheduled(cron = "0 0/3 * * * ?")
     public void doSweepTable(){
-//        log.debug("定时器执行");
+        log.debug("定时器执行");
         List<FollowOrder> followOrder = followOrderService.getNOStopFollowOrder();
         CommunicatorConfig cfg = new CommunicatorConfig();
         Communicator communicator = CommunicatorFactory.getInstance().getCommunicator(cfg);

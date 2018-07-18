@@ -128,7 +128,7 @@ public class NetworkManger extends Thread {
 
 
     public synchronized Socket ConnectToServerByTcp() throws InterruptedException {
-// 建立通讯连接
+        // 建立通讯连接
         boolean connectOk = true;
         boolean test = true;
         try {
