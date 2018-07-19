@@ -75,11 +75,8 @@ function setFollowOrderParameter(followOrder) {
     setRadio('maxLoss',followOrder.maxLoss,followOrder.maxLossNumber);
     setRadio('accountLoss',followOrder.accountLoss,followOrder.accountLossNumber);
     setRadio('followManner',followOrder.followManner);
-    $("#GD-id option").each(function () {
-        if($(this).val() == followOrder.account.id){
-            $(this).attr("selected", true);
-        }
-    });
+
+    findAccount(followOrder.account.id);
     if(followOrder.followManner){
         setRadio('netPositionDirection',followOrder.netPositionDirection);
         $("#netPositionChange-id").val(followOrder.netPositionChange);
@@ -88,6 +85,39 @@ function setFollowOrderParameter(followOrder) {
 
 }
 
+function findAccount(accountId) {
+    $.ajax({
+        url:url_+"/account/getListAccount.Action",
+        type:'POST', //GET
+        async:true,    //或false,是否异步
+        data:{
+        },
+        // timeout:5000,    //超时时间
+        dataType:'json',    //返回的数据格式：json/xml/html/script/jsonp/text
+        beforeSend:function(xhr){
+
+        },
+        success:function(data,textStatus,jqXHR){
+            var content = "";
+            $.each(data,function (index,ele) {
+                if(accountId == ele.account.id){
+                    content += "<option value="+ele.account.id+" selected>"+ ele.account.platform.name + "-"+ele.account.account+"</option>"
+                }else {
+
+                    content += "<option value="+ele.account.id+">"+ ele.account.platform.name + "-"+ele.account.account+"</option>"
+                }
+            });
+            $("#account-id").append(content);
+        },
+        error:function(xhr,textStatus){
+
+        },
+        complete:function(){
+
+        }
+    })
+
+}
 function setRadio(radioName,parameter,number,value) {
 
     $("input[type=radio][name='"+radioName+"']").each(function () {
@@ -275,8 +305,7 @@ function member_del(id, obj) {
             icon: 1,
             time: 1000
         });
-        // var date = $("#mytable").bootstrapTable('getData');
-        // console.log(date)
+
     });
 
 }
@@ -419,7 +448,7 @@ function commit(){
     });
     var str = JSON.stringify(fayuan_data);
     $.ajax({
-        url:"/sm/followOrder/updateFollowOrder.Action",
+        url:url_+"/followOrder/updateFollowOrder.Action",
         type:'POST', //GET
         async:true,    //或false,是否异步
         data:{

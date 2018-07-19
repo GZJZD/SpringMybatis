@@ -106,7 +106,7 @@ public class FollowOrderDetailServiceImpl implements FollowOrderDetailService {
                     clientDetail .put("followOrderClientId",followOrderDetail.getFollowOrderClientId());
                     clientDetail .put("openPrice",followOrderDetail.getOpenPrice());
                     clientDetail .put("poundage",followOrderDetail.getPoundage());
-                    clientDetail .put("clientProfit",followOrderDetail.getClosePrice());
+                    clientDetail .put("clientProfit",followOrderDetail.getClientProfit());
                     clientDetail .put("followOrderId",followOrderDetail.getFollowOrderId());
                     if (followOrderDetail.getOpenTime() != null) {
                         clientDetail .put("openTime",DateUtil.strToStr(followOrderDetail.getOpenTime()));
@@ -216,7 +216,7 @@ public class FollowOrderDetailServiceImpl implements FollowOrderDetailService {
                     if (tradeRecord.getTradeDirection().equals(FollowOrderEnum.FollowStatus.BUY.getIndex())) {
                         //交易方向为多，查询：卖出价（ask）
                         netPositionDetailVo.setProfit(DoubleUtil.mul(DoubleUtil.sub(askAndBid.get("ask"), netPositionDetailVo.getMarketPrice()), netPositionDetailVo.getRemainHandNumber()));
-                        log.debug(netPositionDetailVo.getDetailId()+"L明细盈亏:"+netPositionDetailVo.getProfit()+",ask:"+askAndBid.get("ask"));
+//                        log.debug(netPositionDetailVo.getDetailId()+"L明细盈亏:"+netPositionDetailVo.getProfit()+",ask:"+askAndBid.get("ask"));
 
                     } else {
                         //交易方向为空，查询：买入价（bid）

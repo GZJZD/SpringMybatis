@@ -168,7 +168,6 @@ $(function () {
                 }
                 // parent.window.parent.location.reload();
 
-
             },
             error: function (xhr, textStatus) {
 

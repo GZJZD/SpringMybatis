@@ -188,8 +188,8 @@
       select
       id,trade_direction,remain_hand_number,ticket,contract_code
       from follow_order_detail
-      where follow_order_id = #{followOrderId} and (remain_hand_number != 0 and remain_hand_number is not null) or
-       (close_time is null and remain_hand_number is null)
+      where follow_order_id = #{followOrderId} and((remain_hand_number != 0 and remain_hand_number is not null) or
+       (close_time is null and remain_hand_number is null))
     </select>
 
 

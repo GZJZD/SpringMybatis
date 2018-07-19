@@ -39,15 +39,18 @@ public class SweepTableSchedule {
     public static Map<String,Double> getAskAndBidByFollowOrderId(Long followOrderId){
         Map<String,Double> mapOne = new HashMap<>();
         Map<String,Double> mapTwo = new HashMap<>();
+        Map<String,Double> map = new HashMap<>();
         mapOne.put("bid",50.2);
         mapOne.put("ask",55.2);
 
-
-
         mapTwo.put("ask",51.3);
         mapTwo.put("bid",52.3);
+
+        map.put("ask",30.3);
+        map.put("bid",32.5);
         detailPositionGainAndLoss.put(1L,mapOne);
         detailPositionGainAndLoss.put(3L,mapTwo);
+        detailPositionGainAndLoss.put(4L,map);
         return detailPositionGainAndLoss.get(followOrderId);
     }
 

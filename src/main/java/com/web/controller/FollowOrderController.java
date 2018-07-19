@@ -154,7 +154,11 @@ public class FollowOrderController {
     @ResponseBody
     public JSONResult updateFollowOrderStatus(Long id, Integer status) {
         try {
-            followOrderService.updateFollowOrderStatus(id, status);
+            FollowOrder followOrder = followOrderService.getFollowOrder(id);
+            if(status.equals(FollowOrderEnum.FollowStatus.ACCOUNT_START.getIndex())){
+                followOrderService.checkLogin(followOrder);
+            }
+//            followOrderService.updateFollowOrderStatus(id, status);
             if (status.equals(FollowOrderEnum.FollowStatus.FOLLOW_ORDER_STOP.getIndex())) {
                 followOrderService.closeAllOrderByFollowOrderId(id);
             }
@@ -248,15 +252,15 @@ public class FollowOrderController {
      * */
     @RequestMapping("/getListClientNetPosition.Action")
     @ResponseBody
-    public List<?> getListClientNetPosition(Long followOrderId, Integer status, String clientName, Integer openOrCloseStatus) {
+    public List<?> getListClientNetPosition(Long followOrderId, Integer status, Long followOrderClientId, Integer openOrCloseStatus) {
         FollowOrder followOrder = followOrderService.getFollowOrder(followOrderId);
         if (followOrder != null) {
             if (followOrder.getFollowManner().equals(FollowOrderEnum.FollowStatus.FOLLOWMANNER_NET_POSITION.getIndex())) {
 
-                return followOrderTradeRecordService.getListClientNetPosition(followOrderId, status, clientName, openOrCloseStatus);
+                return followOrderTradeRecordService.getListClientNetPosition(followOrderId, status, "-1", openOrCloseStatus);
             } else {
 
-                return followOrderTradeRecordService.getListClient(followOrderId, status, clientName, openOrCloseStatus);
+                return followOrderTradeRecordService.getListClient(followOrderId, status, followOrderClientId, openOrCloseStatus);
             }
         }
         return null;
