@@ -5,8 +5,9 @@ var tableHistoryOrderId = $("#historyFollowOrderTable");
 var method = "get";
 
 var url_orderPage = url_ + "/followOrder/getListFollowOrder.Action?varietyId=" + varietyNum + "&accountId=" + accountNum;
+var url_history = url_ + "/followOrder/getListFollowOrder.Action?varietyId=" + varietyNum + "&accountId=" + accountNum + "&status=0";
 var unique_Id = "detailId";
-var sortOrder = "asc";
+var sortOrder = "desc";
 var columns = [{
     title: '全选',
     field: 'select',
@@ -49,25 +50,30 @@ var columns = [{
 }, {
     field: '',
     title: '跟单成功率',
+    ortable: true,
     formatter: function (value, row, index) {
         return row.successTotal + "/" + row.allTotal;
     }
 
 }, {
     field: 'positionGainAndLoss',
-    title: '持仓盈亏'
+    title: '持仓盈亏',
+    sortable: true
 }, {
     field: 'offsetGainAndLoss',
-    title: '平仓盈亏'
+    title: '平仓盈亏',
+    sortable: true
 }, {
     field: 'poundageTotal',
     title: '手续费'
 }, {
     field: 'profitAndLossRate',
-    title: '盈亏效率'
+    title: '盈亏效率',
+    sortable: true
 }, {
     field: 'clientProfit',
-    title: '客户盈亏'
+    title: '客户盈亏',
+    sortable: true
 }, {
     field: 'followOrder.followOrderStatus',
     title: '跟单状态',
@@ -134,7 +140,7 @@ $(function () {
     * 跟单历史点击事件
     * */
     $("#historyShow").click(function () {
-        var url_history = url_ + "/followOrder/getListFollowOrder.Action?varietyId=" + varietyNum + "&accountId=" + accountNum + "&status=0";
+
         $(tableHistoryOrderId).bootstrapTable('destroy');
         orderTableShow(url_history,tableHistoryOrderId);
         $(tableHistoryOrderId).bootstrapTable('refresh', {
@@ -218,6 +224,7 @@ function showByOrderId(table_Id, method,  unique_Id, sortOrder, columns,data) {
         showToggle: false, //是否显示详细视图和列表视图的切换按钮
         cardView: false, //是否显示详细视图
         detailView: false, //是否显示父子表
+        silent:true,
         //			height:tableHeight(),//高度调整
         queryParams: function(params) {
             return {
@@ -443,19 +450,20 @@ function update_status(id, obj, newTitle, oldTitle, status, i) {
                 $(obj).find('i').html(i);
                 $(obj).parents("tr").find(".td-status").find('span').addClass('layui-btn-disabled').html('已' + oldTitle);
                 layer.msg("状态修改成功", {icon: 6, time: 1000}, function () {
-                    $(tableOrderId).bootstrapTable('refresh', {
-                        silent: true//静默跟新
-                    });
-                    $(tableHistoryOrderId).bootstrapTable('refresh', {
-                        silent: true//静默跟新
-                    });
+                    // $(tableHistoryOrderId).bootstrapTable('refresh', {
+                    //     silent: true//静默跟新
+                    // });
+                    $(tableHistoryOrderId).bootstrapTable('destroy');
+                    orderTableShow(url_history,tableHistoryOrderId);
+                    $(tableOrderId).bootstrapTable('destroy');
+                    orderTableShow(url_orderPage,tableOrderId);
+
+
 
                 });
             } else {
                 //layer.msg(data.msg, {icon: 6, time: 1000});
-                layer.msg("系统出现故障，请联系相关人员进行相应的操作", {icon: 6, time: 1000}, function () {
-                    location.reload()
-                });
+                layer.msg("系统繁忙，请稍后再试", {icon: 6, time: 1000});
             }
         },
         error: function (xhr, textStatus) {
