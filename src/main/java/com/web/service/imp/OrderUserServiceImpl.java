@@ -358,11 +358,11 @@ public class OrderUserServiceImpl implements OrderUserService {
      * @return
      */
     @Override
-    public List<OrderUser> findByUserIdList( Map<String, String> map, String startTime, String endTime, String productCode, Integer openOrCloseStatus) {
+    public List<OrderUser> findByUserIdList(List<String>list, String startTime, String endTime, String productCode, Integer openOrCloseStatus,String platFormCode) {
 
         List<OrderUser> orderUserList = new ArrayList<>();
-        if (map.size() > 0 && startTime != null && !StringUtils.isEmpty(startTime) && productCode != null && !StringUtils.isEmpty(productCode)) {
-            orderUserList = orderUserDao.findByUserIdList(map, startTime, endTime, productCode, openOrCloseStatus);
+        if (list.size() > 0 && startTime != null && !StringUtils.isEmpty(startTime) && productCode != null && !StringUtils.isEmpty(productCode)) {
+            orderUserList = orderUserDao.findByUserIdList(list, startTime, endTime, productCode, openOrCloseStatus,platFormCode);
         }
         return orderUserList;
     }
