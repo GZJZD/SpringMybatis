@@ -129,17 +129,23 @@ $(function () {
     /*
      *表格加载
      * */
-    orderTableShow(url_orderPage);
+    orderTableShow(url_orderPage,tableOrderId);
     /*
     * 跟单历史点击事件
     * */
-    var url_history = url_ + "/followOrder/getListFollowOrder.Action?varietyId=" + varietyNum + "&accountId=" + accountNum + "&status=0";
-    showByTableId(tableHistoryOrderId, "post", url_history, unique_Id, sortOrder, columns);
+    $("#historyShow").click(function () {
+        var url_history = url_ + "/followOrder/getListFollowOrder.Action?varietyId=" + varietyNum + "&accountId=" + accountNum + "&status=0";
+        $(tableHistoryOrderId).bootstrapTable('destroy');
+        orderTableShow(url_history,tableHistoryOrderId);
+        $(tableHistoryOrderId).bootstrapTable('refresh', {
+            silent: true//静默跟新
+        });
+    })
 
 
 
 });
-function orderTableShow(url){
+function orderTableShow(url,tableId){
     $.ajax({
         url: url,
         type: 'post', //GET
@@ -153,7 +159,7 @@ function orderTableShow(url){
         success: function (data) {
 
             if(data.followOrderVoList == null ){
-                $(tableOrderId).bootstrapTable({load:data.followOrderVoList,
+                $(tableId).bootstrapTable({load:data.followOrderVoList,
                     columns:columns,
                     formatLoadingMessage: function(){
                         return "";
@@ -161,7 +167,7 @@ function orderTableShow(url){
                 });
             }else {
 
-                showByOrderId(tableOrderId, method, unique_Id, sortOrder, columns,data.followOrderVoList);
+                showByOrderId(tableId, method, unique_Id, sortOrder, columns,data.followOrderVoList);
             }
             $("#history_close_position").html(data.historyHandNumber + "/" + data.historyProfit);
             if (data.holdPositionHandNumber == null) {
@@ -229,65 +235,11 @@ function showByOrderId(table_Id, method,  unique_Id, sortOrder, columns,data) {
 
         },
         onLoadError: function(status) {
-            console.log(status);
+            // console.log(status);
             //                  showTips("数据加载失败！");
         },
         onDblClickRow: function(row, $element) {
-            console.log(row);
-            var id = row.id;
-            EditViewById(id, 'view');
-            // console.log(id);
-        },
-        formatLoadingMessage: function(){
-            return "";
-        }
-
-    });
-
-}
-function showDataIsNull(table_Id, method,  unique_Id, sortOrder, columns) {
-    $(table_Id).bootstrapTable({
-        method: method,
-        contentType: "application/x-www-form-urlencoded", //必须要有！！！！
-        async:true,//异步加载
-        striped: false, //是否显示行间隔色
-        clickToSelect: true,
-        uniqueId: unique_Id, //每一行的唯一标识，一般为主键列
-        pagination: true, //是否显示分页（*）
-        sortable: true, //是否启用排序
-        sortOrder: sortOrder, //排序方式
-        clickToSelect: true, // 是否启用点击选中行
-        pageSize: 10, //单页记录数
-        pageList: [50, 100], //分页步进值
-        //			search: true, //是否显示表格搜索，此搜索是客户端搜索，不会进服务端，所以，个人感觉意义不大
-        strictSearch: true,
-        showColumns: false, //是否显示所有的列
-        showRefresh: false, //是否显示刷新按钮
-        showToggle: false, //是否显示详细视图和列表视图的切换按钮
-        cardView: false, //是否显示详细视图
-        detailView: false, //是否显示父子表
-        //			height:tableHeight(),//高度调整
-        queryParams: function(params) {
-            return {
-                offset: params.offset, //页码
-                limit: params.limit, //页面大小
-                search: params.search, //搜索
-                order: params.order, //排序
-                ordername: params.sort, //排序
-            };
-        },
-        buttonsAlign: 'right', //按钮对齐方式
-        columns: columns,
-        onLoadSuccess: function(data) {
-            // console.log(data);
-
-        },
-        onLoadError: function(status) {
-            console.log(status);
-            //                  showTips("数据加载失败！");
-        },
-        onDblClickRow: function(row, $element) {
-            console.log(row);
+            // console.log(row);
             var id = row.id;
             EditViewById(id, 'view');
             // console.log(id);
@@ -365,7 +317,6 @@ function orderByParameter(num) {
 
         },
         success: function (data) {
-            console.log(data);
             if(data.followOrderVoList == null ){
                 $(tableOrderId).bootstrapTable({load:data.followOrderVoList,
                     columns:columns,
@@ -612,7 +563,7 @@ function follow_details(obj, title, url, w, h) {
             iframeWin.detailShow(varietyName,name, manager, followOrderId, successTotal + "/" + orderNum, offsetGainAndLoss,obj.positionGainAndLoss, poundageTotal);
             iframeWin.clientTableShow(followOrderId, manager, name);
             iframeWin.orderParameterShow(obj.followOrder);
-            iframeWin.orderClientTableShow(followOrderId, name);
+            iframeWin.orderClientTableShow(followOrderId, name,varietyName);
 
         },
         btn: ['关闭']

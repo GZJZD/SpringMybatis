@@ -6,7 +6,7 @@ var followOrderId;
 var unique_Id = "detailId";
 var sortOrder = "asc";
 var clientStatus = $("#clientFollowOrder option:selected").val();
-var clientName = $("#clientName option:selected").val();
+var followOrderClientId  = $("#clientName option:selected").val();
 var varietyName;
 var columns = [
     {
@@ -86,7 +86,6 @@ function manually_close_position(id) {
             success: function (data) {
                 var obj = eval('(' + data + ')');
                 if (obj.success) {
-                    alert(1311)
                     layer.msg('平仓成功', {icon: 6, time: 1000}, function () {
                         location.reload();
                         $(".layui-laypage-btn").click();
@@ -209,7 +208,7 @@ function detailShow(varietyName, name, manager, id, orderNum, offsetGainAndLoss,
 function clientTableShow(id, manager, name) {
 
     followOrderId = id;
-    var url_client = url_ + "/followOrder/getListClientNetPosition.Action?followOrderId=" + id + "&status=" + clientStatus + "&clientName=" + clientName;
+    var url_client = url_ + "/followOrder/getListClientNetPosition.Action?followOrderId=" + id +"&followOrderClientId="+followOrderClientId+ "&status=" + clientStatus ;
     var clientNetPositionColumns = [
         {
             title: '序号',
@@ -367,7 +366,7 @@ function clientTableShow(id, manager, name) {
 *
 * 展示跟每单中跟单数据
 * */
-function orderClientTableShow(followOrderId, name) {
+function orderClientTableShow(followOrderId, name,varietyCode) {
     var orderClientTable = $("#orderClientTable");
     var url_order_client = url_ + "/followOrder/getListClientFollowOrderTrade.Action?followOrderId=" + followOrderId;
     var orderClientColumns = [
@@ -377,7 +376,8 @@ function orderClientTableShow(followOrderId, name) {
 
         }, {
             field: 'varietyCode',
-            title: '品种'
+            title: '品种',
+            formatter:varietyCode
         }, {
             field: 'followDirection',
             title: '跟单方向',
@@ -405,17 +405,17 @@ function orderClientTableShow(followOrderId, name) {
             field: 'winRate',
             title: '跟单成功率'
         }, {
-            field: 'clientProfit',
+            field: 'followOrderVo.clientProfit',
             title: '客户盈亏'
         }, {
-            field: 'offsetGainAndLoss',
+            field: 'followOrderVo.offsetGainAndLoss',
             title: '平仓盈亏'
 
         }, {
-            field: 'positionGainAndLoss',
+            field: 'followOrderVo.positionGainAndLoss',
             title: '持仓盈亏'
         }, {
-            field: 'poundageTotal',
+            field: 'followOrderVo.poundageTotal',
             title: '手续费'
         }, {
             field: 'status',
@@ -511,7 +511,7 @@ function tableExportFile(tableId, fileName) {
 function findByClient() {
     var clientTable = $("#clientTable");
     var status = $("#clientFollowOrder option:selected").val();
-    var clientName = $("#clientName option:selected").val();
+    var followOrderClientId = $("#clientName option:selected").val();
     var openOrCloseStatus = $("#clientOpenOrClose option:selected").val();
     $.ajax({
         url: url_ + "/followOrder/getListClientNetPosition.Action",
@@ -520,7 +520,7 @@ function findByClient() {
         data: {
             followOrderId: followOrderId,
             status: status,
-            clientName: clientName,
+            followOrderClientId: followOrderClientId,
             openOrCloseStatus: openOrCloseStatus
         },
         timeout: 5000,    //超时时间
@@ -634,7 +634,7 @@ function findByClientName(followOrderId) {
         success: function (data) {
             var content = "";
             $.each(data, function (index, ele) {
-                content += "<option value=" + ele + ">" + ele + "</option>"
+                content += "<option value=" + ele.followOrderClientId + ">" + ele.userName + "</option>"
             });
             $("#clientName").append(content);
         },
