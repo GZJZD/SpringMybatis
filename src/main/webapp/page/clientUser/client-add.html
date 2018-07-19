@@ -192,26 +192,7 @@
                         <div class="layui-input-inline">
                             <select id="GD-id" name="modules" lay-verify="required" lay-search="">
 
-                                <option value="1">layer</option>
-                                <option value="2">form</option>
-                                <option value="3">layim</option>
-                                <option value="4">element</option>
-                                <option value="5">laytpl</option>
-                                <option value="6">upload</option>
-                                <option value="7">laydate</option>
-                                <option value="8">laypage</option>
-                                <option value="9">flow</option>
-                                <option value="10">util</option>
-                                <option value="11">code</option>
-                                <option value="12">tree</option>
-                                <option value="13">layedit</option>
-                                <option value="14">nav</option>
-                                <option value="15">tab</option>
-                                <option value="16">table</option>
-                                <option value="17">select</option>
-                                <option value="18">checkbox</option>
-                                <option value="19">switch</option>
-                                <option value="20">radio</option>
+
                             </select>
                        </div>
                     </div>
@@ -219,7 +200,7 @@
                      <div class="layui-form-item">
                         <label class="layui-form-label">跟单方式:</label>
                         <div class="layui-input-block">
-                            <input class="disPaly" type="text" id="followManner" value="1"/>
+                            <input class="disPaly" type="text" id="followManner" value="0"/>
                             <input type="radio" name="followManner" onclick="setStatus('followManner')" value="0" title="跟每一单" checked="">跟每一单</input>
                             <input type="radio" name="followManner" onclick="setStatus('followManner')" value="1" title="跟净头寸">跟净头寸</input>
                         </div>
@@ -227,7 +208,7 @@
 
                         <div class="layui-form-item">
                             <div class="layui-input-block">
-                                <button type="submit" class="layui-btn" lay-submit="" lay-filter="demo1" onclick="goOn(1)">继续<i class="layui-icon layui-icon-face-smile"></i>   </button>
+                                <button type="submit" class="layui-btn" lay-submit="" lay-filter="demo1" onclick="goOn(1)">继续1<i class="layui-icon layui-icon-face-smile"></i>   </button>
                             </div>
                         </div>
                 </div>
@@ -242,7 +223,7 @@
             <div class="layui-form-item">
                 <div class="layui-input-block">
                     <button type="submit" class="layui-btn layui-btn-primary" onclick="returnBlack(1)">返回</button>
-                    <button type="submit" class="layui-btn" lay-submit="" lay-filter="demo1" onclick="goOn(2)">继续<i class="layui-icon layui-icon-face-smile"></i>   </button>
+                    <button type="submit" class="layui-btn" lay-submit="" lay-filter="demo1" onclick="goOn(2)">继续2<i class="layui-icon layui-icon-face-smile"></i>   </button>
                 </div>
             </div>
         </div>
@@ -282,7 +263,7 @@
             <div class="layui-form-item">
                 <div class="layui-input-block">
                     <button type="submit" class="layui-btn layui-btn-primary" onclick="returnBlack(1)">返回</button>
-                    <button type="submit" class="layui-btn" lay-submit="" lay-filter="demo1" onclick="goOn(2)">继续<i class="layui-icon layui-icon-face-smile"></i>   </button>
+                    <button type="submit" class="layui-btn" lay-submit="" lay-filter="demo1" onclick="goOn(2)">继续3<i class="layui-icon layui-icon-face-smile"></i>   </button>
                 </div>
             </div>
         </div>
@@ -378,7 +359,7 @@
             </div>
 
         </div>
-        <div>
+        <div  class="user-set disPaly">
             <fieldset class="layui-elem-field layui-field-title " style="margin-top: 20px;">
                 <legend>客户设置</legend>
             </fieldset>
@@ -386,6 +367,40 @@
             <table id="datails-table" >
             </table>
         </div>
+
+        <div class="user-input-set disPaly">
+
+            <div>
+                <div class="layui-form-item">
+                    <label class="layui-form-label">跟单方式:</label>
+                    <div class="layui-input-block">
+
+                        <input type="radio" disabled="disabled" name="netPositionDirection-val" value="1" title="正向" >正向</input>
+                        <input type="radio" disabled="disabled" name="netPositionDirection-val"  value="0" title="反向">反向</input>
+                    </div>
+                </div>
+                <div class="layui-form-item">
+
+                    <div class="layui-inline">
+                        <label class="layui-form-label">下单手数:</label>
+                        <label class="layui-form-label">净头寸每变化/手</label>
+                        <div class="layui-input-block set-input">
+                            <input type="number"  readonly="readonly"   id="netPositionChange-val" autocomplete="off" class="layui-input">
+                        </div>
+
+                    </div>
+                    <div class="layui-inline set-div-top" >
+                        <label class="layui-form-label">跟单/手</label>
+                        <div class="layui-input-block">
+                            <input type="number"  readonly="readonly"  id="netPositionFollowNumber-val"  autocomplete="off" class="layui-input">
+                        </div>
+
+                    </div>
+                </div>
+             </div>
+
+        </div>
+
         <div class="layui-form-item">
             <div class="layui-input-block">
                 <button type="submit" class="layui-btn layui-btn-primary" onclick="returnBlack(2)">返回</button>
