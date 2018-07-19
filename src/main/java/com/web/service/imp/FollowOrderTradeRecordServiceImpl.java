@@ -190,23 +190,22 @@ public class FollowOrderTradeRecordServiceImpl implements FollowOrderTradeRecord
         List<Map<String, Object>> orderUserList = new ArrayList<>();
 
         List<FollowOrderClient> userCode = followOrderClientService.getListByFollowOrderId(followOrderId); //查找该跟单下的客户编号
-        List<String> code = new ArrayList<>();
+        Map<String, String> map = new HashMap<>();
         if (followOrderClientId != -1) {
             //-1:代表查询全部客户
-            //todo 修改为通过usercode 和平台找到对应的客户
             FollowOrderClient followOrderClient = followOrderClientService.getFollowOrderClient(followOrderClientId);
-//            userCode.add(followOrderClient.getUserCode());
-            code.add(followOrderClient.getUserCode());
+
+            map.put(followOrderClient.getUserCode(),followOrderClient.getPlatformCode());
         } else {
             for (FollowOrderClient orderClient : userCode) {
-                code.add(orderClient.getUserCode());
+                map.put(orderClient.getUserCode(),orderClient.getPlatformCode());
             }
         }
         FollowOrder followOrder = followOrderService.getFollowOrder(followOrderId);
         //todo 是哪个数据源不清楚
         ContractInfo info = contractInfoService.getInfoByVarietyIdAndPlatformId(followOrder.getVariety().getId(), 2L);
 
-        List<OrderUser> userList = orderUserService.findByUserIdList(code, followOrder.getStartTime(), null, info.getContractCode(), openOrCloseStatus);
+        List<OrderUser> userList = orderUserService.findByUserIdList(map, followOrder.getStartTime(), null, info.getContractCode(), openOrCloseStatus);
         for (OrderUser orderUser : userList) {
             if (orderUser.getOpenTime() != null) {
                 Map<String, Object> orderUserMap = new HashMap<>();
@@ -253,18 +252,26 @@ public class FollowOrderTradeRecordServiceImpl implements FollowOrderTradeRecord
      * @param followOrderId：跟单id
      * @return
      */
-    public List<NetPositionDetailVo> getListClientNetPosition(Long followOrderId, Integer status, String clientName, Integer openOrCloseStatus) {
-        List<String> userCode = followOrderClientService.getListUserCodeByFollowOrderId(followOrderId); //正式
-        if (!"-1".equals(clientName)) {
+    public List<NetPositionDetailVo> getListClientNetPosition(Long followOrderId, Integer status, Long followOrderClientId, Integer openOrCloseStatus) {
+//        List<String> userCode = followOrderClientService.getListUserCodeByFollowOrderId(followOrderId); //正式
+        Map<String, String> map = new HashMap<>();
+        List<FollowOrderClient> userCode = followOrderClientService.getListByFollowOrderId(followOrderId); //查找该跟单下的客户编号
+
+        if (followOrderClientId != -1) {
             //-1:代表查询全部客户
-            userCode = new ArrayList<>();
-            userCode.add(clientName);
+            FollowOrderClient followOrderClient = followOrderClientService.getFollowOrderClient(followOrderClientId);
+
+            map.put(followOrderClient.getUserCode(),followOrderClient.getPlatformCode());
+        } else {
+            for (FollowOrderClient orderClient : userCode) {
+                map.put(orderClient.getUserCode(),orderClient.getPlatformCode());
+            }
         }
         FollowOrder followOrder = followOrderService.getFollowOrder(followOrderId);
         //todo 是哪个数据源不清楚
         ContractInfo info = contractInfoService.getInfoByVarietyIdAndPlatformId(followOrder.getVariety().getId(), 2L);
 
-        List<OrderUser> userList = orderUserService.findByUserIdList(userCode, followOrder.getStartTime(), null, info.getContractCode(), openOrCloseStatus);
+        List<OrderUser> userList = orderUserService.findByUserIdList(map, followOrder.getStartTime(), null, info.getContractCode(), openOrCloseStatus);
         List<NetPositionDetailVo> netPositionDetailVoList = new ArrayList<>();
 
         for (OrderUser orderUser : userList) {

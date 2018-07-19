@@ -257,7 +257,7 @@ public class FollowOrderController {
         if (followOrder != null) {
             if (followOrder.getFollowManner().equals(FollowOrderEnum.FollowStatus.FOLLOWMANNER_NET_POSITION.getIndex())) {
 
-                return followOrderTradeRecordService.getListClientNetPosition(followOrderId, status, "-1", openOrCloseStatus);
+                return followOrderTradeRecordService.getListClientNetPosition(followOrderId, status, followOrderClientId, openOrCloseStatus);
             } else {
 
                 return followOrderTradeRecordService.getListClient(followOrderId, status, followOrderClientId, openOrCloseStatus);

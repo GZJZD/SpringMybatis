@@ -48,7 +48,7 @@ public interface FollowOrderTradeRecordService {
      * @param
      * @return
      */
-    List<NetPositionDetailVo> getListClientNetPosition(Long followOrderId, Integer status, String clientName, Integer openOrCloseStatus);
+    List<NetPositionDetailVo> getListClientNetPosition(Long followOrderId, Integer status, Long followOrderClientId, Integer openOrCloseStatus);
 
 
     List<Map<String, Object>> getListClient(Long followOrderId, Integer status, Long followOrderClientId, Integer openOrCloseStatus);
