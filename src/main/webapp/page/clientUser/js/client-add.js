@@ -4,6 +4,7 @@ $(function(){
     $("#accountLoss-id").hide();
     $("#maxLoss-id").hide();
     setParameter();
+    getAccountList();
 });
 
 function showTableBase(tableId,data_){
@@ -115,7 +116,7 @@ function  setParameter() {
             title: '平台',
             align: 'center',
             valign: 'middle',
-            hidden:false
+            hidden:true
         }
         ,
         {
@@ -178,16 +179,34 @@ function goOn(status){
         var tableId =$("#datails-table");
         if(leght > 0){
             $(tableId).bootstrapTable('destroy');
-
         }
         showTableBase(tableId,data_);
-        //设置参数
-        $(".detalis-div").show();
-
+        tableOrInputs();
     }
-
 }
 
+/**
+ * 根据状态 显示 table表格 或 input 参数
+ */
+  function tableOrInputs(){
+      ($('input[name="followManner"]:checked').val() == 0 ? $('.user-set').show() : showInput());
+    //设置参数
+    $(".detalis-div").show();
+  }
+
+  function showInput(){
+      
+      var netPositionDirection = $('input[name="netPositionDirection"]:checked').val(); //正向反向
+      if(netPositionDirection ==0){
+          $("input[name='netPositionDirection-val']").get(1).checked=true;
+      }else {
+          $("input[name='netPositionDirection-val']").get(0).checked=true;
+      }
+        $('#netPositionChange-val').val($('#netPositionChange-id').val());
+      $('#netPositionFollowNumber-val').val($('#netPositionFollowNumber-id').val());
+
+      $('.user-input-set').show()
+  }
 /**
  * 设置详情页明细显示
  */
@@ -226,6 +245,8 @@ function returnBlack(status){
         $(".three-div").css('background-color','#f0eff0');
         $('.first-div').hide();
         $('.detalis-div').hide();
+        $('.user-set').hide();//table
+        $('.user-input-set').hide(); //input框
         ($('input[name="followManner"]:checked').val() == 0? $('.table-div').show():$('.jtc').show());
 
     }
@@ -318,14 +339,12 @@ function setStatus(status){
 /**
  *   跟单创建提交
  */
-function commit(){
+function commit() {
+
     var followOrderName = $("#followOrderName").val();//策略名称
-    var varietyCode =  parent.$("#product-val-id option:selected").val(); //商品
-    var id  = $("#GD-id option:selected").val();//跟单人id
+    var varietyCode = parent.$("#product-val-id option:selected").val(); //商品
+    var id = $("#GD-id option:selected").val();//跟单人id
     var leght = $("#datails-table tbody").find('tr').length;
-
-
-
     var maxProfit = $("#maxProfit").val(); //最大止盈
     var maxProfitNumber = $("#maxProfit-id").val(); //止盈点数
     var maxLoss = $("#maxLoss").val();//止损
@@ -336,73 +355,112 @@ function commit(){
     var clientPoint = $(".clientPoint-class option:selected").val(); //比客户点位
     var clientPointNumber = $('#clientPointNumber-id').val(); //点位
     var followManner = $("#followManner").val(); //跟单方式
-    var netPositionDirection=$('input[name="netPositionDirection"]:checked').val(); //正向反向
-    var netPositionChange=$('#netPositionChange-id').val(); //净头寸变化
+    var netPositionDirection = $('input[name="netPositionDirection"]:checked').val(); //正向反向
+    var netPositionChange = $('#netPositionChange-id').val(); //净头寸变化
     var netPositionFollowNumber = $('#netPositionFollowNumber-id').val();//跟单、手数
-    if(followOrderName == ''|| followOrderName == 'undefined'){
+    if (followOrderName == '' || followOrderName == 'undefined') {
         return layer.msg('策略名称不能为空');
     }
 
-    if(leght < 1){
+    if (leght < 1) {
         return layer.msg('请选择用户');
     }
     //构造用户数组
     var fayuan_data = new Array();
-    $("#mytable tbody").find('tr').each(function(){
+    $("#mytable tbody").find('tr').each(function () {
         var tdArr = $(this).children();
         var userCode = tdArr.eq(0).html();//用户编号
         var userName = tdArr.eq(1).html();//用户姓名
         var followDirection = tdArr.eq(4.).find(".followDirection option:selected").val();//跟单方向
-        var handNumberType= tdArr.eq(5).find(".handNumberType option:selected").val();//手数类型
+        var handNumberType = tdArr.eq(5).find(".handNumberType option:selected").val();//手数类型
         var followHandNumber = tdArr.eq(6).find(".followHandNumber").val();//手数
         var platFormCode = tdArr.eq(7).html();//平台
-        var json_ = {"userCode":userCode,"userName":userName,"followDirection":followDirection,"handNumberType":handNumberType,"followHandNumber":followHandNumber,"platFormCode":platFormCode};
+        var json_ = {
+            "userCode": userCode,
+            "userName": userName,
+            "followDirection": followDirection,
+            "handNumberType": handNumberType,
+            "followHandNumber": followHandNumber,
+            "platFormCode": platFormCode
+        };
         fayuan_data.push(json_);
     });
     var str = JSON.stringify(fayuan_data);
 
     $.ajax({
-        url:url_+"/followOrder/createFollowOrder.Action",
-        type:'POST', //GET
-        async:true,    //或false,是否异步
-        data:{
-            followOrderClients:str, // 用户数组字符串
-            followOrderName:followOrderName, //策略名称
-            accountId:id,//跟单人id
-            varietyCode:varietyCode, //商品id
-            maxProfit:maxProfit,//最大止盈
-            maxProfitNumber : maxProfitNumber,//止盈点数
-            maxLoss:maxLoss, //止损
-            maxLossNumber : maxLossNumber,//止损点数
-            accountLoss:accountLoss,//账户止损
-            accountLossNumber:accountLossNumber, //账户止损金额
-            orderPoint:orderPoint,//下单点位
-            clientPoint :clientPoint, //比客户点位
-            clientPointNumber:clientPointNumber, //点位
-            netPositionDirection:netPositionDirection,//跟单正反向
-            netPositionChange:netPositionChange,//变化基数
-            netPositionFollowNumber:netPositionFollowNumber,//手数
-            followManner :followManner //跟单方式:用户or净头寸
+        url: url_ + "/followOrder/createFollowOrder.Action",
+        type: 'POST', //GET
+        async: true,    //或false,是否异步
+        data: {
+            followOrderClients: str, // 用户数组字符串
+            followOrderName: followOrderName, //策略名称
+            accountId: id,//跟单人id
+            varietyCode: varietyCode, //商品id
+            maxProfit: maxProfit,//最大止盈
+            maxProfitNumber: maxProfitNumber,//止盈点数
+            maxLoss: maxLoss, //止损
+            maxLossNumber: maxLossNumber,//止损点数
+            accountLoss: accountLoss,//账户止损
+            accountLossNumber: accountLossNumber, //账户止损金额
+            orderPoint: orderPoint,//下单点位
+            clientPoint: clientPoint, //比客户点位
+            clientPointNumber: clientPointNumber, //点位
+            netPositionDirection: netPositionDirection,//跟单正反向
+            netPositionChange: netPositionChange,//变化基数
+            netPositionFollowNumber: netPositionFollowNumber,//手数
+            followManner: followManner //跟单方式:用户or净头寸
         },
         // timeout:5000,    //超时时间
-        dataType:'json',    //返回的数据格式：json/xml/html/script/jsonp/text
-        beforeSend:function(xhr){
+        dataType: 'json',    //返回的数据格式：json/xml/html/script/jsonp/text
+        beforeSend: function (xhr) {
 
         },
-        success:function(data,textStatus,jqXHR){
-            if(data.success){
+        success: function (data, textStatus, jqXHR) {
+            if (data.success) {
                 parent.layer.closeAll();
 
-            }else{
+            } else {
                 layer.msg(data.msg);
             }
             parent.layer.msg(data.msg);
         },
-        error:function(xhr,textStatus){
+        error: function (xhr, textStatus) {
 
         },
-        complete:function(){
+        complete: function () {
 
         }
     })
 }
+    function getAccountList(){
+        $.ajax({
+            url:url_+"/account/getListAccount.Action",
+            type:'POST', //GET
+            async:true,    //或false,是否异步
+            data:{
+
+            },
+            // timeout:5000,    //超时时间
+            dataType:'json',    //返回的数据格式：json/xml/html/script/jsonp/text
+            beforeSend:function(xhr){
+
+            },
+            success:function(data,textStatus,jqXHR){
+                var content = "";
+                $.each(data,function (index,ele) {
+
+                    content += "<option value="+ele.account.id+" selected>"+ele.account.platform.name+"-"+ele.account.account+"</option>"
+
+                });
+                $("#GD-id").append(content);
+
+            },
+            error:function(xhr,textStatus){
+
+            },
+            complete:function(){
+
+            }
+        })
+    }
+
