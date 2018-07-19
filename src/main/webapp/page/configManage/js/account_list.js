@@ -12,13 +12,13 @@ var columns = [{
     align: 'center',
     valign: 'middle'
 }, {
-    field: 'platformName',
+    field: 'account.platform.name',
     title: '平台'
 }, {
     field: 'account.account',
     title: '账号'
 }, {
-    field: 'agentName',
+    field: 'account.agent.name',
     title: '对应代理人'
 
 }, {
