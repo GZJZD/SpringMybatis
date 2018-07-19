@@ -76,7 +76,7 @@
         where ticket = #{ticket}
     </update>
 
-    <select id="findByUserIdList"   resultMap="java.util.Map">
+    <select id="findByUserIdList"    resultType="java.util.Map">
 
         SELECT
         <include refid="Base_Column_List" />
