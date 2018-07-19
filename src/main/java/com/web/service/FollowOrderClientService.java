@@ -5,6 +5,7 @@ import com.web.pojo.FollowOrderClient;
 import com.web.pojo.vo.followOrder.FollowOrderClientParamVo;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * 跟单与客户之间的联系
@@ -21,7 +22,7 @@ public interface FollowOrderClientService {
 
     List<FollowOrderClient> getListByFollowOrderId(Long followOrderId);
     List<String> getListUserCodeByFollowOrderId(Long followOrderId);
-    List<String> getListUserNameByFollowOrderId(Long followOrderId);
+    List<Map<String,Object>> getListUserNameByFollowOrderId(Long followOrderId);
     List<FollowOrderClientParamVo> getListFollowOrderClientParamVo(Long followOrderId);
 
     void deleteByFollowOrderId(Long followOrderId);
@@ -31,6 +32,6 @@ public interface FollowOrderClientService {
 
     void update(FollowOrderClient record);
 
-
     FollowOrderClient getFollowOrderClient(Long followOrderClientId);
+     String getUserName(String userCode, String platformCode);
 }

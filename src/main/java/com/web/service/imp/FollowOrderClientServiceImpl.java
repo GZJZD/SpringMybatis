@@ -18,12 +18,15 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created by may on 2018/5/19.
  */
-@Service@Transactional
+@Service
+@Transactional
 public class FollowOrderClientServiceImpl implements FollowOrderClientService {
     @Autowired
     private FollowOrderClientDao followOrderClientDao;
@@ -37,8 +40,8 @@ public class FollowOrderClientServiceImpl implements FollowOrderClientService {
     private OrderHongKongService orderHongKongService;
 
     @Override
-    public List<Long> getListByUserCodeAndPlatformCode(String userCode,String PlatformCode) {
-        return followOrderClientDao.findListFollowOrderIDsByUserCode(userCode,PlatformCode);
+    public List<Long> getListByUserCodeAndPlatformCode(String userCode, String PlatformCode) {
+        return followOrderClientDao.findListFollowOrderIDsByUserCode(userCode, PlatformCode);
     }
 
     @Override
@@ -54,7 +57,7 @@ public class FollowOrderClientServiceImpl implements FollowOrderClientService {
 
     @Override
     public FollowOrderClient getByUserCodeAndPlatformCode(String userCode, String platformCode, Long followOrderId) {
-        return followOrderClientDao.getByUserCodeAndPlatformCode(userCode,platformCode,followOrderId);
+        return followOrderClientDao.getByUserCodeAndPlatformCode(userCode, platformCode, followOrderId);
     }
 
     @Override
@@ -64,7 +67,7 @@ public class FollowOrderClientServiceImpl implements FollowOrderClientService {
 
     @Override
     public void saveListFollowOrderClient(List<FollowOrderClient> followOrderClients, FollowOrder followOrder) {
-        if(followOrderClients.size() != 0){
+        if (followOrderClients.size() != 0) {
             for (FollowOrderClient orderClient : followOrderClients) {
                 FollowOrderClient followOrderClient = new FollowOrderClient();
                 followOrderClient.setFollowOrderId(followOrder.getId());
@@ -97,8 +100,9 @@ public class FollowOrderClientServiceImpl implements FollowOrderClientService {
         for (FollowOrderClient followOrderClient : followOrderClients) {
             FollowOrderClientParamVo followOrderClientParamVo = new FollowOrderClientParamVo();
             OrderUserDetailsVo orderUserCount = orderUserService.getOrderUserCount(followOrderClient.getUserCode(),
-                    info.getContractCode(),followOrderClient.getPlatformCode());
+                    info.getContractCode(), followOrderClient.getPlatformCode());
             followOrderClientParamVo.setUserCode(followOrderClient.getUserCode());//用户编号 todo
+
             followOrderClientParamVo.setUserName("向日葵");//用户姓名
             followOrderClientParamVo.setOffset_gain_and_loss(orderUserCount.getOffset_gain_and_loss());//平仓盈亏
             followOrderClientParamVo.setProfit_loss_than(orderUserCount.getPosition_gain_and_loss());//持仓盈亏
@@ -117,24 +121,35 @@ public class FollowOrderClientServiceImpl implements FollowOrderClientService {
     }
 
     @Override
-    public List<String> getListUserNameByFollowOrderId(Long followOrderId) {
+    public List<Map<String,Object>> getListUserNameByFollowOrderId(Long followOrderId) {
         List<FollowOrderClient> followOrderClients = followOrderClientDao.getListByFollowOrderId(followOrderId);
-        List<String> userName = new ArrayList<>();
+        List<Map<String,Object>> userName = new ArrayList<>();
         for (FollowOrderClient orderClient : followOrderClients) {
+            Map<String,Object> map = new HashMap<>();
+            String userName1 = getUserName(orderClient.getUserCode(), orderClient.getPlatformCode());
+            map.put("userName",userName1);
+            map.put("followOrderClientId",orderClient.getId());
 
-            PlatFromUsers users;
-            if(orderClient.getPlatformCode().equals("orders75")){
-                users = orderHongKongService.getUser75(orderClient.getUserCode());
-            }else {
-                users = orderHongKongService.getUser76(orderClient.getUserCode());
-            }
-            if(users == null){
-
-                userName.add(orderClient.getUserCode());
-            }else {
-                userName.add(users.getNAME());
-            }
+            userName.add(map);
         }
         return userName;
+    }
+
+    /*
+     * 通过平台和userCode获取对应的客户名字
+     * */
+    public String getUserName(String userCode, String platformCode) {
+
+        PlatFromUsers users;
+        if ("orders75".equals(platformCode)) {
+            users = orderHongKongService.getUser75(userCode);
+        } else {
+            users = orderHongKongService.getUser76(userCode);
+        }
+        if (users == null) {
+            return "-";
+        }
+        return users.getNAME();
+
     }
 }

@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import java.util.List;
+import java.util.Map;
 
 @Controller
 @RequestMapping("/followOrderClient")
@@ -30,7 +31,7 @@ public class FollowOrderClientController {
     * */
     @RequestMapping("/findListUserName.Action")
     @ResponseBody
-    public List<String> findListUserName(Long followOrderId){
+    public List<Map<String,Object>> findListUserName(Long followOrderId){
         return followOrderClientService.getListUserNameByFollowOrderId(followOrderId);
     }
 

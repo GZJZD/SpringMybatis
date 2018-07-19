@@ -30,25 +30,9 @@ public interface FollowOrderTradeRecordService {
 
     void updateRecordByTradeFail(Long tradeRecordId);
 
-    /*
-     *
-     *  找到对应跟单的总交易数量
-     * @author may
-     * @date 2018/5/25 15:44
-     * @param   followOrderId
-     * @return
-     */
-    List<FollowOrderVo> getFollowOrderTradeTotalCount(Long followOrderId, boolean userCode, String endTime, String startTime);
-    /*
-     *
-     *   找到对应跟单的成功交易数量
-     * @author may
-     * @date 2018/5/25 15:50
-     * @param
-     * @return
-     */
-    List<FollowOrderVo> getFollowOrderSuccessTradeTotal(Long followOrderId, boolean userCode, String endTime, String startTime);
 
+
+    List<FollowOrderTradeRecord> findListFollowOrderTradeRecord(Long followOrderId, String endTime, String startTime);
 
     /*
      * 找到对应的跟单记录
@@ -67,7 +51,9 @@ public interface FollowOrderTradeRecordService {
     List<NetPositionDetailVo> getListClientNetPosition(Long followOrderId, Integer status, String clientName, Integer openOrCloseStatus);
 
 
-    List<Map<String, Object>> getListClient(Long followOrderId, Integer status, String clientName, Integer openOrCloseStatus);
+    List<Map<String, Object>> getListClient(Long followOrderId, Integer status, Long followOrderClientId, Integer openOrCloseStatus);
 
     List<Map<String,Object>>  getListClientFollowOrderTrade(String endTime, String startTime, Long followOrderId);
+
+     Map<Long, FollowOrderVo> tradeTotalCount(String endTime, String startTime, Long followOrderId, boolean orderOrClient);
 }

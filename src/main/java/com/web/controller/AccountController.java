@@ -69,19 +69,21 @@ public class AccountController {
         List<Account> accountList = accountService.getListAccount();
         List<Map<String,Object> >  listMap = new ArrayList<>();
         for (Account account : accountList) {
+            Account account1 = new Account();
+            account1.setId(account.getId());
+            account1.setStatus(account.getStatus());
+            account1.setPlatform(account.getPlatform());
+            account1.setAgent(account.getAgent());
+            account1.setAccount(account.getAccount());
             Map<String,Object> accountMap = new HashMap<>();
-            accountMap.put("platformName",account.getPlatform().getName());
-            accountMap.put("account",account);
-            accountMap.put("agentName",account.getAgent().getName());
+            accountMap.put("account",account1);
             int count = followOrderService.findAccountStatusByAccountId(account.getId());
             if (count > 0) {
                 accountMap.put("status", "跟单中");
             } else {
                 accountMap.put("status", "未跟单");
             }
-
             FollowOrderVo followOrderVo = followOrderDetailService.getAccountCountAndOffsetGainAndLossBYAccountId(account.getId());
-
             accountMap.put("allTotal",followOrderVo.getAllTotal());
             accountMap.put("profitAndLoss",followOrderVo.getOffsetGainAndLoss());
             listMap.add(accountMap);

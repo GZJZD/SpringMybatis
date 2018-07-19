@@ -19,6 +19,7 @@ import com.web.service.*;
 import com.web.util.common.DateUtil;
 import com.web.util.common.DoubleUtil;
 import com.web.util.json.WebJsion;
+import com.web.util.tars.CommunicatorConfigUtil;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -167,6 +168,7 @@ public class FollowOrderServiceImpl implements FollowOrderService {
         if (FollowOrderEnum.FollowStatus.FOLLOW_ORDER_START.getIndex().equals(status)) {
             startTime = DateUtil.getStringDate();
         }
+
         log.debug("修改跟单策略转态：followOrderId=" + followOrderId + "状态值：" + status);
         followOrderDao.updateFollowOrderStatus(followOrderId, status, startTime);
 
@@ -276,10 +278,13 @@ public class FollowOrderServiceImpl implements FollowOrderService {
                 //盈亏率:平仓盈亏之和除以手数之和，保留1位小数
                 followOrderVo.setProfitAndLossRate(DoubleUtil.div(followOrderVo.getOffsetGainAndLoss() ,
                         followOrderVo.getOffsetHandNumber() == 0 ? 1 : followOrderVo.getOffsetHandNumber(), 1));
+                // tradeTotalCount该方法最后一个参数 true:统计跟单得成功数以及总数
+                Map<Long, FollowOrderVo> orderVoMap = followOrderTradeRecordService.tradeTotalCount(null, null, followOrder.getId(), true);
                 //跟单的成功交易数,
-                followOrderVo.setSuccessTotal(successCount);
+                followOrderVo.setSuccessTotal(orderVoMap.get(followOrder.getId()).getSuccessTotal());
+                followOrderVo.setAllTotal(orderVoMap.get(followOrder.getId()).getAllTotal());
                 //跟单总数：false:算总跟单的交易数
-                followOrderVo.setAllTotal(followOrderTradeRecordService.getFollowOrderTradeTotalCount(followOrder.getId(), false, null, null).get(0).getAllTotal());
+//                followOrderVo.setAllTotal(followOrderTradeRecordService.getFollowOrderTradeTotalCount(followOrder.getId(), false, null, null).get(0).getAllTotal());
 
                 followOrderVoList.add(followOrderVo);
 
@@ -548,13 +553,6 @@ public class FollowOrderServiceImpl implements FollowOrderService {
 
         if (followOrder.getFollowOrderStatus().equals(FollowOrderEnum.FollowStatus.FOLLOW_ORDER_STOP.getIndex())) {
             Account account = followOrder.getAccount();
-
-            //tars框架代替MQ
-            CommunicatorConfig cfg = new CommunicatorConfig();
-            Communicator communicator = CommunicatorFactory.getInstance().getCommunicator(cfg);
-            TraderServantPrx proxy = communicator.stringToProxy(TraderServantPrx.class, "TestApp.HelloServer.HelloTrade@tcp -h 192.168.3.189 -p 50506 -t 60000");
-            //tars end
-
             userLoginRequest req = new userLoginRequest();
             req.setTypeId("userLogin");
             req.setRequestId(followOrder.getId().intValue());
@@ -562,16 +560,18 @@ public class FollowOrderServiceImpl implements FollowOrderService {
             req.setUserId(account.getAccount());
             req.setPassword(account.getPassword());
             log.info(followOrder.getFollowOrderName() + "策略发送一条登陆信息：" + WebJsion.toJson(req));
+            TraderServantPrx proxy = CommunicatorConfigUtil.getProxy();
             try {
                 proxy.async_userLogin(new TraderServantPrxCallback() {
                     @Override
                     public void callback_expired() {
-                        System.out.println(11111);
+
                     }
 
                     @Override
                     public void callback_exception(Throwable ex) {
-                        System.out.println(2222);
+
+                        log.debug(ex.getMessage());
                     }
 
                     @Override
@@ -584,6 +584,7 @@ public class FollowOrderServiceImpl implements FollowOrderService {
                         updateFollowOrderStatus(Long.valueOf(rsp.getRequestId()),
                                 FollowOrderEnum.FollowStatus.FOLLOW_ORDER_START.getIndex());
                         log.debug(followOrder.getFollowOrderName() + "跟单策略启动");
+
                     }
 
                     @Override
@@ -740,14 +741,9 @@ public class FollowOrderServiceImpl implements FollowOrderService {
         followOrderTradeRecord.setNewTicket(newTicket);
         //设置开仓单号
         followOrderTradeRecord.setTicket(ticket);
-        //设置客户姓名
+        //找到对应的客户
         OrderUser orderUser = orderUserService.findByTicket(ticket);
-        PlatFromUsers users;
-        if(orderUser.getPlatFormCode().equals("orders75")){
-            users = orderHongKongService.getUser75(orderUser.getUserCode());
-        }else {
-            users = orderHongKongService.getUser76(orderUser.getUserCode());
-        }
+
         FollowOrderClient userCodeAndPlatformCode = followOrderClientService.getByUserCodeAndPlatformCode(orderUser.getUserCode(), orderUser.getPlatFormCode(),followOrder.getId());
         followOrderTradeRecord.setFollowOrderClient(userCodeAndPlatformCode);
         //设置跟单id
@@ -767,9 +763,8 @@ public class FollowOrderServiceImpl implements FollowOrderService {
         //新增操作
         followOrderTradeRecordService.save(followOrderTradeRecord);
 
-        CommunicatorConfig cfg = new CommunicatorConfig();
-        Communicator communicator = CommunicatorFactory.getInstance().getCommunicator(cfg);
-        TraderServantPrx proxy = communicator.stringToProxy(TraderServantPrx.class, "TestApp.HelloServer.HelloTrade@tcp -h 192.168.3.189 -p 50506 -t 60000");
+        TraderServantPrx proxy = CommunicatorConfigUtil.getProxy();
+
 
         if (openClose.equals(FollowOrderEnum.FollowStatus.CLOSE.getIndex())) {
             final orderCloseRequest close = new orderCloseRequest();
@@ -999,25 +994,26 @@ public class FollowOrderServiceImpl implements FollowOrderService {
     public void closeAllOrderByFollowOrderId(Long followOrderId) {
         List<FollowOrderDetail> orderDetails = followOrderDetailService.getNOCloseDetailListByFollowOrderId(followOrderId);
         FollowOrder followOrder = getFollowOrder(followOrderId);
+        if(orderDetails.size()!=0){
+            for (FollowOrderDetail orderDetail : orderDetails) {
+                //BUY:多；
+                Integer direction = orderDetail.getTradeDirection() == FollowOrderEnum.FollowStatus.BUY.getIndex() ?
+                        FollowOrderEnum.FollowStatus.SELL.getIndex() : FollowOrderEnum.FollowStatus.BUY.getIndex();
 
-        for (FollowOrderDetail orderDetail : orderDetails) {
-            //BUY:多；
-            Integer direction = orderDetail.getTradeDirection() == FollowOrderEnum.FollowStatus.BUY.getIndex() ?
-                    FollowOrderEnum.FollowStatus.SELL.getIndex() : FollowOrderEnum.FollowStatus.BUY.getIndex();
 
+                if(followOrder.getFollowManner().equals(FollowOrderEnum.FollowStatus.FOLLOWMANNER_NET_POSITION.getIndex())){
+                    //净头寸
+                    //发送交易信息
 
-            if(followOrder.getFollowManner().equals(FollowOrderEnum.FollowStatus.FOLLOWMANNER_NET_POSITION.getIndex())){
-                //净头寸
-                //发送交易信息
+                    this.sendMsgByTrade(followOrder, direction, FollowOrderEnum.FollowStatus.CLOSE.getIndex(),
+                            orderDetail.getRemainHandNumber(), orderDetail.getTicket(),
+                            orderDetail.getTicket(), null);
+                }else{
 
-                this.sendMsgByTrade(followOrder, direction, FollowOrderEnum.FollowStatus.CLOSE.getIndex(),
-                        orderDetail.getRemainHandNumber(), orderDetail.getTicket(),
-                        orderDetail.getTicket(), null);
-            }else{
-
-                this.sendMsgByTrade(followOrder, direction, FollowOrderEnum.FollowStatus.CLOSE.getIndex(),
-                        orderDetail.getHandNumber(), orderDetail.getTicket(),
-                        orderDetail.getTicket(), null);
+                    this.sendMsgByTrade(followOrder, direction, FollowOrderEnum.FollowStatus.CLOSE.getIndex(),
+                            orderDetail.getHandNumber(), orderDetail.getTicket(),
+                            orderDetail.getTicket(), null);
+                }
             }
         }
     }

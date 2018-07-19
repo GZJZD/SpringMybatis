@@ -18,8 +18,7 @@ public interface FollowOrderTradeRecordDao {
 
     int updateByPrimaryKey(FollowOrderTradeRecord record);
 
-    List<FollowOrderVo> getFollowOrderTradeTotalCount(@Param("followOrderId") Long followOrderId, @Param("userCode") boolean userCode, @Param("endTime") String endTime, @Param("startTime") String startTime);
 
-    List<FollowOrderVo> getFollowOrderSuccessTradeTotal(@Param("followOrderId") Long followOrderId, @Param("userCode") boolean userCode, @Param("endTime") String endTime, @Param("startTime") String startTime);
 
+    List<FollowOrderTradeRecord> findListFollowOrderTradeRecord(@Param("followOrderId") Long followOrderId, @Param("endTime") String endTime, @Param("startTime") String startTime);
 }

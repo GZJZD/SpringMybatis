@@ -14,6 +14,7 @@ import com.web.service.ContractInfoLinkService;
 import com.web.service.ContractInfoService;
 import com.web.util.common.DoubleUtil;
 import com.web.util.json.WebJsion;
+import com.web.util.tars.CommunicatorConfigUtil;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -77,11 +78,9 @@ public class ContractInfoLinkServiceImpl implements ContractInfoLinkService {
             req.setBrokerId(account.getPlatform().getName());
             req.setUserId(account.getAccount());
             req.setInstrumentId(contractInfo.getContractCode());
-            CommunicatorConfig cfg = new CommunicatorConfig();
-//            cfg.setAsyncInvokeTimeout(6000000);
-//            cfg.setSyncInvokeTimeout(600000);
-            Communicator communicator = CommunicatorFactory.getInstance().getCommunicator(cfg);
-            TraderServantPrx proxy = communicator.stringToProxy(TraderServantPrx.class, "TestApp.HelloServer.HelloTrade@tcp -h 192.168.3.189 -p 50506 -t 60000");
+            TraderServantPrx proxy = CommunicatorConfigUtil.getProxy();
+//            Communicator communicator = CommunicatorFactory.getInstance().getCommunicator(cfg);
+//            TraderServantPrx proxy = communicator.stringToProxy(TraderServantPrx.class, "TestApp.HelloServer.HelloTrade@tcp -h 192.168.3.189 -p 50506 -t 60000");
 
 
             try {
@@ -167,9 +166,9 @@ public class ContractInfoLinkServiceImpl implements ContractInfoLinkService {
         log.debug("查找合约:"+WebJsion.toJson(contractInfoLinkId));
         ContractInfoLink linkByInfoId = this.getContractInfoLink(contractInfoLinkId);
         if(linkByInfoId.getMaxMarketOrderVolume()==null){
-            CommunicatorConfig cfg = new CommunicatorConfig();
-            Communicator communicator = CommunicatorFactory.getInstance().getCommunicator(cfg);
-            TraderServantPrx proxy = communicator.stringToProxy(TraderServantPrx.class, "TestApp.HelloServer.HelloTrade@tcp -h 192.168.3.189 -p 50506 -t 60000");
+            TraderServantPrx proxy = CommunicatorConfigUtil.getProxy();
+//            Communicator communicator = CommunicatorFactory.getInstance().getCommunicator(cfg);
+//            TraderServantPrx proxy = communicator.stringToProxy(TraderServantPrx.class, "TestApp.HelloServer.HelloTrade@tcp -h 192.168.3.189 -p 50506 -t 60000");
             instrumentQueryRequest req = new instrumentQueryRequest();
             req.setTypeId("instrumentQuery");
             req.setInstrumentId(linkByInfoId.getContractInfo().getContractCode());

@@ -35,7 +35,7 @@ public class FollowOrderVo {
     private Double profitAndLossRate;
 
     //跟单成功率:成功的交易数
-    private Integer successTotal;
+    private Integer successTotal=0;
     //全部的跟单数
     private Integer allTotal=0;
     //手数

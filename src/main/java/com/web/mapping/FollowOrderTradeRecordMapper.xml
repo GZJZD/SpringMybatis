@@ -119,45 +119,25 @@
         from follow_order_trade_record
     </select>
 
-    <select id="getFollowOrderTradeTotalCount" resultMap="followOrderVoMap">
-        select count(id) allTotal
-        <if test="userCode">
-            ,follow_order_client_id follow_order_client_id
-        </if>
+
+
+    <select id="getListOrderTradeByTicketAndTime" resultMap="BaseResultMap">
+        select
+        <include refid="base_List"/>
         from follow_order_trade_record
-        where follow_order_id =#{followOrderId}
+        where ticket =#{ticket} and client_trade_time=#{time}
+    </select>
+    <select id="findListFollowOrderTradeRecord" resultMap="BaseResultMap">
+        select
+        <include refid="base_List"/>
+        from follow_order_trade_record
+        where follow_order_id = #{followOrderId}
         <if test="endTime != '' and endTime != null ">
             and create_date <![CDATA[ <= ]]> #{endTime}
         </if>
         <if test="startTime != '' and startTime != null">
             and create_date <![CDATA[ >= ]]> #{startTime}
         </if>
-        <if test="userCode">
-            group by follow_order_client_id
-        </if>
-    </select>
-    <select id="getFollowOrderSuccessTradeTotal" resultMap="followOrderVoMap">
-        select count(id) successTotal
-        <if test="userCode">
-            ,follow_order_client_id follow_order_client_id
-        </if>
-        from follow_order_trade_record
-        where hand_number != 0 and trade_time is not null and follow_order_id = #{followOrderId}
-        <if test="endTime != '' and endTime != null">
-            and create_date <![CDATA[ <= ]]> #{endTime}
-        </if>
-        <if test="startTime != '' and startTime != null">
-            and create_date <![CDATA[ >= ]]> #{startTime}
-        </if>
-        <if test="userCode">
-            group by follow_order_client_id
-        </if>
-    </select>
-    <select id="getListOrderTradeByTicketAndTime" resultMap="BaseResultMap">
-        select
-        <include refid="base_List"/>
-        from follow_order_trade_record
-        where ticket =#{ticket} and client_trade_time=#{time}
     </select>
 
 
