@@ -129,7 +129,7 @@ function setParameter(num,account) {
 }
 
 $(function () {
-    $("#test").click(function () {
+    $("#add").click(function () {
         var platformId = $("#platform_id option:selected").val();
         var agentId = $("#agent_id option:selected").val();
         var account = $("#account").val();
@@ -155,9 +155,7 @@ $(function () {
             },
             success: function (data) {
                 // parent.layer.closeAll();
-                console.info("3333");
                 if(data.success){
-                    console.info("2222");
                     parent.layer.closeAll();
                     parent.layer.msg(data.msg);
                     parent.$("#accountTable").bootstrapTable('refresh', {
@@ -165,7 +163,6 @@ $(function () {
                     });
                 }else {
                     if(data.msg!="两次密码输入不一致，请重新输入"){
-
                         parent.layer.msg(data.msg);
                     }
                 }

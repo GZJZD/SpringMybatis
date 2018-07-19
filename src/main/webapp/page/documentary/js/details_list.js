@@ -38,7 +38,7 @@ var columns = [
         field: 'tradeDirection',
         title: '方向',
         formatter: function (value, row, index) {
-            if (value == "1") {
+            if (value == 1) {
                 return "空";
             } else {
                 return "多";
@@ -104,10 +104,10 @@ function manually_close_position(id) {
 /*
 * 展示跟单明细列表
 * */
-function detailShow(varietyName, name, manager, id, orderNum, offsetGainAndLoss, poundageTotal) {
+function detailShow(varietyName, name, manager, id, orderNum, offsetGainAndLoss,positionGainAndLoss, poundageTotal) {
     $("#orderNum").html(orderNum);
     $("#offsetGainAndLoss").html(offsetGainAndLoss);
-    $("#positionGainAndLoss").html(0);
+    $("#positionGainAndLoss").html(positionGainAndLoss);
     $("#poundageTotal").html(poundageTotal);
     url_detail = url_ + "/followOrder/getListDetails.Action?followOrderId=" + id;
     followOrderId = id;
@@ -143,7 +143,14 @@ function detailShow(varietyName, name, manager, id, orderNum, offsetGainAndLoss,
                 }
             }, {
                 field: 'handNumber',
-                title: '手数'
+                title: '手数',
+                formatter: function (value, row, index) {
+                    if(row.originalHandNumber==value){
+                        return value;
+                    }else {
+                        return value+"("+row.originalHandNumber+")";
+                    }
+                }
             }, {
                 field: 'openPrice',
                 title: '开仓价'
@@ -271,7 +278,7 @@ function clientTableShow(id, manager, name) {
                 if (value == "1") {
                     return "<span style='color: #26a69a'>已跟单</span>";
                 } else if (value == "0") {
-                    return "<span style='color: #c49f47'>跟单失败</span>";
+                    return "<span style='color: #c49f47'>未跟单</span>";
                 }
             }
         }
@@ -282,8 +289,8 @@ function clientTableShow(id, manager, name) {
             title: '跟单编号'
 
         }, {
-            field: 'orderUser.userCode',
-            title: '客户编号'
+            field: 'clientName',
+            title: '客户名'
         }, {
             field: 'orderUser.productCode',
             title: '品种'
@@ -335,6 +342,9 @@ function clientTableShow(id, manager, name) {
                     return "<span style='color: #26a69a'>已跟单</span>";
                 } else if (value == "0") {
                     return "<span style='color: #c49f47'>未跟单</span>";
+                }else if(value == "2") {
+                    return "<span style='color: #c44b73'>无需跟单</span>";
+
                 }
             }
         }
@@ -342,6 +352,7 @@ function clientTableShow(id, manager, name) {
     if (manager == "1") {
         showByTableId(tableClientId, method, url_client, unique_Id, sortOrder, clientNetPositionColumns);
     } else {
+        $("#clientFollowOrder").append("<option value='2'>无需跟单</option>");
         showByTableId(tableClientId, method, url_client, unique_Id, sortOrder, clientColumns);
 
     }
@@ -430,7 +441,7 @@ function orderClientTableShow(followOrderId, name) {
 * 展示跟单参数
 * */
 function orderParameterShow(followOrder) {
-    $("#accountName").html(followOrder.account.platform.name + "-" + followOrder.account.username);
+    $("#accountName").html(followOrder.account.platform.name + "-" + followOrder.account.account);
     $("#varietyName").html(followOrder.variety.varietyName);
     var num = 0;//1:不设置/净头寸/正向，0代表设置/客户/反向
 

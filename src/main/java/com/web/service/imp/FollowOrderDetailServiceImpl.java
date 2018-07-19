@@ -4,6 +4,7 @@ import com.web.common.FollowOrderEnum;
 import com.web.dao.FollowOrderDetailDao;
 import com.web.database.OrderHongKongService;
 
+import com.web.database.entity.PlatFromUsers;
 import com.web.pojo.*;
 
 import com.web.pojo.vo.followOrder.FollowOrderVo;
@@ -20,6 +21,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -48,6 +50,8 @@ public class FollowOrderDetailServiceImpl implements FollowOrderDetailService {
     private OrderHongKongService orderHongKongService;
     @Autowired
     private ContractInfoService contractInfoService;
+    @Autowired
+    private UselessTicketService uselessTicketService;
 
     @Override
     public void save(FollowOrderDetail followOrderDetail) {
@@ -89,17 +93,44 @@ public class FollowOrderDetailServiceImpl implements FollowOrderDetailService {
                 return findNetPositionDetail(orderDetailList, followOrder);
             } else {
                 //客户
+                List<Map<String,Object>> clientDetailList = new ArrayList<>();
                 for (FollowOrderDetail followOrderDetail : orderDetailList) {
+                    Map<String,Object> clientDetail = new HashMap<>();
+                    clientDetail .put("id",followOrderDetail.getId());
+                    clientDetail .put("contractCode",followOrderDetail.getContractCode());
+                    clientDetail .put("tradeDirection",followOrderDetail.getTradeDirection());
+                    clientDetail .put("handNumber",followOrderDetail.getHandNumber());
+                    clientDetail .put("originalHandNumber",followOrderDetail.getOriginalHandNumber());
+
+                    clientDetail .put("followOrderTradeRecordId",followOrderDetail.getFollowOrderTradeRecordId());
+                    clientDetail .put("followOrderClientId",followOrderDetail.getFollowOrderClientId());
+                    clientDetail .put("openPrice",followOrderDetail.getOpenPrice());
+                    clientDetail .put("poundage",followOrderDetail.getPoundage());
+                    clientDetail .put("clientProfit",followOrderDetail.getClosePrice());
+                    clientDetail .put("followOrderId",followOrderDetail.getFollowOrderId());
                     if (followOrderDetail.getOpenTime() != null) {
-                        followOrderDetail.setOpenTime(DateUtil.strToStr(followOrderDetail.getOpenTime()));
+                        clientDetail .put("openTime",DateUtil.strToStr(followOrderDetail.getOpenTime()));
                     }
                     if (followOrderDetail.getCloseTime() != null) {
-                        followOrderDetail.setCloseTime(DateUtil.strToStr(followOrderDetail.getCloseTime()));
+                        clientDetail .put("closeTime",DateUtil.strToStr(followOrderDetail.getCloseTime()));
+                        clientDetail .put("closePrice",followOrderDetail.getClosePrice());
+                    }
+
+                    PlatFromUsers users;
+                    FollowOrderClient client = followOrderClientService.getFollowOrderClient(followOrderDetail.getFollowOrderClientId());
+
+                    if(client.getPlatformCode().equals("orders75")){
+                        users = orderHongKongService.getUser75(client.getUserCode());
+                    }else {
+                        users = orderHongKongService.getUser76(client.getUserCode());
+                    }
+                    if(users!=null){
+
+                        clientDetail.put("clientName",users.getNAME());
                     }
                     if (followOrderDetail.getCloseTime() == null) {
                         Map<String, Double> askAndBid = SweepTableSchedule.getAskAndBidByFollowOrderId(followOrderId);
                         if (askAndBid != null) {
-                            log.debug(askAndBid);
                             if (followOrderDetail.getTradeDirection().equals(FollowOrderEnum.FollowStatus.SELL.getIndex())) {
                                 //交易方向为空：获取买入价：bid
                                 //持仓盈亏
@@ -116,8 +147,10 @@ public class FollowOrderDetailServiceImpl implements FollowOrderDetailService {
                             followOrderDetail.setProfitLoss(0.0);
                         }
                     }
+                    clientDetail .put("profitLoss",followOrderDetail.getProfitLoss());
+                    clientDetailList.add(clientDetail);
                 }
-                return orderDetailList;
+                return clientDetailList;
             }
         }
         return null;
@@ -166,14 +199,24 @@ public class FollowOrderDetailServiceImpl implements FollowOrderDetailService {
             netPositionDetailVo.setDetailId(followOrderDetail.getId());
             //设置盈亏
             netPositionDetailVo.setProfit(followOrderDetail.getProfitLoss());
+            FollowOrderClient followOrderClient = followOrderClientService.getFollowOrderClient(followOrderDetail.getFollowOrderClientId());
+            PlatFromUsers users;
+            if(followOrderClient.getPlatformCode().equals("orders75")){
+                users = orderHongKongService.getUser75(followOrderClient.getUserCode());
+            }else {
+                users = orderHongKongService.getUser76(followOrderClient.getUserCode());
+            }
+            if(users!=null){
+                netPositionDetailVo.setUserName(users.getNAME());
+            }
             //剩下得手数
             if (netPositionDetailVo.getRemainHandNumber()!=null&&netPositionDetailVo.getRemainHandNumber() != 0) {
                 Map<String, Double> askAndBid = SweepTableSchedule.getAskAndBidByFollowOrderId(followOrder.getId());
                 if (askAndBid != null) {
-                    log.debug(askAndBid);
                     if (tradeRecord.getTradeDirection().equals(FollowOrderEnum.FollowStatus.BUY.getIndex())) {
                         //交易方向为多，查询：卖出价（ask）
                         netPositionDetailVo.setProfit(DoubleUtil.mul(DoubleUtil.sub(askAndBid.get("ask"), netPositionDetailVo.getMarketPrice()), netPositionDetailVo.getRemainHandNumber()));
+                        log.debug(netPositionDetailVo.getDetailId()+"L明细盈亏:"+netPositionDetailVo.getProfit()+",ask:"+askAndBid.get("ask"));
 
                     } else {
                         //交易方向为空，查询：买入价（bid）
@@ -219,17 +262,23 @@ public class FollowOrderDetailServiceImpl implements FollowOrderDetailService {
         //客户平仓,
         FollowOrderDetail detail = getFollowOrderDetailByTicket(followOrderTradeRecord.getTicket(), followOrderTradeRecord.getFollowOrderId());
         OrderUser user = orderUserService.findByTicket(followOrderTradeRecord.getTicket());
-        FollowOrderClient followOrderClient = followOrderClientService.findClientByIdAndName(followOrderTradeRecord.getFollowOrderId(), user.getUserCode());
+
+        FollowOrderClient followOrderClient  = followOrderTradeRecord.getFollowOrderClient();
+
+
         if (detail != null && detail.getCloseTime() == null) {
             log.debug("跟每单客户平仓：ticket{}," + detail.getTicket());
+            //剩下手数
+            int hand = detail.getHandNumber() - followOrderTradeRecord.getHandNumber();
             if (!followOrderTradeRecord.getTicket().equals(followOrderTradeRecord.getNewTicket()) &&
-                    !followOrderClient.getHandNumberType().equals(FollowOrderEnum.FollowStatus.CLIENT_HAND_NUMBER_TYPE.getIndex())) {
+                    !followOrderClient.getHandNumberType().equals(FollowOrderEnum.FollowStatus.CLIENT_HAND_NUMBER_TYPE.getIndex())
+                    && hand!=0) {
                 //开仓单号和新开仓单号不一致 和不是固定手数
                 //新建开仓单号
 
                 Double poundage = DoubleUtil.div(detail.getPoundage(), detail.getHandNumber(), 2);//每一手的手续费
                 FollowOrderDetail detailNew = new FollowOrderDetail();
-                detailNew.setHandNumber(detail.getHandNumber() - followOrderTradeRecord.getHandNumber());
+                detailNew.setHandNumber(hand);
                 detailNew.setOriginalHandNumber(detailNew.getHandNumber());
                 detailNew.setTicket(followOrderTradeRecord.getNewTicket());
                 detailNew.setPoundage(DoubleUtil.mul(poundage, detailNew.getHandNumber()));
@@ -240,11 +289,21 @@ public class FollowOrderDetailServiceImpl implements FollowOrderDetailService {
                 detailNew.setTradeDirection(detail.getTradeDirection());
                 detailNew.setContractCode(detail.getContractCode());
                 detailNew.setFollowOrderTradeRecordId(detail.getFollowOrderTradeRecordId());
+                detailNew.setFollowOrderClientId(detail.getFollowOrderClientId());
+                detailNew.setAccountId(detail.getAccountId());
                 save(detailNew);
                 log.debug("客户新开仓明细：newTicket{},handNumber{}," + detailNew.getTicket() + "," + detailNew.getHandNumber());
                 detail.setHandNumber(followOrderTradeRecord.getHandNumber());
                 detail.setOriginalHandNumber(followOrderTradeRecord.getHandNumber());
                 detail.setPoundage(DoubleUtil.mul(poundage, detail.getHandNumber()));
+            }
+            if(!followOrderTradeRecord.getTicket().equals(followOrderTradeRecord.getNewTicket())&&
+                    (followOrderClient.getHandNumberType().equals(FollowOrderEnum.FollowStatus.CLIENT_HAND_NUMBER_TYPE.getIndex()) || hand ==0 )){
+                //当两个Ticket不一样时，而且是固定手数or 相减等于0时，代表newTicket是要保存在无需跟单的表中
+                UselessTicket uselessTicket = new UselessTicket();
+                uselessTicket.setTicket(followOrderTradeRecord.getNewTicket());
+                uselessTicket.setCreateDate(DateUtil.getStringDate());
+                uselessTicketService.save(uselessTicket);
             }
             //设置平仓时间
             detail.setCloseTime(orderMsgResult.getTradeDate() + orderMsgResult.getTradeTime());
@@ -381,10 +440,11 @@ public class FollowOrderDetailServiceImpl implements FollowOrderDetailService {
      */
     public void createDetail(FollowOrderTradeRecord followOrderTradeRecord, OrderMsgResult orderMsgResult) {
         FollowOrderDetail orderDetail = new FollowOrderDetail();
+        FollowOrder followOrder = followOrderService.getFollowOrder(followOrderTradeRecord.getFollowOrderId());
         //判断跟单方向
         if (followOrderTradeRecord != null) {
             if (followOrderTradeRecord.getOpenCloseType().equals(FollowOrderEnum.FollowStatus.CLOSE.getIndex())) {
-                if (followOrderTradeRecord.getClientNetPositionId() == null) {
+                if (!followOrder.getFollowManner().equals(FollowOrderEnum.FollowStatus.FOLLOWMANNER_NET_POSITION.getIndex())) {
                     //客户平仓
                     createClientCloseDetail(followOrderTradeRecord, orderMsgResult);
                 } else {
@@ -410,8 +470,8 @@ public class FollowOrderDetailServiceImpl implements FollowOrderDetailService {
      * 查客户的所有明细详情
      * */
     @Override
-    public List<FollowOrderDetail> getFollowOrderDetailByUserCode(Long followOrderId, String endTime, String startTime, String clientName) {
-        return followOrderDetailDao.getFollowOrderDetailByUserCode(followOrderId, endTime, startTime, clientName);
+    public List<FollowOrderDetail> getFollowOrderDetailByUserCode(Long followOrderId, String endTime, String startTime, Long followOrderClientId) {
+        return followOrderDetailDao.getFollowOrderDetailByUserCode(followOrderId, endTime, startTime, followOrderClientId);
     }
 
     /*

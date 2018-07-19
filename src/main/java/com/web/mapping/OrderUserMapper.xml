@@ -105,7 +105,7 @@
 
             <if test="startTime != null and startTime != '' ">and create_date = #{startTime} </if>
             <if test="endTime != null and endTime != '' "> and create_date  <![CDATA[ <= ]]> #{endTime} </if>
-            <if test="platformName != null and platformName != '' "> and  plat_form_code = #{platformName} </if>
+            <if test="platFormCode != null and platFormCode != '' "> and  plat_form_code = #{platFormCode} </if>
             <if test="contract != null and contract != '' ">
               and contract = #{contract}
             </if>
@@ -124,6 +124,7 @@
         <if test="productCode != null and productCode != '' ">product_code = #{productCode}</if>
 
         <if test="userCode != null and userCode != '' "> and user_code = #{userCode}</if>
+        <if test="platFormCode != null and platFormCode != '' "> and plat_form_code = #{platFormCode}</if>
     </select>
 
 

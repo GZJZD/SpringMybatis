@@ -8,7 +8,7 @@ import java.util.List;
  * 用户明细Vo映射类
  */
 public class OrderUserDetailsVo {
-    private String platformName;//平台名称
+    private String platFromCode;//平台名称
     private String  loginTime; //注册时间
     private String lastOrderTime;//最近下单时间
     private String agencyName;//代理人
@@ -25,6 +25,70 @@ public class OrderUserDetailsVo {
     private Double everyHandNumber;//每单手数
     private List<HoldOrderUserVo>holdList;//持仓记录
     private List<OrderUser>profitList; //平仓记录
+    private Long lossNumber ; //亏损次数
+    private Long  profitNumber; //盈利次数
+    private Double profitVal; //盈利值
+    private  Double lossVal;//亏损值
+    private Double handNumber;// 手数学
+    private Double profitAndLossRatio; //盈亏比
+    private Double profitAndLossEfficiency ;// 盈亏效率
+
+
+    public Double getProfitAndLossEfficiency() {
+        return profitAndLossEfficiency;
+    }
+
+    public void setProfitAndLossEfficiency(Double profitAndLossEfficiency) {
+        this.profitAndLossEfficiency = profitAndLossEfficiency;
+    }
+
+    public Double getProfitAndLossRatio() {
+        return profitAndLossRatio;
+    }
+
+    public void setProfitAndLossRatio(Double profitAndLossRatio) {
+        this.profitAndLossRatio = profitAndLossRatio;
+    }
+
+    public Double getProfitVal() {
+        return profitVal;
+    }
+
+    public void setProfitVal(Double profitVal) {
+        this.profitVal = profitVal;
+    }
+
+    public Double getLossVal() {
+        return lossVal;
+    }
+
+    public void setLossVal(Double lossVal) {
+        this.lossVal = lossVal;
+    }
+
+    public Double getHandNumber() {
+        return handNumber;
+    }
+
+    public void setHandNumber(Double handNumber) {
+        this.handNumber = handNumber;
+    }
+
+    public Long getLossNumber() {
+        return lossNumber;
+    }
+
+    public void setLossNumber(Long lossNumber) {
+        this.lossNumber = lossNumber;
+    }
+
+    public Long getProfitNumber() {
+        return profitNumber;
+    }
+
+    public void setProfitNumber(Long profitNumber) {
+        this.profitNumber = profitNumber;
+    }
 
     public Long getCountNumber() {
         return countNumber;
@@ -50,12 +114,12 @@ public class OrderUserDetailsVo {
         this.offset_gain_and_loss = offset_gain_and_loss;
     }
 
-    public String getPlatformName() {
-        return platformName;
+    public String getPlatFromCode() {
+        return platFromCode;
     }
 
-    public void setPlatformName(String platformName) {
-        this.platformName = platformName;
+    public void setPlatFromCode(String platFromCode) {
+        this.platFromCode = platFromCode;
     }
 
     public String getLoginTime() {

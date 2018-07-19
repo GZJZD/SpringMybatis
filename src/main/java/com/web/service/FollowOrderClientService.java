@@ -18,18 +18,19 @@ public interface FollowOrderClientService {
      *@Date: 10:39 2018/5/21
      */
     List<Long> getListByUserCodeAndPlatformCode(String userCode,String platformCode);
-    List<FollowOrderClient> getListByFollowOrderId(Long followOrderId);
 
+    List<FollowOrderClient> getListByFollowOrderId(Long followOrderId);
     List<String> getListUserCodeByFollowOrderId(Long followOrderId);
+    List<String> getListUserNameByFollowOrderId(Long followOrderId);
+    List<FollowOrderClientParamVo> getListFollowOrderClientParamVo(Long followOrderId);
+
     void deleteByFollowOrderId(Long followOrderId);
     FollowOrderClient getByUserCodeAndPlatformCode(String userCode, String platformCode, Long followOrderId);
+
     void saveListFollowOrderClient(List<FollowOrderClient> FollowOrderClients, FollowOrder followOrder);
+
     void update(FollowOrderClient record);
 
 
-    List<FollowOrderClientParamVo> getListFollowOrderClientParamVo(Long followOrderId);
-
-    FollowOrderClient findClientByIdAndName(Long id, String login);
-
-    List<String> getListUserNameByFollowOrderId(Long followOrderId);
+    FollowOrderClient getFollowOrderClient(Long followOrderClientId);
 }

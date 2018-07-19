@@ -83,8 +83,8 @@ public class NetPositionDetailVo {
         this.detailId = detailId;
     }
 
-    public String getTradeDirection() {
-        return tradeDirection == FollowOrderEnum.FollowStatus.SELL.getIndex() ? "卖出" : "买入";
+    public Integer getTradeDirection() {
+        return tradeDirection;
     }
 
     public void setTradeDirection(Integer tradeDirection) {

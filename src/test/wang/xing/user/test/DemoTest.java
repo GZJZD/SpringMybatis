@@ -2,15 +2,12 @@ package wang.xing.user.test;
 
 import com.aliyuncs.dysmsapi.model.v20170525.SendSmsResponse;
 import com.aliyuncs.exceptions.ClientException;
-import com.github.pagehelper.PageHelper;
-import com.github.pagehelper.page.PageMethod;
 import com.web.pojo.DataSource;
-import com.web.pojo.Login;
 import com.web.pojo.OrderUser;
-import com.web.pojo.vo.OrderUserVo;
+import com.web.pojo.vo.orderuser.OrderUserListVo;
+import com.web.pojo.vo.orderuser.OrderUserVo;
 import com.web.service.OrderUserService;
 import com.web.service.TestService;
-import com.web.util.query.QueryObject;
 import com.web.util.sms.AliSms;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -19,8 +16,9 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
-import javax.persistence.criteria.Order;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.LinkedHashSet;
 import java.util.List;
 
@@ -148,9 +146,9 @@ public class DemoTest {
         orderUserVo.setProductCode(productCode);
         orderUserVo.setEndTime(endTime);
         orderUserVo.setStartTime(startTime);
-        List<OrderUserVo> orderUserList =    orderUserService.countOrderUser(orderUserVo);
+        OrderUserListVo orderUserList =    orderUserService.countOrderUser(orderUserVo);
 
-        for(OrderUserVo o :orderUserList){
+        for(OrderUserVo o :orderUserList.getListVo()){
             System.out.println(o.getTotalGainAndLoss());//累计盈亏list
             System.out.println(o.getPosition_gain_and_loss());//盈亏效率
             System.out.println(o.getOffset_gain_and_loss());//平仓盈亏
@@ -192,5 +190,24 @@ public class DemoTest {
 
 
   }
+
+  public void testDate(){
+       Long  millSec= 1530864644000L;
+      SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+
+      Date date= new Date(millSec);
+
+      System.out.println(sdf.format(date));
+  }
+    @Test
+    public void testDouble (){
+        double  d=0.01;
+        if(d <0){
+            System.out.println("负数");
+        }else{
+            System.out.println("不是负数");
+        }
+   }
+
 
 }

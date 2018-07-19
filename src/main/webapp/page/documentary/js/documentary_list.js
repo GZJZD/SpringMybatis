@@ -93,7 +93,7 @@ var columns = [{
             var followOrderId = row.followOrder.id;
 
             var obj = JSON.stringify(row);
-                var varietyName = row.followOrder.variety.varietyName;
+            var varietyName = row.followOrder.variety.varietyName;
 
             if (value == "1") {
                 return "<a onclick='follow_order_stop(this," + followOrderId + ")' href='javascript:;' title='暂停'> <i class='layui-icon'>&#xe651;</i> </a>" +
@@ -346,7 +346,7 @@ function orderByParameter(num) {
         (($('#history-end-time').val()) == 'undefined') ? (endTime = '') : (endTime = ($("#history-end-time").val()));
     }
 
-        // ?varietyId=" + varietyNum + "&accountId=" + accountNum + "&startTime=" + startTime + "&endTime=" + endTime
+    // ?varietyId=" + varietyNum + "&accountId=" + accountNum + "&startTime=" + startTime + "&endTime=" + endTime
     var url = url_ + "/followOrder/getListFollowOrder.Action";
     $(tableOrderId).bootstrapTable('destroy');
     $.ajax({
@@ -609,7 +609,7 @@ function follow_details(obj, title, url, w, h) {
             //找到子页面
             var iframeWin = window['layui-layer-iframe' + index]; //得到iframe页的窗口对象，执行iframe页的方法：iframeWin.method();
             //调用子页面的方法
-            iframeWin.detailShow(varietyName,name, manager, followOrderId, successTotal + "/" + orderNum, offsetGainAndLoss, poundageTotal);
+            iframeWin.detailShow(varietyName,name, manager, followOrderId, successTotal + "/" + orderNum, offsetGainAndLoss,obj.positionGainAndLoss, poundageTotal);
             iframeWin.clientTableShow(followOrderId, manager, name);
             iframeWin.orderParameterShow(obj.followOrder);
             iframeWin.orderClientTableShow(followOrderId, name);

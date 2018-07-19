@@ -79,7 +79,7 @@ function  setParameter() {
         },
 
         {
-            field: 'profit',
+            field: 'offset_gain_and_loss',
             title: '平仓盈亏'
         },
 
@@ -108,6 +108,14 @@ function  setParameter() {
             align: 'center',
             valign: 'middle',
             formatter:handNumber
+        }
+        ,
+        {
+            field: 'platFormCode',
+            title: '平台',
+            align: 'center',
+            valign: 'middle',
+            hidden:false
         }
         ,
         {
@@ -343,14 +351,16 @@ function commit(){
     $("#mytable tbody").find('tr').each(function(){
         var tdArr = $(this).children();
         var userCode = tdArr.eq(0).html();//用户编号
-        var userName = tdArr.eq(1).html();//用户编号
+        var userName = tdArr.eq(1).html();//用户姓名
         var followDirection = tdArr.eq(4.).find(".followDirection option:selected").val();//跟单方向
         var handNumberType= tdArr.eq(5).find(".handNumberType option:selected").val();//手数类型
         var followHandNumber = tdArr.eq(6).find(".followHandNumber").val();//手数
-        var json_ = {"userCode":userCode,"userName":userName,"followDirection":followDirection,"handNumberType":handNumberType,"followHandNumber":followHandNumber};
+        var platFormCode = tdArr.eq(7).html();//平台
+        var json_ = {"userCode":userCode,"userName":userName,"followDirection":followDirection,"handNumberType":handNumberType,"followHandNumber":followHandNumber,"platFormCode":platFormCode};
         fayuan_data.push(json_);
     });
     var str = JSON.stringify(fayuan_data);
+
     $.ajax({
         url:url_+"/followOrder/createFollowOrder.Action",
         type:'POST', //GET

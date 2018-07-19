@@ -39,7 +39,7 @@ public class OrderUserController {
      * 用戶列表的计算 & 列表展示
      * @param endTime 结束时间
      * @param startTime 开始时间
-     * @param platformName  平台
+     * @param platFormCode  平台
      * @param productCode 商品代码
      * @param agencyName 代理人
      * @param contract 合约
@@ -48,13 +48,13 @@ public class OrderUserController {
      */
     @RequestMapping(value = "/countOrderUser.Action")
     @ResponseBody
-    public OrderUserListVo countOrderUser(String endTime ,String startTime,String platformName,String productCode,String agencyName,String contract,String userCode ){
+    public OrderUserListVo countOrderUser(String endTime ,String startTime,String platFormCode,String productCode,String agencyName,String contract,String userCode ){
         OrderUserVo orderUserVo = new OrderUserVo();
         orderUserVo.setStartTime(startTime);
         orderUserVo.setEndTime(endTime);
         orderUserVo.setProductCode(productCode);
         orderUserVo.setAgencyName(agencyName);
-        orderUserVo.setPlatformName(platformName);
+        orderUserVo.setPlatFormCode(platFormCode);
         orderUserVo.setContract(contract);
         orderUserVo.setUserCode(userCode);
         OrderUserListVo orderUserVos = orderUserService.countOrderUser(orderUserVo);
@@ -69,9 +69,8 @@ public class OrderUserController {
      */
     @RequestMapping(value = "/getOrderUser.Action")
     @ResponseBody
-    public OrderUserDetailsVo getOrderUser (String productCode,String userCode,String platformName){
-
-        OrderUserDetailsVo orderUserDetailsVos =  orderUserService.getUserDetails(userCode,productCode,platformName);
+    public OrderUserDetailsVo getOrderUser (String productCode,String userCode,String platFormCode){
+        OrderUserDetailsVo orderUserDetailsVos =  orderUserService.getUserDetails(userCode,productCode,platFormCode);
         return orderUserDetailsVos;
     }
 }
