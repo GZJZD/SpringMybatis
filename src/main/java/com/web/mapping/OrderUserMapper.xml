@@ -76,31 +76,24 @@
         where ticket = #{ticket}
     </update>
 
-    <select id="findByUserIdList"    resultType="java.util.Map">
+    <select id="findByUserIdList"   resultMap="BaseResultMap">
 
         SELECT
         <include refid="Base_Column_List" />
         FROM
         tb_order_user
         WHERE user_code IN
-        <foreach collection="relationMap" index="key" item="value" open="(" separator="," close=")">
-            <if test="map.size>0">
-                #{key}
-            </if>
-        </foreach>
-        AND plat_form_code
-        <foreach collection="relationMap" index="key" item="value" open="(" separator="," close=")">
-            <if test="map.size>0">
-                #{value}
+        <foreach collection="list" index="index" item="item" open="(" separator="," close=")">
+            <if test="list.size>0">
+                #{item}
             </if>
         </foreach>
         <if test="productCode != null and productCode != '' "> and product_code = #{productCode} </if>
-        <if test="platFormCode != null and platFormCode != '' ">and plat_form_code =#{platFormCode}</if>
         <if test="startTime != null and startTime != '' "> and create_date <![CDATA[ > ]]> #{startTime} </if>
         <if test="endTime != null and endTime != '' "> and create_date <![CDATA[ <= ]]> #{endTime} </if>
         <if test="status == 1">and close_time is not null </if>
         <if test="status == 0">and close_time is  null </if>
-
+        <if test="platFormCode != null and platFormCode != '' "> and  plat_form_code = #{platFormCode} </if>
     </select>
 
     <select id="countOrderUser" parameterType="com.web.pojo.vo.orderuser.OrderUserVo" resultMap="BaseResultMap">
