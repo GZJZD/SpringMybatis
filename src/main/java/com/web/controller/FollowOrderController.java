@@ -157,9 +157,13 @@ public class FollowOrderController {
             FollowOrder followOrder = followOrderService.getFollowOrder(id);
             if(status.equals(FollowOrderEnum.FollowStatus.ACCOUNT_START.getIndex())){
                 followOrderService.checkLogin(followOrder);
+                if(!followOrder.getFollowOrderStatus().equals(FollowOrderEnum.FollowStatus.FOLLOW_ORDER_START.getIndex())){
+                    return new JSONResult(false, "操作失败");
+                }
             }
-//            followOrderService.updateFollowOrderStatus(id, status);
+
             if (status.equals(FollowOrderEnum.FollowStatus.FOLLOW_ORDER_STOP.getIndex())) {
+                followOrderService.updateFollowOrderStatus(id,status);
                 followOrderService.closeAllOrderByFollowOrderId(id);
             }
         } catch (Exception e) {

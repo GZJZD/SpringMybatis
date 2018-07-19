@@ -198,7 +198,6 @@ public class FollowOrderServiceImpl implements FollowOrderService {
                 FollowOrderVo followOrderVo = new FollowOrderVo();
                 followOrderVo.setFollowOrder(followOrder);
                 Integer openHandNum = 0;
-                Integer successCount = 0;
                 List<FollowOrderDetail> detailList = followOrderDetailService.getDetailListByFollowOrderId(followOrder.getId(), null, null, null);
                 if(detailList.size()!=0){
                     Map<String, Double> askAndBid = SweepTableSchedule.getAskAndBidByFollowOrderId(followOrder.getId());
@@ -212,8 +211,7 @@ public class FollowOrderServiceImpl implements FollowOrderService {
 
                         //累计持仓盈亏
                         if (detail.getRemainHandNumber() !=null &&  detail.getRemainHandNumber() != 0|| (detail.getRemainHandNumber() == null && detail.getCloseTime() == null)) {
-                            //做单成功数
-                            successCount+=1;
+
                             //这条detail数据本身的持仓数
                             int detailOpenHandNum = 0;
                             //剩下得手数
@@ -242,17 +240,8 @@ public class FollowOrderServiceImpl implements FollowOrderService {
                                 followOrderVo.setPositionGainAndLoss(0.0);
                             }
                         }
-                        if(detail.getRemainHandNumber()!=null&&detail.getRemainHandNumber()==0){
-                            //做单成功数
-                            successCount+=1;
-                        }
+
                         if(detail.getCloseTime()!=null){
-                            if(detail.getOpenTime()!=null){
-                                //客户一条平仓记录 = 开仓 + 平仓
-                                successCount += 2;
-                            }else {
-                                successCount +=1;
-                            }
                             //平仓手数
                             followOrderVo.setOffsetHandNumber(followOrderVo.getOffsetHandNumber()+detail.getHandNumber());
                             //平仓盈亏
@@ -262,7 +251,6 @@ public class FollowOrderServiceImpl implements FollowOrderService {
                                 closePositionWinSum ++;
                                 closePositionTotalNumber ++;
                             }else{
-
                                 closePositionTotalNumber ++;
                             }
                         }
@@ -284,10 +272,7 @@ public class FollowOrderServiceImpl implements FollowOrderService {
                 followOrderVo.setSuccessTotal(orderVoMap.get(followOrder.getId()).getSuccessTotal());
                 followOrderVo.setAllTotal(orderVoMap.get(followOrder.getId()).getAllTotal());
                 //跟单总数：false:算总跟单的交易数
-//                followOrderVo.setAllTotal(followOrderTradeRecordService.getFollowOrderTradeTotalCount(followOrder.getId(), false, null, null).get(0).getAllTotal());
-
                 followOrderVoList.add(followOrderVo);
-
                 //累计历史平仓跟单手数
                 followOrderPageVo.setHistoryHandNumber(followOrderPageVo.getHoldPositionHandNumber()+followOrderVo.getOffsetHandNumber());
                 //累计平仓盈亏
@@ -551,14 +536,15 @@ public class FollowOrderServiceImpl implements FollowOrderService {
      */
     public void checkLogin(final FollowOrder followOrder) {
 
+
         if (followOrder.getFollowOrderStatus().equals(FollowOrderEnum.FollowStatus.FOLLOW_ORDER_STOP.getIndex())) {
-            Account account = followOrder.getAccount();
+            final Account[] account = {followOrder.getAccount()};
             userLoginRequest req = new userLoginRequest();
             req.setTypeId("userLogin");
             req.setRequestId(followOrder.getId().intValue());
-            req.setBrokerId(account.getPlatform().getName());
-            req.setUserId(account.getAccount());
-            req.setPassword(account.getPassword());
+            req.setBrokerId(account[0].getPlatform().getName());
+            req.setUserId(account[0].getAccount());
+            req.setPassword(account[0].getPassword());
             log.info(followOrder.getFollowOrderName() + "策略发送一条登陆信息：" + WebJsion.toJson(req));
             TraderServantPrx proxy = CommunicatorConfigUtil.getProxy();
             try {
@@ -570,7 +556,6 @@ public class FollowOrderServiceImpl implements FollowOrderService {
 
                     @Override
                     public void callback_exception(Throwable ex) {
-
                         log.debug(ex.getMessage());
                     }
 
@@ -999,7 +984,6 @@ public class FollowOrderServiceImpl implements FollowOrderService {
                 //BUY:多；
                 Integer direction = orderDetail.getTradeDirection() == FollowOrderEnum.FollowStatus.BUY.getIndex() ?
                         FollowOrderEnum.FollowStatus.SELL.getIndex() : FollowOrderEnum.FollowStatus.BUY.getIndex();
-
 
                 if(followOrder.getFollowManner().equals(FollowOrderEnum.FollowStatus.FOLLOWMANNER_NET_POSITION.getIndex())){
                     //净头寸
