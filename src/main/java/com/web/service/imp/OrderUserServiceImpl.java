@@ -550,8 +550,9 @@ public class OrderUserServiceImpl implements OrderUserService {
                 detailsVo.setEveryHandNumber(DoubleUtil.Double_val);
             }
 
-            detailsVo.setPosition_gain_and_loss(profit);//平仓盈亏
-            detailsVo.setOffset_gain_and_loss(position_gain_and_loss);//持仓盈亏
+            detailsVo.setHandNumber(handNumber);
+            detailsVo.setPosition_gain_and_loss(position_gain_and_loss);//持仓盈亏
+            detailsVo.setOffset_gain_and_loss(profit);//平仓盈亏
         }
 
         return detailsVo;

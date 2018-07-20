@@ -7,6 +7,7 @@ import com.web.common.FollowOrderEnum;
 import com.web.pojo.FollowOrder;
 import com.web.pojo.FollowOrderDetail;
 import com.web.pojo.vo.OrderMsgResult;
+import com.web.pojo.vo.followOrder.FollowOrderQuery;
 import com.web.servant.center.*;
 import com.web.service.FollowOrderDetailService;
 import com.web.service.FollowOrderService;
@@ -58,7 +59,8 @@ public class SweepTableSchedule {
 //    @Scheduled(cron = "0 0/3 * * * ?")
     public void doSweepTable(){
         log.debug("定时器执行");
-        List<FollowOrder> followOrder = followOrderService.getNOStopFollowOrder();
+        FollowOrderQuery followOrderQuery = new FollowOrderQuery();
+        List<FollowOrder> followOrder = followOrderService.selectListFollowOrder(followOrderQuery);
         CommunicatorConfig cfg = new CommunicatorConfig();
         Communicator communicator = CommunicatorFactory.getInstance().getCommunicator(cfg);
         TraderServantPrx proxy = communicator.stringToProxy(TraderServantPrx.class, "TestApp.HelloServer.HelloTrade@tcp -h 192.168.3.189 -p 50506 -t 60000");

@@ -22,7 +22,7 @@ public class FollowOrderClientController {
      * */
     @RequestMapping("/getListFollowOrderClientParamVo.Action")
     @ResponseBody
-    public List<FollowOrderClientParamVo> getListFollowOrderClientParamVo(Long followOrderId){
+    public List<Map<String,Object>> getListFollowOrderClientParamVo(Long followOrderId){
         return followOrderClientService.getListFollowOrderClientParamVo(followOrderId);
     }
 
