@@ -197,12 +197,12 @@ function goOn(status){
   function showInput(){
       
       var netPositionDirection = $('input[name="netPositionDirection"]:checked').val(); //正向反向
-      if(netPositionDirection ==0){
+      if(netPositionDirection == 0){
           $("input[name='netPositionDirection-val']").get(1).checked=true;
       }else {
           $("input[name='netPositionDirection-val']").get(0).checked=true;
       }
-        $('#netPositionChange-val').val($('#netPositionChange-id').val());
+      $('#netPositionChange-val').val($('#netPositionChange-id').val());
       $('#netPositionFollowNumber-val').val($('#netPositionFollowNumber-id').val());
 
       $('.user-input-set').show()
@@ -226,7 +226,6 @@ function returnBlack(status){
         layui.use('element', function(){
             var element = layui.element;
             element.progress('demo', '33%');
-
         });
         $(".one-div").css('background-color','#44b7af');
         $(".two-div").css('background-color','#f0eff0');
