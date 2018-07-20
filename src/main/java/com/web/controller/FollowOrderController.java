@@ -234,11 +234,10 @@ public class FollowOrderController {
                 }
                 followOrderService.updateFollowOrder(followOrder);
                 log.debug("跟单策略修改后："+WebJsion.toJson(followOrder));
-                //删除
-                followOrderClientService.deleteByFollowOrderId(id);
+
                 if (!followOrder.getFollowManner().equals(FollowOrderEnum.FollowStatus.FOLLOWMANNER_NET_POSITION.getIndex())) {
                     //保存关联
-                    followOrderClientService.saveListFollowOrderClient(followOrderClients1, followOrder);
+                    followOrderClientService.updateListFollowOrderClient(followOrderClients1);
                 }
             }
 

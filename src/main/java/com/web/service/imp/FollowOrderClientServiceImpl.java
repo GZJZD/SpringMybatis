@@ -6,7 +6,6 @@ import com.web.database.entity.PlatFromUsers;
 import com.web.pojo.ContractInfo;
 import com.web.pojo.FollowOrder;
 import com.web.pojo.FollowOrderClient;
-import com.web.pojo.vo.followOrder.FollowOrderClientParamVo;
 import com.web.pojo.vo.orderuser.OrderUserDetailsVo;
 import com.web.service.ContractInfoService;
 import com.web.service.FollowOrderClientService;
@@ -90,36 +89,28 @@ public class FollowOrderClientServiceImpl implements FollowOrderClientService {
      * param 跟单id
      * */
     @Override
-    public List<FollowOrderClientParamVo> getListFollowOrderClientParamVo(Long followOrderId) {
+    public List<Map<String,Object>> getListFollowOrderClientParamVo(Long followOrderId) {
         List<FollowOrderClient> followOrderClients = getListByFollowOrderId(followOrderId);
         FollowOrder followOrder = followOrderService.getFollowOrder(followOrderId);
-        List<FollowOrderClientParamVo> followOrderClientParamVoList = new ArrayList<>();
         //todo 数据源不清晰
         ContractInfo info = contractInfoService.getInfoByVarietyIdAndPlatformId(followOrder.getVariety().getId(), 2L);
+
         List<Map<String,Object>> mapList  = new ArrayList<>();
         for (FollowOrderClient followOrderClient : followOrderClients) {
             Map<String,Object> map = new HashMap<>();
-            FollowOrderClientParamVo followOrderClientParamVo = new FollowOrderClientParamVo();
             OrderUserDetailsVo orderUserCount = orderUserService.getOrderUserCount(followOrderClient.getUserCode(),
                     info.getContractCode(), followOrderClient.getPlatformCode());
-
-            followOrderClientParamVo.setFollowDirection(followOrderClient.getFollowDirection());//跟单方向
-            followOrderClientParamVo.setHandNumber(followOrderClient.getFollowHandNumber());//跟单手数
-            followOrderClientParamVo.setHandNumberType(followOrderClient.getHandNumberType());//跟单类型
-            followOrderClientParamVo.setUserCode(followOrderClient.getUserCode());//用户编号
-
             map.put("followOrderClient",followOrderClient);
             String userName = getUserName(followOrderClient.getUserCode(), followOrderClient.getPlatformCode());
-            followOrderClientParamVo.setUserName(userName);//用户姓名
             map.put("userName",userName);
             map.put("offsetGainAndLoss",orderUserCount.getOffset_gain_and_loss());//平仓盈亏
             map.put("profitAndLossEfficiency",DoubleUtil.div(orderUserCount.getOffset_gain_and_loss(),
-                    orderUserCount.getHandNumber(),2));//盈亏效率 平仓盈亏之和除以手数
+                    orderUserCount.getHandNumber()==0?1.0:orderUserCount.getHandNumber(),2));//盈亏效率 平仓盈亏之和除以手数
             map.put("everyHandNumber",orderUserCount.getEveryHandNumber());//每单手数
 
             mapList.add(map);
         }
-        return followOrderClientParamVoList;
+        return mapList;
     }
 
 
@@ -159,5 +150,13 @@ public class FollowOrderClientServiceImpl implements FollowOrderClientService {
         }
         return users.getNAME();
 
+    }
+
+    @Override
+    public void updateListFollowOrderClient(List<FollowOrderClient> followOrderClients) {
+        for (FollowOrderClient followOrderClient : followOrderClients) {
+            followOrderClient.setUpdateDate(DateUtil.getStringDate());
+            update(followOrderClient);
+        }
     }
 }

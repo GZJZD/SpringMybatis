@@ -10,13 +10,6 @@ function hideRadio(id){
 
 function showTableBase(tableId,data_){
     var columns = [
-
-        {
-            field: 'followOrderClient.id',
-            title: '客户ID',
-            hidden:true
-
-        },
         {
             field: 'userName',
             title: '客户姓名'
@@ -26,7 +19,7 @@ function showTableBase(tableId,data_){
         },
 
         {
-            field: 'offset_gain_and_loss',
+            field: 'offsetGainAndLoss',
             title: '平仓盈亏'
         },
 
@@ -35,7 +28,7 @@ function showTableBase(tableId,data_){
             title: '盈亏效率'
         },
         {
-            field:'followOrderClient.followDirection',
+            field:'followDirection',
             title:'跟单方向',
             align: 'center',
             valign: 'middle',
@@ -53,29 +46,7 @@ function showTableBase(tableId,data_){
             title:'手数',
             align: 'center',
             valign: 'middle'
-        } ,
-        {
-            field: 'platFormCode',
-            title: '平台',
-            align: 'center',
-            valign: 'middle',
-            hidden:true
-        },
-        {
-            field: 'platFormCode',
-            title: '平台',
-            align: 'center',
-            valign: 'middle',
-            hidden:true
-        },
-        {
-            field: 'userCode',
-            title: '操作',
-            align: 'center',
-            valign: 'middle',
-            formatter: actionFormatter
         }
-
     ];
 
     $(tableId).bootstrapTable({
@@ -162,27 +133,30 @@ function  setParameter(id) {
     var url_client=url_+"/followOrderClient/getListFollowOrderClientParamVo.Action?followOrderId="+id;
     var columns;
     columns = [
-
         {
-            field: 'userCode',
-            title: '客户编号'
+            field: 'followOrderClient.id',
+            title: 'ID'
+
         },
         {
             field: 'userName',
             title: '客户姓名'
+        },{
+            field: 'everyHandNumber',
+            title: '每单手数'
         },
 
         {
-            field: 'profit',
+            field: 'offsetGainAndLoss',
             title: '平仓盈亏'
         },
 
         {
-            field: 'profit_loss_than',
+            field: 'profitAndLossEfficiency',
             title: '盈亏效率'
         },
         {
-            field: 'followDirection',
+            field: 'followOrderClient.followDirection',
             title: '跟单类型',
             align: 'center',
             valign: 'middle',
@@ -191,7 +165,7 @@ function  setParameter(id) {
             }
         },
         {
-            field: 'handNumberType',
+            field: 'followOrderClient.handNumberType',
             title: '手数类型',
             align: 'center',
             valign: 'middle',
@@ -200,13 +174,19 @@ function  setParameter(id) {
             }
         }
         , {
-            field: 'handNumber',
+            field: 'followOrderClient.followHandNumber',
             title: '手数',
             align: 'center',
             valign: 'middle',
             formatter: function (value,row,index) {
                return handNumber(value);
             }
+        } ,
+        {
+            field: 'followOrderClient.platformCode',
+            title: '平台',
+            align: 'center',
+            valign: 'middle'
         }
         ,
         {
@@ -222,6 +202,7 @@ function  setParameter(id) {
        url:url_client,
         columns:columns
     });
+
 }
 
 function goOn(status){
@@ -254,14 +235,22 @@ function goOn(status){
 
         $("#mytable tbody").find('tr').each(function(){
             var tdArr = $(this).children();
-            var userCode = tdArr.eq(0).html();//id
-            var userName = tdArr.eq(1).html();//用户编号
-            var profit = tdArr.eq(2).html();//平仓盈亏
-            var profit_loss_than  =tdArr.eq(3).html();//盈亏率
-            var followDirection = tdArr.eq(4.).find(".followDirection option:selected").val();//跟单方向
-            var handNumberType= tdArr.eq(5).find(".handNumberType option:selected").val();//手数类型
-            var followHandNumber = tdArr.eq(6).find(".followHandNumber").val();//手数
-            var json_ = {"userCode":userCode,"userName":userName,"profit":profit,"profit_loss_than":profit_loss_than,"followDirection":followDirection,"handNumberType":handNumberType,"followHandNumber":followHandNumber};
+            var userName = tdArr.eq(1).html();//客户姓名
+            var everyHandNumber = tdArr.eq(2).html();//每单手数
+            var offsetGainAndLoss = tdArr.eq(3).html();//平仓盈亏
+            var profitAndLossEfficiency  =tdArr.eq(4).html();//盈亏率
+            var followDirection = tdArr.eq(5).find(".followDirection option:selected").val();//跟单方向
+            var handNumberType= tdArr.eq(6).find(".handNumberType option:selected").val();//手数类型
+            var followHandNumber = tdArr.eq(7).find(".followHandNumber").val();//手数
+            var json_ = {
+                "userName":userName,
+                "everyHandNumber":everyHandNumber,
+                "offsetGainAndLoss":offsetGainAndLoss,
+                "profitAndLossEfficiency":profitAndLossEfficiency,
+                "followDirection":followDirection,
+                "handNumberType":handNumberType,
+                "followHandNumber":followHandNumber
+            };
             fayuan_data.push(json_);
         });
         setDetalsTitle();//设置明细动态数据
@@ -325,9 +314,11 @@ function returnBlack(status){
 
         $(".one-div").css('background-color','#f0eff0');
         $(".two-div").css('background-color','#44b7af');
-        $(".three-div").css('background-color','#f0eff0')
+        $(".three-div").css('background-color','#f0eff0');
         $('.first-div').hide();
         $('.detalis-div').hide();
+        $('.user-set').hide();//table
+        $('.user-input-set').hide(); //input框
         ($('input[name="followManner"]:checked').val() == 1 ? $('.jtc').show(): $('.table-div').show());
 
     }
@@ -450,7 +441,7 @@ function setDetalsTitle() {
     $('.maxProfit').text($('input[name="maxProfit"]:checked').val() == 1 ? '不设':'点/手   '+$('input[name="maxProfit"]:checked').val());//单笔最大止盈
     $('.maxLoss').text( $('input[name="maxLoss"]:checked').val() == 1 ? '不设':'点/手   '+ $('input[name="maxLoss"]:checked').val());//单笔最大止损
     $('.accountLoss').text($('input[name="accountLoss"]:checked').val() == 1 ? '不设':'美金   '+$("#accountLoss-id").val());//账户止损
-    $('.userCode').text($('#GD-id option:selected').text());//跟单账号
+    $('.userCode').text($('#account-id option:selected').text());//跟单账号
     $('.followManner').text($('input[name="followManner"]:checked').val()== 0 ? '跟每一单':'跟进头寸');//跟单方式
 
 }
@@ -461,7 +452,7 @@ function setDetalsTitle() {
 function commit(){
     var leght = $("#datails-table tbody").find('tr').length;
     var followOrderName = $("#followOrderName").val();//策略名称
-    var id  = $("#GD-id option:selected").val();//跟单人id
+    var id  = $("#account-id option:selected").val();//跟单人id
     var varietyCode =  parent.$("#product-val-id option:selected").val(); //商品
     var maxProfit = $('input[name="maxProfit"]:checked').val(); //最大止盈
     var maxProfitNumber = $("#maxProfit-id").val(); //止盈点数
@@ -472,28 +463,25 @@ function commit(){
     var orderPoint = $("#orderPoint").val();//下单点位
     var clientPoint = $(".clientPoint-class option:selected").val(); //比客户点位
     var clientPointNumber = $('#clientPointNumber-id').val(); //点位
-   var followManner = $("#followManner").val(); //跟单正反向
-    var netPositionDirection='1';
-    var netPositionChange=1; //变化基数
-    var netPositionFollowNumber = 1;//手数
+   var followManner = $('input[name="followManner"]:checked').val(); //跟单正反向
+    var netPositionDirection = $('input[name="netPositionDirection"]:checked').val(); //正向反向
+    var netPositionChange = $('#netPositionChange-id').val(); //变化基数
+    var netPositionFollowNumber = $('#netPositionFollowNumber-id').val();//跟单、手数
     if(followOrderName == ''|| followOrderName == 'undefined'){
         return layer.msg('策略名称不能为空');
     }
 
-    if(leght < 1){
-        return layer.msg('请选择用户');
-    }
     //构造用户数组
     var fayuan_data = new Array();
     $("#mytable tbody").find('tr').each(function(){
         var tdArr = $(this).children();
-        var userCode = tdArr.eq(0).html();//用户编号
-        var followDirection = tdArr.eq(4.).find(".followDirection option:selected").val();//跟单方向
-        var handNumberType= tdArr.eq(5).find(".handNumberType option:selected").val();//手数类型
-        var followHandNumber = tdArr.eq(6).find(".followHandNumber").val();//手数
-        var platFormCode = tdArr.eq(7).html();//平台
+        var id = tdArr.eq(0).html();//id
+        var followDirection = tdArr.eq(5.).find(".followDirection option:selected").val();//跟单方向
+        var handNumberType= tdArr.eq(6).find(".handNumberType option:selected").val();//手数类型
+        var followHandNumber = tdArr.eq(7).find(".followHandNumber").val();//手数
+        var platFormCode = tdArr.eq(8).html();//平台
         var json_ = {
-             "userCode":userCode,
+             "id":id,
              "followDirection":followDirection,
              "handNumberType":handNumberType,
              "followHandNumber":followHandNumber,
@@ -532,7 +520,13 @@ function commit(){
 
         },
         success:function(data,textStatus,jqXHR){
+            if (data.success) {
+                parent.layer.closeAll();
 
+            } else {
+                layer.msg(data.msg);
+            }
+            parent.layer.msg(data.msg);
         },
         error:function(xhr,textStatus){
 
