@@ -23,7 +23,7 @@ public interface FollowOrderClientService {
     List<FollowOrderClient> getListByFollowOrderId(Long followOrderId);
 
     List<Map<String,Object>> getListUserNameByFollowOrderId(Long followOrderId);
-    List<FollowOrderClientParamVo> getListFollowOrderClientParamVo(Long followOrderId);
+    List<Map<String,Object>> getListFollowOrderClientParamVo(Long followOrderId);
 
     void deleteByFollowOrderId(Long followOrderId);
     FollowOrderClient getByUserCodeAndPlatformCode(String userCode, String platformCode, Long followOrderId);
