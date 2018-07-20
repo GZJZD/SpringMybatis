@@ -12,26 +12,31 @@ function showTableBase(tableId,data_){
     var columns = [
 
         {
-            field: 'userCode',
-            title: '客户编号'
+            field: 'followOrderClient.id',
+            title: '客户ID',
+            hidden:true
+
         },
         {
             field: 'userName',
             title: '客户姓名'
+        },{
+            field: 'everyHandNumber',
+            title: '每单手数'
         },
 
         {
-            field: 'profit',
+            field: 'offset_gain_and_loss',
             title: '平仓盈亏'
         },
 
         {
-            field: 'profit_loss_than',
+            field: 'profitAndLossEfficiency',
             title: '盈亏效率'
         },
         {
-            field:'followDirection',
-            title:'跟单类型',
+            field:'followOrderClient.followDirection',
+            title:'跟单方向',
             align: 'center',
             valign: 'middle',
             formatter: returnFollowDirection
@@ -49,6 +54,13 @@ function showTableBase(tableId,data_){
             align: 'center',
             valign: 'middle'
         } ,
+        {
+            field: 'platFormCode',
+            title: '平台',
+            align: 'center',
+            valign: 'middle',
+            hidden:true
+        },
         {
             field: 'platFormCode',
             title: '平台',
