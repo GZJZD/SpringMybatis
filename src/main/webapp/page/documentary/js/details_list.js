@@ -205,7 +205,7 @@ function detailShow(varietyName, name, manager, id, orderNum, offsetGainAndLoss,
 * 展示客户数据列表
 * */
 
-function clientTableShow(id, manager, name) {
+function clientTableShow(id, manager, name,varietyName) {
 
     followOrderId = id;
     var url_client = url_ + "/followOrder/getListClientNetPosition.Action?followOrderId=" + id +"&followOrderClientId="+followOrderClientId+ "&status=" + clientStatus ;
@@ -229,7 +229,8 @@ function clientTableShow(id, manager, name) {
             title: '客户名'
         }, {
             field: 'varietyName',
-            title: '品种'
+            title: '品种',
+            formatter:varietyName
         }, {
             field: 'openCloseType',
             title: '类型',

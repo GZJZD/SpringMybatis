@@ -361,7 +361,7 @@ function orderByParameter(num) {
 * 打开明细
 * */
 function openDeatil(obj) {
-    follow_details(obj, '跟单明细', url_ + "/page/documentary/documentary-details.html", 1400, 750);
+    follow_details(obj, '跟单明细', url_ + "/page/documentary/documentary-details.html", 1500, 800);
 }
 
 /*
@@ -569,7 +569,7 @@ function follow_details(obj, title, url, w, h) {
             var iframeWin = window['layui-layer-iframe' + index]; //得到iframe页的窗口对象，执行iframe页的方法：iframeWin.method();
             //调用子页面的方法
             iframeWin.detailShow(varietyName,name, manager, followOrderId, successTotal + "/" + orderNum, offsetGainAndLoss,obj.positionGainAndLoss, poundageTotal);
-            iframeWin.clientTableShow(followOrderId, manager, name);
+            iframeWin.clientTableShow(followOrderId, manager, name,varietyName);
             iframeWin.orderParameterShow(obj.followOrder);
             iframeWin.orderClientTableShow(followOrderId, name,varietyName);
 

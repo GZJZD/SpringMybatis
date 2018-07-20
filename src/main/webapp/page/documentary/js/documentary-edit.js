@@ -48,7 +48,22 @@ function showTableBase(tableId,data_){
             title:'手数',
             align: 'center',
             valign: 'middle'
+        } ,
+        {
+            field: 'platFormCode',
+            title: '平台',
+            align: 'center',
+            valign: 'middle',
+            hidden:true
+        },
+        {
+            field: 'userCode',
+            title: '操作',
+            align: 'center',
+            valign: 'middle',
+            formatter: actionFormatter
         }
+
     ];
 
     $(tableId).bootstrapTable({
@@ -249,10 +264,31 @@ function goOn(status){
         showTableBase(tableId,data_);
         //设置参数
 
-        $(".detalis-div").show();
+        tableOrInputs();
 
     }
 
+}
+/**
+ * 根据状态 显示 table表格 或 input 参数
+ */
+function tableOrInputs(){
+    ($('input[name="followManner"]:checked').val() == 0 ? $('.user-set').show() : showInput());
+    //设置参数
+    $(".detalis-div").show();
+}
+function showInput(){
+
+    var netPositionDirection = $('input[name="netPositionDirection"]:checked').val(); //正向反向
+    if(netPositionDirection ==0){
+        $("input[name='netPositionDirection-val']").get(1).checked=true;
+    }else {
+        $("input[name='netPositionDirection-val']").get(0).checked=true;
+    }
+    $('#netPositionChange-val').val($('#netPositionChange-id').val());
+    $('#netPositionFollowNumber-val').val($('#netPositionFollowNumber-id').val());
+
+    $('.user-input-set').show()
 }
 
 //每个返回按钮事件
@@ -443,7 +479,14 @@ function commit(){
         var followDirection = tdArr.eq(4.).find(".followDirection option:selected").val();//跟单方向
         var handNumberType= tdArr.eq(5).find(".handNumberType option:selected").val();//手数类型
         var followHandNumber = tdArr.eq(6).find(".followHandNumber").val();//手数
-        var json_ = {"userCode":userCode,"followDirection":followDirection,"handNumberType":handNumberType,"followHandNumber":followHandNumber};
+        var platFormCode = tdArr.eq(7).html();//平台
+        var json_ = {
+             "userCode":userCode,
+             "followDirection":followDirection,
+             "handNumberType":handNumberType,
+             "followHandNumber":followHandNumber,
+             "platFormCode": platFormCode
+        };
         fayuan_data.push(json_);
     });
     var str = JSON.stringify(fayuan_data);
