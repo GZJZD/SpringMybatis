@@ -63,11 +63,11 @@ public class FollowOrderClientServiceImpl implements FollowOrderClientService {
 
 
     @Override
-    public void saveListFollowOrderClient(List<FollowOrderClient> followOrderClients, FollowOrder followOrder) {
+    public void saveListFollowOrderClient(List<FollowOrderClient> followOrderClients, Long followOrderId) {
         if (followOrderClients.size() != 0) {
             for (FollowOrderClient orderClient : followOrderClients) {
                 FollowOrderClient followOrderClient = new FollowOrderClient();
-                followOrderClient.setFollowOrderId(followOrder.getId());
+                followOrderClient.setFollowOrderId(followOrderId);
                 followOrderClient.setUserCode(orderClient.getUserCode());
                 followOrderClient.setPlatformCode(orderClient.getPlatformCode());
                 followOrderClient.setFollowDirection(orderClient.getFollowDirection());

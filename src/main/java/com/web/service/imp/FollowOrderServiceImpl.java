@@ -647,7 +647,7 @@ public class FollowOrderServiceImpl implements FollowOrderService {
         }
         this.save(order);
         //保存客户与跟单关联
-        followOrderClientService.saveListFollowOrderClient(followOrderClients, order);
+        followOrderClientService.saveListFollowOrderClient(followOrderClients, order.getId());
 
         this.checkLogin(order);
         ContractInfo contractInfo = contractInfoService.getInfoByVarietyIdAndPlatformId(followOrder.getVariety().getId(), followOrder.getAccount().getPlatform().getId());
