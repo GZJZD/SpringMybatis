@@ -441,7 +441,7 @@ function setDetalsTitle() {
     $('.maxProfit').text($('input[name="maxProfit"]:checked').val() == 1 ? '不设':'点/手   '+$('input[name="maxProfit"]:checked').val());//单笔最大止盈
     $('.maxLoss').text( $('input[name="maxLoss"]:checked').val() == 1 ? '不设':'点/手   '+ $('input[name="maxLoss"]:checked').val());//单笔最大止损
     $('.accountLoss').text($('input[name="accountLoss"]:checked').val() == 1 ? '不设':'美金   '+$("#accountLoss-id").val());//账户止损
-    $('.userCode').text($('#GD-id option:selected').text());//跟单账号
+    $('.userCode').text($('#account-id option:selected').text());//跟单账号
     $('.followManner').text($('input[name="followManner"]:checked').val()== 0 ? '跟每一单':'跟进头寸');//跟单方式
 
 }
@@ -464,16 +464,13 @@ function commit(){
     var clientPoint = $(".clientPoint-class option:selected").val(); //比客户点位
     var clientPointNumber = $('#clientPointNumber-id').val(); //点位
    var followManner = $('input[name="followManner"]:checked').val(); //跟单正反向
-    var netPositionDirection='1';
-    var netPositionChange=1; //变化基数
-    var netPositionFollowNumber = 1;//手数
+    var netPositionDirection = $('input[name="netPositionDirection"]:checked').val(); //正向反向
+    var netPositionChange = $('#netPositionChange-id').val(); //变化基数
+    var netPositionFollowNumber = $('#netPositionFollowNumber-id').val();//跟单、手数
     if(followOrderName == ''|| followOrderName == 'undefined'){
         return layer.msg('策略名称不能为空');
     }
 
-    if(leght < 1){
-        return layer.msg('请选择用户');
-    }
     //构造用户数组
     var fayuan_data = new Array();
     $("#mytable tbody").find('tr').each(function(){
@@ -523,7 +520,13 @@ function commit(){
 
         },
         success:function(data,textStatus,jqXHR){
+            if (data.success) {
+                parent.layer.closeAll();
 
+            } else {
+                layer.msg(data.msg);
+            }
+            parent.layer.msg(data.msg);
         },
         error:function(xhr,textStatus){
 
