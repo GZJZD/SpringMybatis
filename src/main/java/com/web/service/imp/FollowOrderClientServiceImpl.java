@@ -13,6 +13,7 @@ import com.web.service.FollowOrderClientService;
 import com.web.service.FollowOrderService;
 import com.web.service.OrderUserService;
 import com.web.util.common.DateUtil;
+import com.web.util.common.DoubleUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -93,20 +94,30 @@ public class FollowOrderClientServiceImpl implements FollowOrderClientService {
         List<FollowOrderClient> followOrderClients = getListByFollowOrderId(followOrderId);
         FollowOrder followOrder = followOrderService.getFollowOrder(followOrderId);
         List<FollowOrderClientParamVo> followOrderClientParamVoList = new ArrayList<>();
+        //todo 数据源不清晰
         ContractInfo info = contractInfoService.getInfoByVarietyIdAndPlatformId(followOrder.getVariety().getId(), 2L);
+        List<Map<String,Object>> mapList  = new ArrayList<>();
         for (FollowOrderClient followOrderClient : followOrderClients) {
+            Map<String,Object> map = new HashMap<>();
             FollowOrderClientParamVo followOrderClientParamVo = new FollowOrderClientParamVo();
             OrderUserDetailsVo orderUserCount = orderUserService.getOrderUserCount(followOrderClient.getUserCode(),
                     info.getContractCode(), followOrderClient.getPlatformCode());
-            followOrderClientParamVo.setUserCode(followOrderClient.getUserCode());//用户编号 todo
 
-            followOrderClientParamVo.setUserName("向日葵");//用户姓名
-            followOrderClientParamVo.setOffset_gain_and_loss(orderUserCount.getOffset_gain_and_loss());//平仓盈亏
-            followOrderClientParamVo.setProfit_loss_than(orderUserCount.getPosition_gain_and_loss());//持仓盈亏
             followOrderClientParamVo.setFollowDirection(followOrderClient.getFollowDirection());//跟单方向
             followOrderClientParamVo.setHandNumber(followOrderClient.getFollowHandNumber());//跟单手数
             followOrderClientParamVo.setHandNumberType(followOrderClient.getHandNumberType());//跟单类型
-            followOrderClientParamVoList.add(followOrderClientParamVo);
+            followOrderClientParamVo.setUserCode(followOrderClient.getUserCode());//用户编号
+
+            map.put("followOrderClient",followOrderClient);
+            String userName = getUserName(followOrderClient.getUserCode(), followOrderClient.getPlatformCode());
+            followOrderClientParamVo.setUserName(userName);//用户姓名
+            map.put("userName",userName);
+            map.put("offsetGainAndLoss",orderUserCount.getOffset_gain_and_loss());//平仓盈亏
+            map.put("profitAndLossEfficiency",DoubleUtil.div(orderUserCount.getOffset_gain_and_loss(),
+                    orderUserCount.getHandNumber(),2));//盈亏效率 平仓盈亏之和除以手数
+            map.put("everyHandNumber",orderUserCount.getEveryHandNumber());//每单手数
+
+            mapList.add(map);
         }
         return followOrderClientParamVoList;
     }

@@ -184,12 +184,14 @@
     <select id="getNOStopFollowOrder" resultMap="BaseResultMap">
         select
         f.id,
+        f.follow_order_name,
         f.tb_account_id,
         v.id v_id,
         v.variety_code v_variety_code,
         v.variety_name v_variety_name
         from follow_order f
         join tb_variety v on v.id = f.tb_variety_id
+        where f.follow_order_status = 1
     </select>
 
     <sql id="base_where">

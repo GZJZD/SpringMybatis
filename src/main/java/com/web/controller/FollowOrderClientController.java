@@ -17,7 +17,7 @@ public class FollowOrderClientController {
     private FollowOrderClientService followOrderClientService;
 
     /*
-     * 通过跟单id，客户列表数据展示
+     * 通过跟单id，返回跟单编辑中的客户列表
      * param 跟单id
      * */
     @RequestMapping("/getListFollowOrderClientParamVo.Action")
