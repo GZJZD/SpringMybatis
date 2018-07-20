@@ -21,7 +21,7 @@ public interface FollowOrderClientService {
     List<Long> getListByUserCodeAndPlatformCode(String userCode,String platformCode);
 
     List<FollowOrderClient> getListByFollowOrderId(Long followOrderId);
-    List<String> getListUserCodeByFollowOrderId(Long followOrderId);
+
     List<Map<String,Object>> getListUserNameByFollowOrderId(Long followOrderId);
     List<FollowOrderClientParamVo> getListFollowOrderClientParamVo(Long followOrderId);
 

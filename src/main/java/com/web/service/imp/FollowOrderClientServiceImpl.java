@@ -60,10 +60,7 @@ public class FollowOrderClientServiceImpl implements FollowOrderClientService {
         return followOrderClientDao.getByUserCodeAndPlatformCode(userCode, platformCode, followOrderId);
     }
 
-    @Override
-    public List<String> getListUserCodeByFollowOrderId(Long followOrderId) {
-        return followOrderClientDao.getListUserCodeByFollowOrderId(followOrderId);
-    }
+
 
     @Override
     public void saveListFollowOrderClient(List<FollowOrderClient> followOrderClients, FollowOrder followOrder) {
