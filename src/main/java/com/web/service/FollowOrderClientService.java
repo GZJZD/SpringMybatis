@@ -2,7 +2,6 @@ package com.web.service;
 
 import com.web.pojo.FollowOrder;
 import com.web.pojo.FollowOrderClient;
-import com.web.pojo.vo.followOrder.FollowOrderClientParamVo;
 
 import java.util.List;
 import java.util.Map;
@@ -34,4 +33,6 @@ public interface FollowOrderClientService {
 
     FollowOrderClient getFollowOrderClient(Long followOrderClientId);
      String getUserName(String userCode, String platformCode);
+
+    void updateListFollowOrderClient(List<FollowOrderClient> followOrderClients);
 }

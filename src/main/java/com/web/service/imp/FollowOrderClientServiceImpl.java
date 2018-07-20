@@ -6,7 +6,6 @@ import com.web.database.entity.PlatFromUsers;
 import com.web.pojo.ContractInfo;
 import com.web.pojo.FollowOrder;
 import com.web.pojo.FollowOrderClient;
-import com.web.pojo.vo.followOrder.FollowOrderClientParamVo;
 import com.web.pojo.vo.orderuser.OrderUserDetailsVo;
 import com.web.service.ContractInfoService;
 import com.web.service.FollowOrderClientService;
@@ -151,5 +150,13 @@ public class FollowOrderClientServiceImpl implements FollowOrderClientService {
         }
         return users.getNAME();
 
+    }
+
+    @Override
+    public void updateListFollowOrderClient(List<FollowOrderClient> followOrderClients) {
+        for (FollowOrderClient followOrderClient : followOrderClients) {
+            followOrderClient.setUpdateDate(DateUtil.getStringDate());
+            update(followOrderClient);
+        }
     }
 }
