@@ -1,9 +1,11 @@
 package com.web.controller;
 
+import com.web.pojo.FollowOrder;
 import com.web.pojo.OrderUser;
 import com.web.pojo.vo.orderuser.OrderUserDetailsVo;
 import com.web.pojo.vo.orderuser.OrderUserListVo;
 import com.web.pojo.vo.orderuser.OrderUserVo;
+import com.web.service.FollowOrderService;
 import com.web.service.OrderUserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -23,7 +25,8 @@ public class OrderUserController {
     @Autowired
     @Qualifier("orderUserService")
     private OrderUserService orderUserService;
-
+    @Autowired
+    private FollowOrderService followOrderService;
 
 
     @RequestMapping(value = "/findAll.Action")
@@ -72,5 +75,26 @@ public class OrderUserController {
     public OrderUserDetailsVo getOrderUser (String productCode,String userCode,String platFormCode){
         OrderUserDetailsVo orderUserDetailsVos =  orderUserService.getUserDetails(userCode,productCode,platFormCode);
         return orderUserDetailsVos;
+    }
+
+    /**
+     * 获取所有启动中的策略
+     */
+    @RequestMapping(value = "getfollowOrderList.Action")
+    @ResponseBody
+    public List<FollowOrder>  getfollowOrderList(){
+        List <FollowOrder> list = followOrderService.getNOStopFollowOrder();
+            return list;
+    }
+
+    /**
+     * 通过id 获取策略明细
+     */
+    @RequestMapping(value = "getFollowOrder.Action")
+    @ResponseBody
+    public FollowOrder getFollowOrder(Long id){
+        FollowOrder followOrder = followOrderService.getFollowOrder(id);
+        return followOrder;
+
     }
 }
