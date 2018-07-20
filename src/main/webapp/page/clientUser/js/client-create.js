@@ -1,30 +1,11 @@
-function findById(id){
-    $.ajax({
-        url:url_+"/orderUser/getFollowOrder.Action",
-        type:'POST', //GET
-        async:true,    //或false,是否异步
-        data:{
-            id:id
-        },
-        // timeout:5000,    //超时时间
-        dataType:'json',    //返回的数据格式：json/xml/html/script/jsonp/text
-        beforeSend:function(xhr){
-
-        },
-        success:function(data,textStatus,jqXHR){
-
-            setParemt(data);
-        },
-        error:function(xhr,textStatus){
-        },
-        complete:function(){
-        }
-    })
-
-}
-function setParemt(data){
-    $("#followOrderName").val(data.followOrderName)
-}
+$(function(){
+    $(".bili-class").hide();
+    $("#maxProfit-id").hide();
+    $("#accountLoss-id").hide();
+    $("#maxLoss-id").hide();
+    setParameter();
+    getAccountList();
+});
 
 function showTableBase(tableId,data_){
     var columns = [
@@ -207,36 +188,36 @@ function goOn(status){
 /**
  * 根据状态 显示 table表格 或 input 参数
  */
-function tableOrInputs(){
-    ($('input[name="followManner"]:checked').val() == 0 ? $('.user-set').show() : showInput());
+  function tableOrInputs(){
+      ($('input[name="followManner"]:checked').val() == 0 ? $('.user-set').show() : showInput());
     //设置参数
     $(".detalis-div").show();
-}
+  }
 
-function showInput(){
+  function showInput(){
+      
+      var netPositionDirection = $('input[name="netPositionDirection"]:checked').val(); //正向反向
+      if(netPositionDirection ==0){
+          $("input[name='netPositionDirection-val']").get(1).checked=true;
+      }else {
+          $("input[name='netPositionDirection-val']").get(0).checked=true;
+      }
+        $('#netPositionChange-val').val($('#netPositionChange-id').val());
+      $('#netPositionFollowNumber-val').val($('#netPositionFollowNumber-id').val());
 
-    var netPositionDirection = $('input[name="netPositionDirection"]:checked').val(); //正向反向
-    if(netPositionDirection ==0){
-        $("input[name='netPositionDirection-val']").get(1).checked=true;
-    }else {
-        $("input[name='netPositionDirection-val']").get(0).checked=true;
-    }
-    $('#netPositionChange-val').val($('#netPositionChange-id').val());
-    $('#netPositionFollowNumber-val').val($('#netPositionFollowNumber-id').val());
-
-    $('.user-input-set').show()
-}
+      $('.user-input-set').show()
+  }
 /**
  * 设置详情页明细显示
  */
 function setDetalsTitle() {
-    $('.followOrderName').text($("#followOrderName").val())//策略名称
-    $('.orderPoint').text($('input[name="orderPoint"]:checked').val() == 1 ? '市价':'限价:比客户点位   '+($('.clientPoint-class option:selected').val() == 1 ? '好':'差')+''+$('#clientPointNumber-id').val());
-    $('.maxProfit').text($('input[name="maxProfit"]:checked').val() == 1 ? '市价':'点/手   '+$('input[name="maxProfit"]:checked').val());//单笔最大止盈
-    $('.maxLoss').text( $('input[name="maxLoss"]:checked').val() == 1 ? '不设':'点/手   '+ $('input[name="maxLoss"]:checked').val());//单笔最大止损
-    $('.accountLoss').text($('input[name="accountLoss"]:checked').val() == 1 ? '不设':'美金   '+$("#accountLoss-id").val());//账户止损
-    $('.userCode').text($('#GD-id option:selected').val());//跟单账号
-    $('.followManner').text($('input[name="followManner"]:checked').val()== 1 ? '跟净头寸':'跟每一单');//跟单方式
+   $('.followOrderName').text($("#followOrderName").val())//策略名称
+   $('.orderPoint').text($('input[name="orderPoint"]:checked').val() == 1 ? '市价':'限价:比客户点位   '+($('.clientPoint-class option:selected').val() == 1 ? '好':'差')+''+$('#clientPointNumber-id').val());
+   $('.maxProfit').text($('input[name="maxProfit"]:checked').val() == 1 ? '市价':'点/手   '+$('input[name="maxProfit"]:checked').val());//单笔最大止盈
+   $('.maxLoss').text( $('input[name="maxLoss"]:checked').val() == 1 ? '不设':'点/手   '+ $('input[name="maxLoss"]:checked').val());//单笔最大止损
+   $('.accountLoss').text($('input[name="accountLoss"]:checked').val() == 1 ? '不设':'美金   '+$("#accountLoss-id").val());//账户止损
+   $('.userCode').text($('#GD-id option:selected').val());//跟单账号
+   $('.followManner').text($('input[name="followManner"]:checked').val()== 1 ? '跟净头寸':'跟每一单');//跟单方式
 
 }
 //每个返回按钮事件
@@ -405,7 +386,7 @@ function commit() {
         fayuan_data.push(json_);
     });
     var str = JSON.stringify(fayuan_data);
-
+    console.log(str);
     $.ajax({
         url: url_ + "/followOrder/createFollowOrder.Action",
         type: 'POST', //GET
@@ -451,34 +432,35 @@ function commit() {
         }
     })
 }
-function getAccountList(){
-    $.ajax({
-        url:url_+"/account/getListAccount.Action",
-        type:'POST', //GET
-        async:true,    //或false,是否异步
-        data:{
+    function getAccountList(){
+        $.ajax({
+            url:url_+"/account/getListAccount.Action",
+            type:'POST', //GET
+            async:true,    //或false,是否异步
+            data:{
 
-        },
-        // timeout:5000,    //超时时间
-        dataType:'json',    //返回的数据格式：json/xml/html/script/jsonp/text
-        beforeSend:function(xhr){
+            },
+            // timeout:5000,    //超时时间
+            dataType:'json',    //返回的数据格式：json/xml/html/script/jsonp/text
+            beforeSend:function(xhr){
 
-        },
-        success:function(data,textStatus,jqXHR){
-            var content = "";
-            $.each(data,function (index,ele) {
+            },
+            success:function(data,textStatus,jqXHR){
+                var content = "";
+                $.each(data,function (index,ele) {
 
-                content += "<option value="+ele.account.id+" selected>"+ele.account.platform.name+"-"+ele.account.account+"</option>"
+                    content += "<option value="+ele.account.id+" selected>"+ele.account.platform.name+"-"+ele.account.account+"</option>"
 
-            });
-            $("#GD-id").append(content);
+                });
+                $("#GD-id").append(content);
 
-        },
-        error:function(xhr,textStatus){
+            },
+            error:function(xhr,textStatus){
 
-        },
-        complete:function(){
+            },
+            complete:function(){
 
-        }
-    })
-}
+            }
+        })
+    }
+

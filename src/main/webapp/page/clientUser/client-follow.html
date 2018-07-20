@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>添加用户</title>
+
+    <link rel="stylesheet" href="../../lib/bootstrap/css/bootstrap-table.min.css" />
+    <link rel="stylesheet" href="http://netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" type="text/css" href="http://cdn.bootcss.com/bootstrap-select/2.0.0-beta1/css/bootstrap-select.css">
+    <link rel="stylesheet" href="../../css/font.css">
+    <link rel="stylesheet" href="../../css/xadmin.css">
+    <script type="text/javascript" src="../../lib/jquery/jquery-3.2.1.min.js"></script>
+    <script type="text/javascript" src="../../lib/layui/layui.js" charset="utf-8"></script>
+    <script type="text/javascript" src="../../js/xadmin.js"></script>
+    <script type="text/javascript" src="http://cdn.bootcss.com/bootstrap-select/2.0.0-beta1/js/bootstrap-select.js"></script>
+    <script src="../../lib/bootstrap/js/bootstrap-table.js"></script>
+    <script src="http://netdna.bootstrapcdn.com/bootstrap/3.0.0/js/bootstrap.min.js"></script>
+    <script src="../../lib/bootstrap/js/bootstrap-table-zh-CN.min.js"></script>
+    <link rel="stylesheet" href="css/ui-box.css">
+    <link rel="stylesheet" href="css/client-create.css">
+    <style type="text/css">
+        *{
+            margin: 0px;
+            padding: 0px;
+        }
+        #followOrderList-id{
+            width: 0.5rem;
+
+            margin-top: -1.7rem ;
+            margin-left:4.3rem ;
+        }
+        .first-div{
+            margin: 10% 0% 10% 20%;
+        }
+    </style>
+</head>
+<body>
+    <div>
+        <div class="search first-div">
+                   策略名称：
+                <div class="form-group">
+                    <select class="form-control " id="followOrderList-id" name="" style="width: 60%">
+                    </select>
+                </div>
+            </div>
+
+        <div>
+            <div class="layui-form-item" style="margin-left: 153px; min-height: 36px;">
+                <div class="layui-input-block">
+                    <button type="submit" class="layui-btn layui-btn-primary" onclick="cancel()">取消</button>
+                    <button type="submit" class="layui-btn" lay-submit="" lay-filter="demo1" onclick="commit()">确定<i class="layui-icon layui-icon-face-smile"></i>   </button>
+                </div>
+            </div>
+
+        </div>
+    </div>
+    <script src="../../js/commonParameter.js"></script>
+
+   <script type="text/javascript">
+       $(function(){
+           findAllFollowOrder();
+       })
+       /**
+        * 获取所有启动策略
+        */
+       function findAllFollowOrder(){
+           $.ajax({
+               url:url_+"/orderUser/getfollowOrderList.Action",
+               type:'POST', //GET
+               async:true,    //或false,是否异步
+               data:{
+
+               },
+               // timeout:5000,    //超时时间
+               dataType:'json',    //返回的数据格式：json/xml/html/script/jsonp/text
+               beforeSend:function(xhr){
+
+               },
+               success:function(data,textStatus,jqXHR){
+                   var content = "";
+                   $.each(data,function (index,ele) {
+                       content += "<option value="+ele.id+" selected>"+ele.followOrderName+"</option>"
+                   });
+                   $("#followOrderList-id").append(content);
+               },
+               error:function(xhr,textStatus){
+               },
+               complete:function(){
+               }
+           })
+        }
+
+       //关闭弹窗
+        function cancel(){
+            parent.layer.closeAll();
+        }
+
+        function commit(){
+            var id = $("#followOrderList-id option:selected").val();
+            if(id == "") {
+               return layer.msg("请选择策略");
+            }
+            console.log(id);
+            parent.layer.closeAll();
+            var title = "添加用户";
+            var url = "page/clientUser/client-add.html";
+            var w=1100;
+            var h=700;
+            if(title == null || title == '') {
+                title = false;
+            };
+            if(url == null || url == '') {
+                url = "404.html";
+            };
+            if(w == null || w == '') {
+                w = ($(window).width() * 0.9);
+            };
+            if(h == null || h == '') {
+                h = ($(window).height() - 50);
+            };
+
+            parent.layer.open({
+                type: 2 //此处以iframe举例
+                ,title: '添加新用户'
+                ,area: [w+'px', h+'px']
+                ,shade: 0
+                ,maxmin: true
+                ,content: [url]
+                ,zIndex: layer.zIndex //重点1
+                ,success: function(layero,index){
+                    // layer.setTop(layero); //重点2
+                    //找到子页面
+                    var iframeWin = parent.window['layui-layer-iframe' + index]; //得到iframe页的窗口对象，执行iframe页的方法：iframeWin.method();
+                    //调用子页面的方法
+                    iframeWin.findById(id);
+                }
+            });
+
+
+        }
+   </script>
+</body>
+</html>
