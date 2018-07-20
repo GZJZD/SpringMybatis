@@ -27,7 +27,7 @@ public interface FollowOrderClientService {
     void deleteByFollowOrderId(Long followOrderId);
     FollowOrderClient getByUserCodeAndPlatformCode(String userCode, String platformCode, Long followOrderId);
 
-    void saveListFollowOrderClient(List<FollowOrderClient> FollowOrderClients, FollowOrder followOrder);
+    void saveListFollowOrderClient(List<FollowOrderClient> FollowOrderClients, Long followOrderId);
 
     void update(FollowOrderClient record);
 
