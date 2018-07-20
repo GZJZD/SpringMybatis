@@ -54,9 +54,9 @@ public class FollowOrderClientController {
         } catch (Exception e) {
             e.printStackTrace();
             log.error(e.getMessage());
-            return new JSONResult(false, "创建跟单失败");
+            return new JSONResult(false, "添加客户失败");
         }
-        return new JSONResult("创建跟单成功");
+        return new JSONResult("添加客户成功");
     }
 
 }
