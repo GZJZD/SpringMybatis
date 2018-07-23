@@ -325,7 +325,7 @@ function returnBlack(status){
 }
 //操作栏的格式化
 function actionFormatter(value, row, index) {
-    var id = row.id;
+    var id = row.followOrderClient.id;
     var result = "";
     var editUrl ="page/clientUser/client-detail.html";
     var edit_w = 1500;
@@ -340,12 +340,43 @@ function member_del(id, obj) {
     layer.confirm('确认要删除吗？', function(index) {
         //发异步删除数据
         $(obj).parents("tr").remove();
-        layer.msg('已删除!', {
-            icon: 1,
-            time: 1000
-        });
-
+        deleteUser(id);
     });
+
+}
+/*
+* 删除客户
+* */
+function deleteUser(followOrderClientId) {
+    $.ajax({
+        url:url_+"/followOrderClient/deleteClient.Action",
+        type:'POST', //GET
+        async:true,    //或false,是否异步
+        data:{
+            followOrderClientId:followOrderClientId//id
+        },
+        // timeout:5000,    //超时时间
+        dataType:'json',    //返回的数据格式：json/xml/html/script/jsonp/text
+        beforeSend:function(xhr){
+
+        },
+        success:function(data,textStatus,jqXHR){
+            if (data.success) {
+                layer.msg(data.msg, {
+                    icon: 1,
+                    time: 1000
+                });
+            } else {
+                layer.msg(data.msg);
+            }
+        },
+        error:function(xhr,textStatus){
+
+        },
+        complete:function(){
+
+        }
+    })
 
 }
 
@@ -479,13 +510,13 @@ function commit(){
         var followDirection = tdArr.eq(5.).find(".followDirection option:selected").val();//跟单方向
         var handNumberType= tdArr.eq(6).find(".handNumberType option:selected").val();//手数类型
         var followHandNumber = tdArr.eq(7).find(".followHandNumber").val();//手数
-        var platFormCode = tdArr.eq(8).html();//平台
+        var platformCode = tdArr.eq(8).html();//平台
         var json_ = {
              "id":id,
              "followDirection":followDirection,
              "handNumberType":handNumberType,
              "followHandNumber":followHandNumber,
-             "platFormCode": platFormCode
+             "platformCode": platformCode
         };
         fayuan_data.push(json_);
     });
