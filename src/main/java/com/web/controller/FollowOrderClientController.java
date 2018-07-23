@@ -50,13 +50,39 @@ public class FollowOrderClientController {
     public JSONResult addClientByFollowOrder(Long followOrderId, String followOrderClients) {
         try {
             List<FollowOrderClient> followOrderClients1 = WebJsion.parseArray(followOrderClients, FollowOrderClient.class);
-            followOrderClientService.saveListFollowOrderClient(followOrderClients1,followOrderId);
+            //检查客户是否已经存在
+            List<String> userName = followOrderClientService.checkAddClient(followOrderClients1, followOrderId);
+            StringBuilder sBuilder = new StringBuilder();
+            if (userName.size()!=0){
+                for (String name : userName) {
+                    sBuilder.append(name+"、");
+                }
+                sBuilder.deleteCharAt(sBuilder.length() - 1);
+                return new JSONResult(sBuilder+"客户已在跟单中");
+            }
         } catch (Exception e) {
             e.printStackTrace();
             log.error(e.getMessage());
             return new JSONResult(false, "添加客户失败");
         }
-        return new JSONResult("添加客户成功");
+        return new JSONResult("添加成功");
+    }
+
+    /*
+     * 删除客户
+     * */
+    @RequestMapping("/deleteClient.Action")
+    @ResponseBody
+    public JSONResult deleteClient(Long followOrderClientId){
+        try {
+
+            followOrderClientService.deleteClient(followOrderClientId);
+        } catch (Exception e) {
+            e.printStackTrace();
+            log.error(e.getMessage());
+            return new JSONResult(false, "删除客户失败");
+        }
+        return new JSONResult("删除成功");
     }
 
 }

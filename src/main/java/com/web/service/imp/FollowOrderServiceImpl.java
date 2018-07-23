@@ -456,7 +456,10 @@ public class FollowOrderServiceImpl implements FollowOrderService {
         log.debug("跟每单跟单：followOrderName{}," + followOrder.getFollowOrderName()+",userCode:"+data.getLogin()+",PlatformName:"+data.getPlatformName()+",followOrderId:"+followOrder.getId());
         //跟客户的策略判断
         log.debug("userCode:"+data.getLogin()+",PlatformName:"+data.getPlatformName()+",followOrderId:"+followOrder.getId());
-      FollowOrderClient followOrderClient = followOrderClientService.getByUserCodeAndPlatformCode(data.getLogin(),data.getPlatformName(),followOrder.getId());
+
+        //找到没有删除状态的客户
+        FollowOrderClient followOrderClient = followOrderClientService.getByUserCodeAndPlatformCode(data.getLogin(),data.getPlatformName(),followOrder.getId());
+
         //判断手数类型：按比例=比例数*客户的手数
         Double handNumber = followOrderClient.getHandNumberType().equals(FollowOrderEnum.FollowStatus.CLIENT_HAND_NUMBER_TYPE.getIndex()) ?
                 followOrderClient.getFollowHandNumber() : DoubleUtil.mul(Double.valueOf(followOrderClient.getFollowHandNumber()), data.getHandNumber());
@@ -729,6 +732,7 @@ public class FollowOrderServiceImpl implements FollowOrderService {
         //找到对应的客户
         OrderUser orderUser = orderUserService.findByTicket(ticket);
 
+        //找到没有删除的客户
         FollowOrderClient userCodeAndPlatformCode = followOrderClientService.getByUserCodeAndPlatformCode(orderUser.getUserCode(), orderUser.getPlatFormCode(),followOrder.getId());
         followOrderTradeRecord.setFollowOrderClient(userCodeAndPlatformCode);
         //设置跟单id

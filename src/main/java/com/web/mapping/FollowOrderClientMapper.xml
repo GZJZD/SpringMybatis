@@ -13,6 +13,9 @@
         <result column="update_by_user" property="updateByUser"/>
         <result column="create_date" property="createDate"/>
         <result column="create_user" property="createUser"/>
+        <result column="delete_date" property="deleteDate"/>
+        <result column="delete_by_user" property="deleteByUser"/>
+        <result column="status" property="status"/>
         <result column="version" property="version"/>
     </resultMap>
     <delete id="deleteByFollowOrderId" parameterType="java.lang.Long">
@@ -21,10 +24,10 @@
   </delete>
     <insert id="insert" parameterType="com.web.pojo.FollowOrderClient" useGeneratedKeys="true" keyProperty="id">
     insert into follow_order_client (follow_order_id, user_code,platform_code, follow_direction,
-      hand_number_type, follow_hand_number, update_date,update_by_user,create_date,create_user,
+      hand_number_type, follow_hand_number, update_date,update_by_user,create_date,create_user,delete_date,delete_by_user,status
       version)
     values (#{followOrderId}, #{userCode},#{platformCode}, #{followDirection},
-      #{handNumberType}, #{followHandNumber}, #{updateDate}, #{updateByUser} ,#{createDate},#{createUser},
+      #{handNumberType}, #{followHandNumber}, #{updateDate}, #{updateByUser} ,#{createDate},#{createUser},#{deleteDate},#{deleteByUser},#{status},
      #{version})
   </insert>
     <update id="updateByPrimaryKey" parameterType="com.web.pojo.FollowOrderClient">
@@ -60,6 +63,15 @@
             <if test="createUser != null ">
                 create_user = #{createUser},
             </if>
+            <if test="deleteDate != null ">
+                delete_date = #{deleteDate},
+            </if>
+            <if test="deleteByUser != null ">
+                delete_by_user = #{deleteByUser},
+            </if>
+            <if test="status != null ">
+                status = #{status},
+            </if>
             <if test="version != null ">
                 version = #{version} + 1,
             </if>
@@ -80,13 +92,16 @@
         <include refid="base_List"/>
         from follow_order_client
         where follow_order_id =#{followOrderId}
+        <if test="NODeleteOrAllStatus != null">
+            and status = #{NODeleteOrAllStatus}
+        </if>
     </select>
 
     <select id="findListFollowOrderIDsByUserCode" resultType="java.lang.Long">
       select
       follow_order_id
       from follow_order_client
-      where user_code =#{userCode} and platform_code = #{platformCode}
+      where user_code =#{userCode} and platform_code = #{platformCode} and status = 1
     </select>
 
 
@@ -94,13 +109,19 @@
         select
         <include refid="base_List"/>
         from follow_order_client
-        where user_code = #{userCode} and platform_code = #{platformCode} and follow_order_id =#{followOrderId}
+        where user_code = #{userCode} and platform_code = #{platformCode} and follow_order_id =#{followOrderId} and status = 1
     </select>
     <select id="getFollowOrderClient" resultMap="BaseResultMap">
         select
         <include refid="base_List"/>
         from follow_order_client
         where id = #{followOrderClientId}
+    </select>
+    <select id="getAllByUserCodeAndPlatformCode" resultMap="BaseResultMap">
+        select
+        <include refid="base_List"/>
+        from follow_order_client
+        where user_code = #{userCode} and platform_code = #{platformCode} and follow_order_id =#{followOrderId}
     </select>
 
 
@@ -116,6 +137,9 @@
     update_by_user,
     create_date,
     create_user,
+    delete_date,
+    delete_by_user,
+    status,
     version
   </sql>
 </mapper>
