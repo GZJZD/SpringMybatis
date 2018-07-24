@@ -100,7 +100,6 @@
             if(id == "") {
                return layer.msg("请选择策略");
             }
-            console.log(id);
             parent.layer.closeAll();
             var title = "添加用户";
             var url = "page/clientUser/client-add.html";
@@ -118,6 +117,7 @@
             if(h == null || h == '') {
                 h = ($(window).height() - 50);
             };
+
 
             parent.layer.open({
                 type: 2 //此处以iframe举例
