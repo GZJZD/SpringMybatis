@@ -3,6 +3,8 @@ $(function(){
 });
 
 function findById(id){
+$('#followOrder-id').val(id);
+
     $.ajax({
         url:url_+"/orderUser/getFollowOrder.Action",
         type:'POST', //GET
@@ -24,6 +26,7 @@ function findById(id){
         complete:function(){
         }
     })
+
 
 }
 function setFollowOrderParemt(data){
@@ -440,11 +443,12 @@ function commit() {
     var str = JSON.stringify(fayuan_data);
 
     $.ajax({
-        url: url_ + "/followOrder/createFollowOrder.Action",
+        url: url_ + "/followOrderClient/addClientByFollowOrder.Action",
         type: 'POST', //GET
         async: true,    //或false,是否异步
         data: {
-
+            followOrderId:$('#followOrder-id').val(),
+            followOrderClients:str
         },
         // timeout:5000,    //超时时间
         dataType: 'json',    //返回的数据格式：json/xml/html/script/jsonp/text
