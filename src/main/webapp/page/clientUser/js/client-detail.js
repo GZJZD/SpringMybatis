@@ -44,7 +44,7 @@ $(function(){
              $('#doOrderDays-id').text(data.doOrderDays);//做单天数
              $('#offset_gain_and_loss-id').text(data.offset_gain_and_loss);//持仓盈亏
              $('#position_gain_and_loss-id').text(data.position_gain_and_loss);//平仓盈亏
-             $('#platformName-id').text(data.platformName);//注册平台
+             $('#platformName-id').text(data.platFormCode);//注册平台
              $('#outMoney-id').text(data.outMoney);//出金
              $('#cmmission-id').text(data.cmmission);//手续费
              $('#countNumberAndHandNumber-id').text(data.countNumber+'/'+data.handNumber);
