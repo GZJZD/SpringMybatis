@@ -80,20 +80,20 @@
 					按品种
 					<div class="form-group">
 						<input type="text"  style="display: none"></input>
-						<select id="product-val-id" class="selectpicker show-tick form-control" multiple data-live-search="true">
+						<select id="product-val-id" class="show-tick form-control" >
 							<option selected="selected" value="XAUUSD.e">黄金</option>
 							<option value="shiyou">石油</option>
 
 						</select>
 					</div>
-					按合约
-					<div class="form-group">
-						<select id="contract-id" class="selectpicker show-tick form-control" multiple data-live-search="true">
-							<option selected="selected">cow111111</option>
-							<option>bull1111</option>
-							<option class="get-class" disabled>ox</option>
-						</select>
-					</div>
+					<!--按合约-->
+					<!--<div class="form-group">-->
+						<!--<select id="contract-id" class="selectpicker show-tick form-control" multiple data-live-search="true">-->
+							<!--<option selected="selected">cow111111</option>-->
+							<!--<option>bull1111</option>-->
+							<!--<option class="get-class" disabled>ox</option>-->
+						<!--</select>-->
+					<!--</div>-->
 					按代理人
 					<div class="form-group">
 						<select class="form-control" name="" id="agencyName-id">
@@ -134,6 +134,12 @@
 		<script src="js/common.js"></script>
 		<!-- 注意：如果你直接复制所有代码到本地，上述js路径需要改成你本地的 -->
 		<script type="text/javascript">
+			$(function(){
+                $('#product-val-id').selectpicker({
+                    liveSearch: true,
+                    maxOptions: 1
+                });
+			})
             var tableId =$("#table");
 			$(function(){
                 var productCode = $("#product-val-id option:selected").val();
