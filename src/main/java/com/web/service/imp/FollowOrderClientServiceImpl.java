@@ -1,5 +1,6 @@
 package com.web.service.imp;
 
+import com.web.common.FollowOrderEnum;
 import com.web.dao.FollowOrderClientDao;
 import com.web.database.OrderHongKongService;
 import com.web.database.entity.PlatFromUsers;
@@ -39,14 +40,23 @@ public class FollowOrderClientServiceImpl implements FollowOrderClientService {
     @Autowired
     private OrderHongKongService orderHongKongService;
 
+    /*
+    * 查找客户状态为未删除的跟单Id
+    * */
     @Override
     public List<Long> getListByUserCodeAndPlatformCode(String userCode, String PlatformCode) {
         return followOrderClientDao.findListFollowOrderIDsByUserCode(userCode, PlatformCode);
     }
 
+    /*
+    *  NODeleteOrAllStatus:
+    *   传1-->查找没有被删除的客户
+    *   传0-->查找已删除的客户
+    *   传null-->查找所有客户
+    * */
     @Override
-    public List<FollowOrderClient> getListByFollowOrderId(Long followOrderId) {
-        return followOrderClientDao.getListByFollowOrderId(followOrderId);
+    public List<FollowOrderClient> getListByFollowOrderId(Long followOrderId,Integer NODeleteOrAllStatus) {
+        return followOrderClientDao.getListByFollowOrderId(followOrderId,NODeleteOrAllStatus);
     }
 
     @Override
@@ -54,13 +64,23 @@ public class FollowOrderClientServiceImpl implements FollowOrderClientService {
         followOrderClientDao.deleteByFollowOrderId(followOrderId);
     }
 
+    /*
+    * 通过userCode，platformCode ，followOrderId 找到 没有删除的FollowOrderClient
+    * */
 
     @Override
     public FollowOrderClient getByUserCodeAndPlatformCode(String userCode, String platformCode, Long followOrderId) {
         return followOrderClientDao.getByUserCodeAndPlatformCode(userCode, platformCode, followOrderId);
     }
 
-
+    /*
+    *
+    * 找到同一个客户所有删除或者未删除记录，获取开始时间以及结束时间
+    * */
+    @Override
+    public List<FollowOrderClient> getAllByUserCodeAndPlatformCode(String userCode, String platformCode, Long followOrderId) {
+        return followOrderClientDao.getAllByUserCodeAndPlatformCode(userCode,platformCode,followOrderId);
+    }
 
     @Override
     public void saveListFollowOrderClient(List<FollowOrderClient> followOrderClients, Long followOrderId) {
@@ -90,7 +110,8 @@ public class FollowOrderClientServiceImpl implements FollowOrderClientService {
      * */
     @Override
     public List<Map<String,Object>> getListFollowOrderClientParamVo(Long followOrderId) {
-        List<FollowOrderClient> followOrderClients = getListByFollowOrderId(followOrderId);
+        //找到该跟单下客户状态为未删除
+        List<FollowOrderClient> followOrderClients = getListByFollowOrderId(followOrderId,FollowOrderEnum.FollowStatus.FOLLOW_ORDER_CLIENT_START.getIndex());
         FollowOrder followOrder = followOrderService.getFollowOrder(followOrderId);
         //todo 数据源不清晰
         ContractInfo info = contractInfoService.getInfoByVarietyIdAndPlatformId(followOrder.getVariety().getId(), 2L);
@@ -121,14 +142,14 @@ public class FollowOrderClientServiceImpl implements FollowOrderClientService {
 
     @Override
     public List<Map<String,Object>> getListUserNameByFollowOrderId(Long followOrderId) {
-        List<FollowOrderClient> followOrderClients = followOrderClientDao.getListByFollowOrderId(followOrderId);
+        //找到该跟单下客户状态为未删除
+        List<FollowOrderClient> followOrderClients = followOrderClientDao.getListByFollowOrderId(followOrderId, FollowOrderEnum.FollowStatus.FOLLOW_ORDER_CLIENT_START.getIndex());
         List<Map<String,Object>> userName = new ArrayList<>();
         for (FollowOrderClient orderClient : followOrderClients) {
             Map<String,Object> map = new HashMap<>();
             String userName1 = getUserName(orderClient.getUserCode(), orderClient.getPlatformCode());
             map.put("userName",userName1);
             map.put("followOrderClientId",orderClient.getId());
-
             userName.add(map);
         }
         return userName;
@@ -156,6 +177,34 @@ public class FollowOrderClientServiceImpl implements FollowOrderClientService {
     public void updateListFollowOrderClient(List<FollowOrderClient> followOrderClients) {
         for (FollowOrderClient followOrderClient : followOrderClients) {
             followOrderClient.setUpdateDate(DateUtil.getStringDate());
+            update(followOrderClient);
+        }
+    }
+
+    /*
+    * 检查已添加的客户是否还没有被删除
+    * */
+    @Override
+    public List<String> checkAddClient(List<FollowOrderClient> followOrderClients, Long followOrderId) {
+        List<String> userName = new ArrayList<>();
+        for (FollowOrderClient followOrderClient : followOrderClients) {
+            FollowOrderClient orderClient = getByUserCodeAndPlatformCode(followOrderClient.getUserCode(), followOrderClient.getPlatformCode(), followOrderId);
+            if(orderClient!=null){
+                String name = getUserName(orderClient.getUserCode(), orderClient.getPlatformCode());
+                userName.add(name);
+            }else{
+                followOrderClientDao.insert(followOrderClient);
+            }
+        }
+        return userName;
+    }
+
+    @Override
+    public void deleteClient(Long followOrderClientId) {
+        FollowOrderClient followOrderClient = getFollowOrderClient(followOrderClientId);
+        if(followOrderClient != null){
+            followOrderClient.setStatus(FollowOrderEnum.FollowStatus.FOLLOW_ORDER_CLIENT_DELETE.getIndex());
+            followOrderClient.setDeleteDate(DateUtil.getStringDate());
             update(followOrderClient);
         }
     }

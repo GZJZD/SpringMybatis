@@ -51,8 +51,11 @@ public  class FollowOrderEnum {
 
         //账号状态
         ACCOUNT_START("启用",1),
-        ACCOUNT_DELETE("删除",0)
+        ACCOUNT_DELETE("删除",0),
 
+        //跟单客户是否删除
+        FOLLOW_ORDER_CLIENT_DELETE("客户删除",0),
+        FOLLOW_ORDER_CLIENT_START("客户启用",1)
         ;
 
 

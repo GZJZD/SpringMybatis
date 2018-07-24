@@ -23,8 +23,40 @@ public class FollowOrderClient extends BaseUtil{
     //手数
     private Integer followHandNumber;
 
+    //删除时间
+    private String deleteDate;
+
+    //操作人
+    private Long deleteByUser;
+
+    //是否被删除
+    private Integer status;
     //版本
     private Integer version=0;
+
+    public Long getDeleteByUser() {
+        return deleteByUser;
+    }
+
+    public void setDeleteByUser(Long deleteByUser) {
+        this.deleteByUser = deleteByUser;
+    }
+
+    public String getDeleteDate() {
+        return deleteDate;
+    }
+
+    public void setDeleteDate(String deleteDate) {
+        this.deleteDate = deleteDate;
+    }
+
+    public Integer getStatus() {
+        return status;
+    }
+
+    public void setStatus(Integer status) {
+        this.status = status;
+    }
 
     public Long getId() {
         return id;

@@ -135,14 +135,14 @@ $(function () {
     /*
      *表格加载
      * */
-    orderTableShow(url_orderPage,tableOrderId);
+    orderTableShow(url_orderPage,tableOrderId,true);
     /*
     * 跟单历史点击事件
     * */
     $("#historyShow").click(function () {
 
         $(tableHistoryOrderId).bootstrapTable('destroy');
-        orderTableShow(url_history,tableHistoryOrderId);
+        orderTableShow(url_history,tableHistoryOrderId,false);
         $(tableHistoryOrderId).bootstrapTable('refresh', {
             silent: true//静默跟新
         });
@@ -151,7 +151,7 @@ $(function () {
 
 
 });
-function orderTableShow(url,tableId){
+function orderTableShow(url,tableId,historyOrNow){
     $.ajax({
         url: url,
         type: 'post', //GET
@@ -175,15 +175,18 @@ function orderTableShow(url,tableId){
 
                 showByOrderId(tableId, method, unique_Id, sortOrder, columns,data.followOrderVoList);
             }
-            $("#history_close_position").html(data.historyHandNumber + "/" + data.historyProfit);
-            if (data.holdPositionHandNumber == null) {
-                $("#hold_position").html(0 + "/" + 0);
-            } else {
-                $("#hold_position").html(data.holdPositionHandNumber + "/" + data.holdPositionProfit);
+            if(historyOrNow){
 
+                $("#history_close_position").html(data.historyHandNumber + "/" + data.historyProfit);
+                if (data.holdPositionHandNumber == null) {
+                    $("#hold_position").html(0 + "/" + 0);
+                } else {
+                    $("#hold_position").html(data.holdPositionHandNumber + "/" + data.holdPositionProfit);
+
+                }
+                $("#profit_rate").html(data.profitAndLossRate);
+                $("#win_rate").html(data.winRate + "%");
             }
-            $("#profit_rate").html(data.profitAndLossRate);
-            $("#win_rate").html(data.winRate + "%");
         },
         error: function (xhr, textStatus) {
 

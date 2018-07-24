@@ -29,10 +29,12 @@ public interface FollowOrderClientDao {
      */
     List<Long> findListFollowOrderIDsByUserCode(@Param("userCode") String userCode, @Param("platformCode") String platformCode);
 
-    List<FollowOrderClient> getListByFollowOrderId(Long followOrderId);
+    List<FollowOrderClient> getListByFollowOrderId(@Param("followOrderId") Long followOrderId, @Param("NODeleteOrAllStatus") Integer NODeleteOrAllStatus);
 
 
     FollowOrderClient getByUserCodeAndPlatformCode(@Param("userCode") String userCode, @Param("platformCode") String platformCode, @Param("followOrderId") Long followOrderId);
+
+    List<FollowOrderClient> getAllByUserCodeAndPlatformCode(@Param("userCode") String userCode, @Param("platformCode") String platformCode, @Param("followOrderId") Long followOrderId);
 
     FollowOrderClient getFollowOrderClient(Long followOrderClientId);
 }
