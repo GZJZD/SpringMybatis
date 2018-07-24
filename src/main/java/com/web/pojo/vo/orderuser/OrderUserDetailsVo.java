@@ -8,7 +8,7 @@ import java.util.List;
  * 用户明细Vo映射类
  */
 public class OrderUserDetailsVo {
-    private String platFromCode;//平台名称
+    private String platFormCode;//平台名称
     private String  loginTime; //注册时间
     private String lastOrderTime;//最近下单时间
     private String agencyName;//代理人
@@ -114,12 +114,12 @@ public class OrderUserDetailsVo {
         this.offset_gain_and_loss = offset_gain_and_loss;
     }
 
-    public String getPlatFromCode() {
-        return platFromCode;
+    public String getPlatFormCode() {
+        return platFormCode;
     }
 
-    public void setPlatFromCode(String platFromCode) {
-        this.platFromCode = platFromCode;
+    public void setPlatFormCode(String platFormCode) {
+        this.platFormCode = platFormCode;
     }
 
     public String getLoginTime() {
