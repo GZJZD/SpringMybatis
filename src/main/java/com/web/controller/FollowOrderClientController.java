@@ -1,6 +1,7 @@
 package com.web.controller;
 
 import com.web.pojo.FollowOrderClient;
+import com.web.pojo.vo.followOrder.FollowOrderVo;
 import com.web.service.FollowOrderClientService;
 import com.web.util.json.JSONResult;
 import com.web.util.json.WebJsion;
@@ -37,7 +38,7 @@ public class FollowOrderClientController {
      * */
     @RequestMapping("/findListUserName.Action")
     @ResponseBody
-    public List<Map<String, Object>> findListUserName(Long followOrderId) {
+    public  List<FollowOrderVo> findListUserName(Long followOrderId) {
         return followOrderClientService.getListUserNameByFollowOrderId(followOrderId);
     }
 

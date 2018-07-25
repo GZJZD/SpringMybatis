@@ -189,6 +189,7 @@ public class FollowOrderTradeRecordServiceImpl implements FollowOrderTradeRecord
     public List<Map<String, Object>> getListClient(Long followOrderId, Integer status, Long followOrderClientId, Integer openOrCloseStatus) {
         List<Map<String, Object>> orderUserList = new ArrayList<>();
         FollowOrder followOrder = followOrderService.getFollowOrder(followOrderId);
+        //找到符合的客户数据
         List<OrderUser> userList = findOrderUserByFollowOrder(followOrderClientId, followOrder, openOrCloseStatus);
         for (OrderUser orderUser : userList) {
             if (orderUser.getOpenTime() != null) {
@@ -355,52 +356,54 @@ public class FollowOrderTradeRecordServiceImpl implements FollowOrderTradeRecord
     }
 
     /*
-    * 查找客户数据
-    * */
-    private List<OrderUser> findOrderUserByFollowOrder(Long followOrderClientId,FollowOrder followOrder,Integer openOrCloseStatus){
+     * 查找客户数据
+     * */
+    private List<OrderUser> findOrderUserByFollowOrder(Long followOrderClientId, FollowOrder followOrder, Integer openOrCloseStatus) {
         //todo 是哪个数据源不清楚
         ContractInfo info = contractInfoService.getInfoByVarietyIdAndPlatformId(followOrder.getVariety().getId(), 2L);
         List<OrderUser> userList = new ArrayList<>();
 
         if (followOrderClientId != -1) {
             FollowOrderClient followOrderClient = followOrderClientService.getFollowOrderClient(followOrderClientId);
-            //同一个客户在不同时间段的客户交易数据
-            sameUserDifferentTimePeriods(userList,followOrderClient,info.getContractCode(),openOrCloseStatus,followOrder.getId());
+            List<FollowOrderClient> followOrderClientList = followOrderClientService.getALLByUserCodeAndPlatformCode(followOrderClient.getUserCode(),
+                    followOrderClient.getPlatformCode(), followOrder.getId());
+            for (FollowOrderClient orderClient : followOrderClientList) {
+
+                //同一个客户在不同时间段的客户交易数据
+                sameUserDifferentTimePeriods(userList, orderClient, info.getContractCode(), openOrCloseStatus, followOrder.getId());
+            }
         } else {
             //-1:代表查询全部客户，状态为null:查找所有删除或者未删除的客户
 
-            List<FollowOrderClient> FollowOrderClient = followOrderClientService.getListByFollowOrderId(followOrder.getId(),null); //查找该跟单下的客户编号
+            List<FollowOrderClient> FollowOrderClient = followOrderClientService.getListByFollowOrderId(followOrder.getId(), null); //查找该跟单下的客户编号
             for (FollowOrderClient orderClient : FollowOrderClient) {
                 //同一个客户在不同时间段的客户交易数据
-                sameUserDifferentTimePeriods(userList,orderClient,info.getContractCode(),openOrCloseStatus,followOrder.getId());
+                sameUserDifferentTimePeriods(userList, orderClient, info.getContractCode(), openOrCloseStatus, followOrder.getId());
             }
         }
 
         return userList;
     }
+
     /*
-    * 同一个客户，根据不同的开始时间和删除时间获取客户数据
-    * */
-     private void sameUserDifferentTimePeriods (List<OrderUser> userList,FollowOrderClient orderClient,String contractCode,Integer openOrCloseStatus,Long followOrderId){
-         List<FollowOrderClient> followOrderClientList = followOrderClientService.getAllByUserCodeAndPlatformCode(orderClient.getUserCode(), orderClient.getPlatformCode(), followOrderId);
-         List<String> userCode1 = new ArrayList<>();
-         userCode1.add(orderClient.getUserCode());
-         if(followOrderClientList.size()!=0){
-             for (FollowOrderClient orderClient1 : followOrderClientList) {
-                 if(orderClient1.getDeleteDate() != null){
-                     //查找上一回开始-删除的时间段的客户数据
-                     List<OrderUser> userIdList = orderUserService.findByUserIdList(userCode1, orderClient1.getCreateDate(),
-                             orderClient1.getDeleteDate(), contractCode, openOrCloseStatus, orderClient1.getPlatformCode());
-                     userList.addAll(userIdList);
-                 }else {
-                     //查找该客户，从添加时间-到现在的时间段的客户数据
-                     List<OrderUser> userIdList = orderUserService.findByUserIdList(userCode1, orderClient1.getCreateDate(),
-                             null, contractCode, openOrCloseStatus, orderClient1.getPlatformCode());
-                     userList.addAll(userIdList);
-                 }
-             }
-         }
-     }
+     * 同一个客户，根据不同的开始时间和删除时间获取客户数据
+     * */
+    private void sameUserDifferentTimePeriods(List<OrderUser> userList, FollowOrderClient orderClient, String contractCode, Integer openOrCloseStatus, Long followOrderId) {
+        List<String> userCode1 = new ArrayList<>();
+        userCode1.add(orderClient.getUserCode());
+        if (orderClient.getDeleteDate() != null) {
+            //查找上一回开始-删除的时间段的客户数据
+            List<OrderUser> userIdList = orderUserService.findByUserIdList(userCode1, orderClient.getCreateDate(),
+                    orderClient.getDeleteDate(), contractCode, openOrCloseStatus, orderClient.getPlatformCode());
+            userList.addAll(userIdList);
+        } else {
+            //查找该客户，从添加时间-到现在的时间段的客户数据
+            List<OrderUser> userIdList = orderUserService.findByUserIdList(userCode1, orderClient.getCreateDate(),
+                    null, contractCode, openOrCloseStatus, orderClient.getPlatformCode());
+            userList.addAll(userIdList);
+        }
+
+    }
 
     /*
      * 客户的跟单状态查询
@@ -425,16 +428,14 @@ public class FollowOrderTradeRecordServiceImpl implements FollowOrderTradeRecord
      * 跟单明细中跟单数据映射
      * */
     @Override
-    public List<Map<String, Object>> getListClientFollowOrderTrade(String endTime, String startTime, Long followOrderId) {
+    public List<FollowOrderVo> getListClientFollowOrderTrade(String endTime, String startTime, Long followOrderId) {
         if (endTime != null && !endTime.isEmpty()) {
             endTime = DateUtil.dateToStrLong(DateUtil.getEndDate(DateUtil.strToDate(endTime)));
         }
-        List<Map<String, Object>> orderUserTrade = new ArrayList<>();
-
-        Map<Long, FollowOrderVo> map = tradeTotalCount(endTime,startTime,followOrderId,false);
-
-
-        for (FollowOrderVo followOrderVo : map.values()) {
+        Map<Long, FollowOrderVo> followOrderVoTradeTotalMap = tradeTotalCount(endTime, startTime, followOrderId, false);
+        //累计相同FollowOrderVo的数据
+        Map<String, FollowOrderVo> addUpRepeatFollowOrderVo = new HashMap<>();
+        for (FollowOrderVo followOrderVo : followOrderVoTradeTotalMap.values()) {
             List<FollowOrderDetail> detail = followOrderDetailService.getFollowOrderDetailByUserCode(followOrderId,
                     null, null, followOrderVo.getFollowOrderClient().getId());
             for (FollowOrderDetail followOrderDetail : detail) {
@@ -463,37 +464,47 @@ public class FollowOrderTradeRecordServiceImpl implements FollowOrderTradeRecord
                     followOrderVo.setOffsetGainAndLoss(DoubleUtil.add(followOrderVo.getOffsetGainAndLoss(), followOrderDetail.getProfitLoss()));
                 }
             }
-            Map<String, Object> orderUserMap = new HashMap<>();
-            orderUserMap.put("winRate", followOrderVo.getSuccessTotal() + "/" + followOrderVo.getAllTotal());//成功率
-            orderUserMap.put("followOrderVo", followOrderVo);//
-            FollowOrderClient client = followOrderVo.getFollowOrderClient();
-            String userName = followOrderClientService.getUserName(client.getUserCode(), client.getPlatformCode());
-            orderUserMap.put("clientName", userName);//客户姓名
-            orderUserMap.put("followDirection", client.getFollowDirection());//跟单方向
-            orderUserMap.put("handNumberType", client.getHandNumberType());//手数类型
-            if (client.getHandNumberType().equals(FollowOrderEnum.FollowStatus.CLIENT_HAND_NUMBER_TYPE.getIndex())) {
-                orderUserMap.put("followHandNumber", client.getFollowHandNumber());//跟多少手
+            FollowOrderVo orderVo = addUpRepeatFollowOrderVo.get(followOrderVo.getFollowOrderClient().getUserCode() + followOrderVo.getFollowOrderClient().getPlatformCode());
+            if (orderVo != null) {
+                //存在，叠加
+                orderVo.setSuccessTotal(orderVo.getSuccessTotal() + followOrderVo.getSuccessTotal());//累计成功数
+                orderVo.setAllTotal(orderVo.getAllTotal() + followOrderVo.getAllTotal());//累计总数
+                orderVo.setClientProfit(DoubleUtil.add(orderVo.getClientProfit(), followOrderVo.getClientProfit()));//客户盈亏
+                orderVo.setOffsetGainAndLoss(DoubleUtil.add(orderVo.getOffsetGainAndLoss(), followOrderVo.getOffsetGainAndLoss()));//平仓盈亏
+                orderVo.setPositionGainAndLoss(DoubleUtil.add(orderVo.getPositionGainAndLoss(), followOrderVo.getPositionGainAndLoss()));//持仓盈亏
+                orderVo.setPoundageTotal(DoubleUtil.add(orderVo.getPoundageTotal(), followOrderVo.getPoundageTotal()));//手续费
+                if (followOrderVo.getFollowOrderClient().getStatus().equals(FollowOrderEnum.FollowStatus.FOLLOW_ORDER_CLIENT_START.getIndex())) {
+                    //同一客户，优先设置状态为未删除
+                    orderVo.setFollowOrderClient(followOrderVo.getFollowOrderClient());
+                }
             } else {
-                orderUserMap.put("followHandNumber", "1:" + client.getFollowHandNumber());
+                //不存在，put
+                String clientName = followOrderClientService.getUserName(followOrderVo.getFollowOrderClient().getUserCode(), followOrderVo.getFollowOrderClient().getPlatformCode());
+                followOrderVo.setClientName(clientName);//客户姓名
+                //以客户的用户编号+用户所在的平台作为Key
+                addUpRepeatFollowOrderVo.put(followOrderVo.getFollowOrderClient().getUserCode() + followOrderVo.getFollowOrderClient().getPlatformCode(), followOrderVo);
             }
-            orderUserTrade.add(orderUserMap);
-        }
 
-        return orderUserTrade;
+        }
+        List<FollowOrderVo> followOrderVoList = new ArrayList<>();
+        followOrderVoList.addAll(addUpRepeatFollowOrderVo.values());
+
+
+        return followOrderVoList;
     }
 
     /*
-    *
-    * 统计总跟单数 & 总跟单成功数
-    * orderOrClient：为true:统计策略
-    * 为false:统计每个客户得总跟单数 & 总跟单成功数
-    *
-    * */
+     *
+     * 统计总跟单数 & 总跟单成功数
+     * orderOrClient：为true:统计策略
+     * 为false:统计每个客户得总跟单数 & 总跟单成功数
+     *
+     * */
     public Map<Long, FollowOrderVo> tradeTotalCount(String endTime, String startTime, Long followOrderId, boolean orderOrClient) {
         List<FollowOrderTradeRecord> tradeRecord = findListFollowOrderTradeRecord(followOrderId, endTime, startTime);
         Map<Long, FollowOrderVo> mapClient = new HashMap<>();
         FollowOrderVo orderVo1 = new FollowOrderVo();
-        if(tradeRecord.size()!=0){
+        if (tradeRecord.size() != 0) {
             for (FollowOrderTradeRecord record : tradeRecord) {
                 if (!orderOrClient) {
                     orderVo1 = mapClient.get(record.getFollowOrderClient().getId());

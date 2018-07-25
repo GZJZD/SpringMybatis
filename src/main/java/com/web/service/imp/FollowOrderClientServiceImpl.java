@@ -7,6 +7,7 @@ import com.web.database.entity.PlatFromUsers;
 import com.web.pojo.ContractInfo;
 import com.web.pojo.FollowOrder;
 import com.web.pojo.FollowOrderClient;
+import com.web.pojo.vo.followOrder.FollowOrderVo;
 import com.web.pojo.vo.orderuser.OrderUserDetailsVo;
 import com.web.service.ContractInfoService;
 import com.web.service.FollowOrderClientService;
@@ -74,12 +75,11 @@ public class FollowOrderClientServiceImpl implements FollowOrderClientService {
     }
 
     /*
-    *
-    * 找到同一个客户所有删除或者未删除记录，获取开始时间以及结束时间
+    * 查找该客户删除or 未删除
     * */
     @Override
-    public List<FollowOrderClient> getAllByUserCodeAndPlatformCode(String userCode, String platformCode, Long followOrderId) {
-        return followOrderClientDao.getAllByUserCodeAndPlatformCode(userCode,platformCode,followOrderId);
+    public List<FollowOrderClient> getALLByUserCodeAndPlatformCode(String userCode, String platformCode, Long followOrderId) {
+        return followOrderClientDao.getALLByUserCodeAndPlatformCode(userCode,platformCode,followOrderId);
     }
 
     @Override
@@ -141,18 +141,28 @@ public class FollowOrderClientServiceImpl implements FollowOrderClientService {
     }
 
     @Override
-    public List<Map<String,Object>> getListUserNameByFollowOrderId(Long followOrderId) {
-        //找到该跟单下客户状态为未删除
-        List<FollowOrderClient> followOrderClients = followOrderClientDao.getListByFollowOrderId(followOrderId, FollowOrderEnum.FollowStatus.FOLLOW_ORDER_CLIENT_START.getIndex());
-        List<Map<String,Object>> userName = new ArrayList<>();
+    public  List<FollowOrderVo> getListUserNameByFollowOrderId(Long followOrderId) {
+        //找到该跟单下客户状态为所有
+        List<FollowOrderClient> followOrderClients = getListByFollowOrderId(followOrderId, null);
+        List<FollowOrderVo> followOrderVoList = new ArrayList<>();
+        Map<String,FollowOrderVo> deleteRepeatFollowOrderVo = new HashMap<>();
         for (FollowOrderClient orderClient : followOrderClients) {
-            Map<String,Object> map = new HashMap<>();
-            String userName1 = getUserName(orderClient.getUserCode(), orderClient.getPlatformCode());
-            map.put("userName",userName1);
-            map.put("followOrderClientId",orderClient.getId());
-            userName.add(map);
+            FollowOrderVo followOrderVo = deleteRepeatFollowOrderVo.get(orderClient.getUserCode()+orderClient.getPlatformCode());
+            if(followOrderVo != null){
+                if(orderClient.getStatus().equals(FollowOrderEnum.FollowStatus.FOLLOW_ORDER_CLIENT_START.getIndex())){
+                    followOrderVo.setFollowOrderClient(orderClient);
+                }
+            }else{
+                 followOrderVo = new FollowOrderVo();
+                String clientName = getUserName(orderClient.getUserCode(), orderClient.getPlatformCode());
+                followOrderVo.setClientName(clientName);
+                followOrderVo.setFollowOrderClient(orderClient);
+                followOrderVoList.add(followOrderVo);
+            }
+
         }
-        return userName;
+        followOrderVoList.addAll(deleteRepeatFollowOrderVo.values());
+        return followOrderVoList;
     }
 
     /*

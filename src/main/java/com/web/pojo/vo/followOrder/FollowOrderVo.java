@@ -43,8 +43,12 @@ public class FollowOrderVo {
 
     /**********************************************     跟单明细中跟单数据字段     *************************************************************************/
     private FollowOrderClient followOrderClient;
+    private String clientName;//客户姓名
+
+
 
     /**********************************************     跟单数据END     *************************************************************************/
+
 
 
 
@@ -145,6 +149,13 @@ public class FollowOrderVo {
         this.offsetHandNumber = offsetHandNumber;
     }
 
+    public String getClientName() {
+        return clientName;
+    }
+
+    public void setClientName(String clientName) {
+        this.clientName = clientName;
+    }
     @Override
     public String toString() {
         return "FollowOrderVo{" +

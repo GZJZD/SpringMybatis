@@ -11,9 +11,10 @@ public abstract class CommunicatorConfigUtil {
 
     public static TraderServantPrx getProxy(){
         cfg.setLocator("tars.tarsregistry.QueryObj@tcp -h 192.168.3.189 -p 17890");
+        cfg.setSyncInvokeTimeout(3600000);
         Communicator communicator = CommunicatorFactory.getInstance().getCommunicator(cfg);
         // = communicator.stringToProxy(TraderServantPrx.class,"Center.EFServer.TraderServantAObj");
-        String strConnecter = "Center.EFServer.TraderServantAObj@tcp -h 192.168.3.167 -p 21111";
+        String strConnecter = "Center.EFServer.TraderServantObj@tcp -h 192.168.3.167 -p 21111";
         TraderServantPrx proxy = communicator.stringToProxy(TraderServantPrx.class, strConnecter);
         return proxy;
     }
