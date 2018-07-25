@@ -69,18 +69,26 @@ function setFollowOrderParemt(data){
         $("input[name='accountLoss']").get(0).checked=true;
         $('#accountLoss-id').hide();
     }
-     setAccount(data)//跟单人
+     setAccount(data) //跟单人
     //跟单方式
     if(data.followManner == 0){
-        $("input[name='followManner']").get(1).checked=true;
-    }else{
         $("input[name='followManner']").get(0).checked=true;
+    }else{
+        $("input[name='followManner']").get(1).checked=true;
+       $('#netPositionChange-id').val(data.netPositionChange);
+       $('#netPositionFollowNumber-id').val(data.netPositionFollowNumber);
+    }
+    //跟单方向
+    if(data.netPositionDirection == 0){
+        $("input[name='netPositionDirection']").get(1).checked=true; //反向
+    }else {
+        $("input[name='netPositionDirection']").get(0).checked=true; //正向
     }
 
 }
 function setAccount(data){
     var content = "";
-        content += "<option value="+data.account.agent.id+" selected>"+data.account.agent.name+"</option>"
+        content += "<option value="+data.account.id+" selected>"+data.account.platform.name +'-'+data.account.account+"</option>"
     $("#GD-id").append(content); //跟单账号
 
 }
