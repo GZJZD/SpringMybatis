@@ -38,25 +38,25 @@ public class SweepTableSchedule {
     private static Logger log = LogManager.getLogger(SweepTableSchedule.class.getName());
 
     public static Map<String,Double> getAskAndBidByFollowOrderId(Long followOrderId){
-        Map<String,Double> mapOne = new HashMap<>();
-        Map<String,Double> mapTwo = new HashMap<>();
-        Map<String,Double> map = new HashMap<>();
-        mapOne.put("bid",50.2);
-        mapOne.put("ask",55.2);
-
-        mapTwo.put("ask",51.3);
-        mapTwo.put("bid",52.3);
-
-        map.put("ask",30.3);
-        map.put("bid",32.5);
-        detailPositionGainAndLoss.put(1L,mapOne);
-        detailPositionGainAndLoss.put(3L,mapTwo);
-        detailPositionGainAndLoss.put(4L,map);
+//        Map<String,Double> mapOne = new HashMap<>();
+//        Map<String,Double> mapTwo = new HashMap<>();
+//        Map<String,Double> map = new HashMap<>();
+//        mapOne.put("bid",50.2);
+//        mapOne.put("ask",55.2);
+//
+//        mapTwo.put("ask",51.3);
+//        mapTwo.put("bid",52.3);
+//
+//        map.put("ask",30.3);
+//        map.put("bid",32.5);
+//        detailPositionGainAndLoss.put(1L,mapOne);
+//        detailPositionGainAndLoss.put(3L,mapTwo);
+//        detailPositionGainAndLoss.put(4L,map);
         return detailPositionGainAndLoss.get(followOrderId);
     }
 
     //每3秒： */3 * * * * ?
-//    @Scheduled(cron = "0 0/3 * * * ?")
+    @Scheduled(cron = "0 0/3 * * * ?")
     public void doSweepTable(){
         log.debug("定时器执行");
         FollowOrderQuery followOrderQuery = new FollowOrderQuery();
@@ -198,7 +198,7 @@ public class SweepTableSchedule {
         Map<String,Double> holdPrice = new HashMap<>();
         holdPrice.put("ask",ask);
         holdPrice.put("bid",bid);
-//        log.debug(holdPrice);
+        log.debug("跟单ID"+resp.getRequestId()+"，持仓价"+holdPrice);
         detailPositionGainAndLoss.put((long) resp.getRequestId(),holdPrice);
 
     }

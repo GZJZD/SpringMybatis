@@ -4,6 +4,7 @@ import com.web.common.FollowOrderEnum;
 import com.web.pojo.*;
 import com.web.pojo.vo.followOrder.FollowOrderPageVo;
 import com.web.pojo.vo.followOrder.FollowOrderQuery;
+import com.web.pojo.vo.followOrder.FollowOrderVo;
 import com.web.service.*;
 import com.web.util.json.JSONResult;
 import com.web.util.common.DateUtil;
@@ -157,9 +158,7 @@ public class FollowOrderController {
             FollowOrder followOrder = followOrderService.getFollowOrder(id);
             if(status.equals(FollowOrderEnum.FollowStatus.ACCOUNT_START.getIndex())){
                 followOrderService.checkLogin(followOrder);
-                if(!followOrder.getFollowOrderStatus().equals(FollowOrderEnum.FollowStatus.FOLLOW_ORDER_START.getIndex())){
-                    return new JSONResult(false, "操作失败");
-                }
+
             }
 
             if (status.equals(FollowOrderEnum.FollowStatus.FOLLOW_ORDER_STOP.getIndex())) {
@@ -275,7 +274,7 @@ public class FollowOrderController {
     * */
     @RequestMapping("/getListClientFollowOrderTrade.Action")
     @ResponseBody
-    public List<?> getListClientFollowOrderTrade(String endTime, String startTime,Long followOrderId){
+    public List<FollowOrderVo> getListClientFollowOrderTrade(String endTime, String startTime, Long followOrderId){
         return followOrderTradeRecordService.getListClientFollowOrderTrade(endTime,startTime,followOrderId);
     }
 

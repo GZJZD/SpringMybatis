@@ -812,9 +812,7 @@ public class FollowOrderServiceImpl implements FollowOrderService {
                                 //累计平仓价格
                                 closePrice = DoubleUtil.add(closePrice, item.price);
                                 //手数累计
-                                //todo 修改
-//                                handNumber += item.volume;
-                                handNumber += 1;
+                                handNumber += item.volume;
                             }
                             log.debug("平仓交易数据详情" + WebJsion.toJson(rsp.tradeArrayItems));
                             //交易价格:平均值

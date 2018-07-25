@@ -217,7 +217,7 @@
             <if test="status == null">
                 and f.follow_order_status != 0
             </if>
-
+                and f.start_time is not null
         </where>
     </sql>
     <sql id="base_List">

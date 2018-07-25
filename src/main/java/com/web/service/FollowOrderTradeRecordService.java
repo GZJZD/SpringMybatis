@@ -53,7 +53,7 @@ public interface FollowOrderTradeRecordService {
 
     List<Map<String, Object>> getListClient(Long followOrderId, Integer status, Long followOrderClientId, Integer openOrCloseStatus);
 
-    List<Map<String,Object>>  getListClientFollowOrderTrade(String endTime, String startTime, Long followOrderId);
+    List<FollowOrderVo>  getListClientFollowOrderTrade(String endTime, String startTime, Long followOrderId);
 
      Map<Long, FollowOrderVo> tradeTotalCount(String endTime, String startTime, Long followOrderId, boolean orderOrClient);
 }

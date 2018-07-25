@@ -1,6 +1,7 @@
 package com.web.service;
 
 import com.web.pojo.FollowOrderClient;
+import com.web.pojo.vo.followOrder.FollowOrderVo;
 
 import java.util.List;
 import java.util.Map;
@@ -20,14 +21,14 @@ public interface FollowOrderClientService {
 
     List<FollowOrderClient> getListByFollowOrderId(Long followOrderId,Integer NODeleteOrAllStatus);
 
-    List<Map<String,Object>> getListUserNameByFollowOrderId(Long followOrderId);
+    List<FollowOrderVo> getListUserNameByFollowOrderId(Long followOrderId);
     List<Map<String,Object>> getListFollowOrderClientParamVo(Long followOrderId);
 
     void deleteByFollowOrderId(Long followOrderId);
 
     FollowOrderClient getByUserCodeAndPlatformCode(String userCode, String platformCode, Long followOrderId);
+    List<FollowOrderClient> getALLByUserCodeAndPlatformCode(String userCode, String platformCode, Long followOrderId);
 
-    List<FollowOrderClient> getAllByUserCodeAndPlatformCode(String userCode, String platformCode, Long followOrderId);
 
     void saveListFollowOrderClient(List<FollowOrderClient> FollowOrderClients, Long followOrderId);
 
