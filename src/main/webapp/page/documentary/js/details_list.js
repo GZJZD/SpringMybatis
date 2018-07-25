@@ -380,7 +380,7 @@ function orderClientTableShow(followOrderId, name,varietyCode) {
             title: '品种',
             formatter:varietyCode
         }, {
-            field: 'followDirection',
+            field: 'followOrderClient.followDirection',
             title: '跟单方向',
             formatter: function (value, row, index) {
                 if (value == "1") {
@@ -390,7 +390,7 @@ function orderClientTableShow(followOrderId, name,varietyCode) {
                 }
             }
         }, {
-            field: 'handNumberType',
+            field: 'followOrderClient.handNumberType',
             title: '手数类型',
             formatter: function (value, row, index) {
                 if (value == "1") {
@@ -400,23 +400,33 @@ function orderClientTableShow(followOrderId, name,varietyCode) {
                 }
             }
         }, {
-            field: 'followHandNumber',
-            title: '跟单手数'
+            field: 'followOrderClient.followHandNumber',
+            title: '跟单手数',
+            formatter: function (value, row, index) {
+                if(row.followOrderClient.handNumberType==0){
+                    return value;
+                }else{
+                    return "1:"+value
+                }
+            }
         }, {
             field: 'winRate',
-            title: '跟单成功率'
+            title: '跟单成功率',
+            formatter: function (value, row, index) {
+                return row.successTotal+"/"+row.allTotal
+            }
         }, {
-            field: 'followOrderVo.clientProfit',
+            field: 'clientProfit',
             title: '客户盈亏'
         }, {
-            field: 'followOrderVo.offsetGainAndLoss',
+            field: 'offsetGainAndLoss',
             title: '平仓盈亏'
 
         }, {
-            field: 'followOrderVo.positionGainAndLoss',
+            field: 'positionGainAndLoss',
             title: '持仓盈亏'
         }, {
-            field: 'followOrderVo.poundageTotal',
+            field: 'poundageTotal',
             title: '手续费'
         }, {
             field: 'status',
@@ -635,7 +645,7 @@ function findByClientName(followOrderId) {
         success: function (data) {
             var content = "";
             $.each(data, function (index, ele) {
-                content += "<option value=" + ele.followOrderClientId + ">" + ele.userName + "</option>"
+                content += "<option value=" + ele.followOrderClient.id + ">" + ele.clientName + "</option>"
             });
             $("#clientName").append(content);
         },

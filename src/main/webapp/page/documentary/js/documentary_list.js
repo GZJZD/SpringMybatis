@@ -296,6 +296,7 @@ function orderByParameter(num) {
     var accountNum = $("#account_id option:selected").val();
     var startTime;
     var endTime;
+    var status;
     if (num) {
         varietyNum = $("#variety_id option:selected").val();
         accountNum = $("#account_id option:selected").val();
@@ -306,11 +307,12 @@ function orderByParameter(num) {
         accountNum = $("#history_account_id option:selected").val();
         (($('#history-start-time').val()) == 'undefined') ? (startTime = '') : (startTime = ($("#history-start-time").val()));
         (($('#history-end-time').val()) == 'undefined') ? (endTime = '') : (endTime = ($("#history-end-time").val()));
+        status = 0;
     }
 
     // ?varietyId=" + varietyNum + "&accountId=" + accountNum + "&startTime=" + startTime + "&endTime=" + endTime
     var url = url_ + "/followOrder/getListFollowOrder.Action";
-    $(tableOrderId).bootstrapTable('destroy');
+
     $.ajax({
         url: url,
         type: 'post', //GET
@@ -319,7 +321,8 @@ function orderByParameter(num) {
             varietyId:varietyNum,
             accountId:accountNum,
             startTime:startTime,
-            endTime:endTime
+            endTime:endTime,
+            status:status
         },
         timeout: 5000,    //超时时间
         dataType: 'json',    //返回的数据格式：json/xml/html/script/jsonp/text
@@ -327,8 +330,16 @@ function orderByParameter(num) {
 
         },
         success: function (data) {
+
+            var tableName;
+            if(num){
+                tableName = tableOrderId
+            }else{
+                tableName= tableHistoryOrderId;
+            }
+            $(tableName).bootstrapTable('destroy');
             if(data.followOrderVoList == null ){
-                $(tableOrderId).bootstrapTable({load:data.followOrderVoList,
+                $(tableName).bootstrapTable({load:data.followOrderVoList,
                     columns:columns,
                     formatLoadingMessage: function(){
                         return "";
@@ -336,18 +347,19 @@ function orderByParameter(num) {
                 });
             }else {
 
-                showByOrderId(tableOrderId, method, unique_Id, sortOrder, columns,data.followOrderVoList);
+                showByOrderId(tableName, method, unique_Id, sortOrder, columns,data.followOrderVoList);
             }
+            if(num) {
+                $("#history_close_position").html(data.historyHandNumber + "/" + data.historyProfit);
+                if (data.holdPositionHandNumber == null) {
+                    $("#hold_position").html(0 + "/" + 0);
+                } else {
+                    $("#hold_position").html(data.holdPositionHandNumber + "/" + data.holdPositionProfit);
 
-            $("#history_close_position").html(data.historyHandNumber + "/" + data.historyProfit);
-            if (data.holdPositionHandNumber == null) {
-                $("#hold_position").html(0 + "/" + 0);
-            } else {
-                $("#hold_position").html(data.holdPositionHandNumber + "/" + data.holdPositionProfit);
-
+                }
+                $("#profit_rate").html(data.profitAndLossRate);
+                $("#win_rate").html(data.winRate + "%");
             }
-            $("#profit_rate").html(data.profitAndLossRate);
-            $("#win_rate").html(data.winRate + "%");
         },
         error: function (xhr, textStatus) {
 
@@ -448,6 +460,7 @@ function update_status(id, obj, newTitle, oldTitle, status, i) {
         },
         success: function (data) {
             if (data.success) {
+                alert(111)
                 //发异步把用户状态进行更改,'&#xe651;'
                 $(obj).attr('title', newTitle)
                 $(obj).find('i').html(i);
@@ -460,9 +473,6 @@ function update_status(id, obj, newTitle, oldTitle, status, i) {
                     orderTableShow(url_history,tableHistoryOrderId);
                     $(tableOrderId).bootstrapTable('destroy');
                     orderTableShow(url_orderPage,tableOrderId);
-
-
-
                 });
             } else {
                 //layer.msg(data.msg, {icon: 6, time: 1000});
