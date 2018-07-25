@@ -13,6 +13,7 @@ import com.web.service.FollowOrderDetailService;
 import com.web.service.FollowOrderService;
 import com.web.util.common.DoubleUtil;
 import com.web.util.json.WebJsion;
+import com.web.util.tars.CommunicatorConfigUtil;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -56,14 +57,13 @@ public class SweepTableSchedule {
     }
 
     //每3秒： */3 * * * * ?
-    @Scheduled(cron = "0 0/3 * * * ?")
+//    @Scheduled(cron = "0/3 * * * * ?")
     public void doSweepTable(){
         log.debug("定时器执行");
         FollowOrderQuery followOrderQuery = new FollowOrderQuery();
         List<FollowOrder> followOrder = followOrderService.selectListFollowOrder(followOrderQuery);
-        CommunicatorConfig cfg = new CommunicatorConfig();
-        Communicator communicator = CommunicatorFactory.getInstance().getCommunicator(cfg);
-        TraderServantPrx proxy = communicator.stringToProxy(TraderServantPrx.class, "TestApp.HelloServer.HelloTrade@tcp -h 192.168.3.189 -p 50506 -t 60000");
+
+        TraderServantPrx proxy = CommunicatorConfigUtil.getProxy();
 
         for (FollowOrder order : followOrder) {
             List<FollowOrderDetail> detailList = followOrderDetailService.getNOCloseDetailListByFollowOrderId(order.getId());

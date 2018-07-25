@@ -59,7 +59,7 @@ public class FollowOrderClientController {
                     sBuilder.append(name+"、");
                 }
                 sBuilder.deleteCharAt(sBuilder.length() - 1);
-                return new JSONResult(sBuilder+"客户已在跟单中");
+                return new JSONResult("添加 "+sBuilder+"客户无效,因客户已在跟单中");
             }
         } catch (Exception e) {
             e.printStackTrace();

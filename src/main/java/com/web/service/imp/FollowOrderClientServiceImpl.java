@@ -94,6 +94,7 @@ public class FollowOrderClientServiceImpl implements FollowOrderClientService {
                 followOrderClient.setHandNumberType(orderClient.getHandNumberType());
                 followOrderClient.setFollowHandNumber(orderClient.getFollowHandNumber());
                 followOrderClient.setCreateDate(DateUtil.getStringDate());
+                followOrderClient.setStatus(FollowOrderEnum.FollowStatus.FOLLOW_ORDER_CLIENT_START.getIndex());
                 followOrderClientDao.insert(followOrderClient);
             }
         }
@@ -203,6 +204,9 @@ public class FollowOrderClientServiceImpl implements FollowOrderClientService {
                 String name = getUserName(orderClient.getUserCode(), orderClient.getPlatformCode());
                 userName.add(name);
             }else{
+                followOrderClient.setFollowOrderId(followOrderId);
+                followOrderClient.setCreateDate(DateUtil.getStringDate());
+                followOrderClient.setStatus(FollowOrderEnum.FollowStatus.FOLLOW_ORDER_CLIENT_START.getIndex());
                 followOrderClientDao.insert(followOrderClient);
             }
         }

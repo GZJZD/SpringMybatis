@@ -24,7 +24,7 @@
   </delete>
     <insert id="insert" parameterType="com.web.pojo.FollowOrderClient" useGeneratedKeys="true" keyProperty="id">
     insert into follow_order_client (follow_order_id, user_code,platform_code, follow_direction,
-      hand_number_type, follow_hand_number, update_date,update_by_user,create_date,create_user,delete_date,delete_by_user,status
+      hand_number_type, follow_hand_number, update_date,update_by_user,create_date,create_user,delete_date,delete_by_user,status,
       version)
     values (#{followOrderId}, #{userCode},#{platformCode}, #{followDirection},
       #{handNumberType}, #{followHandNumber}, #{updateDate}, #{updateByUser} ,#{createDate},#{createUser},#{deleteDate},#{deleteByUser},#{status},
