@@ -4,7 +4,7 @@
 <!--monitorInterval：Log4j能够自动检测修改配置 文件和重新配置本身，设置间隔秒数 -->
 <configuration status="INFO" monitorInterval="30">
     <properties>
-        <property name="LOG_HOME">E:/logs</property>
+        <property name="LOG_HOME">/sm_logs</property>
         <property name="FILE_NAME">JZT</property>
     </properties>
 	<!--先定义所有的appender -->
