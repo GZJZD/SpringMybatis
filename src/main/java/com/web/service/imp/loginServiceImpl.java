@@ -97,24 +97,27 @@ public class loginServiceImpl implements LoginService {
         String msg =null;
         int code = (int)(Math.random()*8999)+1000; //生成随机4位验证码
         try {
-//            SendSmsResponse sendSmsResponse  = AliSms.SendSms(phoneNumber,code);
-//            if(sendSmsResponse.getCode() != null && sendSmsResponse.getCode().equals("OK")) {
-//                msg="短信发送成功，请注意查收";
-//            }
-//            if(sendSmsResponse.getCode() != null && sendSmsResponse.getCode().equals("isv.AMOUNT_NOT_ENOUGH")){
-//                msg="阿里短信账号余额不足，请联系管理员充值";
-//            }
-//            if(sendSmsResponse.getMessage() != null && !sendSmsResponse.getMessage().equals("ok")){
-//                msg= sendSmsResponse.getMessage();
-//            }
+            SendSmsResponse sendSmsResponse  = AliSms.SendSms(phoneNumber,code);
+            if(sendSmsResponse != null){
+                if(sendSmsResponse.getCode() != null && sendSmsResponse.getCode().equals("OK")) {
+                    login.setCode(Integer.toString(code));
+                    login.setUpdateDate(DateUtil.getStringDate());
+                    login.setVerifyTime(DateUtil.getStringDate());
+                    loginDao.updateCode(login);
+                    msg="OK";
+                }
+                if(sendSmsResponse.getCode() != null && sendSmsResponse.getCode().equals("isv.AMOUNT_NOT_ENOUGH")){
+                    msg="阿里短信账号余额不足，请联系管理员充值";
+                }
+                if(sendSmsResponse.getMessage() != null && !sendSmsResponse.getMessage().equals("OK")){
+                    msg= sendSmsResponse.getMessage();
+                }
+            }
         }catch (Exception e){
             e.printStackTrace();
             msg = "短信发送失败";
         }
-        login.setCode(Integer.toString(code));
-        login.setUpdateDate(DateUtil.getStringDate());
-        login.setVerifyTime(DateUtil.getStringDate());
-        loginDao.updateCode(login);
+
         return msg;
     }
 
