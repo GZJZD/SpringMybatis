@@ -7,7 +7,7 @@ import java.math.RoundingMode;
  * Created by may on 2018/5/9.
  */
 public abstract class DoubleUtil {
-    public static final Double Double_val = 0.00;
+    public static final Double Double_val = 0.0;  // double 默认值
     private static final int DEF_DIV_SCALE = 10;
 
     /**
@@ -126,4 +126,9 @@ public abstract class DoubleUtil {
         BigDecimal b1 = new BigDecimal(Double.toString(v2));
         return b2.divide(b1,scale,BigDecimal.ROUND_HALF_DOWN ).doubleValue();
     }
+
+    /**
+     *
+     */
+
 }
