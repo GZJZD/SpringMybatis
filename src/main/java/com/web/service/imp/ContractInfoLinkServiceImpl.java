@@ -73,15 +73,12 @@ public class ContractInfoLinkServiceImpl implements ContractInfoLinkService {
             ContractInfo contractInfo = contractInfoService.getContractInfoById(contractInfoId);
 
             final instrumentCommissionQueryRequest req = new instrumentCommissionQueryRequest();
-            req.setTypeId("instrumentCommissionQueryRequest");
+            req.setTypeId("instrumentCommissionQuery");
             req.setRequestId(contractInfoId.intValue());
             req.setBrokerId(account.getPlatform().getName());
             req.setUserId(account.getAccount());
             req.setInstrumentId(contractInfo.getContractCode());
             TraderServantPrx proxy = CommunicatorConfigUtil.getProxy();
-//            Communicator communicator = CommunicatorFactory.getInstance().getCommunicator(cfg);
-//            TraderServantPrx proxy = communicator.stringToProxy(TraderServantPrx.class, "TestApp.HelloServer.HelloTrade@tcp -h 192.168.3.189 -p 50506 -t 60000");
-
 
             try {
                 proxy.async_instrumentCommissionQuery(new TraderServantPrxCallback() {
