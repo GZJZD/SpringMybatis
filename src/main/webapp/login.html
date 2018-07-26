@@ -170,6 +170,11 @@
                         success:function(data,textStatus,jqXHR){
 
                           layer.msg(data);
+                          if(data=="OK"){
+                              layer.msg("短信发送成功，请注意查收");
+						  }else {
+                              return layer.msg(data);
+						  }
                         },
                         error:function(xhr,textStatus){
                         },
