@@ -71,7 +71,7 @@ public class loginServiceImpl implements LoginService {
 //                        cookie.setMaxAge(CookieConstantTable.COOKIE_MAX_AGE); //设置cookie最大失效时间<br>　
                         cookie.setMaxAge(8*60*60); //设置cookie最大失效时间<br>　
                         // 设置domain
-                        cookie.setDomain("127.0.0.1");
+//                        cookie.setDomain("127.0.0.1");
                         // 设置path
                         cookie.setPath("/");
                         response.addCookie(cookie);//将cookie返回加入
