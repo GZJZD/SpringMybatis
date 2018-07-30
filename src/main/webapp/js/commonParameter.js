@@ -1,4 +1,7 @@
-var url_="http://127.0.0.1:8090/sm";
+// var url_="http://localhost:8090/sm";
+ var url_="http://47.52.77.50:8090/sm";
+
+
 
 /*
 var jqxhr;
@@ -32,5 +35,5 @@ $(document).ajaxComplete(function(event,xhr,options){
         //将后端重定向的地址取出来,使用win.location.href去实现重定向的要求
         win.location.href = xhr.getResponseHeader("CONTENTPATH");
     }
-    //
+
 });
