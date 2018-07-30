@@ -14,6 +14,8 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class NetworkManger extends Thread {
+
+    private static Logger log =  LogManager.getLogger(NetworkManger.class.getName());
     //由香港提供的数据是固定以HEAD;开头的
     private Pattern compile = Pattern.compile("HEAD;");
     //一条完整的交易数据的分号数量是14个
@@ -60,6 +62,8 @@ public class NetworkManger extends Thread {
      */
     public synchronized void receiveData() {
         try {
+            //数据接收的响应时间设置
+            socket.setSoTimeout(15000);//15秒
             InputStream inputStream = socket.getInputStream();
             int content = -1;
             //用来装载数据
@@ -89,9 +93,7 @@ public class NetworkManger extends Thread {
                         }
                         if (start == 0 || semicolons == MAX_SEMICOLONS) {
 
-                            //System.out.println(sBuilder.toString());
-                            //完成一次交易数据的监听,将数据交于其他线程处理
-//                             madeOrderThreadPool.execute(new DealServiceImpl(sBuilder.toString(),platformSocket.getPlatformName()));
+
                             ThreadPoolUtil.getInstance().getThreadPoole().execute(new DataParserServiceImpl(sBuilder.toString(), this.platformName));
                             semicolons = 0;
                             sBuilder.delete(0, sBuilder.length());
@@ -102,27 +104,29 @@ public class NetworkManger extends Thread {
             }
 
         } catch (SocketTimeoutException e) {
-            System.out.println("服务器连接超时,重新连接ing");
+           log.debug(platformName+"服务器连接超时,重新连接ing");
             int startTime = 5000;
             NetworkManger networkManger = new NetworkManger(ip, port, platformName);
             try {
                 if (socket != null) {
                     socket.close();
-                    System.out.println("socket 删除成功");
+                   log.debug(platformName+",socket 删除成功");
                 }
 
                 sleep(startTime);
                 networkManger.run();
-                System.out.println("服务器重启完成");
+                log.debug(platformName+",服务器重启完成");
             } catch (InterruptedException e1) {
                 e1.printStackTrace();
+                log.debug(platformName+":"+e1.getMessage());
             } catch (IOException e1) {
                 e1.printStackTrace();
+                log.debug(platformName+":"+e1.getMessage());
             }
 
         } catch (Exception e) {
             e.printStackTrace();
-            System.out.println("error lest");
+           log.debug(platformName+",error lest");
         }
     }
 
@@ -136,8 +140,7 @@ public class NetworkManger extends Thread {
             if (test) {
                 socket = new Socket();
                 SocketAddress socketAddress = new InetSocketAddress(ip, port);
-                //数据接收的响应时间设置
-                // socket.setSoTimeout(7000);
+
                 socket.connect(socketAddress, 5000); // 连接超时限制在5秒
                 //       otherSocket.setSoTimeout(1000 * timeOutSecond);//设置读操作超时时间5到180秒
                 test = false;
@@ -157,7 +160,7 @@ public class NetworkManger extends Thread {
             test = true;
             connectOk = false;
             e.printStackTrace();
-            LogManager.getLogger(NetworkManger.class).error("连接失败" + timeNum + "秒后进行重连");
+            LogManager.getLogger(NetworkManger.class).error(platformName+":连接失败" + timeNum + "秒后进行重连");
             Thread.sleep(timeNum*1000);
 
         } catch (IOException e) {
@@ -169,6 +172,7 @@ public class NetworkManger extends Thread {
                 Thread.sleep(timeNum*1000);
             } catch (InterruptedException e1) {
                 e1.printStackTrace();
+                log.debug(platformName+":"+e1.getMessage());
             }
         }
         if (!connectOk) {
@@ -181,6 +185,7 @@ public class NetworkManger extends Thread {
                     timeNum += 2;
                     Thread.sleep(timeNum * 1000);
                     e.printStackTrace();
+                    log.debug(platformName+":"+e.getMessage());
                 }
                 socket = null;
                 test = true;
@@ -210,6 +215,7 @@ public class NetworkManger extends Thread {
 
         } catch (IOException e) {
             e.printStackTrace();
+            log.debug(e.getMessage());
         }
 
     }
